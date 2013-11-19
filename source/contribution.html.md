@@ -20,7 +20,7 @@ git clone [your forked repository].
 cd website
 gem install bundler
 bundle install
-middleman server
+bundle exec middleman server
 ```
 
 #### make a pull request

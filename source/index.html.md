@@ -99,10 +99,10 @@ Whether you like it or not, JDBC is a stable standard interface. Since most of R
 
 We never release without passing all the unit tests with the following RDBMS.
 
-- "com.h2database" % "h2"
-- "org.hsqldb" % "hsqldb"
-- "mysql" % "mysql-connector-java"
-- "org.postgresql" % "postgresql"
+- PostgreSQL
+- MySQL
+- H2 Database Engine
+- HSQLDB
 
 We believe that ScalikeJDBC basically works with any other RDBMS (Oracle, SQL Server and so on).
 
@@ -281,6 +281,17 @@ http://www.apache.org/licenses/LICENSE-2.0.html
 ## Related Products
 
 <hr/>
+### ScalikeJDBC-Async
+
+ScalikeJDBC Extension: Non-blocking APIs in the JDBC way.
+
+[github.com/scalikejdbc/scalikejdbc-async](https://github.com/scalikejdbc/scalikejdbc-async)
+
+ScalikeJDBC-Async provides non-blocking APIs to talk with PostgreSQL and MySQL in the JDBC way.
+
+This library is built with [postgrsql-async and mysql-async](https://github.com/mauricio/postgresql-async),incredible works by @mauricio.
+
+<hr/>
 ### dbconsole
 
 dbconsole is an extended sbt console to connect database. 
@@ -305,11 +316,11 @@ See in detail: [/documentation/dbconsole](documentation/dbconsole.html)
 
 ![Skinny framework](images/skinny.png)
 
-Skinny ORM is the default DB access library of [Skinny Framework](https://github.com/seratch/skinny-framework). Skinny ORM is built upon ScalikeJDBC. 
+Skinny ORM is the default DB access library of [Skinny Framework](https://github.com/skinny-framework/skinny-framework). Skinny ORM is built upon ScalikeJDBC. 
 
 In most cases, ORM makes things easier.
 
-[https://github.com/seratch/skinny-framework#orm](https://github.com/seratch/skinny-framework#orm)
+[https://github.com/skinny-framework/skinny-framework#orm](https://github.com/skinny-framework/skinny-framework#orm)
 
 
 
