@@ -10,7 +10,7 @@ title: SQLInterpolation - ScalikeJDBC
 SQLInterpolation is an SQL builder which uses String interpolation since Scala 2.10. Add scalikejbdc-interpolation to libraryDependencies.
 
 ```
-libraryDependencies += "com.github.seratch" %% "scalikejdbc-interpolation" % "[1.6,)"
+libraryDependencies += "org.scalikejdbc" %% "scalikejdbc-interpolation" % "[1.7,)"
 ```
 
 The usage is pretty simple - just embedding values into sql"" template without `#bind` or `#bindByName`. It looks really cool.

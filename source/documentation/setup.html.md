@@ -18,10 +18,10 @@ If you're still using Scala 2.9, you can't use `scalikejdbc-interpolation`.
 
 ```
 libraryDependencies ++= Seq(
-  "com.github.seratch" %% "scalikejdbc"               % "[1.6,)",
-  "com.github.seratch" %% "scalikejdbc-interpolation" % "[1.6,)",
-  "com.h2database"     %  "h2"                        % "[1.3,)",
-  "ch.qos.logback"     %  "logback-classic"           % "[1.0,)"
+  "org.scalikejdbc" %% "scalikejdbc"               % "[1.7,)",
+  "org.scalikejdbc" %% "scalikejdbc-interpolation" % "[1.7,)",
+  "com.h2database"  %  "h2"                        % "[1.3,)",
+  "ch.qos.logback"  %  "logback-classic"           % "[1.0,)"
 )
 ```
 
@@ -38,11 +38,11 @@ Using `scalikejdbc-test` is highly recommended to improve your application.
 
 ```
 libraryDependencies ++= Seq(
-  "com.github.seratch" %% "scalikejdbc"               % "[1.6,)",
-  "com.github.seratch" %% "scalikejdbc-interpolation" % "[1.6,)",
-  "com.github.seratch" %% "scalikejdbc-test"          % "[1.6,)"   % "test",
-  "com.h2database"     %  "h2"                        % "[1.3,)",
-  "ch.qos.logback"     %  "logback-classic"           % "[1.0,)"
+  "org.scalikejdbc" %% "scalikejdbc"               % "[1.7,)",
+  "org.scalikejdbc" %% "scalikejdbc-interpolation" % "[1.7,)",
+  "org.scalikejdbc" %% "scalikejdbc-test"          % "[1.7,)"   % "test",
+  "com.h2database"  %  "h2"                        % "[1.3,)",
+  "ch.qos.logback"  %  "logback-classic"           % "[1.0,)"
 )
 ```
 
@@ -55,11 +55,11 @@ If you use `application.conf` as settings file, add `scalikejdbc-config` too.
 
 ```
 libraryDependencies ++= Seq(
-  "com.github.seratch" %% "scalikejdbc"               % "[1.6,)",
-  "com.github.seratch" %% "scalikejdbc-interpolation" % "[1.6,)",
-  "com.github.seratch" %% "scalikejdbc-config"        % "[1.6,)",
-  "com.h2database"     %  "h2"                        % "[1.3,)",
-  "ch.qos.logback"     %  "logback-classic"           % "[1.0,)"
+  "org.scalikejdbc" %% "scalikejdbc"               % "[1.7,)",
+  "org.scalikejdbc" %% "scalikejdbc-interpolation" % "[1.7,)",
+  "org.scalikejdbc" %% "scalikejdbc-config"        % "[1.7,)",
+  "com.h2database"  %  "h2"                        % "[1.3,)",
+  "ch.qos.logback"  %  "logback-classic"           % "[1.0,)"
 )
 ```
 
@@ -77,7 +77,7 @@ You need to setup an sbt plugin named `scalikejdbc-mapper-generator`.
 // Don't forget adding your JDBC driver
 libraryDependencies += "org.hsqldb" % "hsqldb" % "[2,)"
 
-addSbtPlugin("com.github.seratch" %% "scalikejdbc-mapper-generator" % "[1.6,)")
+addSbtPlugin("org.scalikejdbc" %% "scalikejdbc-mapper-generator" % "[1.7,)")
 ```
 
 ##### build.sbt
@@ -115,11 +115,11 @@ Add `scalikejdbc-play-plugin` and `scalikejdbc-play-fixture-plugin` (optional) a
 
 ```
 val appDependencies = Seq(
-  "com.github.seratch" %% "scalikejdbc"             % "[1.6,)",
-  "com.github.seratch" %% "scalikejdbc-play-plugin" % "[1.6,)",
-  "com.github.seratch" %% "scalikejdbc-play-fixture-plugin" % "[1.6,)", // optional
+  "org.scalikejdbc" %% "scalikejdbc"                     % "[1.7,)",
+  "org.scalikejdbc" %% "scalikejdbc-play-plugin"         % "[1.7,)",
+  "org.scalikejdbc" %% "scalikejdbc-play-fixture-plugin" % "[1.7,)", // optional
   // substitute this for whatever DB driver you're using:
-  "com.h2database"     %  "h2"                      % "1.3,)"
+  "com.h2database"  %  "h2"                      % "1.3,)"
 )
 ```
 
