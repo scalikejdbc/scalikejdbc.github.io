@@ -4,6 +4,9 @@ gem 'middleman'
 gem 'middleman-syntax'
 gem 'middleman-livereload'
 
+# middleman build -> deploy
+gem 'middleman-deploy'
+
 gem 'redcarpet'
 
 # For faster file watcher updates on Windows:
