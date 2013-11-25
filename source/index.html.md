@@ -75,7 +75,7 @@ You can try a [Play framework](http://www.playframework.com/) sample app which u
 
 Activator page: [Hello ScalikeJDBC!](http://typesafe.com/activator/template/scalikejdbc-activator-template)
 
-See on GitHub: [seratch/hello-scalikejdbc](https://github.com/seratch/hello-scalikejdbc)
+See on GitHub: [scalikejdbc/hello-scalikejdbc](https://github.com/scalikejdbc/hello-scalikejdbc)
 
 <hr/>
 ## ScalikeJDBC in 5 minutes
@@ -171,7 +171,7 @@ val programmers: List[Long] = DB readOnly { implicit session =>
 
 See in detail: [/documentation/query-dsl](documentation/query-dsl.html)
 
-Test code: [src/test/scala/scalikejdbc/QueryInterfaceSpec.scala](https://github.com/seratch/scalikejdbc/blob/master/scalikejdbc-interpolation/src/test/scala/scalikejdbc/QueryInterfaceSpec.scala)
+Test code: [src/test/scala/scalikejdbc/QueryInterfaceSpec.scala](https://github.com/scalikejdbc/scalikejdbc/blob/master/scalikejdbc-interpolation/src/test/scala/scalikejdbc/QueryInterfaceSpec.scala)
 
 <hr/>
 ### Flexible transaction control

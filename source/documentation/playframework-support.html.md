@@ -125,4 +125,4 @@ You can try a [Play framework](http://www.playframework.com/) sample app which u
 
 Activator page: [Hello ScalikeJDBC!](http://typesafe.com/activator/template/scalikejdbc-activator-template)
 
-See on GitHub: [seratch/hello-scalikejdbc](https://github.com/seratch/hello-scalikejdbc)
+See on GitHub: [scalikejdbc/hello-scalikejdbc](https://github.com/scalikejdbc/hello-scalikejdbc)

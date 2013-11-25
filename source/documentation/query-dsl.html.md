@@ -59,11 +59,11 @@ val members = withSQL { select.from(Member as m) }.map(Member(m)).list.apply()
 
 FYI: You can find some example in QueryDSL's test code:
 
-[scalikejdbc-interpolation/src/test/scala/scalikejdbc/QueryInterfaceSpec.scala](https://github.com/seratch/scalikejdbc/blob/master/scalikejdbc-interpolation/src/test/scala/scalikejdbc/QueryInterfaceSpec.scala)
+[scalikejdbc-interpolation/src/test/scala/scalikejdbc/QueryInterfaceSpec.scala](https://github.com/scalikejdbc/scalikejdbc/blob/master/scalikejdbc-interpolation/src/test/scala/scalikejdbc/QueryInterfaceSpec.scala)
 
 `sqls` is alias for `SQLSyntax` object (enabled when you import `scalikejdbc.SQLInterpolation._`.). Methods that are defined on `object SQLSyntax` is available everywhere.
 
-[scalikejdbc-interpolation-core/src/main/scala/scalikejdbc/interpolation/SQLSyntax.scala](https://github.com/seratch/scalikejdbc/blob/master/scalikejdbc-interpolation-core/src/main/scala/scalikejdbc/interpolation/SQLSyntax.scala)
+[scalikejdbc-interpolation-core/src/main/scala/scalikejdbc/interpolation/SQLSyntax.scala](https://github.com/scalikejdbc/scalikejdbc/blob/master/scalikejdbc-interpolation-core/src/main/scala/scalikejdbc/interpolation/SQLSyntax.scala)
 
 <hr/>
 #### Join queries

@@ -113,6 +113,7 @@ where
 
 It seems to be natural that `${m.result.*}` is converted to listing all the columns, `${m.camelCase}` is converted to the `snake_case` column name. However, since you may have questions, I'll explain about some points.
 
+<hr/>
 #### Why is ${m.result.*} transformed to listing all the columns?
 
 In spite of column names are not defined anywhere, `${m.result.*}` is converted to listing all the column names. The secret is that laoding from metadata (and they will be cached) when first access to the table. It's possible to obtain all column names as a `Seq[String]` value via `columns`.
@@ -126,17 +127,18 @@ object GroupMember extends SQLSyntaxSupport[GroupMember] {
 }
 ```
 
+<hr/>
 #### Why can we use undefined methods such as m.groupId?
 
 By Type Dynamic (SIP-17) since Scala 2.10.0, you can call undefined methods such as `m.groupId`. Type Dynamic is similar to Ruby's method_missing.
 
-https://docs.google.com/document/d/1XaNgZ06AR7bXJA9-jHrAiBVUwqReqG4-av6beoLaf3U
+[https://docs.google.com/document/d/1XaNgZ06AR7bXJA9-jHrAiBVUwqReqG4-av6beoLaf3U](https://docs.google.com/document/d/1XaNgZ06AR7bXJA9-jHrAiBVUwqReqG4-av6beoLaf3U)
 
 When you call camel case fields, it will actually be transformed to the column name as an underscore separated string. If the column name doesn't exist in the columns, `InvalidColumnNameException` will be thrown.
 
 Before that, the case case field name should be the same as any of the primary constructor arg names of type `A` of `SQLSyntaxSupport[A]`. The validation for this rule works in compilation phase with the power of Scala macros.
 
-http://docs.scala-lang.org/overviews/macros/overview.html
+[http://docs.scala-lang.org/overviews/macros/overview.html](http://docs.scala-lang.org/overviews/macros/overview.html)
 
 If you don't want to use Type Dynamic, it's also possible to call `#field(String)` or `#column(String)` with String value. For instance, the following four examples mean the same thing.
 
@@ -159,6 +161,7 @@ object Event extends SQLSyntaxSupport[Event] {
 }
 ```
 
+<hr/>
 #### What is the difference between m.id, m.result.id and m.resultName.id?
 
 For instance, `m`'s APIs of `val m = Member.syntax("mm")` means as follows:
