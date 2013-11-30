@@ -69,6 +69,10 @@ object Group extends SQLSyntaxSupport[Group] {
   // If the table name is same as snake_case'd name of this companion object,
   // you don't need to specify tableName explicitly.
   override val tableName = "groups"
+
+  // If you use NamedDB for this entity, override connectionPoolName
+  //override val connectionPoolName = 'anotherdb
+
   def apply(g: ResultName[Group])(rs: WrappedResultSet) =
     new Group(rs.long(g.id), rs.string(g.name))
 }
@@ -122,7 +126,7 @@ If you need to define column names by yourself or need to access multi databases
 
 ```java
 object GroupMember extends SQLSyntaxSupport[GroupMember] {
-  override val tableName = "group_member"
+  override val tableName = "groups_members"
   override val columns = Seq("id", "name", "group_id")
 }
 ```
@@ -149,7 +153,7 @@ m.column("group_id")
 m.c("group_id")
 ```
 
-In some cases, you might want to avoid expose column names to application layer. If this is the case, override `nameConverters`. If you want to treat `service_cd` column as `serviceCode`, define that as follows. Since the `nameConverters` works as partial match retrieval, it's also possible to specify just `Map("Code" -> "cd")`.
+In some cases, you might want to avoid expose column names to application layer. If this is the case, override `nameConverters`. If you want to treat `service_cd` column as `serviceCode`, define regular expression and replaced name in columns as follows. Since the `nameConverters` works as partial match retrieval, it's also possible to specify just `Map("Code" -> "cd")`.
 
 ```java
 case class Event(id: Long, name: String, serviceCode: Long)
@@ -157,7 +161,9 @@ case class Event(id: Long, name: String, serviceCode: Long)
 object Event extends SQLSyntaxSupport[Event] {
   override val tableName = "events"
   override val columns = Seq("id" "name", "service_cd")
-  override val nameConverters = Map("serviceCode" -> "service_cd")
+
+  // specify regular expression to match
+  override val nameConverters = Map("^serviceCode$" -> "service_cd")
 }
 ```
 

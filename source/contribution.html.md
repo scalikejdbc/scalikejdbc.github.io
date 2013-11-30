@@ -83,3 +83,5 @@ Create a branch to request, and send your pull request to `develop` branch (not 
 - [Kengo Asamizu (@rabitarochan)](https://github.com/rabitarochan)
 - [Kenji Yoshida (@xuwei-k)](https://github.com/xuwei-k)
 - [Gabriel Raineri (@graineri)](https://github.com/graineri)
+- [駄猫 (@daneko)](https://github.com/daneko)
+
