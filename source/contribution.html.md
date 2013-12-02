@@ -64,6 +64,7 @@ Create a branch to request, and send your pull request to `develop` branch (not 
 - [Shinobu Aoki (@emalock3)](https://github.com/emalock3)
 - [kxbmap (@kxbmap)](https://github.com/kxbmap)
 - [Yusuke Arakaki (@Arakaki)](https://github.com/Arakaki)
+- [Takeshi Hagikura (@hagikuratakeshi)](https://github.com/hagikuratakeshi)
 
 <hr/>
 ### Issue Report, Wiki maintenance or any feedback
