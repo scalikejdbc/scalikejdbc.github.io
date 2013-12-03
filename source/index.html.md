@@ -125,7 +125,7 @@ Core part of ScalikeJDBC has so less dependencies that you won't be bothered by 
 - Joda Time 2.x
 - SLF4J API
 
-Of course, you can use c3p0 instead of commons-dbcp though ConnectionPool interface is available by default.
+Of course, you can use c3p0 (or others) instead of commons-dbcp though ConnectionPool implementation for that isn't provided by default.
 
 
 <hr/>
@@ -161,7 +161,7 @@ val programmers: List[Long] = DB readOnly { implicit session =>
     select
       .from(Programmer as p)
       .leftJoin(Company as c).on(p.companyId, c.id)
-      .where.ne(p.isDeleted, false)
+      .where.eq(p.isDeleted, false)
       .orderBy(p.createdAt)
       .limit(10)
       .offset(0)
