@@ -48,6 +48,9 @@ scalikejdbc.global.loggingSQLAndTime.warningLogLevel=warn
 # You can disable the default DB plugin
 dbplugin=disabled
 evolutionplugin=disabled
+
+# scalikejdbc logging
+logger.scalikejdbc=DEBUG
 ```
 
 #### Fixtures
