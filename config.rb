@@ -51,9 +51,10 @@ set :js_dir, 'javascripts'
 
 set :images_dir, 'images'
 
-activate :syntax
+activate :syntax, :anchorlinenos => true
+
 set :markdown_engine, :redcarpet
-set :markdown, :fenced_code_blocks => true, :smartypants => true
+set :markdown, fenced_code_blocks: true, smartypants: true, autolink: true, with_toc_data: true
 
 # Build-specific configuration
 configure :build do
