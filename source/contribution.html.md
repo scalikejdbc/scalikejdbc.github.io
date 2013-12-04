@@ -9,7 +9,7 @@ title: Contribution - ScalikeJDBC
 
 #### fork scalikejdbc project
 
-Fork [https://github.com/seratch/scalikejdbc](https://github.com/seratch/scalikejdbc).
+Fork [https://github.com/scalikejdbc/scalikejdbc.github.io](https://github.com/scalikejdbc/scalikejdbc.github.io).
 
 #### change under the website directory
 
@@ -33,7 +33,7 @@ Create a branch to request, and send your pull request to `develop` branch (not 
 
 #### fork scalikejdbc project
 
-Fork [https://github.com/seratch/scalikejdbc](https://github.com/seratch/scalikejdbc).
+Fork [https://github.com/scalikejdbc/scalikejdbc](https://github.com/scalikejdbc/scalikejdbc).
 
 git clone [your forked repository].
 

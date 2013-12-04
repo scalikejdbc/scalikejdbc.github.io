@@ -63,7 +63,8 @@ First of all, mix the `SQLSyntaxSupport[A]` trait to `A` companion object, and d
 import scalikejdbc._, SQLInterpolation._
 
 case class Group(id: Long, name: String)
-case class GroupMember(id: Long, name: String, groupId: Option[Long] = None, group: Option[Group])
+case class GroupMember(id: Long, name: String, 
+  groupId: Option[Long] = None, group: Option[Group] = None)
 
 object Group extends SQLSyntaxSupport[Group] {
   // If the table name is same as snake_case'd name of this companion object,
@@ -101,7 +102,7 @@ val groupMember: Option[GroupMember] = sql"""
   where
     ${m.id} = ${id}
   """
-  .map(GroupMember(m, g)).single.apply()
+  .map(GroupMember(m.resultName, g.resultName)).single.apply()
 ```
 
 Though the above code contains some `${...}` parts, I believe that you can understand what it means. Actually, this code runs the following SQL statement.
