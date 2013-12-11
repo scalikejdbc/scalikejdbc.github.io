@@ -83,7 +83,7 @@ object GroupMember extends SQLSyntaxSupport[GroupMember] {
     new GroupMember(rs.long(m.id), rs.string(m.name), rs.longOpt(m.groupId))
 
   def apply(m: ResultName[GroupMember], g: ResultName[Group])(rs: WrappedResultSet) =  {
-    apply(m)(rs).copy(group = g.longOpt(g.id).map(_ => Group(g)(rs)))
+    apply(m)(rs).copy(group = rs.longOpt(g.id).map(_ => Group(g)(rs)))
   }
 }
 ```
