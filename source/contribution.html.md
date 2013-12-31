@@ -57,6 +57,7 @@ Create a branch to request, and send your pull request to `develop` branch (not 
 <hr/>
 #### Commits
 
+- [Kazuhiro Sera (@seratch)](https://github.com/seratch)
 - [Manabu Nakamura (@gakuzzzz)](https://github.com/gakuzzzz)
 - [Kenji Yoshida (@xuwei-k)](https://github.com/xuwei-k)
 - [Toshiyuki Takahashi (@tototoshi)](https://github.com/tototoshi)
@@ -66,6 +67,7 @@ Create a branch to request, and send your pull request to `develop` branch (not 
 - [Shinobu Aoki (@emalock3)](https://github.com/emalock3)
 - [kxbmap (@kxbmap)](https://github.com/kxbmap)
 - [Yusuke Arakaki (@Arakaki)](https://github.com/Arakaki)
+- [ynomura (@kihn)](https://github.com/kihn)
 - [Takeshi Hagikura (@hagikuratakeshi)](https://github.com/hagikuratakeshi)
 
 <hr/>
@@ -87,4 +89,6 @@ Create a branch to request, and send your pull request to `develop` branch (not 
 - [Kenji Yoshida (@xuwei-k)](https://github.com/xuwei-k)
 - [Gabriel Raineri (@graineri)](https://github.com/graineri)
 - [駄猫 (@daneko)](https://github.com/daneko)
+- [Kazuo Kashima (@k4200)](https://github.com/k4200)
+- [Daisuke Matsumoto (@daimatz)](https://github.com/daimatz)
 

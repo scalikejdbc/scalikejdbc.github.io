@@ -233,3 +233,43 @@ object Member extends SQLSyntaxSupport[Member] {
   }
 ```
 
+<hr/>
+#### Use Case: SQLSyntaxSupport with table sharding
+
+If you have multiple tables for same entity. For example, `orders_2011`, `orders_2012` and `orders_2013`.
+
+```java
+case class Order(id: Long, productId: Long, customerId: Option[Long], createdAt: DateTime)
+
+class OrderTable(val year: Int) extends SQLSyntaxSupport[Order] {
+  // Be careful if you build tableName with input values 
+  // ScalikeJDBC cannot protect your app from SQL injection vulnerability
+  override val tableName = s"orders_$year"
+
+  def apply(o: ResultName[Order])(rs: WrappedResultSet) = new Order(
+    id         = rs.long(o.id), 
+    productId  = rs.long(o.productId), 
+    customerId = rs.longOpt(o.customerId), 
+    createdAt  = rs.dateTime(o.createdAt)
+  )
+}
+val (o2011, o2012, o2013) = (new OrderTable(2011), new OrderTable(2012), new OrderTable(2013))
+
+val ordersIn2011 = DB readOnly { implicit s =>
+  val o = o2011.syntax("o")
+  sql"select ${o.result.*} from ${o2011 as o) where ${o.customerId} is not null"
+    .map(o2011(o)).list.apply()
+}
+DB readOnly { implicit s =>
+  val o2 = o2012.syntax("o")
+  val ordersIn2012 = 
+    sql"select ${o.result.*} from ${o2012 as o2) where ${o.customerId} is not null"
+      .map(o2012(o2)).list.apply()
+
+  val o3 = o2013.syntax("o")
+  val ordersIn2013 = 
+    sql"select ${o.result.*} from ${o2013 as o3) where ${o.customerId} is not null"
+      .map(o2013(o3)).list.apply()
+}
+```
+

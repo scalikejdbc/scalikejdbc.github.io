@@ -121,3 +121,52 @@ val groups: List[Group] = withSQL {
    .map { (group, owner) => group.copy(owner = owner) }
    .list.apply()
 ```
+
+<hr/>
+### Entity equality
+
+In most cases, you will use case classes for entities. And basically it works fine. However, as you know, Scala (under 2.11) has 22 limitation and you cannot create a case class with more thatn 22 parameters. If your table has more than 22 columns, you need to create a normal class like this:
+
+```java
+class HugeTable(
+  val id: Long, val c2: String, val c3: String .... val c23: String)
+
+object HugeTable extends SQLSyntaxSupport[HugeTable] {
+  def apply(h: ResultName[HugeTable])(rs: WrappedResultSet) = new HugeTable(
+    id = rs.long(h.id),
+    c2 = rs.long(h.c2),
+    ....
+    c23 = rs.long(h.c23)
+  )
+}
+```
+
+The above code also works fine except for the use of one-to-x APIs. Case classes nicely overrides `#equals` method. But `HugeTable`'s `#equals` method won't work as you expect because it just predicates instance equality. So when you use normal classes and one-to-x APIs, you must override `#equals` method by yourself.
+
+Since version 1.7.3, ScalikeJDBC provides `EntityEquality` trait like this: 
+
+```java
+class HugeTable(
+  val id: Long, val c2: String, val c3: String .... val c23: String) 
+  extends EntityEquality {
+
+  override val entityIdentity: Any = id
+}
+```
+
+`#equals` method predicates equality with `entityIdentity` and the class is same. The above code use only `id` value for equality. If it isn't appropriate, define `entityIdentity` differently.
+
+```java
+class HugeTable(
+  val id: Long, val c2: String, val c3: String .... val c23: String)
+  extends EntityEquality {
+
+  override val entityIdentity: Any = s"$id, $c2, $c3, ... $23"
+  override val entityIdentity: Any = (id, c2, c3)
+}
+```
+
+If you're still using older version and you cannot upgrade version right now, see the `EntityEquality` implementation and do the same thing.
+
+https://github.com/scalikejdbc/scalikejdbc/blob/develop/scalikejdbc-library/src/main/scala/scalikejdbc/EntityEquality.scala
+
