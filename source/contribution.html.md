@@ -5,6 +5,13 @@ title: Contribution - ScalikeJDBC
 ## Contribution
 
 <hr/>
+### Contributers' Guide
+
+First, see the following guideline:
+
+[CONTRIBUTING.md](https://github.com/scalikejdbc/scalikejdbc/blob/develop/CONTRIBUTING.md)
+
+<hr/>
 ### How to contribute scalikejdbc.org?
 
 #### fork scalikejdbc.github.io project

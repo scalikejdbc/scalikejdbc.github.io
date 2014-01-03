@@ -115,7 +115,7 @@ case class Group(id: Long, name: String,
 
 val (g, o) = (Group.syntax, Owner.syntax)
 val groups: List[Group] = withSQL {
-  select.from(Group as g).leftJoin(Owner as o).on(g.ownerId, o.id)
+    select.from(Group as g).leftJoin(Owner as o).on(g.ownerId, o.id)
   }.one(Group(g))
    .toOptionalOne(Owner.opt(o))
    .map { (group, owner) => group.copy(owner = owner) }
