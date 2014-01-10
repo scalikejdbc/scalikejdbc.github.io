@@ -46,6 +46,20 @@ val settings = ConnectionPoolSettings(
 ConnectionPool.add('foo, user, password, settings)
 ```
 
+When you use external DataSource (e.g. application server's connection pool), use javax.sql.DataSource via JNDI:
+
+```java
+import javax.naming._
+import javax.sql._
+val ds = (new InitialContext)
+  .lookup("java:/comp/env").asInstanceOf[Context]
+  .lookup(name).asInstanceOf[DataSource]
+
+import scalikejdbc._
+ConnnectionPool.singleton(new DataSourceConnectionPool(ds))
+ConnnectionPool.add('foo, new DataSourceConnectionPool(ds))
+```
+
 `ConnectionPool` and `ConnectionPoolSettings`'s parameters are like this:
 
 ```java
