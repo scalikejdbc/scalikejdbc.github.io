@@ -6,12 +6,14 @@ title: Connection Pool - ScalikeJDBC
 
 <hr/>
 ### Configuration
+<hr/>
 
 See [/documentation/configuration](/documentation/configuration.html)
 
 
 <hr/>
-### Borrowing a connection from pool
+### Borrowing Connections
+<hr/>
 
 Simply just call `#borrow` method.
 
@@ -67,7 +69,8 @@ NamedDB('named) readOnly { implicit session =>
 ```
 
 <hr/>
-### Thread-local Connection pattern
+### Thread-local Connection Pattern
+<hr/>
 
 You can share DB connections as thread-local values. The connection should be released by yourself.
 
@@ -86,7 +89,8 @@ def finalize() = {
 ```
 
 <hr/>
-### Replacing ConnectionPool
+### Replacing ConnectionPool on Runtime
+<hr/>
 
 If you want to use another one which is not Commons DBCP as the connection provider, You can also specify your own `ConnectionPoolFactory` as follows:
 

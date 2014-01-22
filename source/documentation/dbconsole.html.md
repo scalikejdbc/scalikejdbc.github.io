@@ -6,11 +6,13 @@ title: dbconsole - ScalikeJDBC
 
 <hr/>
 ### Setup
+<hr/>
 
 See [/documentation/setup](/documentation/setup.html).
 
 <hr/>
 ### Usage
+<hr/>
 
 After installation, you can use `dbconsole` command, usage is pretty simple:
 
@@ -28,6 +30,7 @@ General options:
   -h, --help    show this help, then exit
 ```
 
+<hr/>
 #### Try sandbox db
 
 Please try it now with sandbox database.

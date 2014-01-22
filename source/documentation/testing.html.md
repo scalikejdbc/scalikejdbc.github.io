@@ -6,11 +6,13 @@ title: Testing - ScalikeJDBC
 
 <hr/>
 ### Setup
+<hr/>
 
 See [/documentation/setup](/documentation/setup.html).
 
 <hr/>
-### ScalaTest
+### For ScalaTest Users
+<hr/>
 
 `AutoRollback` trait provides automatic rollback after each test and data fixture.
 
@@ -41,12 +43,14 @@ class AutoRollbackSpec extends FlatSpec with AutoRollback {
 ```
 
 <hr/>
-### specs2
+### For specs2 Users
+<hr/>
 
 `AutoRollback` trait provides automatic rollback after each test and data fixture.
 
 <hr/>
-#### unit
+#### unit style
+<hr/>
 
 ```java
 import scalikejdbc._
@@ -81,7 +85,8 @@ trait AutoRollbackWithFixture extends AutoRollback {
 ```
 
 <hr/>
-#### acceptance
+#### acceptance style
+<hr/>
 
 ```java
 import scalikejdbc._

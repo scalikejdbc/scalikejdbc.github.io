@@ -6,6 +6,7 @@ title: SQLInterpolation - ScalikeJDBC
 
 <hr/>
 ### What's SQLInterpolation
+<hr/>
 
 SQLInterpolation is an SQL builder which uses String interpolation since Scala 2.10. Add scalikejbdc-interpolation to libraryDependencies.
 
@@ -35,6 +36,7 @@ select id, name from members where id = ?
 
 <hr/>
 ### SQLSyntax
+<hr/>
 
 `SQLSyntax` is not a binding parameter but a part of SQL. You can create a `SQLSyntax` object with sqls"" String interpolation.
 
@@ -54,6 +56,7 @@ Don't worry again, this code is safely protected. `sqls""` always treats externa
 
 <hr/>
 ### SQLSyntaxSupport
+<hr/>
 
 SQLSyntaxSupport is one step short of ORM. In other words, it's a powerful DRY way to write SQL.
 
@@ -128,6 +131,7 @@ It seems to be natural that `${m.result.*}` is converted to listing all the colu
 
 <hr/>
 #### Why is ${m.result.*} transformed to listing all the columns?
+<hr/>
 
 In spite of column names are not defined anywhere, `${m.result.*}` is converted to listing all the column names. The secret is that laoding from metadata (and they will be cached) when first access to the table. It's possible to obtain all column names as a `Seq[String]` value via `columns`.
 
@@ -142,12 +146,13 @@ object GroupMember extends SQLSyntaxSupport[GroupMember] {
 
 <hr/>
 #### Why can we use undefined methods such as m.groupId?
+<hr/>
 
 By Type Dynamic (SIP-17) since Scala 2.10.0, you can call undefined methods such as `m.groupId`. Type Dynamic is similar to Ruby's method_missing.
 
 [https://docs.google.com/document/d/1XaNgZ06AR7bXJA9-jHrAiBVUwqReqG4-av6beoLaf3U](https://docs.google.com/document/d/1XaNgZ06AR7bXJA9-jHrAiBVUwqReqG4-av6beoLaf3U)
 
-When you call camel case fields, it will actually be transformed to the column name as an underscore separated string. If the column name doesn't exist in the columns, `InvalidColumnNameException` will be thrown.
+When you call camel case fields, it will actually be transformed to column name as an underscore separated string. If column name doesn't exist in columns, `InvalidColumnNameException` will be thrown.
 
 Before that, the case case field name should be the same as any of the primary constructor arg names of type `A` of `SQLSyntaxSupport[A]`. The validation for this rule works in compilation phase with the power of Scala macros.
 
@@ -178,6 +183,7 @@ object Event extends SQLSyntaxSupport[Event] {
 
 <hr/>
 #### What is the difference between m.id, m.result.id and m.resultName.id?
+<hr/>
 
 For instance, `m`'s APIs of `val m = Member.syntax("mm")` means as follows:
 
@@ -237,6 +243,7 @@ object Member extends SQLSyntaxSupport[Member] {
 
 <hr/>
 #### Use Case: SQLSyntaxSupport with table sharding
+<hr/>
 
 If you have multiple tables for same entity. For example, `orders_2011`, `orders_2012` and `orders_2013`.
 

@@ -6,6 +6,7 @@ title: Transaction - ScalikeJDBC
 
 <hr/>
 ### #readOnly block / session
+<hr/>
 
 Executes query in read-only mode.
 
@@ -33,6 +34,7 @@ DB readOnly { implicit session =>
 
 <hr/>
 ### #autoCommit block / session
+<hr/>
 
 Executes query / update in auto-commit mode.
 
@@ -54,6 +56,7 @@ try {
 
 <hr/>
 ### #localTx block
+<hr/>
 
 Executes query / update in block-scoped transactions.
 
@@ -70,8 +73,10 @@ val count = DB localTx { implicit session =>
 
 <hr/>
 ### #withinTx block / session
+<hr/>
 
 Executes query / update in already existing transactions.
+
 In this case, all the transactional operations (such as `Tx#begin()`, `Tx#rollback()` or `Tx#commit()`) should be managed by users of ScalikeJDBC.
 
 ```java

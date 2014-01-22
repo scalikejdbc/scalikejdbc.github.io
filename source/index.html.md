@@ -2,13 +2,54 @@
 
 <hr/>
 ## Just write SQL and get things done!
+<hr/>
 
-ScalikeJDBC is a tidy SQL-based DB access library for Scala developers.
-This library naturally wraps JDBC APIs and provides you easy-to-use APIs.
+ScalikeJDBC is a tidy SQL-based DB access library for Scala developers. This library naturally wraps JDBC APIs and provides you easy-to-use and very flexible APIs. What's more, QueryDSL makes your code type-safe and reusable.
+
 ScalikeJDBC is a practical and production-ready one. Use this library for your real projects.
+
+### Working on the JDBC layer 
+
+Whether you like it or not, JDBC is a stable standard interface. Since most of RDBMS supports JDBC interface, we can access RDBMS in the same way. We never release without passing all the unit tests with the following RDBMS.
+
+- PostgreSQL
+- MySQL
+- H2 Database Engine
+- HSQLDB
+
+We believe that ScalikeJDBC basically works with any other RDBMS (Oracle, SQL Server and so on).
+
+### Amazon Reshift, Facebook Presto also supports JDBC
+
+If you can access some datastore via JDBC interface, that means you can access them via ScalikeJDBC too.
+
+Recently, [Amazon Redshift](http://docs.aws.amazon.com/redshift/latest/dg/c_redshift-postgres-jdbc.html) and [Facebook Presto](https://github.com/facebook/presto/tree/master/presto-jdbc) support JDBC interface. You can access them via ScalikeJDBC!
+
+### Less dependencies
+
+Core part of ScalikeJDBC has so less dependencies that you won't be bothered by dependency hell.
+
+- JDBC Drivers you need
+- Commons DBCP
+- Joda Time 2.x
+- SLF4J API
+
+Of course, you can use c3p0 (or others) instead of commons-dbcp though ConnectionPool implementation for that isn't provided by default.
+
+### Non-blocking?
+
+Unfortunately, no. Indeed, JDBC drivers block on socket IO. So using them to talk with RDBMS in async event driven archetecture may not be appropriate. However, actually most of real world applications don't need event-driven archetecture yet. JDBC is still important infrastructure for apps on the JVM.
+
+If you really prefer non-blocking database access, take a look at ScalikeJDBC-Async. It provides non-blocking APIs to talk with PostgreSQL and MySQL in the JDBC way. 
+
+https://github.com/scalikejdbc/scalikejdbc-async
+
+ScalikeJDBC-Async is still in the alpha stage. If you don't have motivation to investigate or fix issues by yourself, we recommend you waiting until stable version release someday.
+
 
 <hr/>
 ## Getting Started
+<hr/>
 
 All you need to do is just adding ScalikeJDBC, JDBC driver & slf4j implementation. 
 
@@ -21,7 +62,24 @@ libraryDependencies ++= Seq(
 )
 ```
 
-#### First example
+<hr/>
+## Try Typesafe Activator Template
+<hr/>
+
+![Typesafe](images/typesafe.png)
+
+You can try a [Play framework](http://www.playframework.com/) example app which uses ScalikeJDBC on [Typesafe Activator](http://typesafe.com/activator).
+
+This is a good example to learn how to use ScalikeJDBC.
+
+Activator page: [Hello ScalikeJDBC!](http://typesafe.com/activator/template/scalikejdbc-activator-template)
+
+See on GitHub: [scalikejdbc/hello-scalikejdbc](https://github.com/scalikejdbc/hello-scalikejdbc)
+
+
+<hr/>
+## First example
+<hr/>
 
 Put above dependencies into your `build.sbt` and run `sbt console` now.
 
@@ -67,66 +125,19 @@ val members: List[Member] = sql"select * from members".map(rs => Member(rs)).lis
 
 How did it go? If you'd like to know more details or practical examples, see documentation.
 
-#### Typesafe Activator
-
-![Typesafe](images/typesafe.png)
-
-You can try a [Play framework](http://www.playframework.com/) sample app which uses ScalikeJDBC on [Typesafe Activator](http://typesafe.com/activator).
-
-Activator page: [Hello ScalikeJDBC!](http://typesafe.com/activator/template/scalikejdbc-activator-template)
-
-See on GitHub: [scalikejdbc/hello-scalikejdbc](https://github.com/scalikejdbc/hello-scalikejdbc)
-
 <hr/>
 ## ScalikeJDBC in 5 minutes
+<hr/>
 
 Here is a presentation for beginners which shows overview of ScalikeJDBC in 5 minutes.
 
-<hr/>
 <div style="width: 50%">
 <script async class="speakerdeck-embed" data-id="5a0fa5b0b4df0130946402d040a74214" src="//speakerdeck.com/assets/embed.js"></script>
 </div>
 
 
-
 <hr/>
-## Overview
-
-<hr/>
-### JDBC is the standard SQL interface on the JVM
-
-Whether you like it or not, JDBC is a stable standard interface. Since most of RDBMS supports JDBC interface, we can access RDBMS in the same way.
-
-We never release without passing all the unit tests with the following RDBMS.
-
-- PostgreSQL
-- MySQL
-- H2 Database Engine
-- HSQLDB
-
-We believe that ScalikeJDBC basically works with any other RDBMS (Oracle, SQL Server and so on).
-
-#### Non-blocking?
-
-Unfortunately, no. Indeed, JDBC drivers block on socket IO. So using them to talk with RDBMS in async event driven archetecture may not be appropriate. But actually most of real world applications don't need event-driven archetecture yet. JDBC is still important infrastructure for apps on the JVM.
-
-#### Amazon Reshift, Facebook Presto and then...
-
-If you can access some datastore via JDBC interface, that means you can access them via ScalikeJDBC too. Recently, [Amazon Redshift](http://docs.aws.amazon.com/redshift/latest/dg/c_redshift-postgres-jdbc.html) and [Facebook Presto](https://github.com/facebook/presto/tree/master/presto-jdbc) support JDBC interface. You can access them via ScalikeJDBC!
-
-
-<hr/>
-### Less dependencies
-
-Core part of ScalikeJDBC has so less dependencies that you won't be bothered by dependency hell.
-
-- JDBC Drivers that you need
-- Commons DBCP
-- Joda Time 2.x
-- SLF4J API
-
-Of course, you can use c3p0 (or others) instead of commons-dbcp though ConnectionPool implementation for that isn't provided by default.
-
+## Quick Tour
 
 <hr/>
 ### Using only Scala standard API & SQL
@@ -260,11 +271,12 @@ See in detail: [/documentation/reverse-engineering](documentation/reverse-engine
 <hr/>
 ### Play Framework Support
 
-![Play framework](images/play.png)
-
 You can use ScalikeJDBC with Play framework 2 seamlessly. We promise you that it becomes more productive when using together with scalikejdbc-mapper-generator.
 
 See in detail: [/documentation/playframework-support](documentation/playframework-support.html)
+
+![Play framework](images/play.png)
+
 
 <hr/>
 ## License

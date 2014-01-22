@@ -6,13 +6,15 @@ title: One-to-X API - ScalikeJDBC
 
 <hr/>
 ### Why One-to-x APIs are needed?
+<hr/>
 
 Users can write all the mapping operations by using `#map` or `#foldLeft`... with a lot of boilerplate code.
 
 ScalikeJDBC provides you some useful APIs to map results to objects.
 
 <hr/>
-### one-to-many
+### One-To-Many / One-To-Manies
+<hr/>
 
 Simple example:
 
@@ -60,7 +62,8 @@ val groups: List[Group] = withSQL {
 ```
 
 <hr/>
-### one-to-one
+### One-To-One
+<hr/>
 
 `one.toOne` for inner join queries.
 
@@ -123,7 +126,8 @@ val groups: List[Group] = withSQL {
 ```
 
 <hr/>
-### Entity equality
+### About Entity Equality
+<hr/>
 
 In most cases, you will use case classes for entities. And basically it works fine. However, as you know, Scala (under 2.11) has 22 limitation and you cannot create a case class with more thatn 22 parameters. If your table has more than 22 columns, you need to create a normal class like this:
 

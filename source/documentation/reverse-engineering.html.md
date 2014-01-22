@@ -5,12 +5,14 @@ title: Reverse Engineering - ScalikeJDBC
 ## Reverse Engineering
 
 <hr/>
-### How to setup
+### How to Setup
+<hr/>
 
 See [/documentation/setup](/documentation/setup.html).
 
 <hr/>
-### Sbt command
+### Sbt Command
+<hr/>
 
 ```sh
 sbt "scalikejdbc-gen [table-name (class-name)]"
@@ -24,7 +26,8 @@ sbt "scalikejdbc-gen companies Company"
 ```
 
 <hr/>
-### Output example
+### Output Example
+<hr/>
 
 From the following table:
 

@@ -6,8 +6,10 @@ title: Auto Session - ScalikeJDBC
 
 <hr/>
 ### Why AutoSession?
+<hr/>
 
 Basic usage of ScalikeJDBC is using `DB.autoCommit/readOnly/localTx/withinTx { ...}` blocks.
+
 However, if you'd like to re-use methods, they might not be available.
 
 ```java
@@ -18,6 +20,7 @@ def findById(id: Long) = DB readOnly {
 ```
 
 When you use the above method in a transaction block, the code won't work as you expected.
+
 The reason is that since `#findById(Long)` uses another session(=connection), it couldn't access uncommitted data.
 
 ```java
@@ -74,3 +77,13 @@ If you do the same with `NamedDB`, use `NamedAutoSession` as follows.
 def findById(id: Long)(implicit session: DBSession = NamedAutoSession('named)) =
   sql"select id, name from members where id = ${id}"
 ```
+
+<hr/>
+### ReadOnlyAutoSession
+<hr/>
+
+Since version 1.7.4, `ReadOnlyAutoSession` and `NamedReadOnlyAutoSession` is also available. 
+
+These auto sessions disallow update/execute operations.
+
+

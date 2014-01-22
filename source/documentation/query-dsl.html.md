@@ -6,6 +6,7 @@ title: QueryDSL - ScalikeJDBC
 
 <hr/>
 ### Introduction
+<hr/>
 
 Since version 1.6.0, Query DSL is newly added. It's much readable and type-safe DSL.
 
@@ -56,6 +57,7 @@ val members = withSQL { select.from(Member as m) }.map(Member(m)).list.apply()
 
 <hr/>
 ### QueryDSL Reference
+<hr/>
 
 FYI: You can find some example in QueryDSL's test code:
 
@@ -67,6 +69,7 @@ FYI: You can find some example in QueryDSL's test code:
 
 <hr/>
 #### Join queries
+<hr/>
 
 ```java
 val orders: List[Order] = withSQL {
@@ -89,6 +92,7 @@ val orders: List[Order] = withSQL {
 
 <hr/>
 #### Dynamic query building
+<hr/>
 
 ```java
 def findOrder(id: Long, accountRequired: Boolean) = withSQL {
@@ -119,6 +123,7 @@ val ids = withSQL {
 
 <hr/>
 #### in clause
+<hr/>
 
 ```java
 val inClauseResults = withSQL {
@@ -129,6 +134,7 @@ val inClauseResults = withSQL {
 
 <hr/>
 #### exists/notExists clause
+<hr/>
 
 ```java
 withSQL {
@@ -148,6 +154,7 @@ withSQL {
 
 <hr/>
 #### between
+<hr/>
 
 ```java
 withSQL {
@@ -157,6 +164,7 @@ withSQL {
 
 <hr/>
 #### distinct count
+<hr/>
 
 ```java
 import sqls.{ distinct, count }
@@ -167,6 +175,7 @@ val productCount = withSQL {
 
 <hr/>
 #### group by queries
+<hr/>
 
 ```java
 import sqls.count
@@ -179,6 +188,7 @@ withSQL {
 
 <hr/>
 #### union, unionAll queries
+<hr/>
 
 ```java
 withSQL {
@@ -190,6 +200,7 @@ withSQL {
 
 <hr/>
 #### Sub-queries
+<hr/>
 
 ```java
 import SQLSyntax.{ sum, gt }
@@ -205,6 +216,7 @@ val preferredClients: List[(Int, Int)] = withSQL {
 
 <hr/>
 #### Insert
+<hr/>
 
 ```java
 withSQL {
@@ -234,6 +246,7 @@ applyUpdate {
 
 <hr/>
 #### Insert select
+<hr/>
 
 ```java
 case class Product(id: Int, name: Option[String], price: Int)
@@ -249,6 +262,7 @@ withSQL {
 
 <hr/>
 #### Delete
+<hr/>
 
 ```java
 withSQL {
@@ -258,6 +272,7 @@ withSQL {
 
 <hr/>
 #### Update
+<hr/>
 
 ```java
 withSQL {
@@ -270,6 +285,7 @@ withSQL {
 
 <hr/>
 #### Avoiding Method Name Conflict
+<hr/>
 
 For example, if your code already uses `select`, `insert` or `update` as method name, name confliction occurs.
 

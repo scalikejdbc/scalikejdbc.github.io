@@ -6,11 +6,13 @@ title: Query Inspector - ScalikeJDBC
 
 <hr/>
 ### Checking the actual SQL and timing
+<hr/>
 
 Using LogginSQLAndTime feature, you can check the actual SQL(not exactly) and time.
 
 <hr/>
 ### Settings
+<hr/>
 
 ```java
 import scalikejdbc._
@@ -24,7 +26,8 @@ GlobalSettings.loggingSQLAndTime = LoggingSQLAndTimeSettings(
 ```
 
 <hr/>
-### Output
+### Output Example
+<hr/>
 
 For example, logging as follows:
 
@@ -56,6 +59,7 @@ For example, logging as follows:
 
 <hr/>
 ### Single Line Mode
+<hr/>
 
 If you don't need stack trace logging and just print SQL in single line, use `singleLineMode = true`.
 
@@ -74,7 +78,8 @@ In this case, logging as follows:
 ```
 
 <hr/>
-### Sending data to external services
+### Not Only Logging
+<hr/>
 
 You can use hooks such as `GlobalSettings.queryCompletionListener` and `GlobalSettings.queryFailureListener`.
 

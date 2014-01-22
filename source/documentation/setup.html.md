@@ -11,6 +11,7 @@ ScalikeJDBC libraries are available on the Maven central repository.
 
 <hr/>
 ### Core Library & Interpolation
+<hr/>
 
 Add latest version into your `build.sbt` or `project/Build.scala`. Don't forget JDBC driver and slf4j implementation.
 
@@ -33,6 +34,7 @@ import scalikejdbc._, SQLInterpolation._
 
 <hr/>
 ### Testing Support
+<hr/>
 
 Using `scalikejdbc-test` is highly recommended to improve your application.
 
@@ -50,6 +52,7 @@ Usage: [/documentation/testing](/documentation/testing.html)
 
 <hr/>
 ### Typesafe Config Reader
+<hr/>
 
 If you use `application.conf` as settings file, add `scalikejdbc-config` too.
 
@@ -67,6 +70,7 @@ Usage: [/documentation/configuration](/documentation/configuration.html)
 
 <hr/>
 ### Reverse Engineering
+<hr/>
 
 ScalikeJDBC support reverse engineering Scala code from existing database.
 You need to setup an sbt plugin named `scalikejdbc-mapper-generator`.
@@ -108,6 +112,7 @@ Usage: [/documentation/reverse-engineering](/documentation/reverse-engineering.h
 
 <hr/>
 ### Play Framework Integration
+<hr/>
 
 Add `scalikejdbc-play-plugin` and `scalikejdbc-play-fixture-plugin` (optional) as Play plugins.
 
@@ -141,6 +146,7 @@ Usage: [/documentation/playframework-support](/documentation/playframework-suppo
 
 <hr/>
 ### dbconsole
+<hr/>
 
 A simple console to connect database via JDBC.
 

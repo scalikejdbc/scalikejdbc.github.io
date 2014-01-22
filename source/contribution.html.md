@@ -6,18 +6,21 @@ title: Contribution - ScalikeJDBC
 
 <hr/>
 ### Contributers' Guide
+<hr/>
 
 First, see the following guideline:
 
 [CONTRIBUTING.md](https://github.com/scalikejdbc/scalikejdbc/blob/develop/CONTRIBUTING.md)
 
 <hr/>
-### How to contribute scalikejdbc.org?
+### Website
+<hr/>
 
 #### fork scalikejdbc.github.io project
 
 Fork [https://github.com/scalikejdbc/scalikejdbc.github.io](https://github.com/scalikejdbc/scalikejdbc.github.io).
 
+<hr/>
 #### change under the website directory
 
 How to debug:
@@ -32,13 +35,15 @@ bundle exec middleman server
 
 Access `http://localhost:4567/` from your browser.
 
+<hr/>
 #### make a pull request
 
 Create a branch to request, and send your pull request to `develop` branch (not `master` branch).
 
 
 <hr/>
-### How to contribute libraries?
+### Libraries
+<hr/>
 
 #### fork scalikejdbc project
 
@@ -46,14 +51,17 @@ Fork [https://github.com/scalikejdbc/scalikejdbc](https://github.com/scalikejdbc
 
 git clone [your forked repository].
 
+<hr/>
 #### modify and write tests
 
 Modify code & write test.
 
-#### run all the existing tests
+<hr/>
+### run all the existing tests
 
 Run all the tests at least with H2 database.
 
+<hr/>
 #### make a pull request
 
 Create a branch to request, and send your pull request to `develop` branch (not `master` branch).
@@ -63,6 +71,7 @@ Create a branch to request, and send your pull request to `develop` branch (not 
 
 <hr/>
 #### Commits
+<hr/>
 
 - [Kazuhiro Sera (@seratch)](https://github.com/seratch)
 - [Manabu Nakamura (@gakuzzzz)](https://github.com/gakuzzzz)
@@ -79,6 +88,7 @@ Create a branch to request, and send your pull request to `develop` branch (not 
 
 <hr/>
 ### Issue Report, Wiki maintenance or any feedback
+<hr/>
 
 - [Aktau (@Aktau)](https://github.com/Aktau)
 - [janihur (@janihur)](https://github.com/janihur)

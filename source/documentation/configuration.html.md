@@ -8,7 +8,8 @@ title: Configuration - ScalikeJDBC
 The following 3 things should be configured.
 
 <hr/>
-### JDBC Driver
+### Loading JDBC Drivers
+<hr/>
 
 In advance, JDBC drivers must be loaded by using
 
@@ -26,8 +27,9 @@ If you use `scalikejdbc-config` or `scalikejdbc-play-plugin`, they do the legacy
 
 <hr/>
 ### Connection Pool Settings
+<hr/>
 
-ConnectionPool should be initialized on startu.
+ConnectionPool should be initialized when starting your applications.
 
 ```java
 import scalikejdbc._
@@ -83,6 +85,7 @@ FYI: [Source Code](https://github.com/scalikejdbc/scalikejdbc/blob/master/scalik
 
 <hr/>
 ### Global Settings
+<hr/>
 
 Global settings for logging for query inspection and so on.
 
@@ -100,7 +103,8 @@ object GlobalSettings {
 FYI: [Source Code](https://github.com/scalikejdbc/scalikejdbc/blob/master/scalikejdbc-library/src/main/scala/scalikejdbc/GlobalSettings.scala)
 
 <hr/>
-### Using scalikejdbc-config
+### scalikejdbc-config
+<hr/>
 
 If you use `scalikejdbc-config` which is an easy-to-use configuration loader for ScalikeJDBC which reads typesafe config, configuration is much simple.
 
@@ -153,7 +157,8 @@ DBs.closeAll()
 ```
 
 <hr/>
-### Using scalikejdbc-config with environment
+### scalikejdbc-config with Environment
+<hr/>
 
 It's also possible to add prefix(e.g. environment).
 
@@ -183,7 +188,8 @@ DBsWithEnv("prod").setup('sandbox)
 ```
 
 <hr/>
-### Using scalikejdbc-config for Global Settings
+### scalikejdbc-config for Global Settings
+<hr/>
 
 The following settings are available.
 
