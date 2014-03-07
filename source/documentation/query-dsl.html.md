@@ -127,8 +127,7 @@ val ids = withSQL {
 
 ```java
 val inClauseResults = withSQL {
-  select.from(Order as o)
-    .where.in(o.id, Seq(1, 2,3))
+  select.from(Order as o).where.in(o.id, Seq(1, 2, 3))
 }.map(Order(o)).list.apply()
 ```
 
