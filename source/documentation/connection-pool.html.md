@@ -92,6 +92,29 @@ def finalize() = {
 ### Replacing ConnectionPool on Runtime
 <hr/>
 
+You can replace ConnectionPool settings safely on runtime. 
+
+The old pool won't be abandoned until all the borrwoed connections are closed.
+
+```java
+def doSomething = {
+  ConnectionPool.singleton("jdbc:h2:mem:db1", "user", "pass")
+  DB localTx { implicit s =>
+    // long transaction...
+
+    // overwrite singleton CP
+    ConnectionPool.singleton("jdbc:h2:mem:db2", "user", "pass")
+
+    // db1 connection pool is still available until this trancation is commited.
+    // Newly borrowed connections will access db2.
+  }
+}
+```
+
+<hr/>
+### Using Another ConnectionPool Implementation
+<hr/>
+
 If you want to use another one which is not Commons DBCP as the connection provider, You can also specify your own `ConnectionPoolFactory` as follows:
 
 ```java

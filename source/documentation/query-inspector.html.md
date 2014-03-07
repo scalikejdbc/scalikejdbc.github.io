@@ -83,6 +83,8 @@ In this case, logging as follows:
 
 You can use hooks such as `GlobalSettings.queryCompletionListener` and `GlobalSettings.queryFailureListener`.
 
+For instance, the following example will send information about slow queries to Fluentd.
+
 ```java
 import org.fluentd.logger.scala._
 val logger = FluentLoggerFactory.getLogger("scalikejdbc")
