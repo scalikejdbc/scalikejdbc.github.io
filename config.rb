@@ -51,7 +51,8 @@ set :js_dir, 'javascripts'
 
 set :images_dir, 'images'
 
-activate :syntax, :anchorlinenos => true
+#activate :syntax, :anchorlinenos => true
+activate :syntax
 
 set :markdown_engine, :redcarpet
 set :markdown, fenced_code_blocks: true, smartypants: true, autolink: true, with_toc_data: true
