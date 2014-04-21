@@ -17,7 +17,7 @@ val names = DB readOnly { implicit session =>
 
 val session = DB.readOnlySession
 try {
-  val names = sql"select name from emp").map { rs => rs.string("name") }.list.apply()
+  val names = sql"select name from emp".map { rs => rs.string("name") }.list.apply()
   // do something
 } finally {
   session.close()
@@ -28,7 +28,7 @@ Of course, `update` operations in read-only mode will cause `java.sql.SQLExcepti
 
 ```java
 DB readOnly { implicit session =>
-  sql"update emp set name = ${name} where id = ${id}").update.apply()
+  sql"update emp set name = ${name} where id = ${id}".update.apply()
 } // will throw java.sql.SQLException
 ```
 
@@ -40,7 +40,7 @@ Executes query / update in auto-commit mode.
 
 ```java
 val count = DB autoCommit { implicit session =>
-  sql"update emp set name = ${name} where id = ${id}").update.apply()
+  sql"update emp set name = ${name} where id = ${id}".update.apply()
 }
 ```
 
@@ -49,8 +49,8 @@ When using autoCommitSession, every operation will be executed in auto-commit mo
 ```java
 implicit val session = DB.autoCommitSession
 try {
-  sql"update emp set name = ${name1} where id = ${id1}").update.apply() // auto-commit
-  sql"update emp set name = ${name2} where id = ${id2}").update.apply() // auto-commit
+  sql"update emp set name = ${name1} where id = ${id1}".update.apply() // auto-commit
+  sql"update emp set name = ${name2} where id = ${id2}".update.apply() // auto-commit
 } finally { session.close() }
 ```
 
