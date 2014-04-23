@@ -45,7 +45,7 @@ val settings = ConnectionPoolSettings(
   validationQuery = "select 1 from dual")
 
 // all the connections are released, old connection pool will be abandoned
-ConnectionPool.add('foo, user, password, settings)
+ConnectionPool.add('foo, url, user, password, settings)
 ```
 
 When you use external DataSource (e.g. application server's connection pool), use javax.sql.DataSource via JNDI:
