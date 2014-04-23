@@ -36,7 +36,7 @@ import scalikejdbc._
 
 // after loading JDBC drivers
 ConnectionPool.singleton(url, user, password)
-ConnectionPool.add('foo, user, password)
+ConnectionPool.add('foo, url, user, password)
 
 val settings = ConnectionPoolSettings(
   initialSize = 5,
