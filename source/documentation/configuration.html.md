@@ -80,7 +80,7 @@ case class ConnectionPoolSettings(
   validationQuery: String)
 ```
 
-FYI: [Source Code](https://github.com/scalikejdbc/scalikejdbc/blob/master/scalikejdbc-library/src/main/scala/scalikejdbc/ConnectionPool.scala)
+FYI: [Source Code](https://github.com/scalikejdbc/scalikejdbc/blob/master/scalikejdbc-core/src/main/scala/scalikejdbc/ConnectionPool.scala)
 
 
 <hr/>
@@ -100,7 +100,7 @@ object GlobalSettings {
 }
 ```
 
-FYI: [Source Code](https://github.com/scalikejdbc/scalikejdbc/blob/master/scalikejdbc-library/src/main/scala/scalikejdbc/GlobalSettings.scala)
+FYI: [Source Code](https://github.com/scalikejdbc/scalikejdbc/blob/master/scalikejdbc-core/src/main/scala/scalikejdbc/GlobalSettings.scala)
 
 <hr/>
 ### scalikejdbc-config
