@@ -85,6 +85,11 @@ Create a branch to request, and send your pull request to `develop` branch (not 
 - [Yusuke Arakaki (@Arakaki)](https://github.com/Arakaki)
 - [ynomura (@kihn)](https://github.com/kihn)
 - [Takeshi Hagikura (@hagikuratakeshi)](https://github.com/hagikuratakeshi)
+- [Takuya Fujimura (@tlync)](https://github.com/tlync)
+- [Shun Ozaki (@wozaki)](https://github.com/wozaki)
+- [kalinichenko (@kalinichenko)](https://github.com/kalinichenko)
+- [Takashi Kawachi (@tkawachi)](https://github.com/tkawachi)
+- [todesking (@todesking)](https://github.com/todesking)
 
 <hr/>
 ### Issue Report, Wiki maintenance or any feedback
