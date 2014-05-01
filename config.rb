@@ -60,9 +60,9 @@ set :markdown, fenced_code_blocks: true, smartypants: true, autolink: true, with
 I18n.enforce_available_locales = false
 
 # Latest Skinny Framework version
-@version = "1.7.5"
+@version = "1.7.7"
 set :version, @version
-@latest_version = "[1.7,)"
+@latest_version = "1.7.7"
 set :latest_version, @latest_version
 
 # Build-specific configuration
