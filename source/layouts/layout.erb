@@ -6,7 +6,7 @@
     <!-- Use title if it's in the page YAML frontmatter -->
     <title><%= current_page.data.title || "ScalikeJDBC" %></title>
     <script type="text/javascript" src="//codeorigin.jquery.com/jquery-1.10.2.min.js"></script>
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.1/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"/>
     <%= stylesheet_link_tag "all" %>
     <%= javascript_include_tag  "all" %>
   </head>
@@ -14,11 +14,9 @@
     <div class="container">
     <div class="navbar" role="navigation">
       <div class="container">
-        <div class="navbar-header">
-          <a class="navbar-brand" href="/"><%= tag :img, :src => "/images/logo_small.png" %></a>
-        </div>
         <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
+            <li><a class="navbar-brand" href="/">ScalikeJDBC</a></li>
             <li class="dropdown">
               <a href="/documentation" class="dropdown-toggle" data-toggle="dropdown">Documentation&nbsp;<b class="caret"></b></a>
               <ul class="dropdown-menu">
@@ -42,14 +40,13 @@
             <li><a href="http://typesafe.com/activator/template/scalikejdbc-activator-template">Typesafe Activator</a></li>
             <li><a href="https://groups.google.com/group/scalikejdbc-users-group">Users Group</a></li>
             <li><a href="https://github.com/scalikejdbc/scalikejdbc">GitHub</a></li>
-            <li><a href="https://travis-ci.org/scalikejdbc/scalikejdbc"><img src="https://travis-ci.org/scalikejdbc/scalikejdbc.png?branch=develop" alt="Travis CI"/></a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
     </div>
         <div class="col-xs-2">
           <div class="content small">
-            <h5>Documentation</h5>
+            <h5>Contents</h5>
             <hr/>
             <p><%= link_to 'Setup', '/documentation/setup.html' %></p>
             <p><%= link_to 'Configuration', '/documentation/configuration.html' %></p>
@@ -82,7 +79,7 @@
         </div>
       </div>
     </div>
-    <script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.0.1/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
   </body>
 </html>
 
