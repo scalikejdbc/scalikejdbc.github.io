@@ -15,14 +15,14 @@ See [/documentation/setup](/documentation/setup.html).
 <hr/>
 
 ```sh
-sbt "scalikejdbcGen [table-name (class-name)]"
+sbt "scalikejdbc-gen [table-name (class-name)]"
 ```
 
 e.g.
 
 ```sh
-sbt "scalikejdbcGen company"
-sbt "scalikejdbcGen companies Company"
+sbt "scalikejdbc-gen company"
+sbt "scalikejdbc-gen companies Company"
 ```
 
 <hr/>

@@ -28,6 +28,8 @@
 # proxy "/this-page-has-no-template.html", "/template-file.html", :locals => {
 #  :which_fake_page => "Rendering a fake page with a local variable" }
 
+page "/documentation/1.x/*", :layout => "1.x"
+
 ###
 # Helpers
 ###
@@ -60,10 +62,17 @@ set :markdown, fenced_code_blocks: true, smartypants: true, autolink: true, with
 I18n.enforce_available_locales = false
 
 # Latest Skinny Framework version
-@version = "1.7.7"
-set :version, @version
-@latest_version = "1.7.7"
+@latest_version = "2.0.0-RC3"
+@latest_play_support_version = "2.2.0-RC"
+@v1_version = "1.7.7"
+
+set :version,        @latest_version
 set :latest_version, @latest_version
+set :latest_play_support_version, @latest_play_support_version
+set :v1_version,        @v1_version
+set :v1_latest_version, @v1_version
+set :h2_version,        "1.4.177"
+set :logback_version,   "1.1.2"
 
 # Build-specific configuration
 configure :build do

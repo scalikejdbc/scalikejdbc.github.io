@@ -14,9 +14,7 @@ See [/documentation/setup](/documentation/setup.html).
 ### For ScalaTest Users
 <hr/>
 
-`AutoRollback` trait provides automatic rollback after each test and data fixture. 
-
-NOTICE: scalikejdbc-test is compatible with ScalaTest 2.0 or higher.
+`AutoRollback` trait provides automatic rollback after each test and data fixture.
 
 ```scala
 import scalikejdbc._

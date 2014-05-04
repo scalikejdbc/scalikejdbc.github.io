@@ -136,7 +136,7 @@ db.legacy.password="bar"
 After just calling `scalikejdbc.config.DBs.setupAll()`, Connection pools are prepared.
 
 ```scala
-import scalikejdbc._
+import scalikejdbc._, SQLInterpolation._
 import scalikejdbc.config._
 
 DBs.setupAll()
@@ -200,9 +200,6 @@ scalikejdbc.global.loggingSQLAndTime.logLevel=info
 scalikejdbc.global.loggingSQLAndTime.warningEnabled=true
 scalikejdbc.global.loggingSQLAndTime.warningThresholdMillis=1000
 scalikejdbc.global.loggingSQLAndTime.warningLogLevel=warn
-scalikejdbc.global.loggingSQLAndTime.singleLineMode=false
-scalikejdbc.global.loggingSQLAndTime.printUnprocessedStackTrace=false
-scalikejdbc.global.loggingSQLAndTime.stackTraceDepth=10
 ```
 
 

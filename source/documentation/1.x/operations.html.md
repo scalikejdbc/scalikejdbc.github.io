@@ -17,7 +17,7 @@ There are various query APIs. All of them (`single`, `first`, `list` and `foreac
 `single` returns matched single row as an `Option` value. If matched rows is not single, Exception will be thrown.
 
 ```scala
-import scalikejdbc._
+import scalikejdbc._, SQLInterpolation._
 
 val id = 123
 
@@ -52,7 +52,7 @@ val emp: Option[Emp] = DB readOnly { implicit session =>
 
 You can learn about QueryDSL in defail here: 
 
-[/documentation/query-dsl](documentation/query-dsl.html)
+[/documentation/1.x/query-dsl](documentation/1.x/query-dsl.html)
 
 
 <hr/>

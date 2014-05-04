@@ -8,12 +8,16 @@ title: SQLInterpolation - ScalikeJDBC
 ### What's SQLInterpolation
 <hr/>
 
-SQLInterpolation is an SQL builder which uses String interpolation since Scala 2.10. 
+SQLInterpolation is an SQL builder which uses String interpolation since Scala 2.10. Add scalikejbdc-interpolation to libraryDependencies.
+
+```
+libraryDependencies += "org.scalikejdbc" %% "scalikejdbc-interpolation" % "<%= v1_version %>"
+```
 
 The usage is pretty simple - just embedding values into sql"" template without `#bind` or `#bindByName`. It looks really cool.
 
 ```scala
-import scalikejdbc._
+import scalikejdbc._, SQLInterpolation._
 
 val id = 123
 val member = sql"select id, name from members where id = ${id}"
@@ -58,10 +62,10 @@ SQLSyntaxSupport is one step short of ORM. In other words, it's a powerful DRY w
 
 First of all, mix the `SQLSyntaxSupport[A]` trait to `A` companion object, and define `tableName` and `#apply` method to map values from `ResultSet` object in it. The unfamilier `ResultName[A]` are described later.
 
-NOTICE: When you use case classes for entities as follows (Group, GroupMember) everything goes fine. But if you use normal classes for entities, be aware of entity equality. See the following page in detail: [documentation/one-to-x.html](one-to-x.html)
+NOTICE: When you use case classes for entities as follows (Group, GroupMember) everything goes fine. But if you use normal classes for entities, be aware of entity equality. See the following page in detail: [documentation/1.x/one-to-x.html](one-to-x.html)
 
 ```scala
-import scalikejdbc._
+import scalikejdbc._, SQLInterpolation._
 
 case class Group(id: Long, name: String)
 case class GroupMember(id: Long, name: String, 
@@ -282,12 +286,10 @@ DB readOnly { implicit s =>
 #### Use Case: Working with 22+ columns table
 <hr/>
 
-NOTICE: Since Scala 2.11, you can user a case class for 22+ columns table.
-
 Just use normal class and implement `EntityEquality` trait (for one-to-many relations).
 
 ```scala
-import scalikekdbc._
+import scalikekdbc._, SQLInterpolation._
 
 class HugeTable(
   val column1: Long,

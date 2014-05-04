@@ -8,7 +8,7 @@ title: Connection Pool - ScalikeJDBC
 ### Configuration
 <hr/>
 
-See [/documentation/configuration](/documentation/configuration.html)
+See [/documentation/1.x/configuration](/documentation/1.x/configuration.html)
 
 
 <hr/>
@@ -158,54 +158,5 @@ class C3P0ConnectionPool(
 
 implicit val factory = C3P0ConnectionPoolFactory
 ConnectionPool.add('xxxx, url, user, password)
-```
-
-<hr/>
-### Switching ConnectionPool Implementation by configuration
-<hr/>
-
-When `ConnectionPoolFactory` implementation already exists, it's possible to specify it by configuration. By default, commons-dbcp and bonecp are already prepared. When you'd like to add another `ConnectionPoolFactory`, call repository's add method like this:
-
-```scala
-scalikejdbc.ConnectionPoolFactoryRepository.add("name", YourConnectionPoolFactory)
-```
-
-<hr/>
-#### Default: commons-dbcp
-
-http://commons.apache.org/proper/commons-dbcp/
-
-```scala
-ConnectionPool.add('dbcp, url, user, password, 
-  ConnectionPoolSettings(connectionPoolFactoryName = "commons-dbcp"))
-```
-
-<hr/>
-#### BoneCP
-
-http://jolbox.com/
-
-```scala
-ConnectionPool.add('bonecp, url, user, password, 
-  ConnectionPoolSettings(connectionPoolFactoryName = "bonecp"))
-```
-
-<hr/>
-#### HikariCP
-
-http://brettwooldridge.github.io/HikariCP/
-
-HikariCP expects dataSourceClassName. So we recommend using DataSourceConnectionPool.
-
-```scala
-val dataSource: DataSource = {
-  val ds = new HikariDataSource()
-  ds.setDataSourceClassName(dataSourceClassName)
-  ds.addDataSourceProperty("url", url)
-  ds.addDataSourceProperty("user", user)
-  ds.addDataSourceProperty("password", password)
-  ds
-}
-ConnectionPool.add('hikaricp, new DataSourceConnectionPool(dataSource))
 ```
 

@@ -17,18 +17,19 @@ Add latest version into your `build.sbt` or `project/Build.scala`. Don't forget 
 
 If you're still using Scala 2.9, you can't use `scalikejdbc-interpolation`.
 
-```scala
+```
 libraryDependencies ++= Seq(
-  "org.scalikejdbc" %% "scalikejdbc"       % "<%= version %>",
-  "com.h2database"  %  "h2"                % "<%= h2_version %>",
-  "ch.qos.logback"  %  "logback-classic"   % "<%= logback_version %>"
+  "org.scalikejdbc" %% "scalikejdbc"               % "<%= v1_version %>",
+  "org.scalikejdbc" %% "scalikejdbc-interpolation" % "<%= v1_version %>",
+  "com.h2database"  %  "h2"                        % "1.4.177",
+  "ch.qos.logback"  %  "logback-classic"           % "1.1.2"
 )
 ```
 
 In your application, just add the following import.
 
 ```scala
-import scalikejdbc._
+import scalikejdbc._, SQLInterpolation._
 ```
 
 <hr/>
@@ -37,12 +38,13 @@ import scalikejdbc._
 
 Using `scalikejdbc-test` is highly recommended to improve your application.
 
-```scala
+```
 libraryDependencies ++= Seq(
-  "org.scalikejdbc" %% "scalikejdbc"        % "<%= version %>",
-  "org.scalikejdbc" %% "scalikejdbc-test"   % "<%= version %>"   % "test",
-  "com.h2database"  %  "h2"                 % "<%= h2_version %>",
-  "ch.qos.logback"  %  "logback-classic"    % "<%= logback_version %>"
+  "org.scalikejdbc" %% "scalikejdbc"               % "<%= v1_version %>",
+  "org.scalikejdbc" %% "scalikejdbc-interpolation" % "<%= v1_version %>",
+  "org.scalikejdbc" %% "scalikejdbc-test"          % "<%= v1_version %>"   % "test",
+  "com.h2database"  %  "h2"                        % "1.4.177",
+  "ch.qos.logback"  %  "logback-classic"           % "1.1.2"
 )
 ```
 
@@ -54,12 +56,13 @@ Usage: [/documentation/testing](/documentation/testing.html)
 
 If you use `application.conf` as settings file, add `scalikejdbc-config` too.
 
-```scala
+```
 libraryDependencies ++= Seq(
-  "org.scalikejdbc" %% "scalikejdbc"         % "<%= version %>",
-  "org.scalikejdbc" %% "scalikejdbc-config"  % "<%= version %>",
-  "com.h2database"  %  "h2"                  % "<%= h2_version %>",
-  "ch.qos.logback"  %  "logback-classic"     % "<%= logback_version %>"
+  "org.scalikejdbc" %% "scalikejdbc"               % "<%= v1_version %>",
+  "org.scalikejdbc" %% "scalikejdbc-interpolation" % "<%= v1_version %>",
+  "org.scalikejdbc" %% "scalikejdbc-config"        % "<%= v1_version %>",
+  "com.h2database"  %  "h2"                        % "1.4.177",
+  "ch.qos.logback"  %  "logback-classic"           % "1.1.2"
 )
 ```
 
@@ -74,44 +77,35 @@ You need to setup an sbt plugin named `scalikejdbc-mapper-generator`.
 
 ##### project/plugins.sbt
 
-```scala
+```
 // Don't forget adding your JDBC driver
 libraryDependencies += "org.hsqldb" % "hsqldb" % "2.3.2"
 
-addSbtPlugin("org.scalikejdbc" %% "scalikejdbc-mapper-generator" % "<%= @latest_version %>")
+addSbtPlugin("org.scalikejdbc" %% "scalikejdbc-mapper-generator" % "<%= @v1_version %>")
 ```
 
 ##### build.sbt
 
-```scala
+```
 scalikejdbcSettings
 ```
 
 ##### project/scalikejdbc.properties
 
 ```
-# ---
-# jdbc settings
-
 jdbc.driver=org.h2.Driver
 jdbc.url=jdbc:h2:file:db/hello
 jdbc.username=sa
 jdbc.password=
 jdbc.schema=
-
-# ---
-# source code generator settings
-
 generator.packageName=models
 # generator.lineBreak: LF/CRLF
 geneartor.lineBreak=LF
-# generator.template: interpolation/queryDsl
+# generator.template: basic/namedParameters/executable/interpolation/queryDsl
 generator.template=queryDsl
 # generator.testTemplate: specs2unit/specs2acceptance/ScalaTestFlatSpec
 generator.testTemplate=specs2unit
 generator.encoding=UTF-8
-# When you're using Scala 2.11 or higher, you can use case classes for 22+ columns tables
-generator.caseClassOnly=true
 ```
 
 Usage: [/documentation/reverse-engineering](/documentation/reverse-engineering.html)
@@ -120,22 +114,17 @@ Usage: [/documentation/reverse-engineering](/documentation/reverse-engineering.h
 ### Play Framework Integration
 <hr/>
 
-ScalikeJDBC provides two Play plugins to integrate Play2 and ScalikeJDBC. Choose your preferred one.
-
-<hr/>
-#### scalikejdbc-play-plugin
-
-This plugin supports connection pooling too. You don't need `dbplugin` and `evolutionplugin` when using this plugin.
+Add `scalikejdbc-play-plugin` and `scalikejdbc-play-fixture-plugin` (optional) as Play plugins.
 
 ##### project/Build.scala
 
-```scala
+```
 val appDependencies = Seq(
-  "org.scalikejdbc" %% "scalikejdbc"                       % "<%= version %>",
-  "org.scalikejdbc" %% "scalikejdbc-play-plugin"           % "<%= latest_play_support_version %>",
-  "org.scalikejdbc" %% "scalikejdbc-play-fixture-plugin"   % "<%= latest_play_support_version %>", // optional
+  "org.scalikejdbc" %% "scalikejdbc"                     % "<%= v1_version %>",
+  "org.scalikejdbc" %% "scalikejdbc-play-plugin"         % "<%= v1_version %>",
+  "org.scalikejdbc" %% "scalikejdbc-play-fixture-plugin" % "<%= v1_version %>", // optional
   // substitute this for whatever DB driver you're using:
-  "com.h2database"  %  "h2"                                % "<%= h2_version %>"
+  "com.h2database"  %  "h2"                              % "1.4.177"
 )
 ```
 
@@ -154,30 +143,6 @@ If you use fixture-plugin too, PlayFixturePlugin should be loaded after PlayPlug
 
 Usage: [/documentation/playframework-support](/documentation/playframework-support.html)
 
-<hr/>
-#### scalikejdbc-play-dbplugin-adapter
-
-This plugin is an adapter to connect `dbplugin` and ScalikeJDBC.
-
-##### project/Build.scala
-
-```scala
-val appDependencies = Seq(
-  "org.scalikejdbc" %% "scalikejdbc"                       % "<%= version %>",
-  "org.scalikejdbc" %% "scalikejdbc-play-dbplugin-adapter" % "<%= latest_play_support_version %>",
-  "org.scalikejdbc" %% "scalikejdbc-play-fixture-plugin"   % "<%= latest_play_support_version %>", // optional
-  // substitute this for whatever DB driver you're using:
-  "com.h2database"  %  "h2"                                % "<%= h2_version %>"
-)
-```
-
-##### conf/play.plugins
-
-```
-10000:scalikejdbc.PlayDBPluginAdapter
-```
-
-Usage: [/documentation/playframework-support](/documentation/playframework-support.html)
 
 <hr/>
 ### dbconsole
@@ -187,7 +152,7 @@ A simple console to connect database via JDBC.
 
 ##### Mac OS X, Linux
 
-```sh
+```
 curl -L http://git.io/dbconsole | sh
 ```
 

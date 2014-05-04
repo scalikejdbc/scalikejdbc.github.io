@@ -16,16 +16,12 @@ Using LogginSQLAndTime feature, you can check the actual SQL(not exactly) and ti
 
 ```scala
 import scalikejdbc._
-
 GlobalSettings.loggingSQLAndTime = LoggingSQLAndTimeSettings(
   enabled = true,
-  singleLineMode = false,
-  printUnprocessedStackTrace = false,
-  stackTraceDepth= 15,
-  logLevel = 'debug,
-  warningEnabled = false,
-  warningThresholdMillis = 3000L,
-  warningLogLevel = 'warn
+  logLevel = 'DEBUG,
+  warningEnabled = true,
+  warningThresholdMillis = 1000L,
+  warningLogLevel = 'WARN
 )
 ```
 
