@@ -4,17 +4,40 @@ title: Play Framework Support - ScalikeJDBC
 
 ## Play Framework Support
 
-<hr/>
-### How to setup
-
-See [/documentation/setup](/documentation/setup.html).
+ScalikeJDBC provides two Play plugins to integrate Play2 and ScalikeJDBC. Choose your preferred one.
 
 <hr/>
-### Configuration
+### scalikejdbc-play-plugin
+<hr/>
 
-Here is some configuration examples. Basically it's very simple:
+This plugin supports connection pooling too. You don't need `dbplugin` and `evolutionplugin` when using this plugin.
 
-#### conf/application.conf
+##### project/Build.scala
+
+```scala
+val appDependencies = Seq(
+  "org.scalikejdbc" %% "scalikejdbc"                       % "<%= version %>",
+  "org.scalikejdbc" %% "scalikejdbc-play-plugin"           % "<%= latest_play_support_version %>",
+  "org.scalikejdbc" %% "scalikejdbc-play-fixture-plugin"   % "<%= latest_play_support_version %>", // optional
+  // substitute this for whatever DB driver you're using:
+  "com.h2database"  %  "h2"                                % "<%= h2_version %>"
+)
+```
+
+##### conf/play.plugins
+
+```
+10000:scalikejdbc.PlayPlugin
+```
+
+If you use fixture-plugin too, PlayFixturePlugin should be loaded after PlayPlugin:
+
+```
+10000:scalikejdbc.PlayPlugin
+11000:scalikejdbc.PlayFixturePlugin
+```
+
+##### conf/application.conf
 
 ```sh
 # Database configuration
@@ -46,6 +69,7 @@ scalikejdbc.global.loggingSQLAndTime.warningLogLevel=warn
 #scalikejdbc.play.closeAllOnStop.enabled=true
 
 # You can disable the default DB plugin
+# Otherwise, don't disable dbplugin when you use scalikejdbc-play-dbplugin-adapter
 dbplugin=disabled
 evolutionplugin=disabled
 
@@ -53,7 +77,39 @@ evolutionplugin=disabled
 logger.scalikejdbc=DEBUG
 ```
 
-#### Fixtures
+<hr/>
+### scalikejdbc-play-dbplugin-adapter
+<hr/>
+
+This plugin is an adapter to connect `dbplugin` and ScalikeJDBC.
+
+##### project/Build.scala
+
+```scala
+val appDependencies = Seq(
+  "org.scalikejdbc" %% "scalikejdbc"                       % "<%= version %>",
+  "org.scalikejdbc" %% "scalikejdbc-play-dbplugin-adapter" % "<%= latest_play_support_version %>",
+  "org.scalikejdbc" %% "scalikejdbc-play-fixture-plugin"   % "<%= latest_play_support_version %>", // optional
+  // substitute this for whatever DB driver you're using:
+  "com.h2database"  %  "h2"                                % "<%= h2_version %>"
+)
+```
+
+##### conf/play.plugins
+
+```
+10000:scalikejdbc.PlayDBPluginAdapter
+```
+
+##### conf/application.conf
+
+Basically do same as play-plugin. 
+
+NOTICE: Don't disable dbplugin.
+
+<hr/>
+### Fixtures - PlayFixturePlugin
+<hr/>
 
 Fixtures are optional. If you don't nee, no need to use them.
 
@@ -119,6 +175,7 @@ DELETE FROM project_member;
 
 <hr/>
 ### More Examples
+<hr/>
 
 Take a look at Typesafe Activator template:
 

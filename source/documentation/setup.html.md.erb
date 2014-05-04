@@ -120,64 +120,7 @@ Usage: [/documentation/reverse-engineering](/documentation/reverse-engineering.h
 ### Play Framework Integration
 <hr/>
 
-ScalikeJDBC provides two Play plugins to integrate Play2 and ScalikeJDBC. Choose your preferred one.
-
-<hr/>
-#### scalikejdbc-play-plugin
-
-This plugin supports connection pooling too. You don't need `dbplugin` and `evolutionplugin` when using this plugin.
-
-##### project/Build.scala
-
-```scala
-val appDependencies = Seq(
-  "org.scalikejdbc" %% "scalikejdbc"                       % "<%= version %>",
-  "org.scalikejdbc" %% "scalikejdbc-play-plugin"           % "<%= latest_play_support_version %>",
-  "org.scalikejdbc" %% "scalikejdbc-play-fixture-plugin"   % "<%= latest_play_support_version %>", // optional
-  // substitute this for whatever DB driver you're using:
-  "com.h2database"  %  "h2"                                % "<%= h2_version %>"
-)
-```
-
-##### conf/play.plugins
-
-```
-10000:scalikejdbc.PlayPlugin
-```
-
-If you use fixture-plugin too, PlayFixturePlugin should be loaded after PlayPlugin:
-
-```
-10000:scalikejdbc.PlayPlugin
-11000:scalikejdbc.PlayFixturePlugin
-```
-
-Usage: [/documentation/playframework-support](/documentation/playframework-support.html)
-
-<hr/>
-#### scalikejdbc-play-dbplugin-adapter
-
-This plugin is an adapter to connect `dbplugin` and ScalikeJDBC.
-
-##### project/Build.scala
-
-```scala
-val appDependencies = Seq(
-  "org.scalikejdbc" %% "scalikejdbc"                       % "<%= version %>",
-  "org.scalikejdbc" %% "scalikejdbc-play-dbplugin-adapter" % "<%= latest_play_support_version %>",
-  "org.scalikejdbc" %% "scalikejdbc-play-fixture-plugin"   % "<%= latest_play_support_version %>", // optional
-  // substitute this for whatever DB driver you're using:
-  "com.h2database"  %  "h2"                                % "<%= h2_version %>"
-)
-```
-
-##### conf/play.plugins
-
-```
-10000:scalikejdbc.PlayDBPluginAdapter
-```
-
-Usage: [/documentation/playframework-support](/documentation/playframework-support.html)
+See in detail: [/documentation/playframework-support](/documentation/playframework-support.html)
 
 <hr/>
 ### dbconsole
