@@ -40,7 +40,7 @@ Of course, you can use c3p0 (or others) instead of commons-dbcp though Connectio
 
 ### Non-blocking?
 
-Unfortunately, no. Indeed, JDBC drivers block on socket IO. So using them to talk with RDBMS in async event driven archetecture may not be appropriate. However, actually most of real world applications don't need event-driven archetecture yet. JDBC is still important infrastructure for apps on the JVM.
+Unfortunately, no. Indeed, JDBC drivers block on socket IO. So using them to talk with RDBMS in async event driven architecture may not be appropriate. However, actually most of real world applications don't need event-driven architecture yet. JDBC is still important infrastructure for apps on the JVM.
 
 If you really prefer non-blocking database access, take a look at ScalikeJDBC-Async. It provides non-blocking APIs to talk with PostgreSQL and MySQL in the JDBC way. 
 
