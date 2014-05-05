@@ -255,7 +255,7 @@ class OrderTable(val year: Int) extends SQLSyntaxSupport[Order] {
     id         = rs.long(o.id), 
     productId  = rs.long(o.productId), 
     customerId = rs.longOpt(o.customerId), 
-    createdAt  = rs.dateTime(o.createdAt)
+    createdAt  = rs.jodaDateTime(o.createdAt)
   )
 }
 val (o2011, o2012, o2013) = (new OrderTable(2011), new OrderTable(2012), new OrderTable(2013))
