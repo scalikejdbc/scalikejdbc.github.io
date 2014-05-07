@@ -38,7 +38,7 @@ val groups: List[Group] = withSQL {
    .list.apply()
 ```
 
-`one.toManies` supports 5 tables to join.
+`one.toManies` supports 9 tables to join.
 
 ```scala
 case class Member(id: Long, name: String)
