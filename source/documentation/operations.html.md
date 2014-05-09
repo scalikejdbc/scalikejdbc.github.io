@@ -41,7 +41,7 @@ val emp: Option[Emp] = DB readOnly { implicit session =>
 
 // QueryDSL
 object Emp extends SQLSyntaxSupport[Emp] {
-  def apply(e: ResultName[Emp])(rs: WrappedResultSEt): Emp = 
+  def apply(e: ResultName[Emp])(rs: WrappedResultSEt): Emp =
     new Emp(id = rs.get(e.id), name = rs.get(e.name))
 }
 val e = Emp.syntax("e")
@@ -50,7 +50,7 @@ val emp: Option[Emp] = DB readOnly { implicit session =>
 }
 ```
 
-You can learn about QueryDSL in defail here: 
+You can learn about QueryDSL in defail here:
 
 [/documentation/query-dsl](documentation/query-dsl.html)
 
@@ -107,6 +107,26 @@ DB readOnly { implicit session =>
 ```
 
 <hr/>
+#### Implementing Custom Extractor
+<hr/>
+
+In some cases you might want to implement a custom extractor. This can be useful for testing out queries.
+
+This example shows how to preserve ``null`` values in a result set.
+
+```scala
+def toMap(rs: WrappedResultSet): Map[String, Any] =  {
+  (1 to rs.metaData.getColumnCount).foldLeft(Map[String, Any]()) { (result, i) =>
+    val label = rs.metaData.getColumnLabel(i)
+    Some(rs.any(label)).map { nullableValue => result + (label -> nullableValue) }.getOrElse(result)
+  }
+}
+
+sql"select * from emp".map(rs => toMap(rs)).single.apply()
+```
+
+
+<hr/>
 ### Update API
 <hr/>
 
@@ -126,15 +146,15 @@ DB localTx { implicit session =>
 
 val column = Emp.column
 DB localTx { implicit s =>
-  withSQL { 
+  withSQL {
     insert.into(Emp).namedValues(
       column.id -> id,
       column.name -> name,
       column.createdAt -> DateTime.now)
    }.update.apply()
 
-  val id: Long = withSQL { 
-    insert.into(Empy).namedValues(column.name -> name, column.createdAt -> sqls.currentTimestamp) 
+  val id: Long = withSQL {
+    insert.into(Empy).namedValues(column.name -> name, column.createdAt -> sqls.currentTimestamp)
   }.updateAndReturnGeneratedKey.apply()
 
   withSQL { update(Emp).set(column.name -> newName).where.eq(column.id, id) }.update.apply()
@@ -174,7 +194,7 @@ DB localTx { implicit session =>
 val column = Emp.column
 DB localTx { implicit session =>
   val batchParams: Seq[Seq[Any]] = (2001 to 3000).map(i => Seq(i, "name" + i))
-  withSQL { 
+  withSQL {
     insert.into(Emp).namedValues(column.id -> sqls.?, column.name -> sqls.?)
   }.batch(batchParams: _*).apply()
 }
