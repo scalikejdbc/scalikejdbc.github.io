@@ -64,8 +64,8 @@ See [ScalikeJDBC 1.7 Documentation](/documentation/1.x/) in detail.
 libraryDependencies ++= Seq(
   "org.scalikejdbc" %% "scalikejdbc"               % "<%= v1_version %>",
   "org.scalikejdbc" %% "scalikejdbc-interpolation" % "<%= v1_version %>",
-  "com.h2database"  %  "h2"                        % "1.4.177",
-  "ch.qos.logback"  %  "logback-classic"           % "1.1.2"
+  "com.h2database"  %  "h2"                        % "<%= h2_version %>",
+  "ch.qos.logback"  %  "logback-classic"           % "<%= logback_version %>"
 )
 ```
 
@@ -77,8 +77,8 @@ See [ScalikeJDBC 2.0 Documentation](/) in detail.
 // Scala 2.10, 2.11
 libraryDependencies ++= Seq(
   "org.scalikejdbc" %% "scalikejdbc"       % "<%= version %>",
-  "com.h2database"  %  "h2"                % "1.4.177",
-  "ch.qos.logback"  %  "logback-classic"   % "1.1.2"
+  "com.h2database"  %  "h2"                % "<%= h2_version %>",
+  "ch.qos.logback"  %  "logback-classic"   % "<%= logback_version %>"
 )
 ```
 

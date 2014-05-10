@@ -62,8 +62,8 @@ set :markdown, fenced_code_blocks: true, smartypants: true, autolink: true, with
 I18n.enforce_available_locales = false
 
 # Latest Skinny Framework version
-@latest_version = "2.0.0-RC3"
-@latest_play_support_version = "2.2.0-RC"
+@latest_version = "2.0.0"
+@latest_play_support_version = "2.2.0"
 @v1_version = "1.7.7"
 
 set :version,        @latest_version
@@ -71,7 +71,7 @@ set :latest_version, @latest_version
 set :latest_play_support_version, @latest_play_support_version
 set :v1_version,        @v1_version
 set :v1_latest_version, @v1_version
-set :h2_version,        "1.4.177"
+set :h2_version,        "1.4.178"
 set :logback_version,   "1.1.2"
 
 # Build-specific configuration
