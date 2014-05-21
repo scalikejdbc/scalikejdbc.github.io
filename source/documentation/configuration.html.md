@@ -127,6 +127,13 @@ db.default.poolInitialSize=10
 db.default.poolMaxSize=20
 db.default.connectionTimeoutMillis=1000
 
+# Connection Pool settings
+db.default.poolInitialSize=5
+db.default.poolMaxSize=7
+db.default.poolConnectionTimeoutMillis=1000
+db.default.poolValidationQuery="select 1 as one"
+db.default.poolFactoryName="commons-dbcp"
+
 db.legacy.driver="org.h2.Driver"
 db.legacy.url="jdbc:h2:file:db/db2"
 db.legacy.user="foo"
