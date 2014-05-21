@@ -58,8 +58,8 @@ val ds = (new InitialContext)
   .lookup(name).asInstanceOf[DataSource]
 
 import scalikejdbc._
-ConnnectionPool.singleton(new DataSourceConnectionPool(ds))
-ConnnectionPool.add('foo, new DataSourceConnectionPool(ds))
+ConnectionPool.singleton(new DataSourceConnectionPool(ds))
+ConnectionPool.add('foo, new DataSourceConnectionPool(ds))
 ```
 
 `ConnectionPool` and `ConnectionPoolSettings`'s parameters are like this:
