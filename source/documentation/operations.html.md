@@ -41,7 +41,7 @@ val emp: Option[Emp] = DB readOnly { implicit session =>
 
 // QueryDSL
 object Emp extends SQLSyntaxSupport[Emp] {
-  def apply(e: ResultName[Emp])(rs: WrappedResultSEt): Emp =
+  def apply(e: ResultName[Emp])(rs: WrappedResultSet): Emp =
     new Emp(id = rs.get(e.id), name = rs.get(e.name))
 }
 val e = Emp.syntax("e")
