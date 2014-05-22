@@ -143,6 +143,13 @@ object Member extends SQLSyntaxSupport[Member] {
 
 // find all members
 val members: List[Member] = sql"select * from members".map(rs => Member(rs)).list.apply()
+
+// use paste mode (:paste) on the Scala REPL
+val m = Member.syntax("m")
+val name = "Alice"
+val alice: Option[Member] = withSQL { 
+  select.from(Member as m).where.eq(m.name, name) 
+}.map(rs => Member(rs)).single.apply()
 ```
 
 How did it go? If you'd like to know more details or practical examples, see documentation.
@@ -306,7 +313,7 @@ See in detail: [/documentation/playframework-support](documentation/playframewor
 Published binary files have the following copyright:
 
 ```
-Copyright 2013 ScalikeJDBC committers
+Copyright 2011 - 2014 scalikejdbc.org
 Apache License, Version 2.0
 http://www.apache.org/licenses/LICENSE-2.0.html
 ```
@@ -350,11 +357,11 @@ See in detail: [/documentation/dbconsole](documentation/dbconsole.html)
 
 ![Skinny framework](images/skinny.png)
 
-Skinny ORM is the default DB access library of [Skinny Framework](https://github.com/skinny-framework/skinny-framework). Skinny ORM is built upon ScalikeJDBC. 
+Skinny ORM is the default DB access library of [Skinny Framework](http://skinny-framework.org/). Skinny ORM is built upon ScalikeJDBC. 
 
 In most cases, ORM makes things easier.
 
-[https://github.com/skinny-framework/skinny-framework#orm](https://github.com/skinny-framework/skinny-framework#orm)
+[http://skinny-framework.org/documentation/orm.html](http://skinny-framework.org/documentation/orm.html)
 
 
 
