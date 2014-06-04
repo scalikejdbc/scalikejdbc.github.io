@@ -12,6 +12,10 @@ Users can write all the mapping operations by using `#map` or `#foldLeft`... wit
 
 ScalikeJDBC provides you some useful APIs to map results to objects.
 
+<div class="alert alert-warning">
+Be aware that resolving multiple one-to-many relationships with a single join query may cause performance or data size problems when dealing with large number of rows.
+</div>
+
 <hr/>
 ### One-To-Many / One-To-Manies
 <hr/>
