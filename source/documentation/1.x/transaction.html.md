@@ -100,3 +100,41 @@ try {
 ```
 
 
+<hr/>
+### #futureLocalTx block (1.8.0 or higher)
+<hr/>
+
+Executes query / update within Future operations.
+
+If one of the Future operations was failed, the transaction will perform rollback automatically.
+
+```scala
+object FutureDB {
+  implicit val ec = myOwnExecutorContext
+  def updateFirstName(id: Int, firstName: String)(implicit session: DBSession): Future[Int] = {
+    Future { 
+      blocking {
+        session.update("update users set first_name = ? where id = ?", firstName, id)
+      } 
+    }
+  }
+  def updateLastName(id: Int, lastName: String)(implicit session: DBSession): Future[Int] = {
+    Future { 
+      blocking {
+        session.update("update users set last_name = ? where id = ?", lastName, id)
+      } 
+    }
+  }
+}
+
+object Example {
+  import FutureDB._
+  val fResult = DB futureLocalTx { implicit s =>  
+    updateFirstName(3, "John").map(_ => updateLastName(3, "Smith"))
+  }
+}
+
+Example.fResult.foreach(println(_))
+// #=> 1
+````
+
