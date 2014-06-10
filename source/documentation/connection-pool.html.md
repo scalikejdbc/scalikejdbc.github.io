@@ -181,6 +181,24 @@ ConnectionPool.add('dbcp, url, user, password,
 ```
 
 <hr/>
+#### commons-dbcp2
+
+http://commons.apache.org/proper/commons-dbcp/
+
+http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22org.apache.commons%22%20AND%20a%3A%22commons-dbcp2%22
+
+```scala
+ConnectionPool.add('dbcp, url, user, password, 
+  ConnectionPoolSettings(connectionPoolFactoryName = "commons-dbcp2"))
+```
+
+`commons-dbcp2` dependency should be added by yourself.
+
+```scala
+libraryDependencies += "org.apache.commons" % "commons-dbcp2" % "2.0.+"
+```
+
+<hr/>
 #### BoneCP
 
 http://jolbox.com/
@@ -188,6 +206,12 @@ http://jolbox.com/
 ```scala
 ConnectionPool.add('bonecp, url, user, password, 
   ConnectionPoolSettings(connectionPoolFactoryName = "bonecp"))
+```
+
+`bonecp` dependency should be added by yourself.
+
+```scala
+libraryDependencies += "com.jolbox" % "bonecp" % "0.8.0.RELEASE"
 ```
 
 <hr/>
@@ -207,5 +231,11 @@ val dataSource: DataSource = {
   ds
 }
 ConnectionPool.add('hikaricp, new DataSourceConnectionPool(dataSource))
+```
+
+`HikariCP` dependency should be added by yourself.
+
+```scala
+libraryDependencies += "com.zaxxer" % "HikariCP" % "1.3.+"
 ```
 
