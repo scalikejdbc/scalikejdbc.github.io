@@ -68,6 +68,58 @@ FYI: You can find some example in QueryDSL's test code:
 [scalikejdbc-interpolation-core/src/main/scala/scalikejdbc/interpolation/SQLSyntax.scala](https://github.com/scalikejdbc/scalikejdbc/blob/master/scalikejdbc-interpolation-core/src/main/scala/scalikejdbc/interpolation/SQLSyntax.scala)
 
 <hr/>
+#### And/Or conditions 
+<hr/>
+
+```scala
+val o = Order.syntax("o")
+val orders = withSQL {
+  select
+    .from(Order as o)
+    .where
+    .eq(o.productId, 123)
+    .and
+    .isNotNull(o.orderedAt)
+  }.map(Order(o)).list.apply()
+
+// select o.id as i_on_o, o.customer_id ci_on_o, o.product_id as pi_on_o, o.ordered_at as oa_on_o
+// from orders o where o.product_id = ? and o.ordered_at is not null
+```
+
+```scala
+val orders = withSQL {
+  select(o.result.id).from(Order as o)
+    .where
+    .eq(o.productId, 123)
+    .or
+    .isNull(o.customerId)
+  }.map(Order(o)).list.apply()
+
+// select o.id as i_on_o from orders o where o.product_id = ? and o.customer_id is null
+```
+
+Adding round bracket is like this:
+
+```scala
+val ids = withSQL {
+  select(o.result.id).from(Order as o)
+    .where.isNotNull(o.accountId)
+    .and.withRoundBracket { _.eq(o.productId, 1).or.eq(o.accountId, 2) }
+  }.map(_.int(1)).list.apply()
+
+// select o.id as i_on_o from orders o
+// where o.account_id is not null 
+// and (o.product_id = ? or o.account_id = ?)
+```
+
+or simply using `#append`:
+
+```
+select(o.result.id).from(Order as o).where.isNotNull(o.accountId)
+  .and.append(sqls"(${o.productId} = ${pid} or ${o.accountId} = ${aid})")
+```
+
+<hr/>
 #### Join queries
 <hr/>
 
@@ -82,12 +134,18 @@ val orders: List[Order] = withSQL {
     .limit(4)
     .offset(0)
   }.map(Order(o, p, a)).list.apply()
+
+// select o.*, p.*, a.* from orders o inner join products p on o.product_id = p.id
+// left join accounts a on o.account_id = a.id
+// where o.product_id = ? order by o.id desc limit ? offset ?
 ```
 
 `.on(o.productId, p.id)` is simply converted to `sqls"${o.productId} = ${p.id}"`. If you need to write more complex condition to join tables, use `sqls` directly.
 
 ```scala
   .innerJoin(Product as p).on(sqls"${o.proudctId} = ${p.id} and ${o.deletedAt} is not null")
+
+  // inner join products p on o.product_id = p.id and o.deleted_at is not null
 ```
 
 <hr/>
@@ -105,6 +163,10 @@ def findOrder(id: Long, accountRequired: Boolean) = withSQL {
   }.map { rs =>
     if (accountRequired) Order(o, p, a)(rs) else Order(o, p)(rs)
   }.single.apply()
+
+// select o.*, p.*(, a.*) from orders o inner join products p on o.product_id = p.id
+// (left join accounts a on o.account_id = a.id)
+// where o.id = ?
 ```
 
 If you just need to append optional conditions, `toAndConditionOpt`, and `toOrConditionOpt ` are useful.
@@ -119,6 +181,10 @@ val ids = withSQL {
     ))
     .orderBy(o.id)
 }.map(_.int(1)).list.apply()
+
+// select o.id as i_on_o from orders o
+// where o.product_id = ? (and o.account_id = ?)
+// order by o.id
 ```
 
 <hr/>
@@ -129,6 +195,8 @@ val ids = withSQL {
 val inClauseResults = withSQL {
   select.from(Order as o).where.in(o.id, Seq(1, 2, 3))
 }.map(Order(o)).list.apply()
+
+// select * from orders o where o.id in (?, ?, ?)
 ```
 
 <hr/>
@@ -140,6 +208,9 @@ withSQL {
   select(a.id).from(Account as a)
     .where.exists(select.from(Order as o).where.eq(o.accountId, a.id))
 }.map(_.int(1)).list.apply()
+
+// select a.id from accounts a
+// where exists (select * from orders o where o.account_id = a.id)
 ```
 
 It's also possible to pass `sqls` values.
@@ -149,6 +220,9 @@ withSQL {
   select(a.id).from(Account as a)
     .where.notExists(sqls"select ${o.id} from ${Order as o} where ${o.accountId} = ${a.id}")
 }.map(_.int(1)).list.apply()
+
+// select a.id from accounts a
+// where not exists (select o.id from orders o where o.account_id = a.id)
 ```
 
 <hr/>
@@ -159,6 +233,8 @@ withSQL {
 withSQL {
   select(o.result.id).from(Order as o).where.between(o.id, 13, 22)
 }.map(_.int(1)).list.apply()
+
+// select o.id as i_on_o from orders o where o.id between ? and ?
 ```
 
 <hr/>
@@ -170,6 +246,8 @@ import sqls.{ distinct, count }
 val productCount = withSQL {
   select(count(distinct(o.productId))).from(Order as o)
 }.map(_.int(1)).single.apply().get
+
+// select count(distinct o.product_id) from orders o
 ```
 
 <hr/>
@@ -183,6 +261,10 @@ withSQL {
     .where.isNotNull(o.accountId)
     .groupBy(o.accountId)
 }.map(rs => (rs.int(1), rs.int(2))).list.apply()
+
+// select o.account_id, count(1) from orders o
+// where o.account_id is not null
+// group by o.account_id
 ```
 
 <hr/>
@@ -195,6 +277,10 @@ withSQL {
     .union(select(p.id).from(Product as p))
     //.unionAll(select(p.id).from(Product as p))
 }.map(_.int(1)).list.apply()
+
+// select a.id from accounts a
+// union 
+// select p.id from products p
 ```
 
 <hr/>
@@ -211,6 +297,12 @@ val preferredClients: List[(Int, Int)] = withSQL {
     .having(gt(sum(x(p).price), 300))
     .orderBy(sqls"amount")
   }.map(rs => (rs.int("id"), rs.int("amount"))).list.apply()
+
+// select x.account_id id, sum(x.price) as amount 
+// from (select o.*, p.* from orders o inner join products p on o.product_id = p.id) x
+// group by x.account_id
+// having sum(x.price) > ?
+// order by amount
 ```
 
 <hr/>
@@ -222,6 +314,8 @@ withSQL {
   insert.into(Member).values(1, "Alice", DateTime.now)
 }.update.apply()
 
+// insert into members values (?, ?, ?)
+
 withSQL {
   val m = Member.column
   insert.into(Member).namedValues(
@@ -230,6 +324,8 @@ withSQL {
     m.createdAt -> DateTime.now
   )
 }.update.apply()
+
+// insert into members (id, name, created_at) values (?, ?, ?)
 ```
 
 Or `applyUpdate` is much simpler. But in some cases, applyUpdate causes compilation errors since Scala 2.10.1. This is not an issue of ScalikeJDBC. If you suffered it, use `withSQL { }.update.apply()` instead.
@@ -237,10 +333,14 @@ Or `applyUpdate` is much simpler. But in some cases, applyUpdate causes compilat
 ```scala
 applyUpdate { insert.into(Member).values(2, "Bob", DateTime.now) }
 
+// insert into members values (?, ?, ?)
+
 val c = Member.column
 applyUpdate {
   insert.into(Member).columns(c.id, c.name, c.createdAt).values(2, "Bob", DateTime.now)
 }
+
+// insert into members (id, name, created_at) values (?, ?, ?)
 ```
 
 <hr/>
@@ -257,6 +357,8 @@ val lp = LegacyProduct.syntax("lp")
 withSQL {
   insert.into(Product).select(_.from(LegacyProduct as lp).where.isNotNull(lp.id))
 }.update.apply()
+
+// insert into products select lp.* from legacy_products lp where lp.id is not null
 ```
 
 <hr/>
@@ -267,6 +369,8 @@ withSQL {
 withSQL {
   delete.from(Member).where.eq(Member.column.id, 123)
 }.update.apply()
+
+// delete from members where id = ?
 ```
 
 <hr/>
@@ -280,6 +384,9 @@ withSQL {
     Member.column.updatedAt -> DateTime.now
   ).where.eq(Member.column.id, 2)
 }.update.apply()
+
+// update members set name = ?, updated_at = ? 
+// where id = ?
 ```
 
 <hr/>
