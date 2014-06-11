@@ -176,7 +176,7 @@ scalikejdbc.ConnectionPoolFactoryRepository.add("name", YourConnectionPoolFactor
 http://commons.apache.org/proper/commons-dbcp/
 
 ```scala
-ConnectionPool.add('dbcp, url, user, password, 
+ConnectionPool.singleton(url, user, password, 
   ConnectionPoolSettings(connectionPoolFactoryName = "commons-dbcp"))
 ```
 
@@ -188,7 +188,7 @@ http://commons.apache.org/proper/commons-dbcp/
 http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22org.apache.commons%22%20AND%20a%3A%22commons-dbcp2%22
 
 ```scala
-ConnectionPool.add('dbcp, url, user, password, 
+ConnectionPool.singleton(url, user, password, 
   ConnectionPoolSettings(connectionPoolFactoryName = "commons-dbcp2"))
 ```
 
@@ -204,7 +204,7 @@ libraryDependencies += "org.apache.commons" % "commons-dbcp2" % "2.0.+"
 http://jolbox.com/
 
 ```scala
-ConnectionPool.add('bonecp, url, user, password, 
+ConnectionPool.singleton(url, user, password, 
   ConnectionPoolSettings(connectionPoolFactoryName = "bonecp"))
 ```
 
@@ -230,7 +230,7 @@ val dataSource: DataSource = {
   ds.addDataSourceProperty("password", password)
   ds
 }
-ConnectionPool.add('hikaricp, new DataSourceConnectionPool(dataSource))
+ConnectionPool.singleton(new DataSourceConnectionPool(dataSource))
 ```
 
 `HikariCP` dependency should be added by yourself.
