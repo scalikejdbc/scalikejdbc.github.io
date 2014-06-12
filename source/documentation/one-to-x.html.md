@@ -115,6 +115,8 @@ If you don't want to define `owner` as an optional value, use `#map` instead.
 case class Owner(id: Long, name: String)
 case class Group(id: Long, name: String, ownerId: Long, owner: Owner)
 
+// companion objects must be defined
+
 object Group extends SQLSyntaxSupport[Group] {
   def apply(g: SyntaxProvider[Group], o: SyntaxProvider[Owner])(rs: WrappedResultSet): Group = 
     apply(g.resultName, o.resultName)(rs)
@@ -144,6 +146,8 @@ val groups: Seq[Group] =
 case class Owner(id: Long, name: String)
 case class Group(id: Long, name: String,
   ownerId: Option[Long] = None, owner: Option[Owner] = None)
+
+// companion objects must be defined
 
 val (g, o) = (Group.syntax, Owner.syntax)
 
