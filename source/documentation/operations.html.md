@@ -52,7 +52,7 @@ val emp: Option[Emp] = DB readOnly { implicit session =>
 
 You can learn about QueryDSL in defail here:
 
-[/documentation/query-dsl](documentation/query-dsl.html)
+[/documentation/query-dsl](/documentation/query-dsl.html)
 
 
 <hr/>
