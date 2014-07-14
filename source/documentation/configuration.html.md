@@ -54,7 +54,7 @@ When you use external DataSource (e.g. application server's connection pool), us
 import javax.naming._
 import javax.sql._
 val ds = (new InitialContext)
-  .lookup("scala:/comp/env").asInstanceOf[Context]
+  .lookup("java:/comp/env").asInstanceOf[Context]
   .lookup(name).asInstanceOf[DataSource]
 
 import scalikejdbc._
