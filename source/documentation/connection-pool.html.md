@@ -69,6 +69,48 @@ NamedDB('named) readOnly { implicit session =>
 ```
 
 <hr/>
+### Reusing same DB instance several times
+<hr/>
+
+By default, `scalikejdbc.DB` or `scalikejdbc.NamedDB` instance always closes its connection (= releases and returns it to connection pools).
+
+```scala
+using(connectionPool.borrow()) { conn: java.sql.Connection => 
+  val db: DB = DB(conn)
+
+  db.localTx { implicit session =>
+    sql"update something set name = ${name} where id = ${id}".update.apply()
+  } // localTx or other APIs always close the connection to avoid connection leaks
+
+  // the Connection already has been closed here!
+  // java.sql.SQLException will be thrown!
+  db.localTx { implicit session =>
+    // ....
+  }
+}
+```
+
+When you prefer reusing the same Connection without releasing and returing to connection pools, use `DB#autoClose(Boolean)`.
+
+```scala
+using(connectionPool.borrow()) { conn: java.sql.Connection => 
+  val db: DB = DB(conn)
+
+  // set as auto-close disabled
+  db.autoClose(false)
+
+  db.localTx { implicit session =>
+    sql"update something set name = ${name} where id = ${id}".update.apply()
+  } // localTx won't close the current Connection
+
+  // this block also works fine!
+  db.localTx { implicit session =>
+    // ....
+  }
+}
+```
+
+<hr/>
 ### Thread-local Connection Pattern
 <hr/>
 

@@ -97,12 +97,52 @@ val name: Option[String] = DB readOnly { implicit session =>
 
 ```scala
 DB readOnly { implicit session =>
-  sql"select name from emp" foreach { rs => out.write(rs.string("name")) }
+  sql"select name from emp".foreach { rs => 
+    out.write(rs.string("name")) 
+  }
 }
 
 val e = Emp.syntax("e")
 DB readOnly { implicit session =>
-  withSQL { select(e.result.name).from(Emp as e) }.foreach { rs => out.write(rs.string(e.name)) }
+  withSQL { select(e.name).from(Emp as e) }.foreach { rs => 
+    out.write(rs.string(e.name)) 
+  }
+}
+```
+
+<hr/>
+#### Setting JDBC fetchSize
+<hr/>
+
+For instance, the PostgreSQL JDBC driver does infinite(!) caching for result sets if fetchSize is set to 0 (the default) and this causes memory problems.
+
+http://docs.oracle.com/javase/8/docs/api/java/sql/Statement.html#setFetchSize-int-
+
+You can specify JDBC fetchSize as follows since version 2.0.5.
+
+```scala
+val e = Emp.syntax("e")
+DB readOnly { implicit session =>
+  sql"select name from emp"
+    .fetchSize(1000)
+    .foreach { rs => out.write(rs.string("name")) }
+}
+```
+
+Or it's also fine to set fetchSize to `scalikejdbc.DBSession`.
+
+```scala
+val (e, c) = (Emp.syntax("e"), Cmp.syntax("c"))
+
+DB readOnly { implicit session =>
+  session.fetchSize(1000)
+
+  withSQL { select(e.name).from(Emp as e) }.foreach { rs => 
+    out.write(rs.string(e.name) 
+  }
+  withSQL { select(c.name).from(Cmp as c) }.foreach { rs => 
+    out.write(rs.string(c.name)) 
+  }
 }
 ```
 
