@@ -48,11 +48,11 @@ val settings = ConnectionPoolSettings(
 ConnectionPool.add('foo, url, user, password, settings)
 ```
 
-When you use external DataSource (e.g. application server's connection pool), use scalax.sql.DataSource via JNDI:
+When you use external DataSource (e.g. application server's connection pool), use javax.sql.DataSource via JNDI:
 
 ```scala
-import scalax.naming._
-import scalax.sql._
+import javax.naming._
+import javax.sql._
 val ds = (new InitialContext)
   .lookup("scala:/comp/env").asInstanceOf[Context]
   .lookup(name).asInstanceOf[DataSource]
