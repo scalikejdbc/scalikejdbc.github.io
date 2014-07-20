@@ -29,31 +29,10 @@ You can easily use other implementation. See in detail:
 
 As you know, Rails ActiveRecords saves timestamp values in UTC time zone. DB column types will be `timetamp without timezone`.
 
-When you need to work with them, call the following Java TimeZone's settter method at first.
+When you need to work with them, call the following Java TimeZone's settter method (instead of `DateTimeZone.setDefault(DateTimeZone.UTC)`) at first.
 
 ```scala
 java.util.TimeZone.setDefault(java.util.TimeZone.getTimeZone("UTC"))
-```
-
-The following is an example with MyQL 5.6.13.
-
-```
-scala> import scalikejdbc._
-import scalikejdbc._
-
-scala> import org.joda.time._
-import org.joda.time._
-
-scala> DateTimeZone.setDefault(DateTimeZone.UTC)
-
-scala> val n = DateTime.now
-n: org.joda.time.DateTime = 2014-06-20T02:13:43.582Z
-
-scala> n.toDate
-res1: java.util.Date = Fri Jun 20 11:13:43 JST 2014
-
-scala> n.toDate.toSqlTimestamp
-res2: java.sql.Timestamp = 2014-06-20 11:13:43.582
 ```
 
 <hr/>
