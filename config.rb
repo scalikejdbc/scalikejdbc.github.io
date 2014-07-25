@@ -53,7 +53,6 @@ set :js_dir, 'javascripts'
 
 set :images_dir, 'images'
 
-#activate :syntax, :anchorlinenos => true
 activate :syntax
 
 set :markdown_engine, :redcarpet
@@ -62,7 +61,7 @@ set :markdown, fenced_code_blocks: true, smartypants: true, autolink: true, with
 I18n.enforce_available_locales = false
 
 # Latest Skinny Framework version
-@latest_version = "2.0.6"
+@latest_version = "2.0.7"
 @latest_play_support_version = "2.3.0"
 @v1_version = "1.7.7"
 @v18_version = "1.8.2"
