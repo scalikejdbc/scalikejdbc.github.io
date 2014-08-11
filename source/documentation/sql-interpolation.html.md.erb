@@ -129,7 +129,7 @@ It seems to be natural that `${m.result.*}` is converted to listing all the colu
 #### Why is ${m.result.*} transformed to listing all the columns?
 <hr/>
 
-In spite of column names are not defined anywhere, `${m.result.*}` is converted to listing all the column names. The secret is that laoding from metadata (and they will be cached) when first access to the table. It's possible to obtain all column names as a `Seq[String]` value via `columns`.
+In spite of column names are not defined anywhere, `${m.result.*}` is converted to listing all the column names. The secret is that loading from metadata (and they will be cached) when first access to the table. It's possible to obtain all column names as a `Seq[String]` value via `columns`.
 
 If you need to define column names by yourself or need to access multi databases, please define column names as follows:
 
