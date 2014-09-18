@@ -173,7 +173,7 @@ sql"select * from emp".map(rs => toMap(rs)).single.apply()
 `update` executes `scala.sql.PreparedStatement#executeUpdate()`.
 
 ```scala
-import scalikejdbc._, SQLInterpolation._
+import scalikejdbc._
 
 DB localTx { implicit session =>
   sql"""insert into emp (id, name, created_at) values (${id}, ${name}, ${DateTime.now})"""
@@ -224,11 +224,17 @@ DB autoCommit { implicit session =>
 `batch` and `batchByName` executes `scala.sql.PreparedStatement#executeBatch()`.
 
 ```scala
-import scalikejdbc._, SQLInterpolation._
+import scalikejdbc._
 
 DB localTx { implicit session =>
   val batchParams: Seq[Seq[Any]] = (2001 to 3000).map(i => Seq(i, "name" + i))
   sql"insert into emp (id, name) values (?, ?)".batch(batchParams: _*).apply()
+}
+
+DB localTx { implicit session =>
+  sql"insert into emp (id, name) values ({id}, {name})"
+    .batchByName(Seq(Seq('id -> 1, 'name -> "Alice"), Seq('id -> 2, 'name -> "Bob")):_*)
+    .apply()
 }
 
 val column = Emp.column

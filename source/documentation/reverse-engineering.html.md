@@ -48,7 +48,6 @@ This tool will generate the following Scala source code:
 package models
 
 import scalikejdbc._
-import scalikejdbc.SQLInterpolation._
 import org.joda.time.{LocalDate, DateTime}
 
 case class Member(
@@ -165,7 +164,7 @@ package models
 import scalikejdbc.specs2.mutable.AutoRollback
 import org.specs2.mutable._
 import org.joda.time._
-import scalikejdbc.SQLInterpolation._
+import scalikejdbc._
 
 class MemberSpec extends Specification {
 
