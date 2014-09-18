@@ -138,6 +138,14 @@ db.legacy.driver="org.h2.Driver"
 db.legacy.url="jdbc:h2:file:db/db2"
 db.legacy.user="foo"
 db.legacy.password="bar"
+
+# MySQL example
+db.default.driver="com.mysql.jdbc.Driver"
+db.default.url="jdbc:mysql://localhost/scalikejdbc"
+
+# PostgreSQL example
+db.default.driver="org.postgresql.Driver"
+db.default.url="jdbc:postgresql://localhost:5432/scalikejdbc"
 ```
 
 After just calling `scalikejdbc.config.DBs.setupAll()`, Connection pools are prepared.

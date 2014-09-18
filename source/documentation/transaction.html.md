@@ -15,7 +15,7 @@ val names = DB readOnly { implicit session =>
   sql"select name from emp".map { rs => rs.string("name") }.list.apply()
 }
 
-val session = DB.readOnlySession
+implicit val session = DB.readOnlySession
 try {
   val names = sql"select name from emp".map { rs => rs.string("name") }.list.apply()
   // do something
