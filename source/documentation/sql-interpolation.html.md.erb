@@ -163,6 +163,15 @@ m.column("group_id")
 m.c("group_id")
 ```
 
+If you don't need to convert field names to snake cased column names, set `useSnakeCaseColumnName` as false like this:
+
+```scala
+object UserType extends SQLSyntaxSupport[UserType] {
+  override val useSnakeCaseColumnName = false
+  ...
+}
+```
+
 In some cases, you might want to avoid expose column names to application layer. If this is the case, override `nameConverters`. If you want to treat `service_cd` column as `serviceCode`, define regular expression and replaced name in columns as follows. Since the `nameConverters` works as partial match retrieval, it's also possible to specify just `Map("Code" -> "cd")`.
 
 ```scala
