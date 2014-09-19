@@ -27,7 +27,7 @@ You can easily use other implementation. See in detail:
 ### How to share same DB with Rails ActiveRecord?
 <hr/>
 
-As you know, Rails ActiveRecords saves timestamp values in UTC time zone. DB column types will be `timetamp without timezone`.
+As you know, Rails ActiveRecord saves timestamp values in UTC time zone. DB column types will be `timetamp without timezone`.
 
 When you need to work with them, call the following Java TimeZone's settter method (instead of `DateTimeZone.setDefault(DateTimeZone.UTC)`) at first.
 

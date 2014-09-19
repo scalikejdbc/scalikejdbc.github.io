@@ -185,6 +185,9 @@ val ids = withSQL {
 // select o.id as i_on_o from orders o
 // where o.product_id = ? (and o.account_id = ?)
 // order by o.id
+
+// productId: Some, accountId: None -> where o.product_id = ? 
+// productId: None, accountId: Some -> where o.account_id = ?
 ```
 
 <hr/>
