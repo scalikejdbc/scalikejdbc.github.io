@@ -62,7 +62,7 @@ I18n.enforce_available_locales = false
 
 # Latest Skinny Framework version
 @latest_version = "2.1.4"
-@latest_play_support_version = "2.3.2"
+@latest_play_support_version = "2.3.3"
 @v1_version = "1.7.7"
 @v18_version = "1.8.2"
 
@@ -72,7 +72,7 @@ set :latest_play_support_version, @latest_play_support_version
 set :v1_version,        @v1_version
 set :v18_version,       @v18_version
 set :v1_latest_version, @v1_version
-set :h2_version,        "1.4.181"
+set :h2_version,        "1.4.182"
 set :logback_version,   "1.1.2"
 
 # Build-specific configuration
