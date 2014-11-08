@@ -71,6 +71,22 @@ val count = DB localTx { implicit session =>
 }
 ```
 
+`TxBoundary` provides other transaction boundary instead of Exception as follows (2.2.0 or higher):
+
+```scala
+import scalikejdbc._
+import scala.util.Try
+import scalikejdbc.TxBoundary.Try._
+
+val result: Try[Result] = DB localTx { implicit session =>
+  Try { doSomeStaff() }
+}
+// localTx rolls back when `result` is `Failure`
+// http://scala-lang.org/api/current/#scala.util.Try
+```
+
+Built-in type class instances are `Try`, `Either` and `Future`. You can use them by `import scalikejdbc.TxBoundary,***._`.
+
 <hr/>
 ### #futureLocalTx block (2.0.1 or higher)
 <hr/>
@@ -108,6 +124,15 @@ object Example {
 Example.fResult.foreach(println(_))
 // #=> 1
 ````
+
+or `TxBoundary[Future[A]]` is also available.
+
+```scala
+import scalikejdbc.TxBoundary.Future._
+val fResult = DB localTx { implicit s =>  
+  updateFirstName(3, "John").map(_ => updateLastName(3, "Smith"))
+}
+```
 
 <hr/>
 ### #withinTx block / session
