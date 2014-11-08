@@ -88,12 +88,10 @@ val result: Try[Result] = DB localTx { implicit session =>
 Built-in type class instances are `Try`, `Either` and `Future`. You can use them by `import scalikejdbc.TxBoundary,***._`.
 
 <hr/>
-### #futureLocalTx block (2.0.1 or higher)
+### #futureLocalTx block 
 <hr/>
 
-Executes query / update within Future operations.
-
-If one of the Future operations was failed, the transaction will perform rollback automatically.
+`futureLocalTx` use `Future`'s state as transaction boundary. If one of the Future operations was failed, the transaction will perform rollback automatically. 
 
 ```scala
 object FutureDB {
