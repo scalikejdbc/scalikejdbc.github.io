@@ -150,7 +150,7 @@ DB readOnly { implicit session =>
 #### Implementing Custom Extractor
 <hr/>
 
-In some cases you might want to implement a custom extractor. This can be useful for testing out queries.
+In some cases, you might need to implement your own custom extractor. This can be useful for testing out queries.
 
 This example shows how to preserve ``null`` values in a result set.
 
@@ -165,6 +165,111 @@ def toMap(rs: WrappedResultSet): Map[String, Any] =  {
 sql"select * from emp".map(rs => toMap(rs)).single.apply()
 ```
 
+<hr/>
+#### Using ParameterBinder
+<hr/>
+
+`ParameterBinder[A]` enables to customize how parameters should be bound to `PreparedStatement` object inside ScalikeJDBC.
+
+The following example shows how to use `ResultSet#setBinaryStream` when binding `InputStream` value to `PreparedStatement`.
+
+```scala
+sql"create table blob_example (id bigint, data blob)").execute.apply()
+
+val bytes = scala.Array[Byte](1, 2, 3, 4, 5, 6, 7)
+
+val bytesBinder = ParameterBinder[InputStream](
+  value = new ByteArrayInputStream(bytes),
+  binder = (stmt: PreparedStatement, idx: Int) => stmt.setBinaryStream(idx, in, bytes.length)
+)
+
+sql"insert into blob_example (data) values (${bytesBinder})").update.apply()
+```
+
+<hr/>
+#### Using TypeBinder
+<hr/>
+
+`TypeBinder[A]` is a type class to extract type `A` values from Result. 
+
+The following example shows how to bind long value to `MemberId` value.
+
+```scala
+import scalikejdbc._
+import java.sql.ResultSet
+
+implicit val session = AutoSession
+
+// prepare data
+sql"create table member (id bigint not null primary key, name varchar(100))".execute.apply()
+sql"insert into member values (1, 'Alice')".update.apply()
+sql"insert into member values (2, 'Bob')  ".update.apply()
+sql"insert into member values (3, 'Chris')".update.apply()
+
+case class MemberId(id: Long)
+case class Member(id: MemberId, name: String)
+
+// compilation error here
+val ids: Seq[MemberId] = sql"select * from member".map(_.get[MemberId]("id")).list.apply()
+
+// <console>:24: error: could not find implicit value for evidence parameter of type scalikejdbc.TypeBinder[MemberId]
+//         val ids: Seq[MemberId] = sql"select * from member".map(_.get[MemberId]("id")).list.apply()
+//                                                                               ^
+```
+
+Your `MemberId` class is not supported by default. You can see what types are supported by default [here](https://github.com/scalikejdbc/scalikejdbc/blob/develop/scalikejdbc-core/src/main/scala/scalikejdbc/TypeBinder.scala).
+
+So you need to define your own `TypeBinder` for `MemberId` type as follows.
+
+```scala
+// define TypeBinder[MemberId] for implicit value
+implicit val memberIdTypeBinder: TypeBinder[MemberId] = new TypeBinder[MemberId] {
+  def apply(rs: ResultSet, label: String): MemberId = MemberId(rs.getLong(label))
+  def apply(rs: ResultSet, index: Int): MemberId = MemberId(rs.getLong(index))
+}
+
+val ids: Seq[MemberId] = sql"select id from member".map(_.get[MemberId]("id")).list.apply()
+// ids: Seq[MemberId] = List(MemberId(1), MemberId(1), MemberId(2), MemberId(3))
+```
+
+Of course, it's also possible to simply deal with this case without `TypeBinder`.
+
+```scala
+val ids: Seq[MemberId] = sql"select id from member".map(rs => MemberId(rs.get("id"))).list.apply()
+```
+
+<hr/>
+#### Using Java SE 8 Date Time API (JSR-310)
+<hr/>
+
+ScalikeJDBC still supports Java SE 7. So we provides Java 8 Date Time API support as an optional module.
+
+```scala
+libraryDependencies += "org.scalikejdbc" %% "scalikejdbc-jsr310" % "<%= @latest_version %>"
+```
+
+Usage is so simple. Just add `import scalikejdbc.jsr310._`.
+
+```scala
+import scalikejdbc._, jsr310._
+import java.time._
+                                    
+case class Group(
+  id: Long, 
+  name: Option[String], 
+  createdAt: ZonedDateTime)
+
+object Group extends SQLSyntaxSupport[Group] {
+  def apply(g: SyntaxProvider[Group])(rs: WrappedResultSet): Group = apply(g.resultName)(rs)
+  def apply(g: ResultName[Group])(rs: WrappedResultSet): Group = new Group(
+    id = rs.get(g.id), 
+    name = rs.get(g.name), 
+    createdAt = rs.get(g.createdAt)
+    // (or) createdAt = rs.get[ZonedDateTime](g.createdAt)
+    // (or) createdAt = rs.zonedDateTime(g.createdAt)
+  )
+}
+```
 
 <hr/>
 ### Update API

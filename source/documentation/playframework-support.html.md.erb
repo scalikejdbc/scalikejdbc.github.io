@@ -13,8 +13,9 @@ ScalikeJDBC provides two Play plugins to integrate Play2 and ScalikeJDBC. Choose
 
 `scalikejdbc-play-*` version will follow Play's version. 
 
-- 2.2.x for Play 2.2.0, 2.2.1, 2.2.2, 2.2.3, ...
-- 2.3.x for Play 2.3.0, 2.3.1, ...
+- 2.2.x for Play 2.2.x
+- 2.3.x for Play 2.3.x
+- 2.4.x for Play 2.4.x
 
 <hr/>
 ### scalikejdbc-play-plugin
@@ -25,7 +26,7 @@ This plugin supports connection pooling too. You don't need `dbplugin` and `evol
 ##### project/Build.scala
 
 ```scala
-val appDependencies = Seq(
+libraryDependencies = Seq(
   "org.scalikejdbc" %% "scalikejdbc"                       % "<%= version %>",
   "org.scalikejdbc" %% "scalikejdbc-play-plugin"           % "<%= latest_play_support_version %>",
   "org.scalikejdbc" %% "scalikejdbc-play-fixture-plugin"   % "<%= latest_play_support_version %>", // optional
@@ -96,7 +97,7 @@ This plugin is an adapter to connect `dbplugin` and ScalikeJDBC.
 ##### project/Build.scala
 
 ```scala
-val appDependencies = Seq(
+libraryDependencies = Seq(
   "org.scalikejdbc" %% "scalikejdbc"                       % "<%= version %>",
   "org.scalikejdbc" %% "scalikejdbc-play-dbplugin-adapter" % "<%= latest_play_support_version %>",
   "org.scalikejdbc" %% "scalikejdbc-play-fixture-plugin"   % "<%= latest_play_support_version %>", // optional

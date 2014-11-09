@@ -4,6 +4,9 @@
 ## Just write SQL and get things done!
 <hr/>
 
+<a href="https://twitter.com/ScalikeJDBC" class="twitter-follow-button" data-show-count="false" data-size="large">Follow @ScalikeJDBC</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+
 ![Logo](images/logo.png)
 
 ScalikeJDBC is a tidy SQL-based DB access library for Scala developers. This library naturally wraps JDBC APIs and provides you easy-to-use and very flexible APIs. What's more, QueryDSL makes your code type-safe and reusable.
@@ -59,7 +62,7 @@ See also FAQs here: [/documentation/faq.html](/documentation/faq.html)
 
 All you need to do is just adding ScalikeJDBC, JDBC driver & slf4j implementation. 
 
-### ScalikeJDBC 2.1
+### ScalikeJDBC 2.x
 
 See [ScalikeJDBC 2.1 Documentation](/) in detail.
 
@@ -72,27 +75,15 @@ libraryDependencies ++= Seq(
 )
 ```
 
-### ScalikeJDBC 1.7, 1.8
+### ScalikeJDBC 1.x
 
-See [ScalikeJDBC 1.x Documentation](/documentation/1.x/) in detail.
+See [ScalikeJDBC 1.x Documentation](/documentation/1.x/) for details. Scala 2.9 incompatible changes will be backported only to ScalikeJDBC 1.8.x. Don't worry. We'll keep maintaining ScalikeJDBC 1.7.x for Scala 2.9 users.
 
 ```scala
 // Scala 2.9, 2.10
 libraryDependencies ++= Seq(
-  "org.scalikejdbc" %% "scalikejdbc"               % "<%= v1_version %>",
-  "org.scalikejdbc" %% "scalikejdbc-interpolation" % "<%= v1_version %>",
-  "com.h2database"  %  "h2"                        % "<%= h2_version %>",
-  "ch.qos.logback"  %  "logback-classic"           % "<%= logback_version %>"
-)
-```
-
-Scala 2.9 incompatible changes will be backported only to ScalikeJDBC 1.8.x. Don't worry. We'll keep maintaining ScalikeJDBC 1.7.x for Scala 2.9 users.
-
-```scala
-// Scala 2.10
-libraryDependencies ++= Seq(
-  "org.scalikejdbc" %% "scalikejdbc"               % "<%= v18_version %>",
-  "org.scalikejdbc" %% "scalikejdbc-interpolation" % "<%= v18_version %>",
+  "org.scalikejdbc" %% "scalikejdbc"               % "<%= v1_version %>", // or "<%= v18_version %>" only for Scala 2.10
+  "org.scalikejdbc" %% "scalikejdbc-interpolation" % "<%= v1_version %>", // or "<%= v18_version %>" only for Scala 2.10
   "com.h2database"  %  "h2"                        % "<%= h2_version %>",
   "ch.qos.logback"  %  "logback-classic"           % "<%= logback_version %>"
 )
