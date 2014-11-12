@@ -65,7 +65,7 @@ FYI: You can find some example in QueryDSL's test code:
 
 `sqls` is alias for `SQLSyntax` object. Methods that are defined on `object SQLSyntax` is available everywhere.
 
-[scalikejdbc-interpolation-core/src/main/scala/scalikejdbc/interpolation/SQLSyntax.scala](https://github.com/scalikejdbc/scalikejdbc/blob/master/scalikejdbc-interpolation-core/src/main/scala/scalikejdbc/interpolation/SQLSyntax.scala)
+[scalikejdbc-core/src/main/scala/scalikejdbc/interpolation/SQLSyntax.scala](https://github.com/scalikejdbc/scalikejdbc/blob/master/scalikejdbc-core/src/main/scala/scalikejdbc/interpolation/SQLSyntax.scala)
 
 <hr/>
 #### And/Or conditions 
