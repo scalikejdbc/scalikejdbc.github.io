@@ -209,5 +209,5 @@ class HugeTable(
 
 If you're still using older version and you cannot upgrade version right now, see the `EntityEquality` implementation and do the same thing.
 
-https://github.com/scalikejdbc/scalikejdbc/blob/master/scalikejdbc-core/src/main/scala/scalikejdbc/EntityEquality.scala
+https://github.com/scalikejdbc/scalikejdbc/blob/1.7.x/scalikejdbc-core/src/main/scala/scalikejdbc/EntityEquality.scala
 
