@@ -26,25 +26,25 @@ Simple example:
 case class Member(id: Long, name: String)
 case class Group(id: Long, name: String, members: Seq[Member] = Nil)
 
-object Group extends SQLSyntaxSupport[Group] { 
+object Group extends SQLSyntaxSupport[Group] {
   override val tableName = "groups"
-  def apply(g: SyntaxProvider[Grouo])(rs: WrappedResultSet): Group = apply(g.resultName)(rs)
+  def apply(g: SyntaxProvider[Group])(rs: WrappedResultSet): Group = apply(g.resultName)(rs)
   def apply(g: ResultName[Group])(rs: WrappedResultSet): Group = new Group(rs.get(g.id), rs.get(g.name))
 }
 
 object Member extends SQLSyntaxSupport[Member] {
   override val tableName = "members"
   def apply(m: SyntaxProvider[Member])(rs: WrappedResultSet): Member = apply(m.resultName)(rs)
-  def apply(m: ResultName[Member])(rs: WrappedResultSet): Member = 
+  def apply(m: ResultName[Member])(rs: WrappedResultSet): Member =
     new Member(rs.get(m.id), rs.get(m.name))
 
-  def opt(m: SyntaxProvider[Member])(rs: WrappedResultSet): Option[Member] = 
+  def opt(m: SyntaxProvider[Member])(rs: WrappedResultSet): Option[Member] =
     rs.longOpt(m.resultName.id).map(_ => Member(m)(rs))
 }
 
 val (g, m) = (Group.syntax, Member.syntax)
 
-val groups: Seq[Group] = 
+val groups: Seq[Group] =
   withSQL { select.from(Group as g).leftJoin(Member as m).on(g.id, m.groupId) }
    .one(Group(g))
    .toMany(Member.opt(m))
@@ -57,15 +57,15 @@ val groups: Seq[Group] =
 
 ```scala
 case class Member(id: Long, name: String)
-case class Event(id: Long, name: String) 
-case class Group(id: Long, name: String, 
+case class Event(id: Long, name: String)
+case class Group(id: Long, name: String,
   events: Seq[Event] = Nil, members: Seq[Member] = Nil)
 
 // companion objects must be defined
 
 val (g, m, e) = (Group.syntax, Member.syntax, Event.syntax)
 
-val groups: Seq[Group] = 
+val groups: Seq[Group] =
   withSQL {
     select
       .from(Group as g)
@@ -90,13 +90,13 @@ val groups: Seq[Group] =
 ```scala
 case class Owner(id: Long, name: String)
 case class Group(id: Long, name: String,
-  ownerId: Long, owner: Option[Owner] = None) 
+  ownerId: Long, owner: Option[Owner] = None)
 
 // companion objects must be defined
 
 val (g, o) = (Group.syntax, Owner.syntax)
 
-val groups: Seq[Group] = 
+val groups: Seq[Group] =
   withSQL {
     select
       .from(Group as g)
@@ -118,9 +118,9 @@ case class Group(id: Long, name: String, ownerId: Long, owner: Owner)
 // companion objects must be defined
 
 object Group extends SQLSyntaxSupport[Group] {
-  def apply(g: SyntaxProvider[Group], o: SyntaxProvider[Owner])(rs: WrappedResultSet): Group = 
+  def apply(g: SyntaxProvider[Group], o: SyntaxProvider[Owner])(rs: WrappedResultSet): Group =
     apply(g.resultName, o.resultName)(rs)
-  def apply(g: ResultName[Group], o: ResultName[Owner])(rs: WrappedResultSet): Group = 
+  def apply(g: ResultName[Group], o: ResultName[Owner])(rs: WrappedResultSet): Group =
     new Group(
       id = rs.long(g.id),
       name = rs.string(g.name),
@@ -131,9 +131,9 @@ object Group extends SQLSyntaxSupport[Group] {
 
 val (g, o) = (Group.syntax, Owner.syntax)
 
-val groups: Seq[Group] = 
+val groups: Seq[Group] =
   withSQL {
-    select.from(Group as g).innerJoin(Onwer as o).on(g.ownerId, o.id) 
+    select.from(Group as g).innerJoin(Onwer as o).on(g.ownerId, o.id)
   }
   .map(Group(g, o))
   .list
@@ -151,7 +151,7 @@ case class Group(id: Long, name: String,
 
 val (g, o) = (Group.syntax, Owner.syntax)
 
-val groups: Seq[Group] = 
+val groups: Seq[Group] =
   withSQL {
     select.from(Group as g).leftJoin(Owner as o).on(g.ownerId, o.id)
   }
@@ -184,11 +184,11 @@ object HugeTable extends SQLSyntaxSupport[HugeTable] {
 
 The above code also works fine except for the use of one-to-x APIs. Case classes nicely overrides `#equals` method. But `HugeTable`'s `#equals` method won't work as you expect because it just predicates instance equality. So when you use normal classes and one-to-x APIs, you must override `#equals` method by yourself.
 
-Since version 1.7.3, ScalikeJDBC provides `EntityEquality` trait like this: 
+Since version 1.7.3, ScalikeJDBC provides `EntityEquality` trait like this:
 
 ```scala
 class HugeTable(
-  val id: Long, val c2: String, val c3: String .... val c23: String) 
+  val id: Long, val c2: String, val c3: String .... val c23: String)
   extends EntityEquality {
 
   override val entityIdentity: Any = id
