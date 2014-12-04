@@ -14,7 +14,7 @@ There are various query APIs. All of them (`single`, `first`, `list` and `foreac
 #### Single / Optional Result for Query
 <hr/>
 
-`single` returns matched single row as an `Option` value. If matched rows is not single, Exception will be thrown.
+`single` returns matched single row as an `Option` value. If unexpectedly multiple rows are returned, runtime exception will be thrown.
 
 ```scala
 import scalikejdbc._
