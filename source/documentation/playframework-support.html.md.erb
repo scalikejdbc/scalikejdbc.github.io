@@ -130,6 +130,14 @@ Fixtures are optional. If you don't nee, no need to use them.
 db.default.fixtures.test=[ "project.sql", "project_member.sql" ]
 ```
 
+With MySQL, you may need to append `allowMultiQueries=true` to JDBC url.
+
+
+```
+db.default.url="jdbc:mysql://localhost/testdb?allowMultiQueries=true
+```
+
+
 ##### conf/db/fixtures/default/project.sql
 
 ```sql
