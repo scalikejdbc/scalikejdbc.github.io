@@ -308,11 +308,6 @@ DB localTx { implicit s =>
 
 ```
 
-When you're using Oracle DB (unfortunately Oracle is not officialy supported for now) and would like to return the generated key, specify column name instead.
-
-- Use SQL#updateAndReturnGeneratedKey(keyName) instead of SQL#updateAndReturnGeneratedKey()
-- Use DBSession#updateAndReturnSpecifiedGeneratedKey(template, params)(keyName) instead of #updateAndReturnGeneratedKey(template, params).
-
 <hr/>
 ### Execute API
 <hr/>
