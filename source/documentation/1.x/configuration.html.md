@@ -119,7 +119,7 @@ Configuration file should be like `src/main/resources/application.conf`. See Typ
 ```
 # JDBC settings
 db.default.driver="org.h2.Driver"
-db.default.url="jdbc:h2:file:db/default"
+db.default.url="jdbc:h2:file:./db/default"
 db.default.user="sa"
 db.default.password=""
 
@@ -130,7 +130,7 @@ db.default.poolConnectionTimeoutMillis=1000
 db.default.poolValidationQuery="select 1 as one"
 
 db.legacy.driver="org.h2.Driver"
-db.legacy.url="jdbc:h2:file:db/db2"
+db.legacy.url="jdbc:h2:file:./db/db2"
 db.legacy.user="foo"
 db.legacy.password="bar"
 ```
@@ -166,7 +166,7 @@ It's also possible to add prefix(e.g. environment).
 
 ```
 development.db.default.driver="org.h2.Driver"
-development.db.default.url="jdbc:h2:file:db/default"
+development.db.default.url="jdbc:h2:file:./db/default"
 development.db.default.user="sa"
 development.db.default.password=""
 
@@ -174,7 +174,7 @@ prod {
   db {
     sandbox {
       driver="org.h2.Driver"
-      url="jdbc:h2:file:are-you-sure-in-production"
+      url="jdbc:h2:file:./are-you-sure-in-production"
       user="user"
       password="pass"
     }
