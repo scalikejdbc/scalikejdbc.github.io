@@ -112,6 +112,12 @@ generator.testTemplate=specs2unit
 generator.encoding=UTF-8
 # When you're using Scala 2.11 or higher, you can use case classes for 22+ columns tables
 generator.caseClassOnly=true
+# Set AutoSession for implicit DBSession parameter's default value
+generator.defaultAutoSession=true
+# Use autoConstruct macro (default: false)
+generator.autoConstruct=false
+# joda-time (org.joda.time.DateTime) or JSR-310 (java.time.ZonedDateTime java.time.OffsetDateTime)
+generator.dateTimeClass=org.joda.time.DateTime
 ```
 
 Usage: [/documentation/reverse-engineering](/documentation/reverse-engineering.html)
