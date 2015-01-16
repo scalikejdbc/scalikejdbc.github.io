@@ -100,6 +100,7 @@ This plugin is an adapter to connect `dbplugin` and ScalikeJDBC.
 ```scala
 libraryDependencies = Seq(
   "org.scalikejdbc" %% "scalikejdbc"                       % "<%= version %>",
+  "org.scalikejdbc" %% "scalikejdbc-config"                % "<%= version %>",
   "org.scalikejdbc" %% "scalikejdbc-play-dbplugin-adapter" % "<%= latest_play_support_version %>",
   "org.scalikejdbc" %% "scalikejdbc-play-fixture-plugin"   % "<%= latest_play_support_version %>", // optional
   // substitute this for whatever DB driver you're using:
