@@ -108,3 +108,21 @@ val counts = DB readOnly { implicit s =>
 }
 ```
 
+Since version 2.2.1, you can attach tags to each query. This feature will help you when classifying queries.
+
+```scala
+GlobalSettings.taggedQueryCompletionListener = (sql: String, params: Seq[Any], millis: Long, tags: Seq[String]) => {
+  // do something here
+}
+GlobalSettings.taggedQueryFailureListener = (sql: String, params: Seq[Any], e: Throwable, tags: Seq[String]) => {
+  // do something here
+}
+
+val counts = DB readOnly { implicit s =>
+  sql"select product_id, count(*) from orders group by product_id"
+    .tags("daily_batch", "sales")
+    .map(rs => OrderCount(rs)).list.apply()
+}
+```
+
+
