@@ -29,7 +29,7 @@ You can easily use other implementation. See in detail:
 
 As you know, Rails ActiveRecord saves timestamp values in UTC time zone. DB column types will be `timetamp without timezone`.
 
-When you need to work with them, call the following Java TimeZone's settter method (instead of `DateTimeZone.setDefault(DateTimeZone.UTC)`) at first.
+When you need to work with them, call the following Java TimeZone's setter method (instead of `DateTimeZone.setDefault(DateTimeZone.UTC)`) at first.
 
 ```scala
 java.util.TimeZone.setDefault(java.util.TimeZone.getTimeZone("UTC"))
