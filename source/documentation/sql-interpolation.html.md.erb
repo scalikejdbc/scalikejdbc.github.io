@@ -204,7 +204,7 @@ If you use `Member.syntax()`, tableName will be set. For example,  `m.result.gro
 That's all the rules of `SQLSyntaxSupport`. I believed that now the following code will be easy to understand for you.
 
 ```scala
-val ids: List[Long] = sql"select ${m.result.id} from ${Member.as(m)} where ${m.gourpId} = 1"
+val ids: List[Long] = sql"select ${m.result.id} from ${Member.as(m)} where ${m.groupId} = 1"
   .map(rs => rs.long(m.resultName.id)).list.apply()
 ```
 
