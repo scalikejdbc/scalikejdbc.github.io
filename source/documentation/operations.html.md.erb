@@ -217,7 +217,7 @@ val ids: Seq[MemberId] = sql"select * from member".map(_.get[MemberId]("id")).li
 //                                                                               ^
 ```
 
-Your `MemberId` class is not supported by default. You can see what types are supported by default [here](https://github.com/scalikejdbc/scalikejdbc/blob/develop/scalikejdbc-core/src/main/scala/scalikejdbc/TypeBinder.scala).
+Your `MemberId` class is not supported by default. You can see what types are supported by default [here](https://github.com/scalikejdbc/scalikejdbc/blob/master/scalikejdbc-core/src/main/scala/scalikejdbc/TypeBinder.scala).
 
 So you need to define your own `TypeBinder` for `MemberId` type as follows.
 

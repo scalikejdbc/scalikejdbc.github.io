@@ -10,7 +10,7 @@ title: Contribution - ScalikeJDBC
 
 First, see the following guideline:
 
-[CONTRIBUTING.md](https://github.com/scalikejdbc/scalikejdbc/blob/develop/CONTRIBUTING.md)
+[CONTRIBUTING.md](https://github.com/scalikejdbc/scalikejdbc/blob/master/CONTRIBUTING.md)
 
 <hr/>
 ### Website
@@ -38,7 +38,7 @@ Access `http://localhost:4567/` from your browser.
 <hr/>
 #### make a pull request
 
-Create a branch to request, and send your pull request to `1.x` branch (not `develop` branch).
+Create a branch to request, and send your pull request to `1.x` branch (not `master` branch).
 
 
 <hr/>

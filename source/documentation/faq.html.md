@@ -71,6 +71,6 @@ See in detail here: [/documentation/playframework-support.html](/documentation/p
 
 the Apache License, Version 2.0
 
-https://github.com/scalikejdbc/scalikejdbc/blob/develop/LICENSE.txt
+https://github.com/scalikejdbc/scalikejdbc/blob/master/LICENSE.txt
 
 
