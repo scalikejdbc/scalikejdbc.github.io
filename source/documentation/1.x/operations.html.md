@@ -41,12 +41,11 @@ val emp: Option[Emp] = DB readOnly { implicit session =>
 
 // QueryDSL
 object Emp extends SQLSyntaxSupport[Emp] {
-  def apply(e: ResultName[Emp])(rs: WrappedResultSet): Emp = 
-    new Emp(id = rs.get(e.id), name = rs.get(e.name))
+  def apply(e: ResultName[Emp])(rs: WrappedResultSet): Emp = new Emp(id = rs.get(e.id), name = rs.get(e.name))
 }
 val e = Emp.syntax("e")
 val emp: Option[Emp] = DB readOnly { implicit session =>
-  withSQL { select.from(Emp as e).where.eq(e.id, id) }.map(Emp(e)).single.apply()
+  withSQL { select.from(Emp as e).where.eq(e.id, id) }.map(Emp(e.resultName)).single.apply()
 }
 ```
 
