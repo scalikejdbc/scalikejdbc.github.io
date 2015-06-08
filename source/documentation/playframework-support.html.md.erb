@@ -6,32 +6,40 @@ title: Play Framework Support - ScalikeJDBC
 
 ScalikeJDBC provides two Play plugins to integrate Play2 and ScalikeJDBC. Choose your preferred one.
 
-### Migration Guide
+<hr/>
+## Migration Guide
 
 Unfortunately, Play 2.4 is basically incompatible with Play plugins. Since Play 2.4, you need to switch to use Play modules instead.
 
-#### ScalikeJDBC integration with Play 2.0 - 2.3
+### ScalikeJDBC integration with Play 2.0 - 2.3
 
 - scalikejdbc-play-plugin
 - scalikejdbc-play-dbplugin-adapter
 - scalikejdbc-play-fixture-plugin
 
-#### ScalikeJDBC interation with Play 2.4 or higher
+### ScalikeJDBC interation with Play 2.4 or higher
 
 - scalikejdbc-play-initializer
 - scalikejdbc-play-dbapi-adapter
 - scalikejdbc-play-fixture
 
-### Getting Started with Play 2.4
+<hr/>
+## Getting Started with Play 2.4
+
+<hr/>
+### scalikejdbc-play-initializer
+<hr/>
+
+This module supports connection pooling too.
 
 #### build.sbt
 
 ```scala
 libraryDependencies ++= Seq(
-  "com.h2database"  %  "h2"                           % "1.4.187", // your jdbc driver here
-  "org.scalikejdbc" %% "scalikejdbc"                  % "2.2.7",
-  "org.scalikejdbc" %% "scalikejdbc-config"           % "2.2.7",
-  "org.scalikejdbc" %% "scalikejdbc-play-initializer" % "2.4.0"
+  "com.h2database"  %  "h2"                           % "<%= h2_version %>", // your jdbc driver here
+  "org.scalikejdbc" %% "scalikejdbc"                  % "<%= version %>",
+  "org.scalikejdbc" %% "scalikejdbc-config"           % "<%= version %>",
+  "org.scalikejdbc" %% "scalikejdbc-play-initializer" % "<%= latest_play_support_version %>"
 )
 ```
 
@@ -61,32 +69,110 @@ scalikejdbc.global.loggingSQLAndTime.warningThresholdMillis=5
 scalikejdbc.global.loggingSQLAndTime.warningLogLevel=warn
 
 play.modules.enabled += "scalikejdbc.PlayModule"
+# scalikejdbc.PlayModule doesn't depend on Play's DBModule
+play.modules.disabled += "play.api.db.DBModule"
 ```
 
+<hr/>
+### scalikejdbc-dbapi-adapter
+<hr/>
+
+This plugin is an adapter to connect `play.api.db.DBApi` and ScalikeJDBC.
+
+```sh
+# others are same as Play's defaults
+
+play.modules.enabled += "scalikejdbc.PlayDBApiAdapterModule"
+```
+
+<hr/>
+### Fixtures - scalikejdbc-play-fixture
+<hr/>
+
+```sh
+db.default.fixtures.test=["users.sql", "project.sql", "project_member.sql", "task.sql"]
+#db.secondary.fixtures.test=["users.sql", "project.sql", "project_member.sql", "task.sql"]
+
+play.modules.enabled += "scalikejdbc.PlayFixtureModule"
+```
+
+#### conf/db/fixtures/default/project.sql
+
+```sql
+# --- !Ups
+
+INSERT INTO project (id, name, folder) VALUES (1, 'Play 2.0', 'Play framework');
+INSERT INTO project (id, name, folder) VALUES (2, 'Play 1.2.4', 'Play framework');
+INSERT INTO project (id, name, folder) VALUES (3, 'Website', 'Play framework');
+INSERT INTO project (id, name, folder) VALUES (4, 'Secret project', 'Zenexity');
+INSERT INTO project (id, name, folder) VALUES (5, 'Playmate', 'Zenexity');
+INSERT INTO project (id, name, folder) VALUES (6, 'Things to do', 'Personal');
+INSERT INTO project (id, name, folder) VALUES (7, 'Play samples', 'Zenexity');
+INSERT INTO project (id, name, folder) VALUES (8, 'Private', 'Personal');
+INSERT INTO project (id, name, folder) VALUES (9, 'Private', 'Personal');
+INSERT INTO project (id, name, folder) VALUES (10, 'Private', 'Personal');
+INSERT INTO project (id, name, folder) VALUES (11, 'Private', 'Personal');
+ALTER SEQUENCE project_seq RESTART WITH 12;
+
+# --- !Downs
+ALTER SEQUENCE project_seq RESTART WITH 1;
+DELETE FROM project;
+```
+
+#### conf/db/fixtures/defaut/project_member.sql
+
+```sql
+# --- !Ups
+
+INSERT INTO project_member (project_id, user_email) VALUES (1, 'guillaume@sample.com');
+INSERT INTO project_member (project_id, user_email) VALUES (1, 'maxime@sample.com');
+INSERT INTO project_member (project_id, user_email) VALUES (1, 'sadek@sample.com');
+INSERT INTO project_member (project_id, user_email) VALUES (1, 'erwan@sample.com');
+INSERT INTO project_member (project_id, user_email) VALUES (2, 'guillaume@sample.com');
+INSERT INTO project_member (project_id, user_email) VALUES (2, 'erwan@sample.com');
+INSERT INTO project_member (project_id, user_email) VALUES (3, 'guillaume@sample.com');
+INSERT INTO project_member (project_id, user_email) VALUES (3, 'maxime@sample.com');
+INSERT INTO project_member (project_id, user_email) VALUES (4, 'guillaume@sample.com');
+INSERT INTO project_member (project_id, user_email) VALUES (4, 'maxime@sample.com');
+INSERT INTO project_member (project_id, user_email) VALUES (4, 'sadek@sample.com');
+INSERT INTO project_member (project_id, user_email) VALUES (4, 'erwan@sample.com');
+INSERT INTO project_member (project_id, user_email) VALUES (5, 'maxime@sample.com');
+INSERT INTO project_member (project_id, user_email) VALUES (6, 'guillaume@sample.com');
+INSERT INTO project_member (project_id, user_email) VALUES (7, 'guillaume@sample.com');
+INSERT INTO project_member (project_id, user_email) VALUES (7, 'maxime@sample.com');
+INSERT INTO project_member (project_id, user_email) VALUES (8, 'maxime@sample.com');
+INSERT INTO project_member (project_id, user_email) VALUES (9, 'guillaume@sample.com');
+INSERT INTO project_member (project_id, user_email) VALUES (10, 'erwan@sample.com');
+INSERT INTO project_member (project_id, user_email) VALUES (11, 'sadek@sample.com');
+
+# --- !Downs
+
+DELETE FROM project_member;
+```
 
 <hr/>
 ### Getting Started with Play 2.0 - 2.3
 
 <hr/>
-#### scalikejdbc-play-plugin
+### scalikejdbc-play-plugin
 <hr/>
 
 This plugin supports connection pooling too. You don't need `dbplugin` and `evolutionplugin` when using this plugin.
 
-##### project/Build.scala
+#### project/Build.scala
 
 ```scala
 libraryDependencies = Seq(
   "org.scalikejdbc" %% "scalikejdbc"                       % "<%= version %>",
   "org.scalikejdbc" %% "scalikejdbc-config"                % "<%= version %>",
-  "org.scalikejdbc" %% "scalikejdbc-play-plugin"           % "<%= latest_play_support_version %>",
-  "org.scalikejdbc" %% "scalikejdbc-play-fixture-plugin"   % "<%= latest_play_support_version %>", // optional
+  "org.scalikejdbc" %% "scalikejdbc-play-plugin"           % "2.3.6",
+  "org.scalikejdbc" %% "scalikejdbc-play-fixture-plugin"   % "2.3.6", // optional
   // substitute this for whatever DB driver you're using:
   "com.h2database"  %  "h2"                                % "<%= h2_version %>"
 )
 ```
 
-##### conf/play.plugins
+#### conf/play.plugins
 
 ```
 10000:scalikejdbc.PlayPlugin
@@ -99,7 +185,7 @@ If you use fixture-plugin too, PlayFixturePlugin should be loaded after PlayPlug
 11000:scalikejdbc.PlayFixturePlugin
 ```
 
-##### conf/application.conf
+#### conf/application.conf
 
 ```sh
 # Database configuration
@@ -145,7 +231,7 @@ logger.scalikejdbc=DEBUG
 
 This plugin is an adapter to connect `dbplugin` and ScalikeJDBC.
 
-##### project/Build.scala
+#### project/Build.scala
 
 ```scala
 libraryDependencies = Seq(
@@ -158,13 +244,13 @@ libraryDependencies = Seq(
 )
 ```
 
-##### conf/play.plugins
+#### conf/play.plugins
 
 ```
 10000:scalikejdbc.PlayDBPluginAdapter
 ```
 
-##### conf/application.conf
+#### conf/application.conf
 
 Basically do same as play-plugin. 
 
@@ -176,7 +262,7 @@ NOTICE: Don't disable dbplugin.
 
 Fixtures are optional. If you don't nee, no need to use them.
 
-##### conf/application.conf
+#### conf/application.conf
 
 ```sh
 db.default.fixtures.test=[ "project.sql", "project_member.sql" ]
@@ -190,62 +276,16 @@ db.default.url="jdbc:mysql://localhost/testdb?allowMultiQueries=true"
 ```
 
 
-##### conf/db/fixtures/default/project.sql
+#### conf/db/fixtures/default/project.sql
 
-```sql
-# --- !Ups
+Same as scalikejdbc-play-fixture.
 
-INSERT INTO project (id, name, folder) VALUES (1, 'Play 2.0', 'Play framework');
-INSERT INTO project (id, name, folder) VALUES (2, 'Play 1.2.4', 'Play framework');
-INSERT INTO project (id, name, folder) VALUES (3, 'Website', 'Play framework');
-INSERT INTO project (id, name, folder) VALUES (4, 'Secret project', 'Zenexity');
-INSERT INTO project (id, name, folder) VALUES (5, 'Playmate', 'Zenexity');
-INSERT INTO project (id, name, folder) VALUES (6, 'Things to do', 'Personal');
-INSERT INTO project (id, name, folder) VALUES (7, 'Play samples', 'Zenexity');
-INSERT INTO project (id, name, folder) VALUES (8, 'Private', 'Personal');
-INSERT INTO project (id, name, folder) VALUES (9, 'Private', 'Personal');
-INSERT INTO project (id, name, folder) VALUES (10, 'Private', 'Personal');
-INSERT INTO project (id, name, folder) VALUES (11, 'Private', 'Personal');
-ALTER SEQUENCE project_seq RESTART WITH 12;
+#### conf/db/fixtures/defaut/project_member.sql
 
-# --- !Downs
-ALTER SEQUENCE project_seq RESTART WITH 1;
-DELETE FROM project;
-```
-
-##### conf/db/fixtures/defaut/project_member.sql
-
-```sql
-# --- !Ups
-
-INSERT INTO project_member (project_id, user_email) VALUES (1, 'guillaume@sample.com');
-INSERT INTO project_member (project_id, user_email) VALUES (1, 'maxime@sample.com');
-INSERT INTO project_member (project_id, user_email) VALUES (1, 'sadek@sample.com');
-INSERT INTO project_member (project_id, user_email) VALUES (1, 'erwan@sample.com');
-INSERT INTO project_member (project_id, user_email) VALUES (2, 'guillaume@sample.com');
-INSERT INTO project_member (project_id, user_email) VALUES (2, 'erwan@sample.com');
-INSERT INTO project_member (project_id, user_email) VALUES (3, 'guillaume@sample.com');
-INSERT INTO project_member (project_id, user_email) VALUES (3, 'maxime@sample.com');
-INSERT INTO project_member (project_id, user_email) VALUES (4, 'guillaume@sample.com');
-INSERT INTO project_member (project_id, user_email) VALUES (4, 'maxime@sample.com');
-INSERT INTO project_member (project_id, user_email) VALUES (4, 'sadek@sample.com');
-INSERT INTO project_member (project_id, user_email) VALUES (4, 'erwan@sample.com');
-INSERT INTO project_member (project_id, user_email) VALUES (5, 'maxime@sample.com');
-INSERT INTO project_member (project_id, user_email) VALUES (6, 'guillaume@sample.com');
-INSERT INTO project_member (project_id, user_email) VALUES (7, 'guillaume@sample.com');
-INSERT INTO project_member (project_id, user_email) VALUES (7, 'maxime@sample.com');
-INSERT INTO project_member (project_id, user_email) VALUES (8, 'maxime@sample.com');
-INSERT INTO project_member (project_id, user_email) VALUES (9, 'guillaume@sample.com');
-INSERT INTO project_member (project_id, user_email) VALUES (10, 'erwan@sample.com');
-INSERT INTO project_member (project_id, user_email) VALUES (11, 'sadek@sample.com');
-
-# --- !Downs
-
-DELETE FROM project_member;
-```
+Same as scalikejdbc-play-fixture.
 
 <hr/>
-### More Examples
+## More Examples
 <hr/>
 
 Take a look at Typesafe Activator template:
