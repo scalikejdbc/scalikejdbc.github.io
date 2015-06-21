@@ -203,7 +203,7 @@ Here is an example:
 ```java
 val (p, c) = (Programmer.syntax("p"), Company.syntax("c"))
 
-val programmers: List[Long] = DB readOnly { implicit session =>
+val programmers: Seq[Programmer] = DB.readOnly { implicit session =>
   withSQL {
     select
       .from(Programmer as p)
