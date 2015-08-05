@@ -8,7 +8,7 @@ title: Query Inspector - ScalikeJDBC
 ### Checking the actual SQL and timing
 <hr/>
 
-Using LogginSQLAndTime feature, you can check the actual SQL(not exactly) and time.
+Using LoggingSQLAndTime feature, you can check the actual SQL(not exactly) and time.
 
 <hr/>
 ### Settings
