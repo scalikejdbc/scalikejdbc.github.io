@@ -8,7 +8,7 @@ title: Operations - ScalikeJDBC
 ### Query API
 <hr/>
 
-There are various query APIs. All of them (`single`, `first`, `list` and `foreach`) will execute `scala.sql.PreparedStatement#executeQuery()`.
+There are various query APIs. All of them (`single`, `first`, `list` and `foreach`) will execute `java.sql.PreparedStatement#executeQuery()`.
 
 <hr/>
 #### Single / Optional Result for Query
@@ -109,7 +109,7 @@ DB readOnly { implicit session =>
 ### Update API
 <hr/>
 
-`update` executes `scala.sql.PreparedStatement#executeUpdate()`.
+`update` executes `java.sql.PreparedStatement#executeUpdate()`.
 
 ```scala
 import scalikejdbc._, SQLInterpolation._
@@ -146,7 +146,7 @@ DB localTx { implicit s =>
 ### Execute API
 <hr/>
 
-`execute` executes `scala.sql.PreparedStatement#execute()`.
+`execute` executes `java.sql.PreparedStatement#execute()`.
 
 ```scala
 DB autoCommit { implicit session =>
@@ -160,7 +160,7 @@ DB autoCommit { implicit session =>
 ### Batch API
 <hr/>
 
-`batch` and `batchByName` executes `scala.sql.PreparedStatement#executeBatch()`.
+`batch` and `batchByName` executes `java.sql.PreparedStatement#executeBatch()`.
 
 ```scala
 import scalikejdbc._, SQLInterpolation._

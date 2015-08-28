@@ -20,7 +20,7 @@ Class.forName(String)
 or
 
 ```
-scala.sql.DriverManager.registerDriver(scala.sql.Driver)
+java.sql.DriverManager.registerDriver(java.sql.Driver)
 ```
 
 If you use `scalikejdbc-config` or `scalikejdbc-play-plugin`, they do the legacy work for you.
