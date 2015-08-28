@@ -24,12 +24,12 @@ try {
 }
 ```
 
-Of course, `update` operations in read-only mode will cause `scala.sql.SQLException`.
+Of course, `update` operations in read-only mode will cause `java.sql.SQLException`.
 
 ```scala
 DB readOnly { implicit session =>
   sql"update emp set name = ${name} where id = ${id}".update.apply()
-} // will throw scala.sql.SQLException
+} // will throw java.sql.SQLException
 ```
 
 <hr/>
