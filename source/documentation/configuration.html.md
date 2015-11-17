@@ -157,6 +157,8 @@ import scalikejdbc.config._
 DBs.setupAll()
 // DBs.setup()
 // DBs.setup('legacy)
+// // Unlike DBs.setupAll(), DBs.setup() doesn't load configurations under global settings automatically
+// DBs.loadGlobalSettings()
 
 // loaded from "db.default.*"
 val memberIds = DB readOnly { implicit session =>
