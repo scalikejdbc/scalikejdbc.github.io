@@ -12,55 +12,69 @@
   </head>
   <body>
     <div class="container">
-    <div class="navbar" role="navigation">
+    <div class="navbar" role="navigation" id="header">
       <div class="container">
         <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
             <li><a class="navbar-brand" href="/">ScalikeJDBC</a></li>
-            <li><%= link_to 'ScalikeJDBC 1.x', '/documentation/1.x/' %></li>
             <li><a href="http://typesafe.com/activator/template/scalikejdbc-activator-template">Typesafe Activator</a></li>
             <li><a href="https://groups.google.com/group/scalikejdbc-users-group">Users Group</a></li>
             <li><a href="https://github.com/scalikejdbc/scalikejdbc">GitHub</a></li>
+            <li><a href="http://skinny-framework.org/documentation/orm.html">Skinny ORM</a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
     </div>
-        <div class="col-xs-2">
-          <div class="content small">
-            <h5>version 1.x</h5>
-            <hr/>
-            <p><%= link_to 'Setup',            '/documentation/1.x/setup.html' %></p>
-            <p><%= link_to 'Configuration',    '/documentation/1.x/configuration.html' %></p>
-            <p><%= link_to 'Connection Pool',  '/documentation/1.x/connection-pool.html' %></p>
-            <p><%= link_to 'Operations',       '/documentation/1.x/operations.html' %></p>
-            <p><%= link_to 'Transaction',      '/documentation/1.x/transaction.html' %></p>
-            <p><%= link_to 'Auto Session',     '/documentation/1.x/auto-session.html' %></p>
-            <p><%= link_to 'SQLInterpolation', '/documentation/1.x/sql-interpolation.html' %></p>
-            <p><%= link_to 'QueryDSL',         '/documentation/1.x/query-dsl.html' %></p>
-            <p><%= link_to 'One-to-x API',     '/documentation/1.x/one-to-x.html' %></p>
-            <p><%= link_to 'Query Inspector',  '/documentation/1.x/query-inspector.html' %></p>
-            <p><%= link_to 'Reverse Engineering', '/documentation/1.x/reverse-engineering.html' %></p>
-            <p><%= link_to 'Testing',          '/documentation/1.x/testing.html' %></p>
-            <p><%= link_to 'Play2 Support',    '/documentation/1.x/playframework-support.html' %></p>
-            <p><%= link_to 'dbconsole',        '/documentation/1.x/dbconsole.html' %></p>
-            <p><%= link_to 'Contribution',     '/documentation/1.x/contribution.html' %></p>
+    <div class="col-xs-6 pull-right" style="height:50px;">
+      <gcse:searchbox-only></gcse:searchbox-only>
+    </div>
+      <div class="col-xs-10 left">
+        <div class="content">
+          <div class="alert alert-warning small">
+            WARNING: This page is a guide for 1.x series.
           </div>
-        </div>
-        <div class="col-xs-10">
-          <div class="content">
-<a href="https://github.com/scalikejdbc/scalikejdbc"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub"></a>
-            <%= yield %>
-            <hr/>
-            <div class="alert alert-info small"> 
-              If this webpage has typo or something wrong, Please report or fix. <%= link_to 'How?', '/contribution.html' %>
-            </div> 
-<a href="https://twitter.com/ScalikeJDBC" class="twitter-follow-button" data-show-count="false" data-size="large">Follow @ScalikeJDBC</a>
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+          <%= yield %>
+          <hr/>
+          <div class="alert alert-warning small">
+            If this webpage has typo or something wrong, Please report or fix. <%= link_to 'How?', '/contribution.html' %>
           </div>
         </div>
       </div>
+
+      <div class="col-xs-2 right">
+        <div class="content small">
+          <h5>version 1.x</h5>
+          <hr/>
+          <p><%= link_to 'Setup',            '/documentation/1.x/setup.html' %></p>
+          <p><%= link_to 'Configuration',    '/documentation/1.x/configuration.html' %></p>
+          <p><%= link_to 'Connection Pool',  '/documentation/1.x/connection-pool.html' %></p>
+          <p><%= link_to 'Operations',       '/documentation/1.x/operations.html' %></p>
+          <p><%= link_to 'Transaction',      '/documentation/1.x/transaction.html' %></p>
+          <p><%= link_to 'Auto Session',     '/documentation/1.x/auto-session.html' %></p>
+          <p><%= link_to 'SQLInterpolation', '/documentation/1.x/sql-interpolation.html' %></p>
+          <p><%= link_to 'QueryDSL',         '/documentation/1.x/query-dsl.html' %></p>
+          <p><%= link_to 'One-to-x API',     '/documentation/1.x/one-to-x.html' %></p>
+          <p><%= link_to 'Query Inspector',  '/documentation/1.x/query-inspector.html' %></p>
+          <p><%= link_to 'Reverse Engineering', '/documentation/1.x/reverse-engineering.html' %></p>
+          <p><%= link_to 'Testing',          '/documentation/1.x/testing.html' %></p>
+          <p><%= link_to 'Play2 Support',    '/documentation/1.x/playframework-support.html' %></p>
+          <p><%= link_to 'dbconsole',        '/documentation/1.x/dbconsole.html' %></p>
+          <p><%= link_to 'Contribution',     '/documentation/1.x/contribution.html' %></p>
+        </div>
+      </div>
+    </div>
     </div>
     <script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script>
+(function() {
+var cx = '000372347144050476309:fnw5lotlq6o';
+var gcse = document.createElement('script');
+gcse.type = 'text/javascript';
+gcse.async = true;
+gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//cse.google.com/cse.js?cx=' + cx;
+var s = document.getElementsByTagName('script')[0];
+s.parentNode.insertBefore(gcse, s);
+})();
+</script>
   </body>
 </html>
-
