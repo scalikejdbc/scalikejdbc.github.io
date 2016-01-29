@@ -30,6 +30,24 @@ Don't worry, this code is safely protected from SQL injection attacks. `${id}` w
 select id, name from members where id = ?
 ```
 
+#### Natively-handled types
+
+The following types are natively handled using SQL parameter binding (not only for SQL interpolation, but also for explicit parameter binding):
+
+* Numeric types: `Int`, `Short`, `Long`, `Float`, `Double`, `java.math.{BigInt, BigDecimal}`
+* Time and date types: `java.sql.{Date, Time, Timestamp}`, `java.util.Date`, `org.joda.time.{DateTime, LocalDateTime, LocalDate, LocalTime}`, `java.time.{ZonedDateTime, Instance, LocalDateTime, LocalDate, LocalTime}`
+* Other types with a straightforward SQL correspondence: `java.sql.{Array, SQLXML}`, `java.io.InputStream` (as a binary stream)
+* `Option` – converted to the corresponding value for `Some` instances, and `null` for `None`.
+
+In addition, SQL interpolation unwraps instances of `scala.collection.Traversable` and `java.lang.Iterable` and converts each element of the list into a bound parameter separated by ``, '', so the following behaves as you would expect:
+
+```scala
+val ids = Seq(123, 124, 125)
+sql"SELECT * FROM members WHERE id IN ${ids}"
+```
+
+Other values are mapped directly as `Object`s. 
+
 <hr/>
 ### SQLSyntax
 <hr/>
