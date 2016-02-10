@@ -213,17 +213,7 @@ scalikejdbc.ConnectionPoolFactoryRepository.add("name", YourConnectionPoolFactor
 ```
 
 <hr/>
-#### Default: commons-dbcp
-
-http://commons.apache.org/proper/commons-dbcp/
-
-```scala
-ConnectionPool.singleton(url, user, password, 
-  ConnectionPoolSettings(connectionPoolFactoryName = "commons-dbcp"))
-```
-
-<hr/>
-#### commons-dbcp2
+#### Default: commons-dbcp2
 
 http://commons.apache.org/proper/commons-dbcp/
 
@@ -237,7 +227,17 @@ ConnectionPool.singleton(url, user, password,
 `commons-dbcp2` dependency should be added by yourself.
 
 ```scala
-libraryDependencies += "org.apache.commons" % "commons-dbcp2" % "2.0.+"
+libraryDependencies += "org.apache.commons" % "commons-dbcp2" % "2.1.+"
+```
+
+<hr/>
+#### commons-dbcp
+
+http://commons.apache.org/proper/commons-dbcp/
+
+```scala
+ConnectionPool.singleton(url, user, password, 
+  ConnectionPoolSettings(connectionPoolFactoryName = "commons-dbcp"))
 ```
 
 <hr/>
