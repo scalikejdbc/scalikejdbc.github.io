@@ -148,12 +148,13 @@ db.default.driver="org.postgresql.Driver"
 db.default.url="jdbc:postgresql://localhost:5432/scalikejdbc"
 ```
 
-After just calling `scalikejdbc.config.DBs.setupAll()`, Connection pools are prepared.
+After just calling `scalikejdbc.config.DBs.setupAll()`, Connection pools are prepared. `DBs.setup/DBs.setupAll` loads specified JDBC driver classes as well.
 
 ```scala
 import scalikejdbc._
 import scalikejdbc.config._
 
+// DBs.setup/DBs.setupAll loads specified JDBC driver classes.
 DBs.setupAll()
 // DBs.setup()
 // DBs.setup('legacy)

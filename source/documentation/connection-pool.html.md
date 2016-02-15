@@ -206,24 +206,14 @@ ConnectionPool.add('xxxx, url, user, password)
 ### Switching ConnectionPool Implementation by configuration
 <hr/>
 
-When `ConnectionPoolFactory` implementation already exists, it's possible to specify it by configuration. By default, commons-dbcp and bonecp are already prepared. When you'd like to add another `ConnectionPoolFactory`, call repository's add method like this:
+When `ConnectionPoolFactory` implementation already exists, it's possible to specify it by configuration. By default, commons-dbcp 1/2 and bonecp are already prepared. When you'd like to add another `ConnectionPoolFactory`, call repository's add method like this:
 
 ```scala
 scalikejdbc.ConnectionPoolFactoryRepository.add("name", YourConnectionPoolFactory)
 ```
 
 <hr/>
-#### Default: commons-dbcp
-
-http://commons.apache.org/proper/commons-dbcp/
-
-```scala
-ConnectionPool.singleton(url, user, password, 
-  ConnectionPoolSettings(connectionPoolFactoryName = "commons-dbcp"))
-```
-
-<hr/>
-#### commons-dbcp2
+#### Default: commons-dbcp2
 
 http://commons.apache.org/proper/commons-dbcp/
 
@@ -234,10 +224,20 @@ ConnectionPool.singleton(url, user, password,
   ConnectionPoolSettings(connectionPoolFactoryName = "commons-dbcp2"))
 ```
 
-`commons-dbcp2` dependency should be added by yourself.
+<hr/>
+#### commons-dbcp 1.x
+
+Formally, commons-dbcp 1.4 is the default connection pool of ScalikeJDBC. We don't recomment you using the older one now, but if you need to choose 1.4 instead due to some reasons, specifying `commons-dbcp` works for you.
 
 ```scala
-libraryDependencies += "org.apache.commons" % "commons-dbcp2" % "2.0.+"
+ConnectionPool.singleton(url, user, password, 
+  ConnectionPoolSettings(connectionPoolFactoryName = "commons-dbcp"))
+```
+
+`commons-dbcp` dependency should be added by yourself.
+
+```scala
+libraryDependencies += "commons-dbcp" % "commons-dbcp" % "1.4"
 ```
 
 <hr/>
