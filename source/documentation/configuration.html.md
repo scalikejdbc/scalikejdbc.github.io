@@ -11,7 +11,7 @@ The following 3 things should be configured.
 ### Loading JDBC Drivers
 <hr/>
 
-In advance, JDBC drivers must be loaded by using
+In advance, some JDBC drivers must be loaded by using
 
 ```
 Class.forName(String)
@@ -22,6 +22,8 @@ or
 ```
 java.sql.DriverManager.registerDriver(java.sql.Driver)
 ```
+
+However many modern JDBC implementations will be automatically loaded when they are present on the classpath.
 
 If you use `scalikejdbc-config` or `scalikejdbc-play-plugin`, they do the legacy work for you.
 
