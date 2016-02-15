@@ -150,7 +150,9 @@ db.default.driver="org.postgresql.Driver"
 db.default.url="jdbc:postgresql://localhost:5432/scalikejdbc"
 ```
 
-After just calling `scalikejdbc.config.DBs.setupAll()`, Connection pools are prepared. `DBs.setup/DBs.setupAll` loads specified JDBC driver classes as well.
+After just calling `scalikejdbc.config.DBs.setupAll()`, Connection pools are prepared. `DBs.setup/DBs.setupAll` loads specified JDBC driver classes as well. 
+
+Note that due to the way JDBC works, these drivers are loaded globally for the entire JVM, and then a particular driver is selected from the global JVM list by locating the first which is able to handle the connection URL. This usually produces the expected behaviour anyway, unless you have multiple JDBC drivers in your classpath which handle the same URL (such as MySQL and MariaDB JDBC implementations, which both handle URLs of the form `jdbc:mysql:`). In these cases you may not get the implementation you are expecting, since the presence of JDBC packages in the classpath is, for many drivers, enough to have them registered globally.
 
 ```scala
 import scalikejdbc._
