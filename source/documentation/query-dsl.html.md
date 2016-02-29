@@ -164,6 +164,19 @@ def findOrder(id: Long, accountRequired: Boolean) = withSQL {
     if (accountRequired) Order(o, p, a)(rs) else Order(o, p)(rs)
   }.single.apply()
 
+// or
+
+def findOrder(id: Long, accountRequired: Boolean) = withSQL {
+  select
+    .from[Order](Order as o)
+    .innerJoin(Product as p).on(o.productId, p.id)
+    .leftJoin(if (accountRequired) Some(Account as a) else None).on(o.accountId, a.id)
+    .where.eq(o.id, 13)
+  }.map { rs =>
+    if (accountRequired) Order(o, p, a)(rs) else Order(o, p)(rs)
+  }.single.apply()
+
+
 // select o.*, p.*(, a.*) from orders o inner join products p on o.product_id = p.id
 // (left join accounts a on o.account_id = a.id)
 // where o.id = ?
@@ -428,6 +441,3 @@ def delete(id: Long)(implicit session: DBSession) {
   }.update.apply()
 }
 ```
-
-
-
