@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <!-- Use title if it's in the page YAML frontmatter -->
+    <title>Testing - ScalikeJDBC</title>
+    <script type="text/javascript" src="//codeorigin.jquery.com/jquery-1.10.2.min.js"></script>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"/>
+    <link href="/stylesheets/all.css" rel="stylesheet" />
+    <script src="/javascripts/all.js"></script>
+  </head>
+  <body>
+    <div class="container">
+    <div class="navbar" role="navigation" id="header">
+      <div class="container">
+        <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li><a class="navbar-brand" href="/">ScalikeJDBC</a></li>
+            <li><a href="http://typesafe.com/activator/template/scalikejdbc-activator-template">Typesafe Activator</a></li>
+            <li><a href="https://groups.google.com/group/scalikejdbc-users-group">Users Group</a></li>
+            <li><a href="https://github.com/scalikejdbc/scalikejdbc">GitHub</a></li>
+            <li><a href="http://skinny-framework.org/documentation/orm.html">Skinny ORM</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+    <div class="col-xs-6 pull-right" style="height:50px;">
+      <gcse:searchbox-only></gcse:searchbox-only>
+    </div>
+      <div class="col-xs-10 left">
+        <div class="content">
+          <h2 id="testing">Testing</h2>
+
+<hr/>
+
+<h3 id="setup">Setup</h3>
+
+<hr/>
+
+<p>See <a href="/documentation/setup.html">/documentation/setup</a>.</p>
+
+<hr/>
+
+<h3 id="for-scalatest-users">For ScalaTest Users</h3>
+
+<hr/>
+
+<p><code>AutoRollback</code> trait provides automatic rollback after each test and data fixture. </p>
+
+<p>NOTICE: scalikejdbc-test is compatible with ScalaTest 2.0 or higher.</p>
+<pre class="highlight scala"><code><span class="k">import</span> <span class="nn">scalikejdbc._</span>
+<span class="k">import</span> <span class="nn">scalikejdbc.scalatest.AutoRollback</span>
+<span class="k">import</span> <span class="nn">org.joda.time.DateTime</span>
+<span class="k">import</span> <span class="nn">org.scalatest.fixture.FlatSpec</span>
+
+<span class="k">class</span> <span class="nc">AutoRollbackSpec</span> <span class="k">extends</span> <span class="nc">FlatSpec</span> <span class="k">with</span> <span class="nc">AutoRollback</span> <span class="o">{</span>
+
+  <span class="c1">// override def db = NamedDB('anotherdb).toDB
+</span>
+  <span class="k">override</span> <span class="k">def</span> <span class="n">fixture</span><span class="o">(</span><span class="k">implicit</span> <span class="n">session</span><span class="k">:</span> <span class="kt">DBSession</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">sql</span><span class="s">"insert into members values (1, ${"</span><span class="nc">Alice</span><span class="s">"}, ${DateTime.now})"</span><span class="o">.</span><span class="n">update</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+    <span class="n">sql</span><span class="s">"insert into members values (2, ${"</span><span class="nc">Bob</span><span class="s">"}, ${DateTime.now})"</span><span class="o">.</span><span class="n">update</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+  <span class="o">}</span>
+
+  <span class="n">behavior</span> <span class="n">of</span> <span class="s">"Members"</span>
+
+  <span class="n">it</span> <span class="n">should</span> <span class="s">"create a new record"</span> <span class="n">in</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span>
+    <span class="k">val</span> <span class="n">before</span> <span class="k">=</span> <span class="nc">Member</span><span class="o">.</span><span class="n">count</span><span class="o">()</span>
+    <span class="nc">Member</span><span class="o">.</span><span class="n">create</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="s">"Chris"</span><span class="o">)</span>
+    <span class="nc">Member</span><span class="o">.</span><span class="n">count</span><span class="o">()</span> <span class="n">should</span> <span class="n">equal</span><span class="o">(</span><span class="n">before</span> <span class="o">+</span> <span class="mi">1</span><span class="o">)</span>
+  <span class="o">}</span>
+
+<span class="o">}</span>
+</code></pre>
+
+<hr/>
+
+<h3 id="for-specs2-users">For specs2 Users</h3>
+
+<hr/>
+
+<p><code>AutoRollback</code> trait provides automatic rollback after each test and data fixture.</p>
+
+<hr/>
+
+<h4 id="unit-style">unit style</h4>
+
+<hr/>
+<pre class="highlight scala"><code><span class="k">import</span> <span class="nn">scalikejdbc._</span>
+<span class="k">import</span> <span class="nn">scalikejdbc.specs2.mutable.AutoRollback</span>
+<span class="k">import</span> <span class="nn">org.joda.time.DateTime</span>
+<span class="k">import</span> <span class="nn">org.specs2.mutable.Specification</span>
+
+<span class="k">object</span> <span class="nc">MemberSpec</span> <span class="k">extends</span> <span class="nc">Specification</span> <span class="o">{</span>
+
+  <span class="n">sequential</span>
+
+  <span class="s">"Member should create a new record"</span> <span class="n">in</span> <span class="k">new</span> <span class="nc">AutoRollback</span> <span class="o">{</span>
+    <span class="k">val</span> <span class="n">before</span> <span class="k">=</span> <span class="nc">Member</span><span class="o">.</span><span class="n">count</span><span class="o">()</span>
+    <span class="nc">Member</span><span class="o">.</span><span class="n">create</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="s">"Chris"</span><span class="o">)</span>
+    <span class="nc">Member</span><span class="o">.</span><span class="n">count</span><span class="o">()</span> <span class="n">must_==</span><span class="o">(</span><span class="n">before</span> <span class="o">+</span> <span class="mi">1</span><span class="o">)</span>
+  <span class="o">}</span>
+
+  <span class="s">"Member should ... "</span> <span class="n">in</span> <span class="k">new</span> <span class="nc">AutoRollbackWithFixture</span> <span class="o">{</span>
+    <span class="o">...</span>
+  <span class="o">}</span>
+
+<span class="o">}</span>
+
+<span class="k">trait</span> <span class="nc">AutoRollbackWithFixture</span> <span class="k">extends</span> <span class="nc">AutoRollback</span> <span class="o">{</span>
+  <span class="c1">// override def db = NamedDB('db2).toDB
+</span>  <span class="k">override</span> <span class="k">def</span> <span class="n">fixture</span><span class="o">(</span><span class="k">implicit</span> <span class="n">session</span><span class="k">:</span> <span class="kt">DBSession</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">sql</span><span class="s">"insert into members values (1, ${"</span><span class="nc">Alice</span><span class="s">"}, ${DateTime.now})"</span><span class="o">.</span><span class="n">update</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+    <span class="n">sql</span><span class="s">"insert into members values (2, ${"</span><span class="nc">Bob</span><span class="s">"}, ${DateTime.now})"</span><span class="o">.</span><span class="n">update</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+
+</code></pre>
+
+<hr/>
+
+<h4 id="acceptance-style">acceptance style</h4>
+
+<hr/>
+<pre class="highlight scala"><code><span class="k">import</span> <span class="nn">scalikejdbc._</span>
+<span class="k">import</span> <span class="nn">scalikejdbc.specs2.AutoRollback</span>
+<span class="k">import</span> <span class="nn">org.joda.time.DateTime</span>
+<span class="k">import</span> <span class="nn">org.specs2.Specification</span>
+
+<span class="k">class</span> <span class="nc">MemberSpec</span> <span class="k">extends</span> <span class="nc">Specification</span> <span class="o">{</span> <span class="k">def</span> <span class="n">is</span> <span class="k">=</span>
+
+  <span class="n">args</span><span class="o">(</span><span class="n">sequential</span> <span class="k">=</span> <span class="kc">true</span><span class="o">)</span> <span class="o">^</span>
+  <span class="s">"Member should create a new record"</span> <span class="o">!</span> <span class="n">autoRollback</span><span class="o">().</span><span class="n">create</span>
+  <span class="n">end</span>
+
+  <span class="k">case</span> <span class="k">class</span> <span class="nc">autoRollback</span><span class="o">()</span> <span class="k">extends</span> <span class="nc">AutoRollback</span> <span class="o">{</span>
+
+    <span class="c1">// override def db = NamedDB('db2).toDB
+</span>    <span class="c1">// override def fixture(implicit session: DBSession) { ... }
+</span>
+    <span class="k">def</span> <span class="n">create</span> <span class="k">=</span> <span class="k">this</span> <span class="o">{</span>
+      <span class="k">val</span> <span class="n">before</span> <span class="k">=</span> <span class="nc">Member</span><span class="o">.</span><span class="n">count</span><span class="o">()</span>
+      <span class="nc">Member</span><span class="o">.</span><span class="n">create</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="s">"Chris"</span><span class="o">)</span>
+      <span class="nc">Member</span><span class="o">.</span><span class="n">count</span><span class="o">()</span> <span class="n">must_==</span><span class="o">(</span><span class="n">before</span> <span class="o">+</span> <span class="mi">1</span><span class="o">)</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+
+<span class="o">}</span>
+</code></pre>
+
+          <hr/>
+          <div class="alert alert-warning small">
+            If this webpage has typo or something wrong, Please report or fix. <a href="/contribution.html">How?</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xs-2 right">
+        <div class="content small">
+          <h5>Latest version</h5>
+          <hr/>
+          <p><a href="/documentation/setup.html">Setup</a></p>
+          <p><a href="/documentation/configuration.html">Configuration</a></p>
+          <p><a href="/documentation/connection-pool.html">Connection Pool</a></p>
+          <p><a href="/documentation/operations.html">Operations</a></p>
+          <p><a href="/documentation/transaction.html">Transaction</a></p>
+          <p><a href="/documentation/auto-session.html">Auto Session</a></p>
+          <p><a href="/documentation/sql-interpolation.html">SQLInterpolation</a></p>
+          <p><a href="/documentation/query-dsl.html">QueryDSL</a></p>
+          <p><a href="/documentation/one-to-x.html">One-to-x API</a></p>
+          <p><a href="/documentation/auto-macros.html">Auto Macros</a></p>
+          <p><a href="/documentation/query-inspector.html">Query Inspector</a></p>
+          <p><a href="/documentation/reverse-engineering.html">Reverse Engineering</a></p>
+          <p><a href="/documentation/testing.html">Testing</a></p>
+          <p><a href="/documentation/playframework-support.html">Play Support</a></p>
+          <p><a href="/documentation/dbconsole.html">dbconsole</a></p>
+          <p><a href="http://www.javadoc.io/doc/org.scalikejdbc/scalikejdbc-core_2.11/2.3.5">Core API Doc</a></p>
+          <p><a href="/documentation/faq.html">FAQ</a></p>
+          <p><a href="/contribution.html">Contribution</a></p>
+          <hr/>
+          <h5>Older Versions</h5>
+          <hr/>
+          <p><a href="/documentation/1.x/">version 1.x</a></p>
+        </div>
+      </div>
+    </div>
+    </div>
+    <script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script>
+(function() {
+var cx = '000372347144050476309:fnw5lotlq6o';
+var gcse = document.createElement('script');
+gcse.type = 'text/javascript';
+gcse.async = true;
+gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//cse.google.com/cse.js?cx=' + cx;
+var s = document.getElementsByTagName('script')[0];
+s.parentNode.insertBefore(gcse, s);
+})();
+</script>
+  </body>
+</html>

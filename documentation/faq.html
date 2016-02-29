@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <!-- Use title if it's in the page YAML frontmatter -->
+    <title>FAQ - ScalikeJDBC</title>
+    <script type="text/javascript" src="//codeorigin.jquery.com/jquery-1.10.2.min.js"></script>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"/>
+    <link href="/stylesheets/all.css" rel="stylesheet" />
+    <script src="/javascripts/all.js"></script>
+  </head>
+  <body>
+    <div class="container">
+    <div class="navbar" role="navigation" id="header">
+      <div class="container">
+        <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li><a class="navbar-brand" href="/">ScalikeJDBC</a></li>
+            <li><a href="http://typesafe.com/activator/template/scalikejdbc-activator-template">Typesafe Activator</a></li>
+            <li><a href="https://groups.google.com/group/scalikejdbc-users-group">Users Group</a></li>
+            <li><a href="https://github.com/scalikejdbc/scalikejdbc">GitHub</a></li>
+            <li><a href="http://skinny-framework.org/documentation/orm.html">Skinny ORM</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+    <div class="col-xs-6 pull-right" style="height:50px;">
+      <gcse:searchbox-only></gcse:searchbox-only>
+    </div>
+      <div class="col-xs-10 left">
+        <div class="content">
+          <h2 id="faq">FAQ</h2>
+
+<hr/>
+
+<h3 id="oracle-db-ms-sqlserver-supported">Oracle DB / MS SQLServer supported?</h3>
+
+<hr/>
+
+<p>ScalikeJDBC supports PostgreSQL, MySQL, H2 Database Engine and HSQLDB. We never release without passing all the unit tests with these RDBMS. If you&rsquo;re using either of them, ScalikeJDBC should be very stable.</p>
+
+<p>On the other hand, ScalikeJDBC simply uses JDBC drivers internally, so it basically should work fine with any other RDBMS. </p>
+
+<hr/>
+
+<h3 id="how-to-use-other-connection-pool">How to use other connection pool?</h3>
+
+<hr/>
+
+<p>ScalikeJDBC&rsquo;s default connection pool implementation is <a href="http://commons.apache.org/proper/commons-dbcp/">Apache Commons DBCP</a>. </p>
+
+<p>You can easily use other implementation. See in detail:</p>
+
+<p><a href="/documentation/connection-pool.html">/documentation/connection-pool.html</a></p>
+
+<hr/>
+
+<h3 id="how-to-share-same-db-with-rails-activerecord">How to share same DB with Rails ActiveRecord?</h3>
+
+<hr/>
+
+<p>As you know, Rails ActiveRecord saves timestamp values in UTC time zone. DB column types will be <code>timetamp without timezone</code>.</p>
+
+<p>When you need to work with them, call the following Java TimeZone&rsquo;s setter method (instead of <code>DateTimeZone.setDefault(DateTimeZone.UTC)</code>) at first.</p>
+<pre class="highlight scala"><code><span class="n">java</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="nc">TimeZone</span><span class="o">.</span><span class="n">setDefault</span><span class="o">(</span><span class="n">java</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="nc">TimeZone</span><span class="o">.</span><span class="n">getTimeZone</span><span class="o">(</span><span class="s">"UTC"</span><span class="o">))</span>
+</code></pre>
+
+<hr/>
+
+<h3 id="non-blocking-support">non-blocking support?</h3>
+
+<hr/>
+
+<p>Unfortunately, no. Indeed, JDBC drivers block on socket IO. So using them to talk with RDBMS in async event driven architecture may not be appropriate. However, actually most of real world applications don’t need event-driven architecture yet. JDBC is still important infrastructure for apps on the JVM.</p>
+
+<p>If you really prefer non-blocking database access, take a look at ScalikeJDBC-Async. It provides non-blocking APIs to talk with PostgreSQL and MySQL in the JDBC way.</p>
+
+<p><a href="https://github.com/scalikejdbc/scalikejdbc-async">https://github.com/scalikejdbc/scalikejdbc-async</a></p>
+
+<p>ScalikeJDBC-Async is still in the alpha stage. If you don’t have motivation to investigate or fix issues by yourself, we recommend you waiting until stable version release someday.</p>
+
+<hr/>
+
+<h3 id="orm-feature">ORM feature?</h3>
+
+<hr/>
+
+<p>ScalikeJDBC&rsquo;s concept is a tidy wrapper of JDBC drivers, so it handles very lower layer than common ORMs. If you&rsquo;re looking for an ORM which supports associations or other rich features, take a look at Skinny ORM.</p>
+
+<p>Skinny ORM is the default DB access library of <a href="http://skinny-framework.org/">Skinny Framework</a>. Skinny ORM is built upon ScalikeJDBC. In most cases, it will make things easier.</p>
+
+<p><a href="http://skinny-framework.org/documentation/orm.html">http://skinny-framework.org/documentation/orm.html</a></p>
+
+<hr/>
+
+<h3 id="is-it-possible-to-integrate-with-play-framework">Is it possible to integrate with Play Framework?</h3>
+
+<hr/>
+
+<p>Yes, it is. We support some Play plugins to seamlesssly integrate ScalikeJDBC with Play Framework. </p>
+
+<p>See in detail here: <a href="/documentation/playframework-support.html">/documentation/playframework-support.html</a></p>
+
+<hr/>
+
+<h3 id="license">License?</h3>
+
+<hr/>
+
+<p>the Apache License, Version 2.0</p>
+
+<p><a href="https://github.com/scalikejdbc/scalikejdbc/blob/master/LICENSE.txt">https://github.com/scalikejdbc/scalikejdbc/blob/master/LICENSE.txt</a></p>
+
+          <hr/>
+          <div class="alert alert-warning small">
+            If this webpage has typo or something wrong, Please report or fix. <a href="/contribution.html">How?</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xs-2 right">
+        <div class="content small">
+          <h5>Latest version</h5>
+          <hr/>
+          <p><a href="/documentation/setup.html">Setup</a></p>
+          <p><a href="/documentation/configuration.html">Configuration</a></p>
+          <p><a href="/documentation/connection-pool.html">Connection Pool</a></p>
+          <p><a href="/documentation/operations.html">Operations</a></p>
+          <p><a href="/documentation/transaction.html">Transaction</a></p>
+          <p><a href="/documentation/auto-session.html">Auto Session</a></p>
+          <p><a href="/documentation/sql-interpolation.html">SQLInterpolation</a></p>
+          <p><a href="/documentation/query-dsl.html">QueryDSL</a></p>
+          <p><a href="/documentation/one-to-x.html">One-to-x API</a></p>
+          <p><a href="/documentation/auto-macros.html">Auto Macros</a></p>
+          <p><a href="/documentation/query-inspector.html">Query Inspector</a></p>
+          <p><a href="/documentation/reverse-engineering.html">Reverse Engineering</a></p>
+          <p><a href="/documentation/testing.html">Testing</a></p>
+          <p><a href="/documentation/playframework-support.html">Play Support</a></p>
+          <p><a href="/documentation/dbconsole.html">dbconsole</a></p>
+          <p><a href="http://www.javadoc.io/doc/org.scalikejdbc/scalikejdbc-core_2.11/2.3.5">Core API Doc</a></p>
+          <p><a href="/documentation/faq.html">FAQ</a></p>
+          <p><a href="/contribution.html">Contribution</a></p>
+          <hr/>
+          <h5>Older Versions</h5>
+          <hr/>
+          <p><a href="/documentation/1.x/">version 1.x</a></p>
+        </div>
+      </div>
+    </div>
+    </div>
+    <script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script>
+(function() {
+var cx = '000372347144050476309:fnw5lotlq6o';
+var gcse = document.createElement('script');
+gcse.type = 'text/javascript';
+gcse.async = true;
+gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//cse.google.com/cse.js?cx=' + cx;
+var s = document.getElementsByTagName('script')[0];
+s.parentNode.insertBefore(gcse, s);
+})();
+</script>
+  </body>
+</html>

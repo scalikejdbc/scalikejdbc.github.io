@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <!-- Use title if it's in the page YAML frontmatter -->
+    <title>Play Framework Support - ScalikeJDBC</title>
+    <script type="text/javascript" src="//codeorigin.jquery.com/jquery-1.10.2.min.js"></script>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"/>
+    <link href="/stylesheets/all.css" rel="stylesheet" />
+    <script src="/javascripts/all.js"></script>
+  </head>
+  <body>
+    <div class="container">
+    <div class="navbar" role="navigation" id="header">
+      <div class="container">
+        <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li><a class="navbar-brand" href="/">ScalikeJDBC</a></li>
+            <li><a href="http://typesafe.com/activator/template/scalikejdbc-activator-template">Typesafe Activator</a></li>
+            <li><a href="https://groups.google.com/group/scalikejdbc-users-group">Users Group</a></li>
+            <li><a href="https://github.com/scalikejdbc/scalikejdbc">GitHub</a></li>
+            <li><a href="http://skinny-framework.org/documentation/orm.html">Skinny ORM</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+    <div class="col-xs-6 pull-right" style="height:50px;">
+      <gcse:searchbox-only></gcse:searchbox-only>
+    </div>
+      <div class="col-xs-10 left">
+        <div class="content">
+          <div class="alert alert-warning small">
+            WARNING: This page is a guide for 1.x series.
+          </div>
+          <h2 id="play-framework-support">Play Framework Support</h2>
+
+<hr/>
+
+<h3 id="how-to-setup">How to setup</h3>
+
+<p>See <a href="/documentation/setup.html">/documentation/setup</a>.</p>
+
+<hr/>
+
+<h3 id="configuration">Configuration</h3>
+
+<p>Here is some configuration examples. Basically it&rsquo;s very simple:</p>
+
+<h4 id="conf-application-conf">conf/application.conf</h4>
+<pre class="highlight shell"><code><span class="c"># Database configuration</span>
+<span class="c"># ~~~~~</span>
+<span class="c"># You can declare as many datasources as you want.</span>
+<span class="c"># By convention, the default datasource is named `default`</span>
+db.default.driver<span class="o">=</span>org.h2.Driver
+db.default.url<span class="o">=</span><span class="s2">"jdbc:h2:mem:play"</span>
+db.default.user<span class="o">=</span><span class="s2">"sa"</span>
+db.default.password<span class="o">=</span><span class="s2">"sa"</span>
+
+db.secondary.driver<span class="o">=</span>org.h2.Driver
+db.secondary.url<span class="o">=</span><span class="s2">"jdbc:h2:mem:play2"</span>
+db.secondary.user<span class="o">=</span><span class="s2">"sa"</span>
+db.secondary.password<span class="o">=</span><span class="s2">"sa"</span>
+
+<span class="c"># ScalikeJDBC original configuration</span>
+
+<span class="c">#db.default.poolInitialSize=10</span>
+<span class="c">#db.default.poolMaxSize=10</span>
+<span class="c">#db.default.poolValidationQuery=</span>
+
+scalikejdbc.global.loggingSQLAndTime.enabled<span class="o">=</span><span class="nb">true
+</span>scalikejdbc.global.loggingSQLAndTime.logLevel<span class="o">=</span>debug
+scalikejdbc.global.loggingSQLAndTime.warningEnabled<span class="o">=</span><span class="nb">true
+</span>scalikejdbc.global.loggingSQLAndTime.warningThresholdMillis<span class="o">=</span>1000
+scalikejdbc.global.loggingSQLAndTime.warningLogLevel<span class="o">=</span>warn
+
+<span class="c">#scalikejdbc.play.closeAllOnStop.enabled=true</span>
+
+<span class="c"># You can disable the default DB plugin</span>
+<span class="nv">dbplugin</span><span class="o">=</span>disabled
+<span class="nv">evolutionplugin</span><span class="o">=</span>disabled
+
+<span class="c"># scalikejdbc logging</span>
+logger.scalikejdbc<span class="o">=</span>DEBUG
+</code></pre>
+
+<h4 id="fixtures">Fixtures</h4>
+
+<p>Fixtures are optional. If you don&rsquo;t nee, no need to use them.</p>
+
+<h5 id="conf-application-conf">conf/application.conf</h5>
+<pre class="highlight shell"><code>db.default.fixtures.test<span class="o">=[</span> <span class="s2">"project.sql"</span>, <span class="s2">"project_member.sql"</span> <span class="o">]</span>
+</code></pre>
+
+<h5 id="conf-db-fixtures-default-project-sql">conf/db/fixtures/default/project.sql</h5>
+<pre class="highlight sql"><code><span class="o">#</span> <span class="c1">--- !Ups
+</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">project</span> <span class="p">(</span><span class="n">id</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">folder</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">'Play 2.0'</span><span class="p">,</span> <span class="s1">'Play framework'</span><span class="p">);</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">project</span> <span class="p">(</span><span class="n">id</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">folder</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s1">'Play 1.2.4'</span><span class="p">,</span> <span class="s1">'Play framework'</span><span class="p">);</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">project</span> <span class="p">(</span><span class="n">id</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">folder</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s1">'Website'</span><span class="p">,</span> <span class="s1">'Play framework'</span><span class="p">);</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">project</span> <span class="p">(</span><span class="n">id</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">folder</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="s1">'Secret project'</span><span class="p">,</span> <span class="s1">'Zenexity'</span><span class="p">);</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">project</span> <span class="p">(</span><span class="n">id</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">folder</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="s1">'Playmate'</span><span class="p">,</span> <span class="s1">'Zenexity'</span><span class="p">);</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">project</span> <span class="p">(</span><span class="n">id</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">folder</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="s1">'Things to do'</span><span class="p">,</span> <span class="s1">'Personal'</span><span class="p">);</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">project</span> <span class="p">(</span><span class="n">id</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">folder</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="s1">'Play samples'</span><span class="p">,</span> <span class="s1">'Zenexity'</span><span class="p">);</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">project</span> <span class="p">(</span><span class="n">id</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">folder</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="s1">'Private'</span><span class="p">,</span> <span class="s1">'Personal'</span><span class="p">);</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">project</span> <span class="p">(</span><span class="n">id</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">folder</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="s1">'Private'</span><span class="p">,</span> <span class="s1">'Personal'</span><span class="p">);</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">project</span> <span class="p">(</span><span class="n">id</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">folder</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="s1">'Private'</span><span class="p">,</span> <span class="s1">'Personal'</span><span class="p">);</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">project</span> <span class="p">(</span><span class="n">id</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">folder</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="s1">'Private'</span><span class="p">,</span> <span class="s1">'Personal'</span><span class="p">);</span>
+<span class="k">ALTER</span> <span class="n">SEQUENCE</span> <span class="n">project_seq</span> <span class="k">RESTART</span> <span class="k">WITH</span> <span class="mi">12</span><span class="p">;</span>
+
+<span class="o">#</span> <span class="c1">--- !Downs
+</span><span class="k">ALTER</span> <span class="n">SEQUENCE</span> <span class="n">project_seq</span> <span class="k">RESTART</span> <span class="k">WITH</span> <span class="mi">1</span><span class="p">;</span>
+<span class="k">DELETE</span> <span class="k">FROM</span> <span class="n">project</span><span class="p">;</span>
+</code></pre>
+
+<h5 id="conf-db-fixtures-defaut-project_member-sql">conf/db/fixtures/defaut/project_member.sql</h5>
+<pre class="highlight sql"><code><span class="o">#</span> <span class="c1">--- !Ups
+</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">project_member</span> <span class="p">(</span><span class="n">project_id</span><span class="p">,</span> <span class="n">user_email</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">'guillaume@sample.com'</span><span class="p">);</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">project_member</span> <span class="p">(</span><span class="n">project_id</span><span class="p">,</span> <span class="n">user_email</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">'maxime@sample.com'</span><span class="p">);</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">project_member</span> <span class="p">(</span><span class="n">project_id</span><span class="p">,</span> <span class="n">user_email</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">'sadek@sample.com'</span><span class="p">);</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">project_member</span> <span class="p">(</span><span class="n">project_id</span><span class="p">,</span> <span class="n">user_email</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">'erwan@sample.com'</span><span class="p">);</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">project_member</span> <span class="p">(</span><span class="n">project_id</span><span class="p">,</span> <span class="n">user_email</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s1">'guillaume@sample.com'</span><span class="p">);</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">project_member</span> <span class="p">(</span><span class="n">project_id</span><span class="p">,</span> <span class="n">user_email</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s1">'erwan@sample.com'</span><span class="p">);</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">project_member</span> <span class="p">(</span><span class="n">project_id</span><span class="p">,</span> <span class="n">user_email</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s1">'guillaume@sample.com'</span><span class="p">);</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">project_member</span> <span class="p">(</span><span class="n">project_id</span><span class="p">,</span> <span class="n">user_email</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s1">'maxime@sample.com'</span><span class="p">);</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">project_member</span> <span class="p">(</span><span class="n">project_id</span><span class="p">,</span> <span class="n">user_email</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="s1">'guillaume@sample.com'</span><span class="p">);</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">project_member</span> <span class="p">(</span><span class="n">project_id</span><span class="p">,</span> <span class="n">user_email</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="s1">'maxime@sample.com'</span><span class="p">);</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">project_member</span> <span class="p">(</span><span class="n">project_id</span><span class="p">,</span> <span class="n">user_email</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="s1">'sadek@sample.com'</span><span class="p">);</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">project_member</span> <span class="p">(</span><span class="n">project_id</span><span class="p">,</span> <span class="n">user_email</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="s1">'erwan@sample.com'</span><span class="p">);</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">project_member</span> <span class="p">(</span><span class="n">project_id</span><span class="p">,</span> <span class="n">user_email</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="s1">'maxime@sample.com'</span><span class="p">);</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">project_member</span> <span class="p">(</span><span class="n">project_id</span><span class="p">,</span> <span class="n">user_email</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="s1">'guillaume@sample.com'</span><span class="p">);</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">project_member</span> <span class="p">(</span><span class="n">project_id</span><span class="p">,</span> <span class="n">user_email</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="s1">'guillaume@sample.com'</span><span class="p">);</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">project_member</span> <span class="p">(</span><span class="n">project_id</span><span class="p">,</span> <span class="n">user_email</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="s1">'maxime@sample.com'</span><span class="p">);</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">project_member</span> <span class="p">(</span><span class="n">project_id</span><span class="p">,</span> <span class="n">user_email</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="s1">'maxime@sample.com'</span><span class="p">);</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">project_member</span> <span class="p">(</span><span class="n">project_id</span><span class="p">,</span> <span class="n">user_email</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="s1">'guillaume@sample.com'</span><span class="p">);</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">project_member</span> <span class="p">(</span><span class="n">project_id</span><span class="p">,</span> <span class="n">user_email</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="s1">'erwan@sample.com'</span><span class="p">);</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">project_member</span> <span class="p">(</span><span class="n">project_id</span><span class="p">,</span> <span class="n">user_email</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="s1">'sadek@sample.com'</span><span class="p">);</span>
+
+<span class="o">#</span> <span class="c1">--- !Downs
+</span>
+<span class="k">DELETE</span> <span class="k">FROM</span> <span class="n">project_member</span><span class="p">;</span>
+</code></pre>
+
+<hr/>
+
+<h3 id="more-examples">More Examples</h3>
+
+<p>Take a look at Typesafe Activator template:</p>
+
+<p><img alt="Typesafe" src="/images/typesafe.png" /></p>
+
+<p>You can try a <a href="http://www.playframework.com/">Play framework</a> sample app which uses ScalikeJDBC on <a href="http://typesafe.com/activator">Typesafe Activator</a>.</p>
+
+<p>Activator page: <a href="http://typesafe.com/activator/template/scalikejdbc-activator-template">Hello ScalikeJDBC!</a></p>
+
+<p>See on GitHub: <a href="https://github.com/scalikejdbc/hello-scalikejdbc">scalikejdbc/hello-scalikejdbc</a></p>
+
+          <hr/>
+          <div class="alert alert-warning small">
+            If this webpage has typo or something wrong, Please report or fix. <a href="/contribution.html">How?</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xs-2 right">
+        <div class="content small">
+          <h5>version 1.x</h5>
+          <hr/>
+          <p><a href="/documentation/1.x/setup.html">Setup</a></p>
+          <p><a href="/documentation/1.x/configuration.html">Configuration</a></p>
+          <p><a href="/documentation/1.x/connection-pool.html">Connection Pool</a></p>
+          <p><a href="/documentation/1.x/operations.html">Operations</a></p>
+          <p><a href="/documentation/1.x/transaction.html">Transaction</a></p>
+          <p><a href="/documentation/1.x/auto-session.html">Auto Session</a></p>
+          <p><a href="/documentation/1.x/sql-interpolation.html">SQLInterpolation</a></p>
+          <p><a href="/documentation/1.x/query-dsl.html">QueryDSL</a></p>
+          <p><a href="/documentation/1.x/one-to-x.html">One-to-x API</a></p>
+          <p><a href="/documentation/1.x/query-inspector.html">Query Inspector</a></p>
+          <p><a href="/documentation/1.x/reverse-engineering.html">Reverse Engineering</a></p>
+          <p><a href="/documentation/1.x/testing.html">Testing</a></p>
+          <p><a href="/documentation/1.x/playframework-support.html">Play2 Support</a></p>
+          <p><a href="/documentation/1.x/dbconsole.html">dbconsole</a></p>
+          <p><a href="/documentation/1.x/contribution.html">Contribution</a></p>
+        </div>
+      </div>
+    </div>
+    </div>
+    <script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script>
+(function() {
+var cx = '000372347144050476309:fnw5lotlq6o';
+var gcse = document.createElement('script');
+gcse.type = 'text/javascript';
+gcse.async = true;
+gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//cse.google.com/cse.js?cx=' + cx;
+var s = document.getElementsByTagName('script')[0];
+s.parentNode.insertBefore(gcse, s);
+})();
+</script>
+  </body>
+</html>

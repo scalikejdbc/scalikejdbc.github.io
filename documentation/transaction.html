@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <!-- Use title if it's in the page YAML frontmatter -->
+    <title>Transaction - ScalikeJDBC</title>
+    <script type="text/javascript" src="//codeorigin.jquery.com/jquery-1.10.2.min.js"></script>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"/>
+    <link href="/stylesheets/all.css" rel="stylesheet" />
+    <script src="/javascripts/all.js"></script>
+  </head>
+  <body>
+    <div class="container">
+    <div class="navbar" role="navigation" id="header">
+      <div class="container">
+        <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li><a class="navbar-brand" href="/">ScalikeJDBC</a></li>
+            <li><a href="http://typesafe.com/activator/template/scalikejdbc-activator-template">Typesafe Activator</a></li>
+            <li><a href="https://groups.google.com/group/scalikejdbc-users-group">Users Group</a></li>
+            <li><a href="https://github.com/scalikejdbc/scalikejdbc">GitHub</a></li>
+            <li><a href="http://skinny-framework.org/documentation/orm.html">Skinny ORM</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+    <div class="col-xs-6 pull-right" style="height:50px;">
+      <gcse:searchbox-only></gcse:searchbox-only>
+    </div>
+      <div class="col-xs-10 left">
+        <div class="content">
+          <h2 id="transaction">Transaction</h2>
+
+<hr/>
+
+<h3 id="readonly-block-session">#readOnly block / session</h3>
+
+<hr/>
+
+<p>Executes query in read-only mode.</p>
+<pre class="highlight scala"><code><span class="k">val</span> <span class="n">names</span> <span class="k">=</span> <span class="nc">DB</span> <span class="n">readOnly</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span>
+  <span class="n">sql</span><span class="s">"select name from emp"</span><span class="o">.</span><span class="n">map</span> <span class="o">{</span> <span class="n">rs</span> <span class="k">=&gt;</span> <span class="n">rs</span><span class="o">.</span><span class="n">string</span><span class="o">(</span><span class="s">"name"</span><span class="o">)</span> <span class="o">}.</span><span class="n">list</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+<span class="o">}</span>
+
+<span class="k">implicit</span> <span class="k">val</span> <span class="n">session</span> <span class="k">=</span> <span class="nc">DB</span><span class="o">.</span><span class="n">readOnlySession</span>
+<span class="k">try</span> <span class="o">{</span>
+  <span class="k">val</span> <span class="n">names</span> <span class="k">=</span> <span class="n">sql</span><span class="s">"select name from emp"</span><span class="o">.</span><span class="n">map</span> <span class="o">{</span> <span class="n">rs</span> <span class="k">=&gt;</span> <span class="n">rs</span><span class="o">.</span><span class="n">string</span><span class="o">(</span><span class="s">"name"</span><span class="o">)</span> <span class="o">}.</span><span class="n">list</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+  <span class="c1">// do something
+</span><span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+  <span class="n">session</span><span class="o">.</span><span class="n">close</span><span class="o">()</span>
+<span class="o">}</span>
+</code></pre>
+
+<p>Of course, <code>update</code> operations in read-only mode will cause <code>java.sql.SQLException</code>.</p>
+<pre class="highlight scala"><code><span class="nc">DB</span> <span class="n">readOnly</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span>
+  <span class="n">sql</span><span class="s">"update emp set name = ${name} where id = ${id}"</span><span class="o">.</span><span class="n">update</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+<span class="o">}</span> <span class="c1">// will throw java.sql.SQLException
+</span></code></pre>
+
+<hr/>
+
+<h3 id="autocommit-block-session">#autoCommit block / session</h3>
+
+<hr/>
+
+<p>Executes query / update in auto-commit mode.</p>
+<pre class="highlight scala"><code><span class="k">val</span> <span class="n">count</span> <span class="k">=</span> <span class="nc">DB</span> <span class="n">autoCommit</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span>
+  <span class="n">sql</span><span class="s">"update emp set name = ${name} where id = ${id}"</span><span class="o">.</span><span class="n">update</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+<span class="o">}</span>
+</code></pre>
+
+<p>When using autoCommitSession, every operation will be executed in auto-commit mode.</p>
+<pre class="highlight scala"><code><span class="k">implicit</span> <span class="k">val</span> <span class="n">session</span> <span class="k">=</span> <span class="nc">DB</span><span class="o">.</span><span class="n">autoCommitSession</span>
+<span class="k">try</span> <span class="o">{</span>
+  <span class="n">sql</span><span class="s">"update emp set name = ${name1} where id = ${id1}"</span><span class="o">.</span><span class="n">update</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span> <span class="c1">// auto-commit
+</span>  <span class="n">sql</span><span class="s">"update emp set name = ${name2} where id = ${id2}"</span><span class="o">.</span><span class="n">update</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span> <span class="c1">// auto-commit
+</span><span class="o">}</span> <span class="k">finally</span> <span class="o">{</span> <span class="n">session</span><span class="o">.</span><span class="n">close</span><span class="o">()</span> <span class="o">}</span>
+</code></pre>
+
+<hr/>
+
+<h3 id="localtx-block">#localTx block</h3>
+
+<hr/>
+
+<p>Executes query / update in block-scoped transactions.</p>
+
+<p>If an Exception was thrown in the block, the transaction will perform rollback automatically.</p>
+<pre class="highlight scala"><code><span class="k">val</span> <span class="n">count</span> <span class="k">=</span> <span class="nc">DB</span> <span class="n">localTx</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span>
+  <span class="c1">// --- transcation scope start ---
+</span>  <span class="n">sql</span><span class="s">"update emp set name = ${name1} where id = ${id1}"</span><span class="o">.</span><span class="n">update</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+  <span class="n">sql</span><span class="s">"update emp set name = ${name2} where id = ${id2}"</span><span class="o">.</span><span class="n">update</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+  <span class="c1">// --- transaction scope end ---
+</span><span class="o">}</span>
+</code></pre>
+
+<p><code>TxBoundary</code> provides other transaction boundary instead of Exception as follows (2.2.0 or higher):</p>
+<pre class="highlight scala"><code><span class="k">import</span> <span class="nn">scalikejdbc._</span>
+<span class="k">import</span> <span class="nn">scala.util.Try</span>
+<span class="k">import</span> <span class="nn">scalikejdbc.TxBoundary.Try._</span>
+
+<span class="k">val</span> <span class="n">result</span><span class="k">:</span> <span class="kt">Try</span><span class="o">[</span><span class="kt">Result</span><span class="o">]</span> <span class="k">=</span> <span class="nc">DB</span> <span class="n">localTx</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span>
+  <span class="nc">Try</span> <span class="o">{</span> <span class="n">doSomeStaff</span><span class="o">()</span> <span class="o">}</span>
+<span class="o">}</span>
+<span class="c1">// localTx rolls back when `result` is `Failure`
+// http://scala-lang.org/api/current/#scala.util.Try
+</span></code></pre>
+
+<p>Built-in type class instances are <code>Try</code>, <code>Either</code> and <code>Future</code>. You can use them by <code>import scalikejdbc.TxBoundary,***._</code>.</p>
+
+<hr/>
+
+<h3 id="futurelocaltx-block">#futureLocalTx block</h3>
+
+<hr/>
+
+<p><code>futureLocalTx</code> use <code>Future</code>&rsquo;s state as transaction boundary. If one of the Future operations was failed, the transaction will perform rollback automatically. </p>
+<pre class="highlight scala"><code><span class="k">object</span> <span class="nc">FutureDB</span> <span class="o">{</span>
+  <span class="k">implicit</span> <span class="k">val</span> <span class="n">ec</span> <span class="k">=</span> <span class="n">myOwnExecutorContext</span>
+  <span class="k">def</span> <span class="n">updateFirstName</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="n">firstName</span><span class="k">:</span> <span class="kt">String</span><span class="o">)(</span><span class="k">implicit</span> <span class="n">session</span><span class="k">:</span> <span class="kt">DBSession</span><span class="o">)</span><span class="k">:</span> <span class="kt">Future</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
+    <span class="nc">Future</span> <span class="o">{</span> 
+      <span class="n">blocking</span> <span class="o">{</span>
+        <span class="n">session</span><span class="o">.</span><span class="n">update</span><span class="o">(</span><span class="s">"update users set first_name = ? where id = ?"</span><span class="o">,</span> <span class="n">firstName</span><span class="o">,</span> <span class="n">id</span><span class="o">)</span>
+      <span class="o">}</span> 
+    <span class="o">}</span>
+  <span class="o">}</span>
+  <span class="k">def</span> <span class="n">updateLastName</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="n">lastName</span><span class="k">:</span> <span class="kt">String</span><span class="o">)(</span><span class="k">implicit</span> <span class="n">session</span><span class="k">:</span> <span class="kt">DBSession</span><span class="o">)</span><span class="k">:</span> <span class="kt">Future</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
+    <span class="nc">Future</span> <span class="o">{</span> 
+      <span class="n">blocking</span> <span class="o">{</span>
+        <span class="n">session</span><span class="o">.</span><span class="n">update</span><span class="o">(</span><span class="s">"update users set last_name = ? where id = ?"</span><span class="o">,</span> <span class="n">lastName</span><span class="o">,</span> <span class="n">id</span><span class="o">)</span>
+      <span class="o">}</span> 
+    <span class="o">}</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="k">object</span> <span class="nc">Example</span> <span class="o">{</span>
+  <span class="k">import</span> <span class="nn">FutureDB._</span>
+  <span class="k">val</span> <span class="n">fResult</span> <span class="k">=</span> <span class="nc">DB</span> <span class="n">futureLocalTx</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">s</span> <span class="k">=&gt;</span>  
+    <span class="n">updateFirstName</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="s">"John"</span><span class="o">).</span><span class="n">map</span><span class="o">(</span><span class="k">_</span> <span class="k">=&gt;</span> <span class="n">updateLastName</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="s">"Smith"</span><span class="o">))</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="nc">Example</span><span class="o">.</span><span class="n">fResult</span><span class="o">.</span><span class="n">foreach</span><span class="o">(</span><span class="n">println</span><span class="o">(</span><span class="k">_</span><span class="o">))</span>
+<span class="c1">// #=&gt; 1
+</span></code></pre>
+
+<p>or <code>TxBoundary[Future[A]]</code> is also available.</p>
+<pre class="highlight scala"><code><span class="k">import</span> <span class="nn">scalikejdbc.TxBoundary.Future._</span>
+<span class="k">val</span> <span class="n">fResult</span> <span class="k">=</span> <span class="nc">DB</span> <span class="n">localTx</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">s</span> <span class="k">=&gt;</span>  
+  <span class="n">updateFirstName</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="s">"John"</span><span class="o">).</span><span class="n">map</span><span class="o">(</span><span class="k">_</span> <span class="k">=&gt;</span> <span class="n">updateLastName</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="s">"Smith"</span><span class="o">))</span>
+<span class="o">}</span>
+</code></pre>
+
+<hr/>
+
+<h3 id="withintx-block-session">#withinTx block / session</h3>
+
+<hr/>
+
+<p>Executes query / update in already existing transactions.</p>
+
+<p>In this case, all the transactional operations (such as <code>Tx#begin()</code>, <code>Tx#rollback()</code> or <code>Tx#commit()</code>) should be managed by users of ScalikeJDBC.</p>
+<pre class="highlight scala"><code><span class="k">val</span> <span class="n">db</span> <span class="k">=</span> <span class="nc">DB</span><span class="o">(</span><span class="n">conn</span><span class="o">)</span>
+<span class="k">try</span> <span class="o">{</span>
+  <span class="n">db</span><span class="o">.</span><span class="n">begin</span><span class="o">()</span>
+  <span class="k">val</span> <span class="n">names</span> <span class="k">=</span> <span class="n">db</span> <span class="n">withinTx</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span>
+    <span class="c1">// if a transaction has not been started, IllegalStateException will be thrown
+</span>    <span class="n">sql</span><span class="s">"select name from emp"</span><span class="o">.</span><span class="n">map</span> <span class="o">{</span> <span class="n">rs</span> <span class="k">=&gt;</span> <span class="n">rs</span><span class="o">.</span><span class="n">string</span><span class="o">(</span><span class="s">"name"</span><span class="o">)</span> <span class="o">}.</span><span class="n">list</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+  <span class="o">}</span>
+  <span class="n">db</span><span class="o">.</span><span class="n">rollback</span><span class="o">()</span> <span class="c1">// it might throw Exception
+</span><span class="o">}</span> <span class="k">finally</span> <span class="o">{</span> <span class="n">db</span><span class="o">.</span><span class="n">close</span><span class="o">()</span> <span class="o">}</span>
+
+<span class="k">val</span> <span class="n">db</span> <span class="k">=</span> <span class="nc">DB</span><span class="o">(</span><span class="n">conn</span><span class="o">)</span>
+<span class="k">try</span> <span class="o">{</span>
+  <span class="n">db</span><span class="o">.</span><span class="n">begin</span><span class="o">()</span>
+  <span class="k">implicit</span> <span class="k">val</span> <span class="n">session</span> <span class="k">=</span> <span class="n">db</span><span class="o">.</span><span class="n">withinTxSession</span><span class="o">()</span>
+  <span class="k">val</span> <span class="n">names</span> <span class="k">=</span> <span class="n">sql</span><span class="s">"select name from emp"</span><span class="o">.</span><span class="n">map</span> <span class="o">{</span> <span class="n">rs</span> <span class="k">=&gt;</span> <span class="n">rs</span><span class="o">.</span><span class="n">string</span><span class="o">(</span><span class="s">"name"</span><span class="o">)</span> <span class="o">}.</span><span class="n">list</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+  <span class="n">db</span><span class="o">.</span><span class="n">rollbackIfActive</span><span class="o">()</span> <span class="c1">// it NEVER throws Exception
+</span><span class="o">}</span> <span class="k">finally</span> <span class="o">{</span> <span class="n">db</span><span class="o">.</span><span class="n">close</span><span class="o">()</span> <span class="o">}</span>
+</code></pre>
+
+          <hr/>
+          <div class="alert alert-warning small">
+            If this webpage has typo or something wrong, Please report or fix. <a href="/contribution.html">How?</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xs-2 right">
+        <div class="content small">
+          <h5>Latest version</h5>
+          <hr/>
+          <p><a href="/documentation/setup.html">Setup</a></p>
+          <p><a href="/documentation/configuration.html">Configuration</a></p>
+          <p><a href="/documentation/connection-pool.html">Connection Pool</a></p>
+          <p><a href="/documentation/operations.html">Operations</a></p>
+          <p><a href="/documentation/transaction.html">Transaction</a></p>
+          <p><a href="/documentation/auto-session.html">Auto Session</a></p>
+          <p><a href="/documentation/sql-interpolation.html">SQLInterpolation</a></p>
+          <p><a href="/documentation/query-dsl.html">QueryDSL</a></p>
+          <p><a href="/documentation/one-to-x.html">One-to-x API</a></p>
+          <p><a href="/documentation/auto-macros.html">Auto Macros</a></p>
+          <p><a href="/documentation/query-inspector.html">Query Inspector</a></p>
+          <p><a href="/documentation/reverse-engineering.html">Reverse Engineering</a></p>
+          <p><a href="/documentation/testing.html">Testing</a></p>
+          <p><a href="/documentation/playframework-support.html">Play Support</a></p>
+          <p><a href="/documentation/dbconsole.html">dbconsole</a></p>
+          <p><a href="http://www.javadoc.io/doc/org.scalikejdbc/scalikejdbc-core_2.11/2.3.5">Core API Doc</a></p>
+          <p><a href="/documentation/faq.html">FAQ</a></p>
+          <p><a href="/contribution.html">Contribution</a></p>
+          <hr/>
+          <h5>Older Versions</h5>
+          <hr/>
+          <p><a href="/documentation/1.x/">version 1.x</a></p>
+        </div>
+      </div>
+    </div>
+    </div>
+    <script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script>
+(function() {
+var cx = '000372347144050476309:fnw5lotlq6o';
+var gcse = document.createElement('script');
+gcse.type = 'text/javascript';
+gcse.async = true;
+gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//cse.google.com/cse.js?cx=' + cx;
+var s = document.getElementsByTagName('script')[0];
+s.parentNode.insertBefore(gcse, s);
+})();
+</script>
+  </body>
+</html>

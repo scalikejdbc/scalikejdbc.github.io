@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <!-- Use title if it's in the page YAML frontmatter -->
+    <title>Setup - ScalikeJDBC</title>
+    <script type="text/javascript" src="//codeorigin.jquery.com/jquery-1.10.2.min.js"></script>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"/>
+    <link href="/stylesheets/all.css" rel="stylesheet" />
+    <script src="/javascripts/all.js"></script>
+  </head>
+  <body>
+    <div class="container">
+    <div class="navbar" role="navigation" id="header">
+      <div class="container">
+        <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li><a class="navbar-brand" href="/">ScalikeJDBC</a></li>
+            <li><a href="http://typesafe.com/activator/template/scalikejdbc-activator-template">Typesafe Activator</a></li>
+            <li><a href="https://groups.google.com/group/scalikejdbc-users-group">Users Group</a></li>
+            <li><a href="https://github.com/scalikejdbc/scalikejdbc">GitHub</a></li>
+            <li><a href="http://skinny-framework.org/documentation/orm.html">Skinny ORM</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+    <div class="col-xs-6 pull-right" style="height:50px;">
+      <gcse:searchbox-only></gcse:searchbox-only>
+    </div>
+      <div class="col-xs-10 left">
+        <div class="content">
+          <div class="alert alert-warning small">
+            WARNING: This page is a guide for 1.x series.
+          </div>
+          <h2 id="setup">Setup</h2>
+
+<hr/>
+
+<p>ScalikeJDBC libraries are available on the Maven central repository.</p>
+
+<p><a href="http://search.maven.org/#search%7Cga%7C1%7Corg.scalikejdbc">http://search.maven.org/#search%7Cga%7C1%7Corg.scalikejdbc</a></p>
+
+<hr/>
+
+<h3 id="core-library-amp-interpolation">Core Library &amp; Interpolation</h3>
+
+<hr/>
+
+<p>Add latest version into your <code>build.sbt</code> or <code>project/Build.scala</code>. Don&rsquo;t forget JDBC driver and slf4j implementation.</p>
+
+<p>If you&rsquo;re still using Scala 2.9, you can&rsquo;t use <code>scalikejdbc-interpolation</code>.</p>
+<pre class="highlight plaintext"><code>libraryDependencies ++= Seq(
+  "org.scalikejdbc" %% "scalikejdbc"               % "1.7.7",
+  "org.scalikejdbc" %% "scalikejdbc-interpolation" % "1.7.7",
+  "com.h2database"  %  "h2"                        % "1.4.177",
+  "ch.qos.logback"  %  "logback-classic"           % "1.1.2"
+)
+</code></pre>
+
+<p>In your application, just add the following import.</p>
+<pre class="highlight scala"><code><span class="k">import</span> <span class="nn">scalikejdbc._</span><span class="o">,</span> <span class="nc">SQLInterpolation</span><span class="o">.</span><span class="k">_</span>
+</code></pre>
+
+<hr/>
+
+<h3 id="testing-support">Testing Support</h3>
+
+<hr/>
+
+<p>Using <code>scalikejdbc-test</code> is highly recommended to improve your application.</p>
+<pre class="highlight plaintext"><code>libraryDependencies ++= Seq(
+  "org.scalikejdbc" %% "scalikejdbc"               % "1.7.7",
+  "org.scalikejdbc" %% "scalikejdbc-interpolation" % "1.7.7",
+  "org.scalikejdbc" %% "scalikejdbc-test"          % "1.7.7"   % "test",
+  "com.h2database"  %  "h2"                        % "1.4.177",
+  "ch.qos.logback"  %  "logback-classic"           % "1.1.2"
+)
+</code></pre>
+
+<p>Usage: <a href="/documentation/testing.html">/documentation/testing</a></p>
+
+<hr/>
+
+<h3 id="typesafe-config-reader">Typesafe Config Reader</h3>
+
+<hr/>
+
+<p>If you use <code>application.conf</code> as settings file, add <code>scalikejdbc-config</code> too.</p>
+<pre class="highlight plaintext"><code>libraryDependencies ++= Seq(
+  "org.scalikejdbc" %% "scalikejdbc"               % "1.7.7",
+  "org.scalikejdbc" %% "scalikejdbc-interpolation" % "1.7.7",
+  "org.scalikejdbc" %% "scalikejdbc-config"        % "1.7.7",
+  "com.h2database"  %  "h2"                        % "1.4.177",
+  "ch.qos.logback"  %  "logback-classic"           % "1.1.2"
+)
+</code></pre>
+
+<p>Usage: <a href="/documentation/configuration.html">/documentation/configuration</a></p>
+
+<hr/>
+
+<h3 id="reverse-engineering">Reverse Engineering</h3>
+
+<hr/>
+
+<p>ScalikeJDBC support reverse engineering Scala code from existing database.
+You need to setup an sbt plugin named <code>scalikejdbc-mapper-generator</code>.</p>
+
+<h5 id="project-plugins-sbt">project/plugins.sbt</h5>
+<pre class="highlight plaintext"><code>// Don't forget adding your JDBC driver
+libraryDependencies += "org.hsqldb" % "hsqldb" % "2.3.2"
+
+addSbtPlugin("org.scalikejdbc" %% "scalikejdbc-mapper-generator" % "1.7.7")
+</code></pre>
+
+<h5 id="build-sbt">build.sbt</h5>
+<pre class="highlight plaintext"><code>scalikejdbcSettings
+</code></pre>
+
+<h5 id="project-scalikejdbc-properties">project/scalikejdbc.properties</h5>
+<pre class="highlight plaintext"><code>jdbc.driver=org.h2.Driver
+jdbc.url=jdbc:h2:file:./db/hello
+jdbc.username=sa
+jdbc.password=
+jdbc.schema=
+generator.packageName=models
+# generator.lineBreak: LF/CRLF
+generator.lineBreak=LF
+# generator.template: basic/namedParameters/executable/interpolation/queryDsl
+generator.template=queryDsl
+# generator.testTemplate: specs2unit/specs2acceptance/ScalaTestFlatSpec
+generator.testTemplate=specs2unit
+generator.encoding=UTF-8
+</code></pre>
+
+<p>Usage: <a href="/documentation/reverse-engineering.html">/documentation/reverse-engineering</a></p>
+
+<hr/>
+
+<h3 id="play-framework-integration">Play Framework Integration</h3>
+
+<hr/>
+
+<p>Add <code>scalikejdbc-play-plugin</code> and <code>scalikejdbc-play-fixture-plugin</code> (optional) as Play plugins.</p>
+
+<h5 id="project-build-scala">project/Build.scala</h5>
+<pre class="highlight plaintext"><code>val appDependencies = Seq(
+  "org.scalikejdbc" %% "scalikejdbc"                     % "1.7.7",
+  "org.scalikejdbc" %% "scalikejdbc-play-plugin"         % "1.7.7",
+  "org.scalikejdbc" %% "scalikejdbc-play-fixture-plugin" % "1.7.7", // optional
+  // substitute this for whatever DB driver you're using:
+  "com.h2database"  %  "h2"                              % "1.4.177"
+)
+</code></pre>
+
+<h5 id="conf-play-plugins">conf/play.plugins</h5>
+<pre class="highlight plaintext"><code>10000:scalikejdbc.PlayPlugin
+</code></pre>
+
+<p>If you use fixture-plugin too, PlayFixturePlugin should be loaded after PlayPlugin:</p>
+<pre class="highlight plaintext"><code>10000:scalikejdbc.PlayPlugin
+11000:scalikejdbc.PlayFixturePlugin
+</code></pre>
+
+<p>Usage: <a href="/documentation/playframework-support.html">/documentation/playframework-support</a></p>
+
+<hr/>
+
+<h3 id="dbconsole">dbconsole</h3>
+
+<hr/>
+
+<p>A simple console to connect database via JDBC.</p>
+
+<h5 id="mac-os-x-linux">Mac OS X, Linux</h5>
+<pre class="highlight plaintext"><code>curl -L http://git.io/dbconsole | sh
+</code></pre>
+
+<h5 id="windows">Windows</h5>
+<pre class="highlight plaintext"><code>http://git.io/dbconsole.bat
+</code></pre>
+
+<p>Usage: <a href="/documentation/dbconsole.html">/documentation/dbconsole</a></p>
+
+          <hr/>
+          <div class="alert alert-warning small">
+            If this webpage has typo or something wrong, Please report or fix. <a href="/contribution.html">How?</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xs-2 right">
+        <div class="content small">
+          <h5>version 1.x</h5>
+          <hr/>
+          <p><a href="/documentation/1.x/setup.html">Setup</a></p>
+          <p><a href="/documentation/1.x/configuration.html">Configuration</a></p>
+          <p><a href="/documentation/1.x/connection-pool.html">Connection Pool</a></p>
+          <p><a href="/documentation/1.x/operations.html">Operations</a></p>
+          <p><a href="/documentation/1.x/transaction.html">Transaction</a></p>
+          <p><a href="/documentation/1.x/auto-session.html">Auto Session</a></p>
+          <p><a href="/documentation/1.x/sql-interpolation.html">SQLInterpolation</a></p>
+          <p><a href="/documentation/1.x/query-dsl.html">QueryDSL</a></p>
+          <p><a href="/documentation/1.x/one-to-x.html">One-to-x API</a></p>
+          <p><a href="/documentation/1.x/query-inspector.html">Query Inspector</a></p>
+          <p><a href="/documentation/1.x/reverse-engineering.html">Reverse Engineering</a></p>
+          <p><a href="/documentation/1.x/testing.html">Testing</a></p>
+          <p><a href="/documentation/1.x/playframework-support.html">Play2 Support</a></p>
+          <p><a href="/documentation/1.x/dbconsole.html">dbconsole</a></p>
+          <p><a href="/documentation/1.x/contribution.html">Contribution</a></p>
+        </div>
+      </div>
+    </div>
+    </div>
+    <script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script>
+(function() {
+var cx = '000372347144050476309:fnw5lotlq6o';
+var gcse = document.createElement('script');
+gcse.type = 'text/javascript';
+gcse.async = true;
+gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//cse.google.com/cse.js?cx=' + cx;
+var s = document.getElementsByTagName('script')[0];
+s.parentNode.insertBefore(gcse, s);
+})();
+</script>
+  </body>
+</html>

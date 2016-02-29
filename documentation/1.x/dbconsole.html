@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <!-- Use title if it's in the page YAML frontmatter -->
+    <title>dbconsole - ScalikeJDBC</title>
+    <script type="text/javascript" src="//codeorigin.jquery.com/jquery-1.10.2.min.js"></script>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"/>
+    <link href="/stylesheets/all.css" rel="stylesheet" />
+    <script src="/javascripts/all.js"></script>
+  </head>
+  <body>
+    <div class="container">
+    <div class="navbar" role="navigation" id="header">
+      <div class="container">
+        <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li><a class="navbar-brand" href="/">ScalikeJDBC</a></li>
+            <li><a href="http://typesafe.com/activator/template/scalikejdbc-activator-template">Typesafe Activator</a></li>
+            <li><a href="https://groups.google.com/group/scalikejdbc-users-group">Users Group</a></li>
+            <li><a href="https://github.com/scalikejdbc/scalikejdbc">GitHub</a></li>
+            <li><a href="http://skinny-framework.org/documentation/orm.html">Skinny ORM</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+    <div class="col-xs-6 pull-right" style="height:50px;">
+      <gcse:searchbox-only></gcse:searchbox-only>
+    </div>
+      <div class="col-xs-10 left">
+        <div class="content">
+          <div class="alert alert-warning small">
+            WARNING: This page is a guide for 1.x series.
+          </div>
+          <h2 id="dbconsole">dbconsole</h2>
+
+<hr/>
+
+<h3 id="setup">Setup</h3>
+
+<hr/>
+
+<p>See <a href="/documentation/setup.html">/documentation/setup</a>.</p>
+
+<hr/>
+
+<h3 id="usage">Usage</h3>
+
+<hr/>
+
+<p>After installation, you can use <code>dbconsole</code> command, usage is pretty simple:</p>
+<pre class="highlight plaintext"><code>$ dbconsole -h
+
+dbconsole is an extended sbt console to connect database easily.
+
+Usage:
+  dbconsole [OPTION]... [PROFILE]
+
+General options:
+  -e, --edit    edit configuration, then exit
+  -c, --clean   clean sbt environment, then exit
+  -h, --help    show this help, then exit
+</code></pre>
+
+<hr/>
+
+<h4 id="try-sandbox-db">Try sandbox db</h4>
+
+<p>Please try it now with sandbox database.</p>
+<pre class="highlight scala"><code><span class="n">$</span> <span class="n">dbconsole</span> <span class="n">sandbox</span>
+
+<span class="nc">Starting</span> <span class="n">sbt</span> <span class="n">console</span> <span class="k">for</span> <span class="n">sandbox</span><span class="o">...</span>
+
+<span class="o">[</span><span class="kt">info</span><span class="o">]</span> <span class="nc">Set</span> <span class="n">current</span> <span class="n">project</span> <span class="n">to</span> <span class="n">default</span><span class="o">-</span><span class="mf">8d</span><span class="mi">98</span><span class="n">e7</span> <span class="o">(</span><span class="n">in</span> <span class="n">build</span> <span class="n">file</span><span class="o">:/</span><span class="nc">Users</span><span class="o">/</span><span class="n">seratch</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">scalikejdbc</span><span class="o">-</span><span class="n">cli</span><span class="o">/)</span>
+<span class="o">[</span><span class="kt">info</span><span class="o">]</span> <span class="nc">Starting</span> <span class="n">scala</span> <span class="n">interpreter</span><span class="o">...</span>
+<span class="o">[</span><span class="kt">info</span><span class="o">]</span>
+<span class="k">import</span> <span class="nn">scalikejdbc._</span>
+<span class="k">import</span> <span class="nn">scalikejdbc.StringSQLRunner._</span>
+<span class="n">initialize</span><span class="k">:</span> <span class="o">()</span><span class="kt">Unit</span>
+<span class="nc">Welcome</span> <span class="n">to</span> <span class="nc">Scala</span> <span class="n">version</span> <span class="mf">2.9</span><span class="o">.</span><span class="mi">2</span> <span class="o">(</span><span class="nc">Java</span> <span class="nc">HotSpot</span><span class="o">(</span><span class="nc">TM</span><span class="o">)</span> <span class="nc">Client</span> <span class="nc">VM</span><span class="o">,</span> <span class="nc">Java</span> <span class="mf">1.6</span><span class="o">.</span><span class="mi">0</span><span class="n">_29</span><span class="o">).</span>
+<span class="nc">Type</span> <span class="n">in</span> <span class="n">expressions</span> <span class="n">to</span> <span class="n">have</span> <span class="n">them</span> <span class="n">evaluated</span><span class="o">.</span>
+<span class="nc">Type</span> <span class="k">:</span><span class="kt">help</span> <span class="kt">for</span> <span class="kt">more</span> <span class="kt">information.</span>
+
+<span class="kt">scala&gt;</span> <span class="kt">tables</span>
+<span class="nc">IRIS</span>
+
+<span class="n">scala</span><span class="o">&gt;</span> <span class="n">describe</span><span class="o">(</span><span class="s">"iris"</span><span class="o">)</span>
+
+<span class="nc">Table</span><span class="k">:</span> <span class="kt">IRIS</span> <span class="o">(</span><span class="kt">The</span> <span class="kt">Iris</span> <span class="kt">flower</span> <span class="kt">data</span> <span class="kt">set</span> <span class="kt">is</span> <span class="kt">a</span> <span class="kt">multivariate</span> <span class="kt">data</span> <span class="kt">set</span> <span class="kt">introduced</span> <span class="kt">by</span> <span class="kt">Sir</span> <span class="kt">Ronald</span> <span class="kt">Fisher</span> <span class="o">(</span><span class="err">1936</span><span class="o">)</span> <span class="kt">as</span> <span class="kt">an</span> <span class="kt">example</span> <span class="kt">of</span> <span class="kt">discrimina..</span><span class="o">)</span>
+<span class="kt">+--------------+-------------+------+-----+---------+-----------------+----------------------+</span>
+<span class="kt">|</span> <span class="kt">Field</span>        <span class="kt">|</span> <span class="kt">Type</span>        <span class="kt">|</span> <span class="kt">Null</span> <span class="kt">|</span> <span class="kt">Key</span> <span class="kt">|</span> <span class="kt">Default</span> <span class="kt">|</span> <span class="kt">Extra</span>           <span class="kt">|</span> <span class="kt">Description</span>          <span class="kt">|</span>
+<span class="kt">+--------------+-------------+------+-----+---------+-----------------+----------------------+</span>
+<span class="kt">|</span> <span class="kt">IRIS_ID</span>      <span class="kt">|</span> <span class="kt">INTEGER</span><span class="o">(</span><span class="err">10</span><span class="o">)</span> <span class="kt">|</span> <span class="kt">NO</span>   <span class="kt">|</span> <span class="kt">PRI</span> <span class="kt">|</span> <span class="kt">NULL</span>    <span class="kt">|</span>                 <span class="kt">|</span> <span class="kt">The</span> <span class="kt">unique</span> <span class="kt">id</span>        <span class="kt">|</span>
+<span class="kt">|</span> <span class="kt">SEPAL_LENGTH</span> <span class="kt">|</span> <span class="kt">DOUBLE</span><span class="o">(</span><span class="err">17</span><span class="o">)</span>  <span class="kt">|</span> <span class="kt">NO</span>   <span class="kt">|</span>     <span class="kt">|</span> <span class="kt">NULL</span>    <span class="kt">|</span>                 <span class="kt">|</span> <span class="kt">The</span> <span class="kt">length</span> <span class="kt">of</span> <span class="kt">sepals</span> <span class="kt">|</span>
+<span class="kt">|</span> <span class="kt">SEPAL_WIDTH</span>  <span class="kt">|</span> <span class="kt">DOUBLE</span><span class="o">(</span><span class="err">17</span><span class="o">)</span>  <span class="kt">|</span> <span class="kt">NO</span>   <span class="kt">|</span>     <span class="kt">|</span> <span class="kt">NULL</span>    <span class="kt">|</span>                 <span class="kt">|</span> <span class="kt">The</span> <span class="kt">width</span> <span class="kt">of</span> <span class="kt">sepals</span>  <span class="kt">|</span>
+<span class="kt">|</span> <span class="kt">PETAL_LENGTH</span> <span class="kt">|</span> <span class="kt">DOUBLE</span><span class="o">(</span><span class="err">17</span><span class="o">)</span>  <span class="kt">|</span> <span class="kt">NO</span>   <span class="kt">|</span>     <span class="kt">|</span> <span class="kt">NULL</span>    <span class="kt">|</span>                 <span class="kt">|</span> <span class="kt">The</span> <span class="kt">length</span> <span class="kt">of</span> <span class="kt">petals</span> <span class="kt">|</span>
+<span class="kt">|</span> <span class="kt">PETAL_WIDTH</span>  <span class="kt">|</span> <span class="kt">DOUBLE</span><span class="o">(</span><span class="err">17</span><span class="o">)</span>  <span class="kt">|</span> <span class="kt">NO</span>   <span class="kt">|</span>     <span class="kt">|</span> <span class="kt">NULL</span>    <span class="kt">|</span>                 <span class="kt">|</span> <span class="kt">The</span> <span class="kt">width</span> <span class="kt">of</span> <span class="kt">petals</span>  <span class="kt">|</span>
+<span class="kt">|</span> <span class="kt">SPECIES</span>      <span class="kt">|</span> <span class="kt">VARCHAR</span><span class="o">(</span><span class="err">16</span><span class="o">)</span> <span class="kt">|</span> <span class="kt">NO</span>   <span class="kt">|</span>     <span class="kt">|</span> <span class="kt">NULL</span>    <span class="kt">|</span>                 <span class="kt">|</span> <span class="kt">The</span> <span class="kt">species</span> <span class="kt">name</span>     <span class="kt">|</span>
+<span class="kt">+--------------+-------------+------+-----+---------+-----------------+----------------------+</span>
+<span class="kt">Indexes:</span>
+  <span class="err">"</span><span class="kt">PRIMARY_KEY_2</span><span class="err">"</span> <span class="kt">UNIQUE</span><span class="o">,</span> <span class="o">(</span><span class="nc">IRIS_ID</span><span class="o">)</span>
+
+
+<span class="n">scala</span><span class="o">&gt;</span> <span class="s">"select count(1) from iris"</span><span class="o">.</span><span class="n">run</span>
+<span class="n">res2</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">Map</span><span class="o">[</span><span class="kt">String</span>,<span class="kt">Any</span><span class="o">]]</span> <span class="k">=</span> <span class="nc">List</span><span class="o">(</span><span class="nc">Map</span><span class="o">(</span><span class="nc">COUNT</span><span class="o">(</span><span class="mi">1</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="mi">150</span><span class="o">))</span>
+
+<span class="n">scala</span><span class="o">&gt;</span> <span class="s">"select count(1) from iris"</span><span class="o">.</span><span class="n">as</span><span class="o">[</span><span class="kt">Long</span><span class="o">]</span>
+<span class="n">res3</span><span class="k">:</span> <span class="kt">Long</span> <span class="o">=</span> <span class="mi">150</span>
+
+<span class="n">scala</span><span class="o">&gt;</span> <span class="s">"select iris_id from iris"</span><span class="o">.</span><span class="n">asList</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span>
+<span class="n">res4</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="nc">List</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="mi">2</span><span class="o">,</span> <span class="mi">3</span><span class="o">,</span> <span class="mi">4</span><span class="o">,</span> <span class="mi">5</span><span class="o">,</span> <span class="mi">6</span><span class="o">,</span> <span class="mi">7</span><span class="o">,</span> <span class="mi">8</span><span class="o">,</span> <span class="mi">9</span><span class="o">,</span> <span class="mi">10</span><span class="o">,</span> <span class="mi">11</span><span class="o">,</span> <span class="mi">12</span><span class="o">,</span> <span class="mi">13</span><span class="o">,</span> <span class="mi">14</span><span class="o">,</span> <span class="mi">15</span><span class="o">,</span> <span class="mi">16</span><span class="o">,</span> <span class="mi">17</span><span class="o">,</span> <span class="mi">18</span><span class="o">,</span> <span class="mi">19</span><span class="o">,</span> <span class="mi">20</span><span class="o">,</span> <span class="mi">21</span><span class="o">,</span> <span class="mi">22</span><span class="o">,</span> <span class="mi">23</span><span class="o">,</span> <span class="mi">24</span><span class="o">,</span> <span class="mi">25</span><span class="o">,</span> <span class="mi">26</span><span class="o">,</span> <span class="mi">27</span><span class="o">,</span> <span class="mi">28</span><span class="o">,</span> <span class="mi">29</span><span class="o">,</span> <span class="mi">30</span><span class="o">,</span> <span class="mi">31</span><span class="o">,</span> <span class="mi">32</span><span class="o">,</span> <span class="mi">33</span><span class="o">,</span> <span class="mi">34</span><span class="o">,</span> <span class="mi">35</span><span class="o">,</span> <span class="mi">36</span><span class="o">,</span> <span class="mi">37</span><span class="o">,</span> <span class="mi">38</span><span class="o">,</span> <span class="mi">39</span><span class="o">,</span> <span class="mi">40</span><span class="o">,</span> <span class="mi">41</span><span class="o">,</span> <span class="mi">42</span><span class="o">,</span> <span class="mi">43</span><span class="o">,</span> <span class="mi">44</span><span class="o">,</span> <span class="mi">45</span><span class="o">,</span> <span class="mi">46</span><span class="o">,</span> <span class="mi">47</span><span class="o">,</span> <span class="mi">48</span><span class="o">,</span> <span class="mi">49</span><span class="o">,</span> <span class="mi">50</span><span class="o">,</span> <span class="mi">51</span><span class="o">,</span> <span class="mi">52</span><span class="o">,</span> <span class="mi">53</span><span class="o">,</span> <span class="mi">54</span><span class="o">,</span> <span class="mi">55</span><span class="o">,</span> <span class="mi">56</span><span class="o">,</span> <span class="mi">57</span><span class="o">,</span> <span class="mi">58</span><span class="o">,</span> <span class="mi">59</span><span class="o">,</span> <span class="mi">60</span><span class="o">,</span> <span class="mi">61</span><span class="o">,</span> <span class="mi">62</span><span class="o">,</span> <span class="mi">63</span><span class="o">,</span> <span class="mi">64</span><span class="o">,</span> <span class="mi">65</span><span class="o">,</span> <span class="mi">66</span><span class="o">,</span> <span class="mi">67</span><span class="o">,</span> <span class="mi">68</span><span class="o">,</span> <span class="mi">69</span><span class="o">,</span> <span class="mi">70</span><span class="o">,</span> <span class="mi">71</span><span class="o">,</span> <span class="mi">72</span><span class="o">,</span> <span class="mi">73</span><span class="o">,</span> <span class="mi">74</span><span class="o">,</span> <span class="mi">75</span><span class="o">,</span> <span class="mi">76</span><span class="o">,</span> <span class="mi">77</span><span class="o">,</span> <span class="mi">78</span><span class="o">,</span> <span class="mi">79</span><span class="o">,</span> <span class="mi">80</span><span class="o">,</span> <span class="mi">81</span><span class="o">,</span> <span class="mi">82</span><span class="o">,</span> <span class="mi">83</span><span class="o">,</span> <span class="mi">84</span><span class="o">,</span> <span class="mi">85</span><span class="o">,</span> <span class="mi">86</span><span class="o">,</span> <span class="mi">87</span><span class="o">,</span> <span class="mi">88</span><span class="o">,</span> <span class="mi">89</span><span class="o">,</span> <span class="mi">90</span><span class="o">,</span> <span class="mi">91</span><span class="o">,</span> <span class="mi">92</span><span class="o">,</span> <span class="mi">93</span><span class="o">,</span> <span class="mi">94</span><span class="o">,</span> <span class="mi">95</span><span class="o">,</span> <span class="mi">96</span><span class="o">,</span> <span class="mi">97</span><span class="o">,</span> <span class="mi">98</span><span class="o">,</span> <span class="mi">99</span><span class="o">,</span> <span class="mi">100</span><span class="o">,</span> <span class="mi">101</span><span class="o">,</span> <span class="mi">102</span><span class="o">,</span> <span class="mi">103</span><span class="o">,</span> <span class="mi">104</span><span class="o">,</span> <span class="mi">105</span><span class="o">,</span> <span class="mi">106</span><span class="o">,</span> <span class="mi">107</span><span class="o">,</span> <span class="mi">108</span><span class="o">,</span> <span class="mi">109</span><span class="o">,</span> <span class="mi">110</span><span class="o">,</span> <span class="mi">111</span><span class="o">,</span> <span class="mi">112</span><span class="o">,</span> <span class="mi">113</span><span class="o">,</span> <span class="mi">114</span><span class="o">,</span> <span class="mi">115</span><span class="o">,</span> <span class="mi">116</span><span class="o">,</span> <span class="mi">117</span><span class="o">,</span> <span class="mi">118</span><span class="o">,</span> <span class="mi">119</span><span class="o">,</span> <span class="mi">120</span><span class="o">,</span> <span class="mi">121</span><span class="o">,</span> <span class="mi">122</span><span class="o">,</span> <span class="mi">123</span><span class="o">,</span> <span class="mi">124</span><span class="o">,</span> <span class="mi">125</span><span class="o">,</span> <span class="mi">126</span><span class="o">,</span> <span class="mi">127</span><span class="o">,</span> <span class="mi">128</span><span class="o">,</span> <span class="mi">129</span><span class="o">,</span> <span class="mi">130</span><span class="o">,</span> <span class="mi">131</span><span class="o">,</span> <span class="mi">132</span><span class="o">,</span> <span class="mi">133</span><span class="o">,</span> <span class="mi">134</span><span class="o">,</span> <span class="mi">135</span><span class="o">,</span> <span class="mi">136</span><span class="o">,</span> <span class="mi">137</span><span class="o">,</span> <span class="mi">138</span><span class="o">,</span> <span class="mi">139</span><span class="o">,</span> <span class="mi">140</span><span class="o">,</span> <span class="mi">141</span><span class="o">,</span> <span class="mi">142</span><span class="o">,</span> <span class="mi">143</span><span class="o">,</span> <span class="mi">144</span><span class="o">,</span> <span class="mi">145</span><span class="o">,</span> <span class="mi">146</span><span class="o">,</span> <span class="mi">147</span><span class="o">,</span> <span class="mi">148</span><span class="o">,</span> <span class="mi">149</span><span class="o">,</span> <span class="mi">150</span><span class="o">)</span>
+
+<span class="n">scala</span><span class="o">&gt;</span> <span class="s">"select species, count(1) from iris group by species"</span><span class="o">.</span><span class="n">run</span>
+<span class="n">res5</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">Map</span><span class="o">[</span><span class="kt">String</span>,<span class="kt">Any</span><span class="o">]]</span> <span class="k">=</span> <span class="nc">List</span><span class="o">(</span><span class="nc">Map</span><span class="o">(</span><span class="nc">SPECIES</span> <span class="o">-&gt;</span> <span class="n">versicolor</span><span class="o">,</span> <span class="nc">COUNT</span><span class="o">(</span><span class="mi">1</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="mi">50</span><span class="o">),</span> <span class="nc">Map</span><span class="o">(</span><span class="nc">SPECIES</span> <span class="o">-&gt;</span> <span class="n">setosa</span><span class="o">,</span> <span class="nc">COUNT</span><span class="o">(</span><span class="mi">1</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="mi">50</span><span class="o">),</span> <span class="nc">Map</span><span class="o">(</span><span class="nc">SPECIES</span> <span class="o">-&gt;</span> <span class="n">virginica</span><span class="o">,</span> <span class="nc">COUNT</span><span class="o">(</span><span class="mi">1</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="mi">50</span><span class="o">))</span>
+
+<span class="n">scala</span><span class="o">&gt;</span> <span class="s">"insert into iris values (151, 0.1, 0.2, 0.3, 0.4, 'xxx');"</span><span class="o">.</span><span class="n">run</span><span class="o">.</span><span class="n">asOption</span><span class="o">[</span><span class="kt">Boolean</span><span class="o">]</span>
+<span class="n">res6</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Boolean</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Some</span><span class="o">(</span><span class="kc">false</span><span class="o">)</span>
+
+<span class="n">scala</span><span class="o">&gt;</span> <span class="nc">DB</span> <span class="n">localTx</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span>
+     <span class="o">|</span>   <span class="s">"insert into iris values (152, 0.1, 0.2, 0.3, 0.4, 'yyy');"</span><span class="o">.</span><span class="n">run</span>
+     <span class="o">|</span>   <span class="k">throw</span> <span class="k">new</span> <span class="nc">RuntimeException</span>
+     <span class="o">|</span> <span class="o">}</span>
+<span class="n">scala</span><span class="o">.</span><span class="n">lang</span><span class="o">.</span><span class="nc">RuntimeException</span>
+    <span class="n">at</span> <span class="nc">$anonfun$1</span><span class="o">.</span><span class="n">apply</span><span class="o">(&lt;</span><span class="n">console</span><span class="k">&gt;:</span><span class="mi">16</span><span class="o">)</span>
+    <span class="n">at</span> <span class="nc">$anonfun$1</span><span class="o">.</span><span class="n">apply</span><span class="o">(&lt;</span><span class="n">console</span><span class="k">&gt;:</span><span class="mi">14</span><span class="o">)</span>
+    <span class="n">at</span> <span class="n">scalikejdbc</span><span class="o">.</span><span class="nc">DB$$anonfun$localTx$2$$anonfun$apply$1</span><span class="o">.</span><span class="n">apply</span><span class="o">(</span><span class="nc">DB</span><span class="o">.</span><span class="n">scala</span><span class="k">:</span><span class="err">606</span><span class="o">)</span>
+    <span class="n">at</span> <span class="n">scala</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">control</span><span class="o">.</span><span class="nc">Exception$Catch</span><span class="o">.</span><span class="n">apply</span><span class="o">(</span><span class="nc">Exception</span><span class="o">.</span><span class="n">scala</span><span class="k">:</span><span class="err">88</span><span class="o">)</span>
+    <span class="n">at</span> <span class="n">scalikejdbc</span><span class="o">.</span><span class="nc">DB$$anonfun$localTx$2</span><span class="o">.</span><span class="n">apply</span><span class="o">(</span><span class="nc">DB</span><span class="o">.</span><span class="n">scala</span><span class="k">:</span><span class="err">604</span><span class="o">)</span>
+    <span class="o">...</span>
+
+<span class="n">scala</span><span class="o">&gt;</span> <span class="s">"select count(1) from iris"</span><span class="o">.</span><span class="n">as</span><span class="o">[</span><span class="kt">Long</span><span class="o">]</span>
+<span class="n">res8</span><span class="k">:</span> <span class="kt">Long</span> <span class="o">=</span> <span class="mi">151</span>
+
+<span class="n">scala</span><span class="o">&gt;</span> <span class="k">:</span><span class="kt">q</span>
+
+<span class="o">[</span><span class="kt">success</span><span class="o">]</span> <span class="nc">Total</span> <span class="n">time</span><span class="k">:</span> <span class="err">48</span> <span class="kt">s</span><span class="o">,</span> <span class="n">completed</span> <span class="nc">Nov</span> <span class="mi">29</span><span class="o">,</span> <span class="mi">2012</span> <span class="mi">8</span><span class="k">:</span><span class="err">56</span><span class="kt">:</span><span class="err">36</span> <span class="kt">PM</span>
+</code></pre>
+
+          <hr/>
+          <div class="alert alert-warning small">
+            If this webpage has typo or something wrong, Please report or fix. <a href="/contribution.html">How?</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xs-2 right">
+        <div class="content small">
+          <h5>version 1.x</h5>
+          <hr/>
+          <p><a href="/documentation/1.x/setup.html">Setup</a></p>
+          <p><a href="/documentation/1.x/configuration.html">Configuration</a></p>
+          <p><a href="/documentation/1.x/connection-pool.html">Connection Pool</a></p>
+          <p><a href="/documentation/1.x/operations.html">Operations</a></p>
+          <p><a href="/documentation/1.x/transaction.html">Transaction</a></p>
+          <p><a href="/documentation/1.x/auto-session.html">Auto Session</a></p>
+          <p><a href="/documentation/1.x/sql-interpolation.html">SQLInterpolation</a></p>
+          <p><a href="/documentation/1.x/query-dsl.html">QueryDSL</a></p>
+          <p><a href="/documentation/1.x/one-to-x.html">One-to-x API</a></p>
+          <p><a href="/documentation/1.x/query-inspector.html">Query Inspector</a></p>
+          <p><a href="/documentation/1.x/reverse-engineering.html">Reverse Engineering</a></p>
+          <p><a href="/documentation/1.x/testing.html">Testing</a></p>
+          <p><a href="/documentation/1.x/playframework-support.html">Play2 Support</a></p>
+          <p><a href="/documentation/1.x/dbconsole.html">dbconsole</a></p>
+          <p><a href="/documentation/1.x/contribution.html">Contribution</a></p>
+        </div>
+      </div>
+    </div>
+    </div>
+    <script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script>
+(function() {
+var cx = '000372347144050476309:fnw5lotlq6o';
+var gcse = document.createElement('script');
+gcse.type = 'text/javascript';
+gcse.async = true;
+gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//cse.google.com/cse.js?cx=' + cx;
+var s = document.getElementsByTagName('script')[0];
+s.parentNode.insertBefore(gcse, s);
+})();
+</script>
+  </body>
+</html>

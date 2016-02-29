@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <!-- Use title if it's in the page YAML frontmatter -->
+    <title>Contribution - ScalikeJDBC</title>
+    <script type="text/javascript" src="//codeorigin.jquery.com/jquery-1.10.2.min.js"></script>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"/>
+    <link href="/stylesheets/all.css" rel="stylesheet" />
+    <script src="/javascripts/all.js"></script>
+  </head>
+  <body>
+    <div class="container">
+    <div class="navbar" role="navigation" id="header">
+      <div class="container">
+        <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li><a class="navbar-brand" href="/">ScalikeJDBC</a></li>
+            <li><a href="http://typesafe.com/activator/template/scalikejdbc-activator-template">Typesafe Activator</a></li>
+            <li><a href="https://groups.google.com/group/scalikejdbc-users-group">Users Group</a></li>
+            <li><a href="https://github.com/scalikejdbc/scalikejdbc">GitHub</a></li>
+            <li><a href="http://skinny-framework.org/documentation/orm.html">Skinny ORM</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+    <div class="col-xs-6 pull-right" style="height:50px;">
+      <gcse:searchbox-only></gcse:searchbox-only>
+    </div>
+      <div class="col-xs-10 left">
+        <div class="content">
+          <div class="alert alert-warning small">
+            WARNING: This page is a guide for 1.x series.
+          </div>
+          <h2 id="contribution">Contribution</h2>
+
+<hr/>
+
+<h3 id="contributers-39-guide">Contributers&rsquo; Guide</h3>
+
+<hr/>
+
+<p>First, see the following guideline:</p>
+
+<p><a href="https://github.com/scalikejdbc/scalikejdbc/blob/master/CONTRIBUTING.md">CONTRIBUTING.md</a></p>
+
+<hr/>
+
+<h3 id="website">Website</h3>
+
+<hr/>
+
+<h4 id="fork-scalikejdbc-github-io-project">fork scalikejdbc.github.io project</h4>
+
+<p>Fork <a href="https://github.com/scalikejdbc/scalikejdbc.github.io">https://github.com/scalikejdbc/scalikejdbc.github.io</a>.</p>
+
+<hr/>
+
+<h4 id="change-under-the-website-directory">change under the website directory</h4>
+
+<p>How to debug:</p>
+<pre class="highlight plaintext"><code>git clone [your forked repository].
+cd scalikejdbc.github.io
+gem install bundler
+bundle install
+bundle exec middleman server
+</code></pre>
+
+<p>Access <code>http://localhost:4567/</code> from your browser.</p>
+
+<hr/>
+
+<h4 id="make-a-pull-request">make a pull request</h4>
+
+<p>Create a branch to request, and send your pull request to <code>1.x</code> branch (not <code>master</code> branch).</p>
+
+<hr/>
+
+<h3 id="libraries">Libraries</h3>
+
+<hr/>
+
+<h4 id="fork-scalikejdbc-project">fork scalikejdbc project</h4>
+
+<p>Fork <a href="https://github.com/scalikejdbc/scalikejdbc">https://github.com/scalikejdbc/scalikejdbc</a>.</p>
+
+<p>git clone [your forked repository].</p>
+
+<hr/>
+
+<h4 id="modify-and-write-tests">modify and write tests</h4>
+
+<p>Modify code &amp; write test.</p>
+
+<hr/>
+
+<h3 id="run-all-the-existing-tests">run all the existing tests</h3>
+
+<p>Run all the tests at least with H2 database.</p>
+
+<hr/>
+
+<h4 id="make-a-pull-request">make a pull request</h4>
+
+<p>Create a branch to request, and send your pull request to <code>develop</code> branch (not <code>master</code> branch).</p>
+
+<hr/>
+
+<h3 id="contributors">Contributors</h3>
+
+<hr/>
+
+<h4 id="commits">Commits</h4>
+
+<hr/>
+
+<ul>
+<li><a href="https://github.com/seratch">Kazuhiro Sera (@seratch)</a></li>
+<li><a href="https://github.com/gakuzzzz">Manabu Nakamura (@gakuzzzz)</a></li>
+<li><a href="https://github.com/xuwei-k">Kenji Yoshida (@xuwei-k)</a></li>
+<li><a href="https://github.com/tototoshi">Toshiyuki Takahashi (@tototoshi)</a></li>
+<li><a href="https://github.com/cb372">Chris Birchall (@cb372)</a></li>
+<li><a href="https://github.com/rabitarochan">Kengo Asamizu (@rabitarochan)</a></li>
+<li><a href="https://github.com/michalbcz">Michal Bernhard (@michalbcz)</a></li>
+<li><a href="https://github.com/emalock3">Shinobu Aoki (@emalock3)</a></li>
+<li><a href="https://github.com/kxbmap">kxbmap (@kxbmap)</a></li>
+<li><a href="https://github.com/Arakaki">Yusuke Arakaki (@Arakaki)</a></li>
+<li><a href="https://github.com/kihn">ynomura (@kihn)</a></li>
+<li><a href="https://github.com/hagikuratakeshi">Takeshi Hagikura (@hagikuratakeshi)</a></li>
+<li><a href="https://github.com/tlync">Takuya Fujimura (@tlync)</a></li>
+<li><a href="https://github.com/wozaki">Shun Ozaki (@wozaki)</a></li>
+<li><a href="https://github.com/kalinichenko">kalinichenko (@kalinichenko)</a></li>
+<li><a href="https://github.com/tkawachi">Takashi Kawachi (@tkawachi)</a></li>
+<li><a href="https://github.com/todesking">todesking (@todesking)</a></li>
+</ul>
+
+<hr/>
+
+<h3 id="issue-report-wiki-maintenance-or-any-feedback">Issue Report, Wiki maintenance or any feedback</h3>
+
+<hr/>
+
+<ul>
+<li><a href="https://github.com/Aktau">Aktau (@Aktau)</a></li>
+<li><a href="https://github.com/janihur">janihur (@janihur)</a></li>
+<li><a href="https://github.com/chungonn">Cheong Chung Onn (@chungonn)</a></li>
+<li><a href="https://github.com/masahitojp">Masahito Nakamura (@masahitojp)</a></li>
+<li><a href="https://github.com/tototoshi">Toshiyuki Takahashi (@tototoshi)</a></li>
+<li><a href="https://github.com/ys16">ys16 (@ys16)</a></li>
+<li><a href="https://github.com/ramn">Simon Andersson (@ramn)</a></li>
+<li><a href="https://github.com/malsmith">malsmith (@malsmith)</a></li>
+<li><a href="https://github.com/landtuna">Jim Hunziker (@landtuna)</a></li>
+<li><a href="https://github.com/opoppon">opoppon (@opoppon)</a></li>
+<li><a href="https://github.com/hexx">Seitaro Yuuki (@hexx)</a></li>
+<li><a href="https://github.com/rvangsgaard">René Grüner Vangsgaard (@rvangsgaard)</a></li>
+<li><a href="https://github.com/rabitarochan">Kengo Asamizu (@rabitarochan)</a></li>
+<li><a href="https://github.com/xuwei-k">Kenji Yoshida (@xuwei-k)</a></li>
+<li><a href="https://github.com/graineri">Gabriel Raineri (@graineri)</a></li>
+<li><a href="https://github.com/daneko">駄猫 (@daneko)</a></li>
+<li><a href="https://github.com/k4200">Kazuo Kashima (@k4200)</a></li>
+<li><a href="https://github.com/daimatz">Daisuke Matsumoto (@daimatz)</a></li>
+</ul>
+
+          <hr/>
+          <div class="alert alert-warning small">
+            If this webpage has typo or something wrong, Please report or fix. <a href="/contribution.html">How?</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xs-2 right">
+        <div class="content small">
+          <h5>version 1.x</h5>
+          <hr/>
+          <p><a href="/documentation/1.x/setup.html">Setup</a></p>
+          <p><a href="/documentation/1.x/configuration.html">Configuration</a></p>
+          <p><a href="/documentation/1.x/connection-pool.html">Connection Pool</a></p>
+          <p><a href="/documentation/1.x/operations.html">Operations</a></p>
+          <p><a href="/documentation/1.x/transaction.html">Transaction</a></p>
+          <p><a href="/documentation/1.x/auto-session.html">Auto Session</a></p>
+          <p><a href="/documentation/1.x/sql-interpolation.html">SQLInterpolation</a></p>
+          <p><a href="/documentation/1.x/query-dsl.html">QueryDSL</a></p>
+          <p><a href="/documentation/1.x/one-to-x.html">One-to-x API</a></p>
+          <p><a href="/documentation/1.x/query-inspector.html">Query Inspector</a></p>
+          <p><a href="/documentation/1.x/reverse-engineering.html">Reverse Engineering</a></p>
+          <p><a href="/documentation/1.x/testing.html">Testing</a></p>
+          <p><a href="/documentation/1.x/playframework-support.html">Play2 Support</a></p>
+          <p><a href="/documentation/1.x/dbconsole.html">dbconsole</a></p>
+          <p><a href="/documentation/1.x/contribution.html">Contribution</a></p>
+        </div>
+      </div>
+    </div>
+    </div>
+    <script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script>
+(function() {
+var cx = '000372347144050476309:fnw5lotlq6o';
+var gcse = document.createElement('script');
+gcse.type = 'text/javascript';
+gcse.async = true;
+gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//cse.google.com/cse.js?cx=' + cx;
+var s = document.getElementsByTagName('script')[0];
+s.parentNode.insertBefore(gcse, s);
+})();
+</script>
+  </body>
+</html>

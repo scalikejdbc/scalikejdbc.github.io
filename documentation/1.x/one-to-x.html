@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <!-- Use title if it's in the page YAML frontmatter -->
+    <title>One-to-X API - ScalikeJDBC</title>
+    <script type="text/javascript" src="//codeorigin.jquery.com/jquery-1.10.2.min.js"></script>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"/>
+    <link href="/stylesheets/all.css" rel="stylesheet" />
+    <script src="/javascripts/all.js"></script>
+  </head>
+  <body>
+    <div class="container">
+    <div class="navbar" role="navigation" id="header">
+      <div class="container">
+        <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li><a class="navbar-brand" href="/">ScalikeJDBC</a></li>
+            <li><a href="http://typesafe.com/activator/template/scalikejdbc-activator-template">Typesafe Activator</a></li>
+            <li><a href="https://groups.google.com/group/scalikejdbc-users-group">Users Group</a></li>
+            <li><a href="https://github.com/scalikejdbc/scalikejdbc">GitHub</a></li>
+            <li><a href="http://skinny-framework.org/documentation/orm.html">Skinny ORM</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+    <div class="col-xs-6 pull-right" style="height:50px;">
+      <gcse:searchbox-only></gcse:searchbox-only>
+    </div>
+      <div class="col-xs-10 left">
+        <div class="content">
+          <div class="alert alert-warning small">
+            WARNING: This page is a guide for 1.x series.
+          </div>
+          <h2 id="one-to-x-api">One-to-X API</h2>
+
+<hr/>
+
+<h3 id="why-one-to-x-apis-are-needed">Why One-to-x APIs are needed?</h3>
+
+<hr/>
+
+<p>Users can write all the mapping operations by using <code>#map</code> or <code>#foldLeft</code>&hellip; with a lot of boilerplate code.</p>
+
+<p>ScalikeJDBC provides you some useful APIs to map results to objects.</p>
+
+<div class="alert alert-warning">
+Be aware that resolving multiple one-to-many relationships with a single join query may cause performance or data size problems when dealing with large number of rows.
+</div>
+
+<hr/>
+
+<h3 id="one-to-many-one-to-manies">One-To-Many / One-To-Manies</h3>
+
+<hr/>
+
+<p>Simple example:</p>
+<pre class="highlight scala"><code><span class="k">case</span> <span class="k">class</span> <span class="nc">Member</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span>
+<span class="k">case</span> <span class="k">class</span> <span class="nc">Group</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">members</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Member</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Nil</span><span class="o">)</span>
+
+<span class="k">object</span> <span class="nc">Group</span> <span class="k">extends</span> <span class="nc">SQLSyntaxSupport</span><span class="o">[</span><span class="kt">Group</span><span class="o">]</span> <span class="o">{</span>
+  <span class="k">override</span> <span class="k">val</span> <span class="n">tableName</span> <span class="k">=</span> <span class="s">"groups"</span>
+  <span class="k">def</span> <span class="n">apply</span><span class="o">(</span><span class="n">g</span><span class="k">:</span> <span class="kt">SyntaxProvider</span><span class="o">[</span><span class="kt">Group</span><span class="o">])(</span><span class="n">rs</span><span class="k">:</span> <span class="kt">WrappedResultSet</span><span class="o">)</span><span class="k">:</span> <span class="kt">Group</span> <span class="o">=</span> <span class="n">apply</span><span class="o">(</span><span class="n">g</span><span class="o">.</span><span class="n">resultName</span><span class="o">)(</span><span class="n">rs</span><span class="o">)</span>
+  <span class="k">def</span> <span class="n">apply</span><span class="o">(</span><span class="n">g</span><span class="k">:</span> <span class="kt">ResultName</span><span class="o">[</span><span class="kt">Group</span><span class="o">])(</span><span class="n">rs</span><span class="k">:</span> <span class="kt">WrappedResultSet</span><span class="o">)</span><span class="k">:</span> <span class="kt">Group</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Group</span><span class="o">(</span><span class="n">rs</span><span class="o">.</span><span class="n">get</span><span class="o">(</span><span class="n">g</span><span class="o">.</span><span class="n">id</span><span class="o">),</span> <span class="n">rs</span><span class="o">.</span><span class="n">get</span><span class="o">(</span><span class="n">g</span><span class="o">.</span><span class="n">name</span><span class="o">))</span>
+<span class="o">}</span>
+
+<span class="k">object</span> <span class="nc">Member</span> <span class="k">extends</span> <span class="nc">SQLSyntaxSupport</span><span class="o">[</span><span class="kt">Member</span><span class="o">]</span> <span class="o">{</span>
+  <span class="k">override</span> <span class="k">val</span> <span class="n">tableName</span> <span class="k">=</span> <span class="s">"members"</span>
+  <span class="k">def</span> <span class="n">apply</span><span class="o">(</span><span class="n">m</span><span class="k">:</span> <span class="kt">SyntaxProvider</span><span class="o">[</span><span class="kt">Member</span><span class="o">])(</span><span class="n">rs</span><span class="k">:</span> <span class="kt">WrappedResultSet</span><span class="o">)</span><span class="k">:</span> <span class="kt">Member</span> <span class="o">=</span> <span class="n">apply</span><span class="o">(</span><span class="n">m</span><span class="o">.</span><span class="n">resultName</span><span class="o">)(</span><span class="n">rs</span><span class="o">)</span>
+  <span class="k">def</span> <span class="n">apply</span><span class="o">(</span><span class="n">m</span><span class="k">:</span> <span class="kt">ResultName</span><span class="o">[</span><span class="kt">Member</span><span class="o">])(</span><span class="n">rs</span><span class="k">:</span> <span class="kt">WrappedResultSet</span><span class="o">)</span><span class="k">:</span> <span class="kt">Member</span> <span class="o">=</span>
+    <span class="k">new</span> <span class="nc">Member</span><span class="o">(</span><span class="n">rs</span><span class="o">.</span><span class="n">get</span><span class="o">(</span><span class="n">m</span><span class="o">.</span><span class="n">id</span><span class="o">),</span> <span class="n">rs</span><span class="o">.</span><span class="n">get</span><span class="o">(</span><span class="n">m</span><span class="o">.</span><span class="n">name</span><span class="o">))</span>
+
+  <span class="k">def</span> <span class="n">opt</span><span class="o">(</span><span class="n">m</span><span class="k">:</span> <span class="kt">SyntaxProvider</span><span class="o">[</span><span class="kt">Member</span><span class="o">])(</span><span class="n">rs</span><span class="k">:</span> <span class="kt">WrappedResultSet</span><span class="o">)</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Member</span><span class="o">]</span> <span class="k">=</span>
+    <span class="n">rs</span><span class="o">.</span><span class="n">longOpt</span><span class="o">(</span><span class="n">m</span><span class="o">.</span><span class="n">resultName</span><span class="o">.</span><span class="n">id</span><span class="o">).</span><span class="n">map</span><span class="o">(</span><span class="k">_</span> <span class="k">=&gt;</span> <span class="nc">Member</span><span class="o">(</span><span class="n">m</span><span class="o">)(</span><span class="n">rs</span><span class="o">))</span>
+<span class="o">}</span>
+
+<span class="k">val</span> <span class="o">(</span><span class="n">g</span><span class="o">,</span> <span class="n">m</span><span class="o">)</span> <span class="k">=</span> <span class="o">(</span><span class="nc">Group</span><span class="o">.</span><span class="n">syntax</span><span class="o">,</span> <span class="nc">Member</span><span class="o">.</span><span class="n">syntax</span><span class="o">)</span>
+
+<span class="k">val</span> <span class="n">groups</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Group</span><span class="o">]</span> <span class="k">=</span>
+  <span class="n">withSQL</span> <span class="o">{</span> <span class="n">select</span><span class="o">.</span><span class="n">from</span><span class="o">(</span><span class="nc">Group</span> <span class="n">as</span> <span class="n">g</span><span class="o">).</span><span class="n">leftJoin</span><span class="o">(</span><span class="nc">Member</span> <span class="n">as</span> <span class="n">m</span><span class="o">).</span><span class="n">on</span><span class="o">(</span><span class="n">g</span><span class="o">.</span><span class="n">id</span><span class="o">,</span> <span class="n">m</span><span class="o">.</span><span class="n">groupId</span><span class="o">)</span> <span class="o">}</span>
+   <span class="o">.</span><span class="n">one</span><span class="o">(</span><span class="nc">Group</span><span class="o">(</span><span class="n">g</span><span class="o">))</span>
+   <span class="o">.</span><span class="n">toMany</span><span class="o">(</span><span class="nc">Member</span><span class="o">.</span><span class="n">opt</span><span class="o">(</span><span class="n">m</span><span class="o">))</span>
+   <span class="o">.</span><span class="n">map</span> <span class="o">{</span> <span class="o">(</span><span class="n">group</span><span class="o">,</span> <span class="n">members</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">group</span><span class="o">.</span><span class="n">copy</span><span class="o">(</span><span class="n">members</span> <span class="k">=</span> <span class="n">members</span><span class="o">)</span> <span class="o">}</span>
+   <span class="o">.</span><span class="n">list</span>
+   <span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+</code></pre>
+
+<p><code>one.toManies</code> supports 9 tables to join.</p>
+<pre class="highlight scala"><code><span class="k">case</span> <span class="k">class</span> <span class="nc">Member</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span>
+<span class="k">case</span> <span class="k">class</span> <span class="nc">Event</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span>
+<span class="k">case</span> <span class="k">class</span> <span class="nc">Group</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
+  <span class="n">events</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Event</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Nil</span><span class="o">,</span> <span class="n">members</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Member</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Nil</span><span class="o">)</span>
+
+<span class="c1">// companion objects must be defined
+</span>
+<span class="k">val</span> <span class="o">(</span><span class="n">g</span><span class="o">,</span> <span class="n">m</span><span class="o">,</span> <span class="n">e</span><span class="o">)</span> <span class="k">=</span> <span class="o">(</span><span class="nc">Group</span><span class="o">.</span><span class="n">syntax</span><span class="o">,</span> <span class="nc">Member</span><span class="o">.</span><span class="n">syntax</span><span class="o">,</span> <span class="nc">Event</span><span class="o">.</span><span class="n">syntax</span><span class="o">)</span>
+
+<span class="k">val</span> <span class="n">groups</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Group</span><span class="o">]</span> <span class="k">=</span>
+  <span class="n">withSQL</span> <span class="o">{</span>
+    <span class="n">select</span>
+      <span class="o">.</span><span class="n">from</span><span class="o">(</span><span class="nc">Group</span> <span class="n">as</span> <span class="n">g</span><span class="o">)</span>
+      <span class="o">.</span><span class="n">leftJoin</span><span class="o">(</span><span class="nc">Member</span> <span class="n">as</span> <span class="n">m</span><span class="o">).</span><span class="n">on</span><span class="o">(</span><span class="n">g</span><span class="o">.</span><span class="n">id</span><span class="o">,</span> <span class="n">m</span><span class="o">.</span><span class="n">groupId</span><span class="o">)</span>
+      <span class="o">.</span><span class="n">leftJoin</span><span class="o">(</span><span class="nc">Event</span> <span class="n">as</span> <span class="n">e</span><span class="o">).</span><span class="n">on</span><span class="o">(</span><span class="n">g</span><span class="o">.</span><span class="n">id</span><span class="o">,</span> <span class="n">e</span><span class="o">.</span><span class="n">groupId</span><span class="o">)</span>
+    <span class="o">}</span>
+    <span class="o">.</span><span class="n">one</span><span class="o">(</span><span class="nc">Group</span><span class="o">(</span><span class="n">m</span><span class="o">))</span>
+    <span class="o">.</span><span class="n">toManies</span><span class="o">(</span>
+       <span class="n">rs</span> <span class="k">=&gt;</span> <span class="nc">Member</span><span class="o">.</span><span class="n">opt</span><span class="o">(</span><span class="n">g</span><span class="o">)(</span><span class="n">rs</span><span class="o">),</span>
+       <span class="n">rs</span> <span class="k">=&gt;</span> <span class="nc">Event</span><span class="o">(</span><span class="n">e</span><span class="o">)(</span><span class="n">rs</span><span class="o">))</span>
+     <span class="o">.</span><span class="n">map</span> <span class="o">{</span> <span class="o">(</span><span class="n">group</span><span class="o">,</span> <span class="n">members</span><span class="o">,</span> <span class="n">events</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">group</span><span class="o">.</span><span class="n">copy</span><span class="o">(</span><span class="n">members</span> <span class="k">=</span> <span class="n">members</span><span class="o">,</span> <span class="n">events</span> <span class="k">=</span> <span class="n">events</span><span class="o">)</span> <span class="o">}</span>
+     <span class="o">.</span><span class="n">list</span>
+     <span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+</code></pre>
+
+<hr/>
+
+<h3 id="one-to-one">One-To-One</h3>
+
+<hr/>
+
+<p><code>one.toOne</code> for inner join queries.</p>
+<pre class="highlight scala"><code><span class="k">case</span> <span class="k">class</span> <span class="nc">Owner</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span>
+<span class="k">case</span> <span class="k">class</span> <span class="nc">Group</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
+  <span class="n">ownerId</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">owner</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Owner</span><span class="o">]</span> <span class="k">=</span> <span class="nc">None</span><span class="o">)</span>
+
+<span class="c1">// companion objects must be defined
+</span>
+<span class="k">val</span> <span class="o">(</span><span class="n">g</span><span class="o">,</span> <span class="n">o</span><span class="o">)</span> <span class="k">=</span> <span class="o">(</span><span class="nc">Group</span><span class="o">.</span><span class="n">syntax</span><span class="o">,</span> <span class="nc">Owner</span><span class="o">.</span><span class="n">syntax</span><span class="o">)</span>
+
+<span class="k">val</span> <span class="n">groups</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Group</span><span class="o">]</span> <span class="k">=</span>
+  <span class="n">withSQL</span> <span class="o">{</span>
+    <span class="n">select</span>
+      <span class="o">.</span><span class="n">from</span><span class="o">(</span><span class="nc">Group</span> <span class="n">as</span> <span class="n">g</span><span class="o">)</span>
+      <span class="o">.</span><span class="n">innerJoin</span><span class="o">(</span><span class="nc">Owner</span> <span class="n">as</span> <span class="n">o</span><span class="o">).</span><span class="n">on</span><span class="o">(</span><span class="n">g</span><span class="o">.</span><span class="n">ownerId</span><span class="o">,</span> <span class="n">o</span><span class="o">.</span><span class="n">id</span><span class="o">)</span>
+  <span class="o">}</span>
+  <span class="o">.</span><span class="n">one</span><span class="o">(</span><span class="nc">Group</span><span class="o">(</span><span class="n">g</span><span class="o">))</span>
+  <span class="o">.</span><span class="n">toOne</span><span class="o">(</span><span class="nc">Owner</span><span class="o">(</span><span class="n">o</span><span class="o">))</span>
+  <span class="o">.</span><span class="n">map</span> <span class="o">{</span> <span class="o">(</span><span class="n">group</span><span class="o">,</span> <span class="n">owner</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">group</span><span class="o">.</span><span class="n">copy</span><span class="o">(</span><span class="n">owner</span> <span class="k">=</span> <span class="nc">Some</span><span class="o">(</span><span class="n">owner</span><span class="o">))</span> <span class="o">}</span>
+  <span class="o">.</span><span class="n">list</span>
+  <span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+</code></pre>
+
+<p>If you don&rsquo;t want to define <code>owner</code> as an optional value, use <code>#map</code> instead.</p>
+<pre class="highlight scala"><code><span class="k">case</span> <span class="k">class</span> <span class="nc">Owner</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span>
+<span class="k">case</span> <span class="k">class</span> <span class="nc">Group</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">ownerId</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">owner</span><span class="k">:</span> <span class="kt">Owner</span><span class="o">)</span>
+
+<span class="c1">// companion objects must be defined
+</span>
+<span class="k">object</span> <span class="nc">Group</span> <span class="k">extends</span> <span class="nc">SQLSyntaxSupport</span><span class="o">[</span><span class="kt">Group</span><span class="o">]</span> <span class="o">{</span>
+  <span class="k">def</span> <span class="n">apply</span><span class="o">(</span><span class="n">g</span><span class="k">:</span> <span class="kt">SyntaxProvider</span><span class="o">[</span><span class="kt">Group</span><span class="o">],</span> <span class="n">o</span><span class="k">:</span> <span class="kt">SyntaxProvider</span><span class="o">[</span><span class="kt">Owner</span><span class="o">])(</span><span class="n">rs</span><span class="k">:</span> <span class="kt">WrappedResultSet</span><span class="o">)</span><span class="k">:</span> <span class="kt">Group</span> <span class="o">=</span>
+    <span class="n">apply</span><span class="o">(</span><span class="n">g</span><span class="o">.</span><span class="n">resultName</span><span class="o">,</span> <span class="n">o</span><span class="o">.</span><span class="n">resultName</span><span class="o">)(</span><span class="n">rs</span><span class="o">)</span>
+  <span class="k">def</span> <span class="n">apply</span><span class="o">(</span><span class="n">g</span><span class="k">:</span> <span class="kt">ResultName</span><span class="o">[</span><span class="kt">Group</span><span class="o">],</span> <span class="n">o</span><span class="k">:</span> <span class="kt">ResultName</span><span class="o">[</span><span class="kt">Owner</span><span class="o">])(</span><span class="n">rs</span><span class="k">:</span> <span class="kt">WrappedResultSet</span><span class="o">)</span><span class="k">:</span> <span class="kt">Group</span> <span class="o">=</span>
+    <span class="k">new</span> <span class="nc">Group</span><span class="o">(</span>
+      <span class="n">id</span> <span class="k">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">long</span><span class="o">(</span><span class="n">g</span><span class="o">.</span><span class="n">id</span><span class="o">),</span>
+      <span class="n">name</span> <span class="k">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">string</span><span class="o">(</span><span class="n">g</span><span class="o">.</span><span class="n">name</span><span class="o">),</span>
+      <span class="n">ownerId</span> <span class="k">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">long</span><span class="o">(</span><span class="n">g</span><span class="o">.</span><span class="n">ownerId</span><span class="o">),</span>
+      <span class="n">group</span> <span class="k">=</span> <span class="nc">Owner</span><span class="o">(</span><span class="n">id</span> <span class="k">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">long</span><span class="o">(</span><span class="n">o</span><span class="o">.</span><span class="n">id</span><span class="o">)),</span>
+      <span class="n">name</span> <span class="k">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">string</span><span class="o">(</span><span class="n">o</span><span class="o">.</span><span class="n">name</span><span class="o">))</span>
+<span class="o">}</span>
+
+<span class="k">val</span> <span class="o">(</span><span class="n">g</span><span class="o">,</span> <span class="n">o</span><span class="o">)</span> <span class="k">=</span> <span class="o">(</span><span class="nc">Group</span><span class="o">.</span><span class="n">syntax</span><span class="o">,</span> <span class="nc">Owner</span><span class="o">.</span><span class="n">syntax</span><span class="o">)</span>
+
+<span class="k">val</span> <span class="n">groups</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Group</span><span class="o">]</span> <span class="k">=</span>
+  <span class="n">withSQL</span> <span class="o">{</span>
+    <span class="n">select</span><span class="o">.</span><span class="n">from</span><span class="o">(</span><span class="nc">Group</span> <span class="n">as</span> <span class="n">g</span><span class="o">).</span><span class="n">innerJoin</span><span class="o">(</span><span class="nc">Onwer</span> <span class="n">as</span> <span class="n">o</span><span class="o">).</span><span class="n">on</span><span class="o">(</span><span class="n">g</span><span class="o">.</span><span class="n">ownerId</span><span class="o">,</span> <span class="n">o</span><span class="o">.</span><span class="n">id</span><span class="o">)</span>
+  <span class="o">}</span>
+  <span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="nc">Group</span><span class="o">(</span><span class="n">g</span><span class="o">,</span> <span class="n">o</span><span class="o">))</span>
+  <span class="o">.</span><span class="n">list</span>
+  <span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+</code></pre>
+
+<p><code>one.toOptionalOne</code> for outer join queries.</p>
+<pre class="highlight scala"><code><span class="k">case</span> <span class="k">class</span> <span class="nc">Owner</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span>
+<span class="k">case</span> <span class="k">class</span> <span class="nc">Group</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
+  <span class="n">ownerId</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Long</span><span class="o">]</span> <span class="k">=</span> <span class="nc">None</span><span class="o">,</span> <span class="n">owner</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Owner</span><span class="o">]</span> <span class="k">=</span> <span class="nc">None</span><span class="o">)</span>
+
+<span class="c1">// companion objects must be defined
+</span>
+<span class="k">val</span> <span class="o">(</span><span class="n">g</span><span class="o">,</span> <span class="n">o</span><span class="o">)</span> <span class="k">=</span> <span class="o">(</span><span class="nc">Group</span><span class="o">.</span><span class="n">syntax</span><span class="o">,</span> <span class="nc">Owner</span><span class="o">.</span><span class="n">syntax</span><span class="o">)</span>
+
+<span class="k">val</span> <span class="n">groups</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Group</span><span class="o">]</span> <span class="k">=</span>
+  <span class="n">withSQL</span> <span class="o">{</span>
+    <span class="n">select</span><span class="o">.</span><span class="n">from</span><span class="o">(</span><span class="nc">Group</span> <span class="n">as</span> <span class="n">g</span><span class="o">).</span><span class="n">leftJoin</span><span class="o">(</span><span class="nc">Owner</span> <span class="n">as</span> <span class="n">o</span><span class="o">).</span><span class="n">on</span><span class="o">(</span><span class="n">g</span><span class="o">.</span><span class="n">ownerId</span><span class="o">,</span> <span class="n">o</span><span class="o">.</span><span class="n">id</span><span class="o">)</span>
+  <span class="o">}</span>
+  <span class="o">.</span><span class="n">one</span><span class="o">(</span><span class="nc">Group</span><span class="o">(</span><span class="n">g</span><span class="o">))</span>
+  <span class="o">.</span><span class="n">toOptionalOne</span><span class="o">(</span><span class="nc">Owner</span><span class="o">.</span><span class="n">opt</span><span class="o">(</span><span class="n">o</span><span class="o">))</span>
+  <span class="o">.</span><span class="n">map</span> <span class="o">{</span> <span class="o">(</span><span class="n">group</span><span class="o">,</span> <span class="n">owner</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">group</span><span class="o">.</span><span class="n">copy</span><span class="o">(</span><span class="n">owner</span> <span class="k">=</span> <span class="n">owner</span><span class="o">)</span> <span class="o">}</span>
+  <span class="o">.</span><span class="n">list</span>
+  <span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+</code></pre>
+
+<hr/>
+
+<h3 id="about-entity-equality">About Entity Equality</h3>
+
+<hr/>
+
+<p>In most cases, you will use case classes for entities. And basically it works fine. However, as you know, Scala (under 2.11) has 22 limitation and you cannot create a case class with more thatn 22 parameters. If your table has more than 22 columns, you need to create a normal class like this:</p>
+<pre class="highlight scala"><code><span class="k">class</span> <span class="nc">HugeTable</span><span class="o">(</span>
+  <span class="k">val</span> <span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="k">val</span> <span class="n">c2</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="k">val</span> <span class="n">c3</span><span class="k">:</span> <span class="kt">String</span> <span class="kt">....</span> <span class="kt">val</span> <span class="kt">c23:</span> <span class="kt">String</span><span class="o">)</span>
+
+<span class="k">object</span> <span class="nc">HugeTable</span> <span class="k">extends</span> <span class="nc">SQLSyntaxSupport</span><span class="o">[</span><span class="kt">HugeTable</span><span class="o">]</span> <span class="o">{</span>
+  <span class="k">def</span> <span class="n">apply</span><span class="o">(</span><span class="n">h</span><span class="k">:</span> <span class="kt">ResultName</span><span class="o">[</span><span class="kt">HugeTable</span><span class="o">])(</span><span class="n">rs</span><span class="k">:</span> <span class="kt">WrappedResultSet</span><span class="o">)</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">HugeTable</span><span class="o">(</span>
+    <span class="n">id</span> <span class="k">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">long</span><span class="o">(</span><span class="n">h</span><span class="o">.</span><span class="n">id</span><span class="o">),</span>
+    <span class="n">c2</span> <span class="k">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">long</span><span class="o">(</span><span class="n">h</span><span class="o">.</span><span class="n">c2</span><span class="o">),</span>
+    <span class="o">....</span>
+    <span class="n">c23</span> <span class="k">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">long</span><span class="o">(</span><span class="n">h</span><span class="o">.</span><span class="n">c23</span><span class="o">)</span>
+  <span class="o">)</span>
+<span class="o">}</span>
+</code></pre>
+
+<p>The above code also works fine except for the use of one-to-x APIs. Case classes nicely overrides <code>#equals</code> method. But <code>HugeTable</code>&rsquo;s <code>#equals</code> method won&rsquo;t work as you expect because it just predicates instance equality. So when you use normal classes and one-to-x APIs, you must override <code>#equals</code> method by yourself.</p>
+
+<p>Since version 1.7.3, ScalikeJDBC provides <code>EntityEquality</code> trait like this:</p>
+<pre class="highlight scala"><code><span class="k">class</span> <span class="nc">HugeTable</span><span class="o">(</span>
+  <span class="k">val</span> <span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="k">val</span> <span class="n">c2</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="k">val</span> <span class="n">c3</span><span class="k">:</span> <span class="kt">String</span> <span class="kt">....</span> <span class="kt">val</span> <span class="kt">c23:</span> <span class="kt">String</span><span class="o">)</span>
+  <span class="k">extends</span> <span class="nc">EntityEquality</span> <span class="o">{</span>
+
+  <span class="k">override</span> <span class="k">val</span> <span class="n">entityIdentity</span><span class="k">:</span> <span class="kt">Any</span> <span class="o">=</span> <span class="n">id</span>
+<span class="o">}</span>
+</code></pre>
+
+<p><code>#equals</code> method predicates equality with <code>entityIdentity</code> and the class is same. The above code use only <code>id</code> value for equality. If it isn&rsquo;t appropriate, define <code>entityIdentity</code> differently.</p>
+<pre class="highlight scala"><code><span class="k">class</span> <span class="nc">HugeTable</span><span class="o">(</span>
+  <span class="k">val</span> <span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="k">val</span> <span class="n">c2</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="k">val</span> <span class="n">c3</span><span class="k">:</span> <span class="kt">String</span> <span class="kt">....</span> <span class="kt">val</span> <span class="kt">c23:</span> <span class="kt">String</span><span class="o">)</span>
+  <span class="k">extends</span> <span class="nc">EntityEquality</span> <span class="o">{</span>
+
+  <span class="k">override</span> <span class="k">val</span> <span class="n">entityIdentity</span><span class="k">:</span> <span class="kt">Any</span> <span class="o">=</span> <span class="n">s</span><span class="s">"$id, $c2, $c3, ... $23"</span>
+  <span class="k">override</span> <span class="k">val</span> <span class="n">entityIdentity</span><span class="k">:</span> <span class="kt">Any</span> <span class="o">=</span> <span class="o">(</span><span class="n">id</span><span class="o">,</span> <span class="n">c2</span><span class="o">,</span> <span class="n">c3</span><span class="o">)</span>
+<span class="o">}</span>
+</code></pre>
+
+<p>If you&rsquo;re still using older version and you cannot upgrade version right now, see the <code>EntityEquality</code> implementation and do the same thing.</p>
+
+<p><a href="https://github.com/scalikejdbc/scalikejdbc/blob/1.7.x/scalikejdbc-core/src/main/scala/scalikejdbc/EntityEquality.scala">https://github.com/scalikejdbc/scalikejdbc/blob/1.7.x/scalikejdbc-core/src/main/scala/scalikejdbc/EntityEquality.scala</a></p>
+
+          <hr/>
+          <div class="alert alert-warning small">
+            If this webpage has typo or something wrong, Please report or fix. <a href="/contribution.html">How?</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xs-2 right">
+        <div class="content small">
+          <h5>version 1.x</h5>
+          <hr/>
+          <p><a href="/documentation/1.x/setup.html">Setup</a></p>
+          <p><a href="/documentation/1.x/configuration.html">Configuration</a></p>
+          <p><a href="/documentation/1.x/connection-pool.html">Connection Pool</a></p>
+          <p><a href="/documentation/1.x/operations.html">Operations</a></p>
+          <p><a href="/documentation/1.x/transaction.html">Transaction</a></p>
+          <p><a href="/documentation/1.x/auto-session.html">Auto Session</a></p>
+          <p><a href="/documentation/1.x/sql-interpolation.html">SQLInterpolation</a></p>
+          <p><a href="/documentation/1.x/query-dsl.html">QueryDSL</a></p>
+          <p><a href="/documentation/1.x/one-to-x.html">One-to-x API</a></p>
+          <p><a href="/documentation/1.x/query-inspector.html">Query Inspector</a></p>
+          <p><a href="/documentation/1.x/reverse-engineering.html">Reverse Engineering</a></p>
+          <p><a href="/documentation/1.x/testing.html">Testing</a></p>
+          <p><a href="/documentation/1.x/playframework-support.html">Play2 Support</a></p>
+          <p><a href="/documentation/1.x/dbconsole.html">dbconsole</a></p>
+          <p><a href="/documentation/1.x/contribution.html">Contribution</a></p>
+        </div>
+      </div>
+    </div>
+    </div>
+    <script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script>
+(function() {
+var cx = '000372347144050476309:fnw5lotlq6o';
+var gcse = document.createElement('script');
+gcse.type = 'text/javascript';
+gcse.async = true;
+gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//cse.google.com/cse.js?cx=' + cx;
+var s = document.getElementsByTagName('script')[0];
+s.parentNode.insertBefore(gcse, s);
+})();
+</script>
+  </body>
+</html>

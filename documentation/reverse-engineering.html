@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <!-- Use title if it's in the page YAML frontmatter -->
+    <title>Reverse Engineering - ScalikeJDBC</title>
+    <script type="text/javascript" src="//codeorigin.jquery.com/jquery-1.10.2.min.js"></script>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"/>
+    <link href="/stylesheets/all.css" rel="stylesheet" />
+    <script src="/javascripts/all.js"></script>
+  </head>
+  <body>
+    <div class="container">
+    <div class="navbar" role="navigation" id="header">
+      <div class="container">
+        <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li><a class="navbar-brand" href="/">ScalikeJDBC</a></li>
+            <li><a href="http://typesafe.com/activator/template/scalikejdbc-activator-template">Typesafe Activator</a></li>
+            <li><a href="https://groups.google.com/group/scalikejdbc-users-group">Users Group</a></li>
+            <li><a href="https://github.com/scalikejdbc/scalikejdbc">GitHub</a></li>
+            <li><a href="http://skinny-framework.org/documentation/orm.html">Skinny ORM</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+    <div class="col-xs-6 pull-right" style="height:50px;">
+      <gcse:searchbox-only></gcse:searchbox-only>
+    </div>
+      <div class="col-xs-10 left">
+        <div class="content">
+          <h2 id="reverse-engineering">Reverse Engineering</h2>
+
+<hr/>
+
+<h3 id="how-to-setup">How to Setup</h3>
+
+<hr/>
+
+<p>See <a href="/documentation/setup.html">/documentation/setup</a>.</p>
+
+<hr/>
+
+<h3 id="sbt-command">Sbt Command</h3>
+
+<hr/>
+<pre class="highlight shell"><code>sbt <span class="s2">"scalikejdbcGen [table-name (class-name)]"</span>
+</code></pre>
+
+<p>e.g.</p>
+<pre class="highlight shell"><code>sbt <span class="s2">"scalikejdbcGen company"</span>
+sbt <span class="s2">"scalikejdbcGen companies Company"</span>
+</code></pre>
+
+<hr/>
+
+<h3 id="output-example">Output Example</h3>
+
+<hr/>
+
+<p>From the following table:</p>
+<pre class="highlight sql"><code><span class="k">create</span> <span class="k">table</span> <span class="n">member</span> <span class="p">(</span>
+  <span class="n">id</span> <span class="n">int</span> <span class="k">generated</span> <span class="n">always</span> <span class="k">as</span> <span class="k">identity</span><span class="p">,</span>
+  <span class="n">name</span> <span class="n">varchar</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span> <span class="k">not</span> <span class="k">null</span><span class="p">,</span>
+  <span class="n">description</span> <span class="n">varchar</span><span class="p">(</span><span class="mi">1000</span><span class="p">),</span>
+  <span class="n">birthday</span> <span class="n">date</span><span class="p">,</span>
+  <span class="n">created_at</span> <span class="k">timestamp</span> <span class="k">not</span> <span class="k">null</span><span class="p">,</span>
+  <span class="k">primary</span> <span class="k">key</span><span class="p">(</span><span class="n">id</span><span class="p">)</span>
+<span class="p">)</span>
+</code></pre>
+
+<p>This tool will generate the following Scala source code:</p>
+<pre class="highlight scala"><code><span class="k">package</span> <span class="nn">models</span>
+
+<span class="k">import</span> <span class="nn">scalikejdbc._</span>
+<span class="k">import</span> <span class="nn">org.joda.time.</span><span class="o">{</span><span class="nc">LocalDate</span><span class="o">,</span> <span class="nc">DateTime</span><span class="o">}</span>
+
+<span class="k">case</span> <span class="k">class</span> <span class="nc">Member</span><span class="o">(</span>
+  <span class="n">id</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span>
+  <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
+  <span class="n">description</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">String</span><span class="o">]</span> <span class="k">=</span> <span class="nc">None</span><span class="o">,</span>
+  <span class="n">birthday</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">LocalDate</span><span class="o">]</span> <span class="k">=</span> <span class="nc">None</span><span class="o">,</span>
+  <span class="n">createdAt</span><span class="k">:</span> <span class="kt">DateTime</span><span class="o">)</span> <span class="o">{</span>
+
+  <span class="k">def</span> <span class="n">save</span><span class="o">()(</span><span class="k">implicit</span> <span class="n">session</span><span class="k">:</span> <span class="kt">DBSession</span> <span class="o">=</span> <span class="nc">Member</span><span class="o">.</span><span class="n">autoSession</span><span class="o">)</span><span class="k">:</span> <span class="kt">Member</span> <span class="o">=</span> <span class="nc">Member</span><span class="o">.</span><span class="n">save</span><span class="o">(</span><span class="k">this</span><span class="o">)(</span><span class="n">session</span><span class="o">)</span>
+
+  <span class="k">def</span> <span class="n">destroy</span><span class="o">()(</span><span class="k">implicit</span> <span class="n">session</span><span class="k">:</span> <span class="kt">DBSession</span> <span class="o">=</span> <span class="nc">Member</span><span class="o">.</span><span class="n">autoSession</span><span class="o">)</span><span class="k">:</span> <span class="kt">Unit</span> <span class="o">=</span> <span class="nc">Member</span><span class="o">.</span><span class="n">destroy</span><span class="o">(</span><span class="k">this</span><span class="o">)(</span><span class="n">session</span><span class="o">)</span>
+
+<span class="o">}</span>
+
+
+<span class="k">object</span> <span class="nc">Member</span> <span class="k">extends</span> <span class="nc">SQLSyntaxSupport</span><span class="o">[</span><span class="kt">Member</span><span class="o">]</span> <span class="o">{</span>
+
+  <span class="k">override</span> <span class="k">val</span> <span class="n">tableName</span> <span class="k">=</span> <span class="s">"MEMBER"</span>
+
+  <span class="k">override</span> <span class="k">val</span> <span class="n">columns</span> <span class="k">=</span> <span class="nc">Seq</span><span class="o">(</span><span class="s">"ID"</span><span class="o">,</span> <span class="s">"NAME"</span><span class="o">,</span> <span class="s">"DESCRIPTION"</span><span class="o">,</span> <span class="s">"BIRTHDAY"</span><span class="o">,</span> <span class="s">"CREATED_AT"</span><span class="o">)</span>
+
+  <span class="k">def</span> <span class="n">apply</span><span class="o">(</span><span class="n">m</span><span class="k">:</span> <span class="kt">ResultName</span><span class="o">[</span><span class="kt">Member</span><span class="o">])(</span><span class="n">rs</span><span class="k">:</span> <span class="kt">WrappedResultSet</span><span class="o">)</span><span class="k">:</span> <span class="kt">Member</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Member</span><span class="o">(</span>
+    <span class="n">id</span> <span class="k">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">int</span><span class="o">(</span><span class="n">m</span><span class="o">.</span><span class="n">id</span><span class="o">),</span>
+    <span class="n">name</span> <span class="k">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">string</span><span class="o">(</span><span class="n">m</span><span class="o">.</span><span class="n">name</span><span class="o">),</span>
+    <span class="n">description</span> <span class="k">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">stringOpt</span><span class="o">(</span><span class="n">m</span><span class="o">.</span><span class="n">description</span><span class="o">),</span>
+    <span class="n">birthday</span> <span class="k">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">dateOpt</span><span class="o">(</span><span class="n">m</span><span class="o">.</span><span class="n">birthday</span><span class="o">).</span><span class="n">map</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">toLocalDate</span><span class="o">),</span>
+    <span class="n">createdAt</span> <span class="k">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">timestamp</span><span class="o">(</span><span class="n">m</span><span class="o">.</span><span class="n">createdAt</span><span class="o">).</span><span class="n">toDateTime</span>
+  <span class="o">)</span>
+
+  <span class="k">val</span> <span class="n">m</span> <span class="k">=</span> <span class="nc">Member</span><span class="o">.</span><span class="n">syntax</span><span class="o">(</span><span class="s">"m"</span><span class="o">)</span>
+
+  <span class="k">val</span> <span class="n">autoSession</span> <span class="k">=</span> <span class="nc">AutoSession</span>
+
+  <span class="k">def</span> <span class="n">find</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)(</span><span class="k">implicit</span> <span class="n">session</span><span class="k">:</span> <span class="kt">DBSession</span> <span class="o">=</span> <span class="n">autoSession</span><span class="o">)</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Member</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
+    <span class="n">withSQL</span> <span class="o">{</span>
+      <span class="n">select</span><span class="o">.</span><span class="n">from</span><span class="o">(</span><span class="nc">Member</span> <span class="n">as</span> <span class="n">m</span><span class="o">).</span><span class="n">where</span><span class="o">.</span><span class="n">eq</span><span class="o">(</span><span class="n">m</span><span class="o">.</span><span class="n">id</span><span class="o">,</span> <span class="n">id</span><span class="o">)</span>
+    <span class="o">}.</span><span class="n">map</span><span class="o">(</span><span class="nc">Member</span><span class="o">(</span><span class="n">m</span><span class="o">.</span><span class="n">resultName</span><span class="o">)).</span><span class="n">single</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+  <span class="o">}</span>
+
+  <span class="k">def</span> <span class="n">findAll</span><span class="o">()(</span><span class="k">implicit</span> <span class="n">session</span><span class="k">:</span> <span class="kt">DBSession</span> <span class="o">=</span> <span class="n">autoSession</span><span class="o">)</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">Member</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
+    <span class="n">withSQL</span><span class="o">(</span><span class="n">select</span><span class="o">.</span><span class="n">from</span><span class="o">(</span><span class="nc">Member</span> <span class="n">as</span> <span class="n">m</span><span class="o">)).</span><span class="n">map</span><span class="o">(</span><span class="nc">Member</span><span class="o">(</span><span class="n">m</span><span class="o">.</span><span class="n">resultName</span><span class="o">)).</span><span class="n">list</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+  <span class="o">}</span>
+
+  <span class="k">def</span> <span class="n">countAll</span><span class="o">()(</span><span class="k">implicit</span> <span class="n">session</span><span class="k">:</span> <span class="kt">DBSession</span> <span class="o">=</span> <span class="n">autoSession</span><span class="o">)</span><span class="k">:</span> <span class="kt">Long</span> <span class="o">=</span> <span class="o">{</span>
+    <span class="n">withSQL</span><span class="o">(</span><span class="n">select</span><span class="o">(</span><span class="n">sqls</span><span class="s">"count(1)"</span><span class="o">).</span><span class="n">from</span><span class="o">(</span><span class="nc">Member</span> <span class="n">as</span> <span class="n">m</span><span class="o">)).</span><span class="n">map</span><span class="o">(</span><span class="n">rs</span> <span class="k">=&gt;</span> <span class="n">rs</span><span class="o">.</span><span class="n">long</span><span class="o">(</span><span class="mi">1</span><span class="o">)).</span><span class="n">single</span><span class="o">.</span><span class="n">apply</span><span class="o">().</span><span class="n">get</span>
+  <span class="o">}</span>
+
+  <span class="k">def</span> <span class="n">findAllBy</span><span class="o">(</span><span class="n">where</span><span class="k">:</span> <span class="kt">SQLSyntax</span><span class="o">)(</span><span class="k">implicit</span> <span class="n">session</span><span class="k">:</span> <span class="kt">DBSession</span> <span class="o">=</span> <span class="n">autoSession</span><span class="o">)</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">Member</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
+    <span class="n">withSQL</span> <span class="o">{</span>
+      <span class="n">select</span><span class="o">.</span><span class="n">from</span><span class="o">(</span><span class="nc">Member</span> <span class="n">as</span> <span class="n">m</span><span class="o">).</span><span class="n">where</span><span class="o">.</span><span class="n">append</span><span class="o">(</span><span class="n">sqls</span><span class="s">"${where}"</span><span class="o">)</span>
+    <span class="o">}.</span><span class="n">map</span><span class="o">(</span><span class="nc">Member</span><span class="o">(</span><span class="n">m</span><span class="o">.</span><span class="n">resultName</span><span class="o">)).</span><span class="n">list</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+  <span class="o">}</span>
+
+  <span class="k">def</span> <span class="n">countBy</span><span class="o">(</span><span class="n">where</span><span class="k">:</span> <span class="kt">SQLSyntax</span><span class="o">)(</span><span class="k">implicit</span> <span class="n">session</span><span class="k">:</span> <span class="kt">DBSession</span> <span class="o">=</span> <span class="n">autoSession</span><span class="o">)</span><span class="k">:</span> <span class="kt">Long</span> <span class="o">=</span> <span class="o">{</span>
+    <span class="n">withSQL</span> <span class="o">{</span>
+      <span class="n">select</span><span class="o">(</span><span class="n">sqls</span><span class="s">"count(1)"</span><span class="o">).</span><span class="n">from</span><span class="o">(</span><span class="nc">Member</span> <span class="n">as</span> <span class="n">m</span><span class="o">).</span><span class="n">where</span><span class="o">.</span><span class="n">append</span><span class="o">(</span><span class="n">sqls</span><span class="s">"${where}"</span><span class="o">)</span>
+    <span class="o">}.</span><span class="n">map</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">long</span><span class="o">(</span><span class="mi">1</span><span class="o">)).</span><span class="n">single</span><span class="o">.</span><span class="n">apply</span><span class="o">().</span><span class="n">get</span>
+  <span class="o">}</span>
+
+  <span class="k">def</span> <span class="n">create</span><span class="o">(</span>
+    <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
+    <span class="n">description</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">String</span><span class="o">]</span> <span class="k">=</span> <span class="nc">None</span><span class="o">,</span>
+    <span class="n">birthday</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">LocalDate</span><span class="o">]</span> <span class="k">=</span> <span class="nc">None</span><span class="o">,</span>
+    <span class="n">createdAt</span><span class="k">:</span> <span class="kt">DateTime</span><span class="o">)(</span><span class="k">implicit</span> <span class="n">session</span><span class="k">:</span> <span class="kt">DBSession</span> <span class="o">=</span> <span class="n">autoSession</span><span class="o">)</span><span class="k">:</span> <span class="kt">Member</span> <span class="o">=</span> <span class="o">{</span>
+    <span class="k">val</span> <span class="n">generatedKey</span> <span class="k">=</span> <span class="n">withSQL</span> <span class="o">{</span>
+      <span class="n">insert</span><span class="o">.</span><span class="n">into</span><span class="o">(</span><span class="nc">Member</span><span class="o">).</span><span class="n">columns</span><span class="o">(</span>
+        <span class="n">column</span><span class="o">.</span><span class="n">name</span><span class="o">,</span>
+        <span class="n">column</span><span class="o">.</span><span class="n">description</span><span class="o">,</span>
+        <span class="n">column</span><span class="o">.</span><span class="n">birthday</span><span class="o">,</span>
+        <span class="n">column</span><span class="o">.</span><span class="n">createdAt</span>
+      <span class="o">).</span><span class="n">values</span><span class="o">(</span>
+        <span class="n">name</span><span class="o">,</span>
+        <span class="n">description</span><span class="o">,</span>
+        <span class="n">birthday</span><span class="o">,</span>
+        <span class="n">createdAt</span>
+      <span class="o">)</span>
+    <span class="o">}.</span><span class="n">updateAndReturnGeneratedKey</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+
+    <span class="nc">Member</span><span class="o">(</span>
+      <span class="n">id</span> <span class="k">=</span> <span class="n">generatedKey</span><span class="o">.</span><span class="n">toInt</span><span class="o">,</span>
+      <span class="n">name</span> <span class="k">=</span> <span class="n">name</span><span class="o">,</span>
+      <span class="n">description</span> <span class="k">=</span> <span class="n">description</span><span class="o">,</span>
+      <span class="n">birthday</span> <span class="k">=</span> <span class="n">birthday</span><span class="o">,</span>
+      <span class="n">createdAt</span> <span class="k">=</span> <span class="n">createdAt</span><span class="o">)</span>
+  <span class="o">}</span>
+
+  <span class="k">def</span> <span class="n">save</span><span class="o">(</span><span class="n">m</span><span class="k">:</span> <span class="kt">Member</span><span class="o">)(</span><span class="k">implicit</span> <span class="n">session</span><span class="k">:</span> <span class="kt">DBSession</span> <span class="o">=</span> <span class="n">autoSession</span><span class="o">)</span><span class="k">:</span> <span class="kt">Member</span> <span class="o">=</span> <span class="o">{</span>
+    <span class="n">withSQL</span> <span class="o">{</span>
+      <span class="n">update</span><span class="o">(</span><span class="nc">Member</span> <span class="n">as</span> <span class="n">m</span><span class="o">).</span><span class="n">set</span><span class="o">(</span>
+        <span class="n">m</span><span class="o">.</span><span class="n">id</span> <span class="o">-&gt;</span> <span class="n">m</span><span class="o">.</span><span class="n">id</span><span class="o">,</span>
+        <span class="n">m</span><span class="o">.</span><span class="n">name</span> <span class="o">-&gt;</span> <span class="n">m</span><span class="o">.</span><span class="n">name</span><span class="o">,</span>
+        <span class="n">m</span><span class="o">.</span><span class="n">description</span> <span class="o">-&gt;</span> <span class="n">m</span><span class="o">.</span><span class="n">description</span><span class="o">,</span>
+        <span class="n">m</span><span class="o">.</span><span class="n">birthday</span> <span class="o">-&gt;</span> <span class="n">m</span><span class="o">.</span><span class="n">birthday</span><span class="o">,</span>
+        <span class="n">m</span><span class="o">.</span><span class="n">createdAt</span> <span class="o">-&gt;</span> <span class="n">m</span><span class="o">.</span><span class="n">createdAt</span>
+      <span class="o">).</span><span class="n">where</span><span class="o">.</span><span class="n">eq</span><span class="o">(</span><span class="n">m</span><span class="o">.</span><span class="n">id</span><span class="o">,</span> <span class="n">m</span><span class="o">.</span><span class="n">id</span><span class="o">)</span>
+    <span class="o">}.</span><span class="n">update</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+    <span class="n">m</span>
+  <span class="o">}</span>
+
+  <span class="k">def</span> <span class="n">destroy</span><span class="o">(</span><span class="n">m</span><span class="k">:</span> <span class="kt">Member</span><span class="o">)(</span><span class="k">implicit</span> <span class="n">session</span><span class="k">:</span> <span class="kt">DBSession</span> <span class="o">=</span> <span class="n">autoSession</span><span class="o">)</span><span class="k">:</span> <span class="kt">Unit</span> <span class="o">=</span> <span class="o">{</span>
+    <span class="n">withSQL</span> <span class="o">{</span> <span class="n">delete</span><span class="o">.</span><span class="n">from</span><span class="o">(</span><span class="nc">Member</span><span class="o">).</span><span class="n">where</span><span class="o">.</span><span class="n">eq</span><span class="o">(</span><span class="n">column</span><span class="o">.</span><span class="n">id</span><span class="o">,</span> <span class="n">m</span><span class="o">.</span><span class="n">id</span><span class="o">)</span> <span class="o">}.</span><span class="n">update</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+  <span class="o">}</span>
+
+<span class="o">}</span>
+</code></pre>
+
+<p>And specs2 or ScalaTest&rsquo;s FlatSpec.</p>
+<pre class="highlight scala"><code><span class="k">package</span> <span class="nn">models</span>
+
+<span class="k">import</span> <span class="nn">scalikejdbc.specs2.mutable.AutoRollback</span>
+<span class="k">import</span> <span class="nn">org.specs2.mutable._</span>
+<span class="k">import</span> <span class="nn">org.joda.time._</span>
+<span class="k">import</span> <span class="nn">scalikejdbc._</span>
+
+<span class="k">class</span> <span class="nc">MemberSpec</span> <span class="k">extends</span> <span class="nc">Specification</span> <span class="o">{</span>
+
+  <span class="s">"Member"</span> <span class="n">should</span> <span class="o">{</span>
+    <span class="s">"find by primary keys"</span> <span class="n">in</span> <span class="k">new</span> <span class="nc">AutoRollback</span> <span class="o">{</span>
+      <span class="k">val</span> <span class="n">maybeFound</span> <span class="k">=</span> <span class="nc">Member</span><span class="o">.</span><span class="n">find</span><span class="o">(</span><span class="mi">123</span><span class="o">)</span>
+      <span class="n">maybeFound</span><span class="o">.</span><span class="n">isDefined</span> <span class="n">should</span> <span class="n">beTrue</span>
+    <span class="o">}</span>
+    <span class="s">"find all records"</span> <span class="n">in</span> <span class="k">new</span> <span class="nc">AutoRollback</span> <span class="o">{</span>
+      <span class="k">val</span> <span class="n">allResults</span> <span class="k">=</span> <span class="nc">Member</span><span class="o">.</span><span class="n">findAll</span><span class="o">()</span>
+      <span class="n">allResults</span><span class="o">.</span><span class="n">size</span> <span class="n">should</span> <span class="n">be_&gt;</span><span class="o">(</span><span class="mi">0</span><span class="o">)</span>
+    <span class="o">}</span>
+    <span class="s">"count all records"</span> <span class="n">in</span> <span class="k">new</span> <span class="nc">AutoRollback</span> <span class="o">{</span>
+      <span class="k">val</span> <span class="n">count</span> <span class="k">=</span> <span class="nc">Member</span><span class="o">.</span><span class="n">countAll</span><span class="o">()</span>
+      <span class="n">count</span> <span class="n">should</span> <span class="n">be_&gt;</span><span class="o">(</span><span class="mi">0L</span><span class="o">)</span>
+    <span class="o">}</span>
+    <span class="s">"find by where clauses"</span> <span class="n">in</span> <span class="k">new</span> <span class="nc">AutoRollback</span> <span class="o">{</span>
+      <span class="k">val</span> <span class="n">results</span> <span class="k">=</span> <span class="nc">Member</span><span class="o">.</span><span class="n">findAllBy</span><span class="o">(</span><span class="n">sqls</span><span class="o">.</span><span class="n">eq</span><span class="o">(</span><span class="n">m</span><span class="o">.</span><span class="n">id</span><span class="o">,</span> <span class="mi">123</span><span class="o">))</span>
+      <span class="n">results</span><span class="o">.</span><span class="n">size</span> <span class="n">should</span> <span class="n">be_&gt;</span><span class="o">(</span><span class="mi">0</span><span class="o">)</span>
+    <span class="o">}</span>
+    <span class="s">"count by where clauses"</span> <span class="n">in</span> <span class="k">new</span> <span class="nc">AutoRollback</span> <span class="o">{</span>
+      <span class="k">val</span> <span class="n">count</span> <span class="k">=</span> <span class="nc">Member</span><span class="o">.</span><span class="n">countBy</span><span class="o">(</span><span class="n">sqls</span><span class="o">.</span><span class="n">eq</span><span class="o">(</span><span class="n">m</span><span class="o">.</span><span class="n">id</span><span class="o">,</span> <span class="mi">123</span><span class="o">))</span>
+      <span class="n">count</span> <span class="n">should</span> <span class="n">be_&gt;</span><span class="o">(</span><span class="mi">0L</span><span class="o">)</span>
+    <span class="o">}</span>
+    <span class="s">"create new record"</span> <span class="n">in</span> <span class="k">new</span> <span class="nc">AutoRollback</span> <span class="o">{</span>
+      <span class="k">val</span> <span class="n">created</span> <span class="k">=</span> <span class="nc">Member</span><span class="o">.</span><span class="n">create</span><span class="o">(</span><span class="n">name</span> <span class="k">=</span> <span class="s">"MyString"</span><span class="o">,</span> <span class="n">createdAt</span> <span class="k">=</span> <span class="nc">DateTime</span><span class="o">.</span><span class="n">now</span><span class="o">)</span>
+      <span class="n">created</span> <span class="n">should</span> <span class="n">not</span> <span class="n">beNull</span>
+    <span class="o">}</span>
+    <span class="s">"save a record"</span> <span class="n">in</span> <span class="k">new</span> <span class="nc">AutoRollback</span> <span class="o">{</span>
+      <span class="k">val</span> <span class="n">entity</span> <span class="k">=</span> <span class="nc">Member</span><span class="o">.</span><span class="n">findAll</span><span class="o">().</span><span class="n">head</span>
+      <span class="k">val</span> <span class="n">updated</span> <span class="k">=</span> <span class="nc">Member</span><span class="o">.</span><span class="n">save</span><span class="o">(</span><span class="n">entity</span><span class="o">)</span>
+      <span class="n">updated</span> <span class="n">should</span> <span class="n">not</span> <span class="n">equalTo</span><span class="o">(</span><span class="n">entity</span><span class="o">)</span>
+    <span class="o">}</span>
+    <span class="s">"destroy a record"</span> <span class="n">in</span> <span class="k">new</span> <span class="nc">AutoRollback</span> <span class="o">{</span>
+      <span class="k">val</span> <span class="n">entity</span> <span class="k">=</span> <span class="nc">Member</span><span class="o">.</span><span class="n">findAll</span><span class="o">().</span><span class="n">head</span>
+      <span class="nc">Member</span><span class="o">.</span><span class="n">destroy</span><span class="o">(</span><span class="n">entity</span><span class="o">)</span>
+      <span class="k">val</span> <span class="n">shouldBeNone</span> <span class="k">=</span> <span class="nc">Member</span><span class="o">.</span><span class="n">find</span><span class="o">(</span><span class="mi">123</span><span class="o">)</span>
+      <span class="n">shouldBeNone</span><span class="o">.</span><span class="n">isDefined</span> <span class="n">should</span> <span class="n">beFalse</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+
+<span class="o">}</span>
+</code></pre>
+
+          <hr/>
+          <div class="alert alert-warning small">
+            If this webpage has typo or something wrong, Please report or fix. <a href="/contribution.html">How?</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xs-2 right">
+        <div class="content small">
+          <h5>Latest version</h5>
+          <hr/>
+          <p><a href="/documentation/setup.html">Setup</a></p>
+          <p><a href="/documentation/configuration.html">Configuration</a></p>
+          <p><a href="/documentation/connection-pool.html">Connection Pool</a></p>
+          <p><a href="/documentation/operations.html">Operations</a></p>
+          <p><a href="/documentation/transaction.html">Transaction</a></p>
+          <p><a href="/documentation/auto-session.html">Auto Session</a></p>
+          <p><a href="/documentation/sql-interpolation.html">SQLInterpolation</a></p>
+          <p><a href="/documentation/query-dsl.html">QueryDSL</a></p>
+          <p><a href="/documentation/one-to-x.html">One-to-x API</a></p>
+          <p><a href="/documentation/auto-macros.html">Auto Macros</a></p>
+          <p><a href="/documentation/query-inspector.html">Query Inspector</a></p>
+          <p><a href="/documentation/reverse-engineering.html">Reverse Engineering</a></p>
+          <p><a href="/documentation/testing.html">Testing</a></p>
+          <p><a href="/documentation/playframework-support.html">Play Support</a></p>
+          <p><a href="/documentation/dbconsole.html">dbconsole</a></p>
+          <p><a href="http://www.javadoc.io/doc/org.scalikejdbc/scalikejdbc-core_2.11/2.3.5">Core API Doc</a></p>
+          <p><a href="/documentation/faq.html">FAQ</a></p>
+          <p><a href="/contribution.html">Contribution</a></p>
+          <hr/>
+          <h5>Older Versions</h5>
+          <hr/>
+          <p><a href="/documentation/1.x/">version 1.x</a></p>
+        </div>
+      </div>
+    </div>
+    </div>
+    <script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script>
+(function() {
+var cx = '000372347144050476309:fnw5lotlq6o';
+var gcse = document.createElement('script');
+gcse.type = 'text/javascript';
+gcse.async = true;
+gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//cse.google.com/cse.js?cx=' + cx;
+var s = document.getElementsByTagName('script')[0];
+s.parentNode.insertBefore(gcse, s);
+})();
+</script>
+  </body>
+</html>

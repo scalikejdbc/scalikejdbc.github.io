@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <!-- Use title if it's in the page YAML frontmatter -->
+    <title>QueryDSL - ScalikeJDBC</title>
+    <script type="text/javascript" src="//codeorigin.jquery.com/jquery-1.10.2.min.js"></script>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"/>
+    <link href="/stylesheets/all.css" rel="stylesheet" />
+    <script src="/javascripts/all.js"></script>
+  </head>
+  <body>
+    <div class="container">
+    <div class="navbar" role="navigation" id="header">
+      <div class="container">
+        <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li><a class="navbar-brand" href="/">ScalikeJDBC</a></li>
+            <li><a href="http://typesafe.com/activator/template/scalikejdbc-activator-template">Typesafe Activator</a></li>
+            <li><a href="https://groups.google.com/group/scalikejdbc-users-group">Users Group</a></li>
+            <li><a href="https://github.com/scalikejdbc/scalikejdbc">GitHub</a></li>
+            <li><a href="http://skinny-framework.org/documentation/orm.html">Skinny ORM</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+    <div class="col-xs-6 pull-right" style="height:50px;">
+      <gcse:searchbox-only></gcse:searchbox-only>
+    </div>
+      <div class="col-xs-10 left">
+        <div class="content">
+          <h2 id="querydsl">QueryDSL</h2>
+
+<hr/>
+
+<h3 id="introduction">Introduction</h3>
+
+<hr/>
+
+<p>Since version 1.6.0, Query DSL is newly added. It&rsquo;s much readable and type-safe DSL.</p>
+<pre class="highlight scala"><code><span class="k">val</span> <span class="n">id</span> <span class="k">=</span> <span class="mi">123</span>
+<span class="k">val</span> <span class="o">(</span><span class="n">m</span><span class="o">,</span> <span class="n">g</span><span class="o">)</span> <span class="k">=</span> <span class="o">(</span><span class="nc">GroupMember</span><span class="o">.</span><span class="n">syntax</span><span class="o">(</span><span class="s">"m"</span><span class="o">),</span> <span class="nc">Group</span><span class="o">.</span><span class="n">syntax</span><span class="o">(</span><span class="s">"g"</span><span class="o">))</span>
+<span class="k">val</span> <span class="n">groupMember</span> <span class="k">=</span> <span class="n">sql</span><span class="s">"""
+  select
+    ${m.result.*}, ${g.result.*}
+  from
+    ${GroupMember.as(m)} left join ${Group.as(g)} on ${m.groupId} = ${g.id}
+  where
+    ${m.id} = ${id}
+  """</span>
+    <span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="nc">GroupMember</span><span class="o">(</span><span class="n">m</span><span class="o">,</span> <span class="n">g</span><span class="o">)).</span><span class="n">single</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+</code></pre>
+
+<p>You can re-write this SQLInterpolation code by using QueryDSL as follow.</p>
+
+<p>We believe this code is much simpler and quite understandable.</p>
+<pre class="highlight scala"><code><span class="k">val</span> <span class="n">id</span> <span class="k">=</span> <span class="mi">123</span>
+<span class="k">val</span> <span class="o">(</span><span class="n">m</span><span class="o">,</span> <span class="n">g</span><span class="o">)</span> <span class="k">=</span> <span class="o">(</span><span class="nc">GroupMember</span><span class="o">.</span><span class="n">syntax</span><span class="o">(</span><span class="s">"m"</span><span class="o">),</span> <span class="nc">Group</span><span class="o">.</span><span class="n">syntax</span><span class="o">(</span><span class="s">"g"</span><span class="o">))</span>
+<span class="k">val</span> <span class="n">groupMember</span> <span class="k">=</span> <span class="n">withSQL</span> <span class="o">{</span>
+  <span class="n">select</span><span class="o">.</span><span class="n">from</span><span class="o">(</span><span class="nc">GroupMember</span> <span class="n">as</span> <span class="n">m</span><span class="o">).</span><span class="n">leftJoin</span><span class="o">(</span><span class="nc">Group</span> <span class="n">as</span> <span class="n">g</span><span class="o">).</span><span class="n">on</span><span class="o">(</span><span class="n">m</span><span class="o">.</span><span class="n">groupId</span><span class="o">,</span> <span class="n">g</span><span class="o">.</span><span class="n">id</span><span class="o">)</span>
+    <span class="o">.</span><span class="n">where</span><span class="o">.</span><span class="n">eq</span><span class="o">(</span><span class="n">m</span><span class="o">.</span><span class="n">id</span><span class="o">,</span> <span class="n">id</span><span class="o">)</span>
+<span class="o">}.</span><span class="n">map</span><span class="o">(</span><span class="nc">GroupMember</span><span class="o">(</span><span class="n">m</span><span class="o">,</span> <span class="n">g</span><span class="o">)).</span><span class="n">single</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+</code></pre>
+
+<p>More examples are</p>
+<pre class="highlight scala"><code><span class="k">val</span> <span class="n">m</span> <span class="k">=</span> <span class="nc">Member</span><span class="o">.</span><span class="n">syntax</span><span class="o">(</span><span class="s">"m"</span><span class="o">)</span>
+<span class="k">val</span> <span class="n">ids</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">Long</span><span class="o">]</span> <span class="k">=</span> <span class="n">sql</span><span class="s">"select ${m.result.id} from ${Member.as(m)} where ${m.gourpId} = 1"</span>
+<span class="k">val</span> <span class="n">members</span> <span class="k">=</span> <span class="n">sql</span><span class="s">"select ${m.result.*} from ${Member.as(m)}"</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="nc">Member</span><span class="o">(</span><span class="n">m</span><span class="o">)).</span><span class="n">list</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+</code></pre>
+
+<p>will be like this:</p>
+<pre class="highlight scala"><code><span class="k">val</span> <span class="n">m</span> <span class="k">=</span> <span class="nc">Member</span><span class="o">.</span><span class="n">syntax</span><span class="o">(</span><span class="s">"m"</span><span class="o">)</span>
+<span class="k">val</span> <span class="n">ids</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">Long</span><span class="o">]</span> <span class="k">=</span> <span class="n">withSQL</span> <span class="o">{</span> <span class="n">select</span><span class="o">(</span><span class="n">m</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">id</span><span class="o">).</span><span class="n">from</span><span class="o">(</span><span class="nc">Member</span> <span class="n">as</span> <span class="n">m</span><span class="o">).</span><span class="n">where</span><span class="o">.</span><span class="n">eq</span><span class="o">(</span><span class="n">m</span><span class="o">.</span><span class="n">groupId</span><span class="o">,</span> <span class="mi">1</span><span class="o">)</span> <span class="o">}</span>
+  <span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="n">rs</span> <span class="k">=&gt;</span> <span class="n">rs</span><span class="o">.</span><span class="n">long</span><span class="o">(</span><span class="n">m</span><span class="o">.</span><span class="n">resultName</span><span class="o">.</span><span class="n">id</span><span class="o">)).</span><span class="n">list</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+<span class="k">val</span> <span class="n">members</span> <span class="k">=</span> <span class="n">withSQL</span> <span class="o">{</span> <span class="n">select</span><span class="o">.</span><span class="n">from</span><span class="o">(</span><span class="nc">Member</span> <span class="n">as</span> <span class="n">m</span><span class="o">)</span> <span class="o">}.</span><span class="n">map</span><span class="o">(</span><span class="nc">Member</span><span class="o">(</span><span class="n">m</span><span class="o">)).</span><span class="n">list</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+<span class="c1">// or select.all(m).from(Member as m)
+</span></code></pre>
+
+<hr/>
+
+<h3 id="querydsl-reference">QueryDSL Reference</h3>
+
+<hr/>
+
+<p>FYI: You can find some example in QueryDSL&rsquo;s test code:</p>
+
+<p><a href="https://github.com/scalikejdbc/scalikejdbc/blob/master/scalikejdbc-interpolation/src/test/scala/scalikejdbc/QueryInterfaceSpec.scala">scalikejdbc-interpolation/src/test/scala/scalikejdbc/QueryInterfaceSpec.scala</a></p>
+
+<p><code>sqls</code> is alias for <code>SQLSyntax</code> object. Methods that are defined on <code>object SQLSyntax</code> is available everywhere.</p>
+
+<p><a href="https://github.com/scalikejdbc/scalikejdbc/blob/master/scalikejdbc-core/src/main/scala/scalikejdbc/interpolation/SQLSyntax.scala">scalikejdbc-core/src/main/scala/scalikejdbc/interpolation/SQLSyntax.scala</a></p>
+
+<hr/>
+
+<h4 id="and-or-conditions">And/Or conditions</h4>
+
+<hr/>
+<pre class="highlight scala"><code><span class="k">val</span> <span class="n">o</span> <span class="k">=</span> <span class="nc">Order</span><span class="o">.</span><span class="n">syntax</span><span class="o">(</span><span class="s">"o"</span><span class="o">)</span>
+<span class="k">val</span> <span class="n">orders</span> <span class="k">=</span> <span class="n">withSQL</span> <span class="o">{</span>
+  <span class="n">select</span>
+    <span class="o">.</span><span class="n">from</span><span class="o">(</span><span class="nc">Order</span> <span class="n">as</span> <span class="n">o</span><span class="o">)</span>
+    <span class="o">.</span><span class="n">where</span>
+    <span class="o">.</span><span class="n">eq</span><span class="o">(</span><span class="n">o</span><span class="o">.</span><span class="n">productId</span><span class="o">,</span> <span class="mi">123</span><span class="o">)</span>
+    <span class="o">.</span><span class="n">and</span>
+    <span class="o">.</span><span class="n">isNotNull</span><span class="o">(</span><span class="n">o</span><span class="o">.</span><span class="n">orderedAt</span><span class="o">)</span>
+  <span class="o">}.</span><span class="n">map</span><span class="o">(</span><span class="nc">Order</span><span class="o">(</span><span class="n">o</span><span class="o">)).</span><span class="n">list</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+
+<span class="c1">// select o.id as i_on_o, o.customer_id ci_on_o, o.product_id as pi_on_o, o.ordered_at as oa_on_o
+// from orders o where o.product_id = ? and o.ordered_at is not null
+</span></code></pre>
+<pre class="highlight scala"><code><span class="k">val</span> <span class="n">orders</span> <span class="k">=</span> <span class="n">withSQL</span> <span class="o">{</span>
+  <span class="n">select</span><span class="o">(</span><span class="n">o</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">id</span><span class="o">).</span><span class="n">from</span><span class="o">(</span><span class="nc">Order</span> <span class="n">as</span> <span class="n">o</span><span class="o">)</span>
+    <span class="o">.</span><span class="n">where</span>
+    <span class="o">.</span><span class="n">eq</span><span class="o">(</span><span class="n">o</span><span class="o">.</span><span class="n">productId</span><span class="o">,</span> <span class="mi">123</span><span class="o">)</span>
+    <span class="o">.</span><span class="n">or</span>
+    <span class="o">.</span><span class="n">isNull</span><span class="o">(</span><span class="n">o</span><span class="o">.</span><span class="n">customerId</span><span class="o">)</span>
+  <span class="o">}.</span><span class="n">map</span><span class="o">(</span><span class="nc">Order</span><span class="o">(</span><span class="n">o</span><span class="o">)).</span><span class="n">list</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+
+<span class="c1">// select o.id as i_on_o from orders o where o.product_id = ? and o.customer_id is null
+</span></code></pre>
+
+<p>Adding round bracket is like this:</p>
+<pre class="highlight scala"><code><span class="k">val</span> <span class="n">ids</span> <span class="k">=</span> <span class="n">withSQL</span> <span class="o">{</span>
+  <span class="n">select</span><span class="o">(</span><span class="n">o</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">id</span><span class="o">).</span><span class="n">from</span><span class="o">(</span><span class="nc">Order</span> <span class="n">as</span> <span class="n">o</span><span class="o">)</span>
+    <span class="o">.</span><span class="n">where</span><span class="o">.</span><span class="n">isNotNull</span><span class="o">(</span><span class="n">o</span><span class="o">.</span><span class="n">accountId</span><span class="o">)</span>
+    <span class="o">.</span><span class="n">and</span><span class="o">.</span><span class="n">withRoundBracket</span> <span class="o">{</span> <span class="k">_</span><span class="o">.</span><span class="n">eq</span><span class="o">(</span><span class="n">o</span><span class="o">.</span><span class="n">productId</span><span class="o">,</span> <span class="mi">1</span><span class="o">).</span><span class="n">or</span><span class="o">.</span><span class="n">eq</span><span class="o">(</span><span class="n">o</span><span class="o">.</span><span class="n">accountId</span><span class="o">,</span> <span class="mi">2</span><span class="o">)</span> <span class="o">}</span>
+  <span class="o">}.</span><span class="n">map</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">int</span><span class="o">(</span><span class="mi">1</span><span class="o">)).</span><span class="n">list</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+
+<span class="c1">// select o.id as i_on_o from orders o
+// where o.account_id is not null 
+// and (o.product_id = ? or o.account_id = ?)
+</span></code></pre>
+
+<p>or simply using <code>#append</code>:</p>
+<pre class="highlight plaintext"><code>select(o.result.id).from(Order as o).where.isNotNull(o.accountId)
+  .and.append(sqls"(${o.productId} = ${pid} or ${o.accountId} = ${aid})")
+</code></pre>
+
+<hr/>
+
+<h4 id="join-queries">Join queries</h4>
+
+<hr/>
+<pre class="highlight scala"><code><span class="k">val</span> <span class="n">orders</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">Order</span><span class="o">]</span> <span class="k">=</span> <span class="n">withSQL</span> <span class="o">{</span>
+  <span class="n">select</span>
+    <span class="o">.</span><span class="n">from</span><span class="o">(</span><span class="nc">Order</span> <span class="n">as</span> <span class="n">o</span><span class="o">)</span>
+    <span class="o">.</span><span class="n">innerJoin</span><span class="o">(</span><span class="nc">Product</span> <span class="n">as</span> <span class="n">p</span><span class="o">).</span><span class="n">on</span><span class="o">(</span><span class="n">o</span><span class="o">.</span><span class="n">productId</span><span class="o">,</span> <span class="n">p</span><span class="o">.</span><span class="n">id</span><span class="o">)</span>
+    <span class="o">.</span><span class="n">leftJoin</span><span class="o">(</span><span class="nc">Account</span> <span class="n">as</span> <span class="n">a</span><span class="o">).</span><span class="n">on</span><span class="o">(</span><span class="n">o</span><span class="o">.</span><span class="n">accountId</span><span class="o">,</span> <span class="n">a</span><span class="o">.</span><span class="n">id</span><span class="o">)</span>
+    <span class="o">.</span><span class="n">where</span><span class="o">.</span><span class="n">eq</span><span class="o">(</span><span class="n">o</span><span class="o">.</span><span class="n">productId</span><span class="o">,</span> <span class="mi">123</span><span class="o">)</span>
+    <span class="o">.</span><span class="n">orderBy</span><span class="o">(</span><span class="n">o</span><span class="o">.</span><span class="n">id</span><span class="o">).</span><span class="n">desc</span>
+    <span class="o">.</span><span class="n">limit</span><span class="o">(</span><span class="mi">4</span><span class="o">)</span>
+    <span class="o">.</span><span class="n">offset</span><span class="o">(</span><span class="mi">0</span><span class="o">)</span>
+  <span class="o">}.</span><span class="n">map</span><span class="o">(</span><span class="nc">Order</span><span class="o">(</span><span class="n">o</span><span class="o">,</span> <span class="n">p</span><span class="o">,</span> <span class="n">a</span><span class="o">)).</span><span class="n">list</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+
+<span class="c1">// select o.*, p.*, a.* from orders o inner join products p on o.product_id = p.id
+// left join accounts a on o.account_id = a.id
+// where o.product_id = ? order by o.id desc limit ? offset ?
+</span></code></pre>
+
+<p><code>.on(o.productId, p.id)</code> is simply converted to <code>sqls&quot;${o.productId} = ${p.id}&quot;</code>. If you need to write more complex condition to join tables, use <code>sqls</code> directly.</p>
+<pre class="highlight scala"><code>  <span class="o">.</span><span class="n">innerJoin</span><span class="o">(</span><span class="nc">Product</span> <span class="n">as</span> <span class="n">p</span><span class="o">).</span><span class="n">on</span><span class="o">(</span><span class="n">sqls</span><span class="s">"${o.proudctId} = ${p.id} and ${o.deletedAt} is not null"</span><span class="o">)</span>
+
+  <span class="c1">// inner join products p on o.product_id = p.id and o.deleted_at is not null
+</span></code></pre>
+
+<hr/>
+
+<h4 id="dynamic-query-building">Dynamic query building</h4>
+
+<hr/>
+<pre class="highlight scala"><code><span class="k">def</span> <span class="n">findOrder</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">accountRequired</span><span class="k">:</span> <span class="kt">Boolean</span><span class="o">)</span> <span class="k">=</span> <span class="n">withSQL</span> <span class="o">{</span>
+  <span class="n">select</span>
+    <span class="o">.</span><span class="n">from</span><span class="o">[</span><span class="kt">Order</span><span class="o">](</span><span class="nc">Order</span> <span class="n">as</span> <span class="n">o</span><span class="o">)</span>
+    <span class="o">.</span><span class="n">innerJoin</span><span class="o">(</span><span class="nc">Product</span> <span class="n">as</span> <span class="n">p</span><span class="o">).</span><span class="n">on</span><span class="o">(</span><span class="n">o</span><span class="o">.</span><span class="n">productId</span><span class="o">,</span> <span class="n">p</span><span class="o">.</span><span class="n">id</span><span class="o">)</span>
+    <span class="o">.</span><span class="n">map</span> <span class="o">{</span> <span class="n">sql</span> <span class="k">=&gt;</span>
+      <span class="k">if</span> <span class="o">(</span><span class="n">accountRequired</span><span class="o">)</span> <span class="n">sql</span><span class="o">.</span><span class="n">leftJoin</span><span class="o">(</span><span class="nc">Account</span> <span class="n">as</span> <span class="n">a</span><span class="o">).</span><span class="n">on</span><span class="o">(</span><span class="n">o</span><span class="o">.</span><span class="n">accountId</span><span class="o">,</span> <span class="n">a</span><span class="o">.</span><span class="n">id</span><span class="o">)</span> <span class="k">else</span> <span class="n">sql</span>
+    <span class="o">}.</span><span class="n">where</span><span class="o">.</span><span class="n">eq</span><span class="o">(</span><span class="n">o</span><span class="o">.</span><span class="n">id</span><span class="o">,</span> <span class="mi">13</span><span class="o">)</span>
+  <span class="o">}.</span><span class="n">map</span> <span class="o">{</span> <span class="n">rs</span> <span class="k">=&gt;</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">accountRequired</span><span class="o">)</span> <span class="nc">Order</span><span class="o">(</span><span class="n">o</span><span class="o">,</span> <span class="n">p</span><span class="o">,</span> <span class="n">a</span><span class="o">)(</span><span class="n">rs</span><span class="o">)</span> <span class="k">else</span> <span class="nc">Order</span><span class="o">(</span><span class="n">o</span><span class="o">,</span> <span class="n">p</span><span class="o">)(</span><span class="n">rs</span><span class="o">)</span>
+  <span class="o">}.</span><span class="n">single</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+
+<span class="c1">// or
+</span>
+<span class="k">def</span> <span class="n">findOrder</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">accountRequired</span><span class="k">:</span> <span class="kt">Boolean</span><span class="o">)</span> <span class="k">=</span> <span class="n">withSQL</span> <span class="o">{</span>
+  <span class="n">select</span>
+    <span class="o">.</span><span class="n">from</span><span class="o">[</span><span class="kt">Order</span><span class="o">](</span><span class="nc">Order</span> <span class="n">as</span> <span class="n">o</span><span class="o">)</span>
+    <span class="o">.</span><span class="n">innerJoin</span><span class="o">(</span><span class="nc">Product</span> <span class="n">as</span> <span class="n">p</span><span class="o">).</span><span class="n">on</span><span class="o">(</span><span class="n">o</span><span class="o">.</span><span class="n">productId</span><span class="o">,</span> <span class="n">p</span><span class="o">.</span><span class="n">id</span><span class="o">)</span>
+    <span class="o">.</span><span class="n">leftJoin</span><span class="o">(</span><span class="k">if</span> <span class="o">(</span><span class="n">accountRequired</span><span class="o">)</span> <span class="nc">Some</span><span class="o">(</span><span class="nc">Account</span> <span class="n">as</span> <span class="n">a</span><span class="o">)</span> <span class="k">else</span> <span class="nc">None</span><span class="o">).</span><span class="n">on</span><span class="o">(</span><span class="n">o</span><span class="o">.</span><span class="n">accountId</span><span class="o">,</span> <span class="n">a</span><span class="o">.</span><span class="n">id</span><span class="o">)</span>
+    <span class="o">.</span><span class="n">where</span><span class="o">.</span><span class="n">eq</span><span class="o">(</span><span class="n">o</span><span class="o">.</span><span class="n">id</span><span class="o">,</span> <span class="mi">13</span><span class="o">)</span>
+  <span class="o">}.</span><span class="n">map</span> <span class="o">{</span> <span class="n">rs</span> <span class="k">=&gt;</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">accountRequired</span><span class="o">)</span> <span class="nc">Order</span><span class="o">(</span><span class="n">o</span><span class="o">,</span> <span class="n">p</span><span class="o">,</span> <span class="n">a</span><span class="o">)(</span><span class="n">rs</span><span class="o">)</span> <span class="k">else</span> <span class="nc">Order</span><span class="o">(</span><span class="n">o</span><span class="o">,</span> <span class="n">p</span><span class="o">)(</span><span class="n">rs</span><span class="o">)</span>
+  <span class="o">}.</span><span class="n">single</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+
+
+<span class="c1">// select o.*, p.*(, a.*) from orders o inner join products p on o.product_id = p.id
+// (left join accounts a on o.account_id = a.id)
+// where o.id = ?
+</span></code></pre>
+
+<p>If you just need to append optional conditions, <code>toAndConditionOpt</code>, and <code>toOrConditionOpt</code> are useful.</p>
+<pre class="highlight scala"><code><span class="k">val</span> <span class="o">(</span><span class="n">productId</span><span class="o">,</span> <span class="n">accountId</span><span class="o">)</span> <span class="k">=</span> <span class="o">(</span><span class="nc">Some</span><span class="o">(</span><span class="mi">1</span><span class="o">),</span> <span class="nc">None</span><span class="o">)</span>
+<span class="k">val</span> <span class="n">ids</span> <span class="k">=</span> <span class="n">withSQL</span> <span class="o">{</span>
+  <span class="n">select</span><span class="o">(</span><span class="n">o</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">id</span><span class="o">).</span><span class="n">from</span><span class="o">(</span><span class="nc">Order</span> <span class="n">as</span> <span class="n">o</span><span class="o">)</span>
+    <span class="o">.</span><span class="n">where</span><span class="o">(</span><span class="n">sqls</span><span class="o">.</span><span class="n">toAndConditionOpt</span><span class="o">(</span>
+      <span class="n">productId</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="n">id</span> <span class="k">=&gt;</span> <span class="n">sqls</span><span class="o">.</span><span class="n">eq</span><span class="o">(</span><span class="n">o</span><span class="o">.</span><span class="n">productId</span><span class="o">,</span> <span class="n">id</span><span class="o">)),</span>
+      <span class="n">accountId</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="n">id</span> <span class="k">=&gt;</span> <span class="n">sqls</span><span class="o">.</span><span class="n">eq</span><span class="o">(</span><span class="n">o</span><span class="o">.</span><span class="n">accountId</span><span class="o">,</span> <span class="n">id</span><span class="o">))</span>
+    <span class="o">))</span>
+    <span class="o">.</span><span class="n">orderBy</span><span class="o">(</span><span class="n">o</span><span class="o">.</span><span class="n">id</span><span class="o">)</span>
+<span class="o">}.</span><span class="n">map</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">int</span><span class="o">(</span><span class="mi">1</span><span class="o">)).</span><span class="n">list</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+
+<span class="c1">// select o.id as i_on_o from orders o
+// where o.product_id = ? (and o.account_id = ?)
+// order by o.id
+</span>
+<span class="c1">// productId: Some, accountId: None -&gt; where o.product_id = ? 
+// productId: None, accountId: Some -&gt; where o.account_id = ?
+</span></code></pre>
+
+<hr/>
+
+<h4 id="in-clause">in clause</h4>
+
+<hr/>
+<pre class="highlight scala"><code><span class="k">val</span> <span class="n">inClauseResults</span> <span class="k">=</span> <span class="n">withSQL</span> <span class="o">{</span>
+  <span class="n">select</span><span class="o">.</span><span class="n">from</span><span class="o">(</span><span class="nc">Order</span> <span class="n">as</span> <span class="n">o</span><span class="o">).</span><span class="n">where</span><span class="o">.</span><span class="n">in</span><span class="o">(</span><span class="n">o</span><span class="o">.</span><span class="n">id</span><span class="o">,</span> <span class="nc">Seq</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="mi">2</span><span class="o">,</span> <span class="mi">3</span><span class="o">))</span>
+<span class="o">}.</span><span class="n">map</span><span class="o">(</span><span class="nc">Order</span><span class="o">(</span><span class="n">o</span><span class="o">)).</span><span class="n">list</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+
+<span class="c1">// select * from orders o where o.id in (?, ?, ?)
+</span></code></pre>
+
+<hr/>
+
+<h4 id="exists-notexists-clause">exists/notExists clause</h4>
+
+<hr/>
+<pre class="highlight scala"><code><span class="n">withSQL</span> <span class="o">{</span>
+  <span class="n">select</span><span class="o">(</span><span class="n">a</span><span class="o">.</span><span class="n">id</span><span class="o">).</span><span class="n">from</span><span class="o">(</span><span class="nc">Account</span> <span class="n">as</span> <span class="n">a</span><span class="o">)</span>
+    <span class="o">.</span><span class="n">where</span><span class="o">.</span><span class="n">exists</span><span class="o">(</span><span class="n">select</span><span class="o">.</span><span class="n">from</span><span class="o">(</span><span class="nc">Order</span> <span class="n">as</span> <span class="n">o</span><span class="o">).</span><span class="n">where</span><span class="o">.</span><span class="n">eq</span><span class="o">(</span><span class="n">o</span><span class="o">.</span><span class="n">accountId</span><span class="o">,</span> <span class="n">a</span><span class="o">.</span><span class="n">id</span><span class="o">))</span>
+<span class="o">}.</span><span class="n">map</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">int</span><span class="o">(</span><span class="mi">1</span><span class="o">)).</span><span class="n">list</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+
+<span class="c1">// select a.id from accounts a
+// where exists (select * from orders o where o.account_id = a.id)
+</span></code></pre>
+
+<p>It&rsquo;s also possible to pass <code>sqls</code> values.</p>
+<pre class="highlight scala"><code><span class="n">withSQL</span> <span class="o">{</span>
+  <span class="n">select</span><span class="o">(</span><span class="n">a</span><span class="o">.</span><span class="n">id</span><span class="o">).</span><span class="n">from</span><span class="o">(</span><span class="nc">Account</span> <span class="n">as</span> <span class="n">a</span><span class="o">)</span>
+    <span class="o">.</span><span class="n">where</span><span class="o">.</span><span class="n">notExists</span><span class="o">(</span><span class="n">sqls</span><span class="s">"select ${o.id} from ${Order as o} where ${o.accountId} = ${a.id}"</span><span class="o">)</span>
+<span class="o">}.</span><span class="n">map</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">int</span><span class="o">(</span><span class="mi">1</span><span class="o">)).</span><span class="n">list</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+
+<span class="c1">// select a.id from accounts a
+// where not exists (select o.id from orders o where o.account_id = a.id)
+</span></code></pre>
+
+<hr/>
+
+<h4 id="between">between</h4>
+
+<hr/>
+<pre class="highlight scala"><code><span class="n">withSQL</span> <span class="o">{</span>
+  <span class="n">select</span><span class="o">(</span><span class="n">o</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">id</span><span class="o">).</span><span class="n">from</span><span class="o">(</span><span class="nc">Order</span> <span class="n">as</span> <span class="n">o</span><span class="o">).</span><span class="n">where</span><span class="o">.</span><span class="n">between</span><span class="o">(</span><span class="n">o</span><span class="o">.</span><span class="n">id</span><span class="o">,</span> <span class="mi">13</span><span class="o">,</span> <span class="mi">22</span><span class="o">)</span>
+<span class="o">}.</span><span class="n">map</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">int</span><span class="o">(</span><span class="mi">1</span><span class="o">)).</span><span class="n">list</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+
+<span class="c1">// select o.id as i_on_o from orders o where o.id between ? and ?
+</span></code></pre>
+
+<hr/>
+
+<h4 id="distinct-count">distinct count</h4>
+
+<hr/>
+<pre class="highlight scala"><code><span class="k">import</span> <span class="nn">sqls.</span><span class="o">{</span> <span class="n">distinct</span><span class="o">,</span> <span class="n">count</span> <span class="o">}</span>
+<span class="k">val</span> <span class="n">productCount</span> <span class="k">=</span> <span class="n">withSQL</span> <span class="o">{</span>
+  <span class="n">select</span><span class="o">(</span><span class="n">count</span><span class="o">(</span><span class="n">distinct</span><span class="o">(</span><span class="n">o</span><span class="o">.</span><span class="n">productId</span><span class="o">))).</span><span class="n">from</span><span class="o">(</span><span class="nc">Order</span> <span class="n">as</span> <span class="n">o</span><span class="o">)</span>
+<span class="o">}.</span><span class="n">map</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">int</span><span class="o">(</span><span class="mi">1</span><span class="o">)).</span><span class="n">single</span><span class="o">.</span><span class="n">apply</span><span class="o">().</span><span class="n">get</span>
+
+<span class="c1">// select count(distinct o.product_id) from orders o
+</span></code></pre>
+
+<hr/>
+
+<h4 id="group-by-queries">group by queries</h4>
+
+<hr/>
+<pre class="highlight scala"><code><span class="k">import</span> <span class="nn">sqls.count</span>
+<span class="n">withSQL</span> <span class="o">{</span>
+  <span class="n">select</span><span class="o">(</span><span class="n">o</span><span class="o">.</span><span class="n">accountId</span><span class="o">,</span> <span class="n">count</span><span class="o">).</span><span class="n">from</span><span class="o">(</span><span class="nc">Order</span> <span class="n">as</span> <span class="n">o</span><span class="o">)</span>
+    <span class="o">.</span><span class="n">where</span><span class="o">.</span><span class="n">isNotNull</span><span class="o">(</span><span class="n">o</span><span class="o">.</span><span class="n">accountId</span><span class="o">)</span>
+    <span class="o">.</span><span class="n">groupBy</span><span class="o">(</span><span class="n">o</span><span class="o">.</span><span class="n">accountId</span><span class="o">)</span>
+<span class="o">}.</span><span class="n">map</span><span class="o">(</span><span class="n">rs</span> <span class="k">=&gt;</span> <span class="o">(</span><span class="n">rs</span><span class="o">.</span><span class="n">int</span><span class="o">(</span><span class="mi">1</span><span class="o">),</span> <span class="n">rs</span><span class="o">.</span><span class="n">int</span><span class="o">(</span><span class="mi">2</span><span class="o">))).</span><span class="n">list</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+
+<span class="c1">// select o.account_id, count(1) from orders o
+// where o.account_id is not null
+// group by o.account_id
+</span></code></pre>
+
+<hr/>
+
+<h4 id="union-unionall-queries">union, unionAll queries</h4>
+
+<hr/>
+<pre class="highlight scala"><code><span class="n">withSQL</span> <span class="o">{</span>
+  <span class="n">select</span><span class="o">(</span><span class="n">a</span><span class="o">.</span><span class="n">id</span><span class="o">).</span><span class="n">from</span><span class="o">(</span><span class="nc">Account</span> <span class="n">as</span> <span class="n">a</span><span class="o">)</span>
+    <span class="o">.</span><span class="n">union</span><span class="o">(</span><span class="n">select</span><span class="o">(</span><span class="n">p</span><span class="o">.</span><span class="n">id</span><span class="o">).</span><span class="n">from</span><span class="o">(</span><span class="nc">Product</span> <span class="n">as</span> <span class="n">p</span><span class="o">))</span>
+    <span class="c1">//.unionAll(select(p.id).from(Product as p))
+</span><span class="o">}.</span><span class="n">map</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">int</span><span class="o">(</span><span class="mi">1</span><span class="o">)).</span><span class="n">list</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+
+<span class="c1">// select a.id from accounts a
+// union 
+// select p.id from products p
+</span></code></pre>
+
+<hr/>
+
+<h4 id="sub-queries">Sub-queries</h4>
+
+<hr/>
+<pre class="highlight scala"><code><span class="k">import</span> <span class="nn">SQLSyntax.</span><span class="o">{</span> <span class="n">sum</span><span class="o">,</span> <span class="n">gt</span> <span class="o">}</span>
+<span class="k">val</span> <span class="n">x</span> <span class="k">=</span> <span class="nc">SubQuery</span><span class="o">.</span><span class="n">syntax</span><span class="o">(</span><span class="s">"x"</span><span class="o">).</span><span class="n">include</span><span class="o">(</span><span class="n">o</span><span class="o">,</span> <span class="n">p</span><span class="o">)</span>
+<span class="k">val</span> <span class="n">preferredClients</span><span class="k">:</span> <span class="kt">List</span><span class="o">[(</span><span class="kt">Int</span>, <span class="kt">Int</span><span class="o">)]</span> <span class="k">=</span> <span class="n">withSQL</span> <span class="o">{</span>
+  <span class="n">select</span><span class="o">(</span><span class="n">sqls</span><span class="s">"${x(o).accountId} id"</span><span class="o">,</span> <span class="n">sqls</span><span class="s">"${sum(x(p).price)} as amount"</span><span class="o">)</span>
+    <span class="o">.</span><span class="n">from</span> <span class="o">{</span> <span class="n">select</span><span class="o">.</span><span class="n">all</span><span class="o">(</span><span class="n">o</span><span class="o">,</span> <span class="n">p</span><span class="o">).</span><span class="n">from</span><span class="o">(</span><span class="nc">Order</span> <span class="n">as</span> <span class="n">o</span><span class="o">).</span><span class="n">innerJoin</span><span class="o">(</span><span class="nc">Product</span> <span class="n">as</span> <span class="n">p</span><span class="o">).</span><span class="n">on</span><span class="o">(</span><span class="n">o</span><span class="o">.</span><span class="n">productId</span><span class="o">,</span> <span class="n">p</span><span class="o">.</span><span class="n">id</span><span class="o">).</span><span class="n">as</span><span class="o">(</span><span class="n">x</span><span class="o">)</span> <span class="o">}</span>
+    <span class="o">.</span><span class="n">groupBy</span><span class="o">(</span><span class="n">x</span><span class="o">(</span><span class="n">o</span><span class="o">).</span><span class="n">accountId</span><span class="o">)</span>
+    <span class="o">.</span><span class="n">having</span><span class="o">(</span><span class="n">gt</span><span class="o">(</span><span class="n">sum</span><span class="o">(</span><span class="n">x</span><span class="o">(</span><span class="n">p</span><span class="o">).</span><span class="n">price</span><span class="o">),</span> <span class="mi">300</span><span class="o">))</span>
+    <span class="o">.</span><span class="n">orderBy</span><span class="o">(</span><span class="n">sqls</span><span class="s">"amount"</span><span class="o">)</span>
+  <span class="o">}.</span><span class="n">map</span><span class="o">(</span><span class="n">rs</span> <span class="k">=&gt;</span> <span class="o">(</span><span class="n">rs</span><span class="o">.</span><span class="n">int</span><span class="o">(</span><span class="s">"id"</span><span class="o">),</span> <span class="n">rs</span><span class="o">.</span><span class="n">int</span><span class="o">(</span><span class="s">"amount"</span><span class="o">))).</span><span class="n">list</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+
+<span class="c1">// select x.account_id id, sum(x.price) as amount 
+// from (select o.*, p.* from orders o inner join products p on o.product_id = p.id) x
+// group by x.account_id
+// having sum(x.price) &gt; ?
+// order by amount
+</span></code></pre>
+
+<hr/>
+
+<h4 id="insert">Insert</h4>
+
+<hr/>
+<pre class="highlight scala"><code><span class="n">withSQL</span> <span class="o">{</span>
+  <span class="n">insert</span><span class="o">.</span><span class="n">into</span><span class="o">(</span><span class="nc">Member</span><span class="o">).</span><span class="n">values</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="s">"Alice"</span><span class="o">,</span> <span class="nc">DateTime</span><span class="o">.</span><span class="n">now</span><span class="o">)</span>
+<span class="o">}.</span><span class="n">update</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+
+<span class="c1">// insert into members values (?, ?, ?)
+</span>
+<span class="n">withSQL</span> <span class="o">{</span>
+  <span class="k">val</span> <span class="n">m</span> <span class="k">=</span> <span class="nc">Member</span><span class="o">.</span><span class="n">column</span>
+  <span class="n">insert</span><span class="o">.</span><span class="n">into</span><span class="o">(</span><span class="nc">Member</span><span class="o">).</span><span class="n">namedValues</span><span class="o">(</span>
+    <span class="n">m</span><span class="o">.</span><span class="n">id</span> <span class="o">-&gt;</span> <span class="mi">1</span><span class="o">,</span> 
+    <span class="n">m</span><span class="o">.</span><span class="n">name</span> <span class="o">-&gt;</span> <span class="s">"Alice"</span><span class="o">,</span> 
+    <span class="n">m</span><span class="o">.</span><span class="n">createdAt</span> <span class="o">-&gt;</span> <span class="nc">DateTime</span><span class="o">.</span><span class="n">now</span>
+  <span class="o">)</span>
+<span class="o">}.</span><span class="n">update</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+
+<span class="c1">// insert into members (id, name, created_at) values (?, ?, ?)
+</span></code></pre>
+
+<p>Or <code>applyUpdate</code> is much simpler. But in some cases, applyUpdate causes compilation errors since Scala 2.10.1. This is not an issue of ScalikeJDBC. If you suffered it, use <code>withSQL { }.update.apply()</code> instead.</p>
+<pre class="highlight scala"><code><span class="n">applyUpdate</span> <span class="o">{</span> <span class="n">insert</span><span class="o">.</span><span class="n">into</span><span class="o">(</span><span class="nc">Member</span><span class="o">).</span><span class="n">values</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span> <span class="s">"Bob"</span><span class="o">,</span> <span class="nc">DateTime</span><span class="o">.</span><span class="n">now</span><span class="o">)</span> <span class="o">}</span>
+
+<span class="c1">// insert into members values (?, ?, ?)
+</span>
+<span class="k">val</span> <span class="n">c</span> <span class="k">=</span> <span class="nc">Member</span><span class="o">.</span><span class="n">column</span>
+<span class="n">applyUpdate</span> <span class="o">{</span>
+  <span class="n">insert</span><span class="o">.</span><span class="n">into</span><span class="o">(</span><span class="nc">Member</span><span class="o">).</span><span class="n">columns</span><span class="o">(</span><span class="n">c</span><span class="o">.</span><span class="n">id</span><span class="o">,</span> <span class="n">c</span><span class="o">.</span><span class="n">name</span><span class="o">,</span> <span class="n">c</span><span class="o">.</span><span class="n">createdAt</span><span class="o">).</span><span class="n">values</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span> <span class="s">"Bob"</span><span class="o">,</span> <span class="nc">DateTime</span><span class="o">.</span><span class="n">now</span><span class="o">)</span>
+<span class="o">}</span>
+
+<span class="c1">// insert into members (id, name, created_at) values (?, ?, ?)
+</span></code></pre>
+
+<hr/>
+
+<h4 id="insert-select">Insert select</h4>
+
+<hr/>
+<pre class="highlight scala"><code><span class="k">case</span> <span class="k">class</span> <span class="nc">Product</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span> <span class="n">name</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">String</span><span class="o">],</span> <span class="n">price</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span>
+<span class="k">object</span> <span class="nc">Product</span> <span class="k">extends</span> <span class="nc">SQLSyntaxSupport</span><span class="o">[</span><span class="kt">Product</span><span class="o">]</span>
+<span class="k">case</span> <span class="k">class</span> <span class="nc">LegacyProduct</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Int</span><span class="o">],</span> <span class="n">name</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">String</span><span class="o">],</span> <span class="n">price</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span>
+<span class="k">object</span> <span class="nc">LegacyProduct</span> <span class="k">extends</span> <span class="nc">SQLSyntaxSupport</span><span class="o">[</span><span class="kt">LegacyProduct</span><span class="o">]</span>
+
+<span class="k">val</span> <span class="n">lp</span> <span class="k">=</span> <span class="nc">LegacyProduct</span><span class="o">.</span><span class="n">syntax</span><span class="o">(</span><span class="s">"lp"</span><span class="o">)</span>
+<span class="n">withSQL</span> <span class="o">{</span>
+  <span class="n">insert</span><span class="o">.</span><span class="n">into</span><span class="o">(</span><span class="nc">Product</span><span class="o">).</span><span class="n">select</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">from</span><span class="o">(</span><span class="nc">LegacyProduct</span> <span class="n">as</span> <span class="n">lp</span><span class="o">).</span><span class="n">where</span><span class="o">.</span><span class="n">isNotNull</span><span class="o">(</span><span class="n">lp</span><span class="o">.</span><span class="n">id</span><span class="o">))</span>
+<span class="o">}.</span><span class="n">update</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+
+<span class="c1">// insert into products select lp.* from legacy_products lp where lp.id is not null
+</span></code></pre>
+
+<hr/>
+
+<h4 id="delete">Delete</h4>
+
+<hr/>
+<pre class="highlight scala"><code><span class="n">withSQL</span> <span class="o">{</span>
+  <span class="n">delete</span><span class="o">.</span><span class="n">from</span><span class="o">(</span><span class="nc">Member</span><span class="o">).</span><span class="n">where</span><span class="o">.</span><span class="n">eq</span><span class="o">(</span><span class="nc">Member</span><span class="o">.</span><span class="n">column</span><span class="o">.</span><span class="n">id</span><span class="o">,</span> <span class="mi">123</span><span class="o">)</span>
+<span class="o">}.</span><span class="n">update</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+
+<span class="c1">// delete from members where id = ?
+</span></code></pre>
+
+<hr/>
+
+<h4 id="update">Update</h4>
+
+<hr/>
+<pre class="highlight scala"><code><span class="n">withSQL</span> <span class="o">{</span>
+  <span class="n">update</span><span class="o">(</span><span class="nc">Member</span><span class="o">).</span><span class="n">set</span><span class="o">(</span>
+    <span class="nc">Member</span><span class="o">.</span><span class="n">column</span><span class="o">.</span><span class="n">name</span> <span class="o">-&gt;</span> <span class="s">"Chris"</span><span class="o">,</span>
+    <span class="nc">Member</span><span class="o">.</span><span class="n">column</span><span class="o">.</span><span class="n">updatedAt</span> <span class="o">-&gt;</span> <span class="nc">DateTime</span><span class="o">.</span><span class="n">now</span>
+  <span class="o">).</span><span class="n">where</span><span class="o">.</span><span class="n">eq</span><span class="o">(</span><span class="nc">Member</span><span class="o">.</span><span class="n">column</span><span class="o">.</span><span class="n">id</span><span class="o">,</span> <span class="mi">2</span><span class="o">)</span>
+<span class="o">}.</span><span class="n">update</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+
+<span class="c1">// update members set name = ?, updated_at = ? 
+// where id = ?
+</span></code></pre>
+
+<hr/>
+
+<h4 id="avoiding-method-name-conflict">Avoiding Method Name Conflict</h4>
+
+<hr/>
+
+<p>For example, if your code already uses <code>select</code>, <code>insert</code> or <code>update</code> as method name, name confliction occurs.</p>
+<pre class="highlight scala"><code><span class="k">def</span> <span class="n">insert</span><span class="o">(</span><span class="n">e</span><span class="k">:</span> <span class="kt">Member</span><span class="o">)(</span><span class="k">implicit</span> <span class="n">session</span><span class="k">:</span> <span class="kt">DBSession</span><span class="o">)</span> <span class="o">{</span>
+  <span class="n">withSQL</span> <span class="o">{</span>
+    <span class="n">insert</span> <span class="c1">// compilation error
+</span>      <span class="o">.</span><span class="n">into</span><span class="o">(</span><span class="nc">Member</span><span class="o">).</span><span class="n">values</span><span class="o">(</span><span class="n">e</span><span class="o">.</span><span class="n">id</span><span class="o">,</span> <span class="n">e</span><span class="o">.</span><span class="n">name</span><span class="o">)</span>
+  <span class="o">}.</span><span class="n">update</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+<span class="o">}</span>
+</code></pre>
+
+<p>Use <code>QueryDSL</code> prefix or <code>insertInto</code>, <code>deleteFrom</code>.</p>
+<pre class="highlight scala"><code><span class="k">def</span> <span class="n">insert</span><span class="o">(</span><span class="n">e</span><span class="k">:</span> <span class="kt">Member</span><span class="o">)(</span><span class="k">implicit</span> <span class="n">session</span><span class="k">:</span> <span class="kt">DBSession</span><span class="o">)</span> <span class="o">{</span>
+  <span class="n">withSQL</span> <span class="o">{</span>
+    <span class="nc">QueryDSL</span><span class="o">.</span><span class="n">insert</span><span class="o">.</span><span class="n">into</span><span class="o">(</span><span class="nc">Member</span><span class="o">).</span><span class="n">values</span><span class="o">(</span><span class="n">e</span><span class="o">.</span><span class="n">id</span><span class="o">,</span> <span class="n">e</span><span class="o">.</span><span class="n">name</span><span class="o">)</span>
+  <span class="o">}.</span><span class="n">update</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+<span class="o">}</span>
+
+<span class="k">def</span> <span class="n">insert</span><span class="o">(</span><span class="n">e</span><span class="k">:</span> <span class="kt">Member</span><span class="o">)(</span><span class="k">implicit</span> <span class="n">session</span><span class="k">:</span> <span class="kt">DBSession</span><span class="o">)</span> <span class="o">{</span>
+  <span class="n">withSQL</span> <span class="o">{</span>
+    <span class="n">insertInto</span><span class="o">(</span><span class="nc">Member</span><span class="o">).</span><span class="n">values</span><span class="o">(</span><span class="n">e</span><span class="o">.</span><span class="n">id</span><span class="o">,</span> <span class="n">e</span><span class="o">.</span><span class="n">name</span><span class="o">)</span>
+  <span class="o">}.</span><span class="n">update</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+<span class="o">}</span>
+
+<span class="k">def</span> <span class="n">delete</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">)(</span><span class="k">implicit</span> <span class="n">session</span><span class="k">:</span> <span class="kt">DBSession</span><span class="o">)</span> <span class="o">{</span>
+  <span class="n">withSQL</span> <span class="o">{</span>
+    <span class="n">deleteFrom</span><span class="o">(</span><span class="nc">Member</span><span class="o">).</span><span class="n">where</span><span class="o">.</span><span class="n">eq</span><span class="o">(</span><span class="nc">Member</span><span class="o">.</span><span class="n">column</span><span class="o">.</span><span class="n">id</span><span class="o">,</span> <span class="n">id</span><span class="o">)</span>
+  <span class="o">}.</span><span class="n">update</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+<span class="o">}</span>
+</code></pre>
+
+          <hr/>
+          <div class="alert alert-warning small">
+            If this webpage has typo or something wrong, Please report or fix. <a href="/contribution.html">How?</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xs-2 right">
+        <div class="content small">
+          <h5>Latest version</h5>
+          <hr/>
+          <p><a href="/documentation/setup.html">Setup</a></p>
+          <p><a href="/documentation/configuration.html">Configuration</a></p>
+          <p><a href="/documentation/connection-pool.html">Connection Pool</a></p>
+          <p><a href="/documentation/operations.html">Operations</a></p>
+          <p><a href="/documentation/transaction.html">Transaction</a></p>
+          <p><a href="/documentation/auto-session.html">Auto Session</a></p>
+          <p><a href="/documentation/sql-interpolation.html">SQLInterpolation</a></p>
+          <p><a href="/documentation/query-dsl.html">QueryDSL</a></p>
+          <p><a href="/documentation/one-to-x.html">One-to-x API</a></p>
+          <p><a href="/documentation/auto-macros.html">Auto Macros</a></p>
+          <p><a href="/documentation/query-inspector.html">Query Inspector</a></p>
+          <p><a href="/documentation/reverse-engineering.html">Reverse Engineering</a></p>
+          <p><a href="/documentation/testing.html">Testing</a></p>
+          <p><a href="/documentation/playframework-support.html">Play Support</a></p>
+          <p><a href="/documentation/dbconsole.html">dbconsole</a></p>
+          <p><a href="http://www.javadoc.io/doc/org.scalikejdbc/scalikejdbc-core_2.11/2.3.5">Core API Doc</a></p>
+          <p><a href="/documentation/faq.html">FAQ</a></p>
+          <p><a href="/contribution.html">Contribution</a></p>
+          <hr/>
+          <h5>Older Versions</h5>
+          <hr/>
+          <p><a href="/documentation/1.x/">version 1.x</a></p>
+        </div>
+      </div>
+    </div>
+    </div>
+    <script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script>
+(function() {
+var cx = '000372347144050476309:fnw5lotlq6o';
+var gcse = document.createElement('script');
+gcse.type = 'text/javascript';
+gcse.async = true;
+gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//cse.google.com/cse.js?cx=' + cx;
+var s = document.getElementsByTagName('script')[0];
+s.parentNode.insertBefore(gcse, s);
+})();
+</script>
+  </body>
+</html>
