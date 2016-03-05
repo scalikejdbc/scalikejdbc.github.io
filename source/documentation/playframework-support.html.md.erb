@@ -24,7 +24,7 @@ Unfortunately, Play 2.4 is basically incompatible with Play plugins. Since Play 
 - scalikejdbc-play-fixture
 
 <hr/>
-## Getting Started with Play 2.4
+## Getting Started with Play 2.4 or higher
 
 <hr/>
 ### scalikejdbc-play-initializer
@@ -165,8 +165,8 @@ This plugin supports connection pooling too. You don't need `dbplugin` and `evol
 libraryDependencies = Seq(
   "org.scalikejdbc" %% "scalikejdbc"                       % "<%= version %>",
   "org.scalikejdbc" %% "scalikejdbc-config"                % "<%= version %>",
-  "org.scalikejdbc" %% "scalikejdbc-play-plugin"           % "2.3.6",
-  "org.scalikejdbc" %% "scalikejdbc-play-fixture-plugin"   % "2.3.6", // optional
+  "org.scalikejdbc" %% "scalikejdbc-play-plugin"           % "2.3.10",
+  "org.scalikejdbc" %% "scalikejdbc-play-fixture-plugin"   % "2.3.10", // optional
   // substitute this for whatever DB driver you're using:
   "com.h2database"  %  "h2"                                % "<%= h2_version %>"
 )

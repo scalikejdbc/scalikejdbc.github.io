@@ -62,7 +62,7 @@ I18n.enforce_available_locales = false
 
 # Latest versions
 @latest_version = "2.3.5"
-@latest_play_support_version = "2.4.3"
+@latest_play_support_version = "2.5.0"
 @v1_version = "1.7.7"
 @v18_version = "1.8.2"
 
