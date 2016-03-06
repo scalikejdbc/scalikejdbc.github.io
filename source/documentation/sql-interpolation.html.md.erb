@@ -52,7 +52,7 @@ Other values are mapped directly as `Object`s.
 ### SQLSyntax
 <hr/>
 
-`SQLSyntax` is not a binding parameter but a part of SQL. You can create a `SQLSyntax` object with sqls"" String interpolation.
+`SQLSyntax` is not a binding parameter but a part of the SQL. You can create a `SQLSyntax` object with sqls"" String interpolation.
 
 ```scala
 val ordering = if (isDesc) sqls"desc" else sqls"asc"
@@ -168,7 +168,7 @@ By Type Dynamic (SIP-17) since Scala 2.10.0, you can call undefined methods such
 
 When you call camel case fields, it will actually be transformed to column name as an underscore separated string. If column name doesn't exist in columns, `InvalidColumnNameException` will be thrown.
 
-Before that, the case case field name should be the same as any of the primary constructor arg names of type `A` of `SQLSyntaxSupport[A]`. The validation for this rule works in compilation phase with the power of Scala macros.
+Before that, the case field name should be the same as any of the primary constructor arg names of type `A` of `SQLSyntaxSupport[A]`. The validation for this rule works in compilation phase with the power of Scala macros.
 
 [http://docs.scala-lang.org/overviews/macros/overview.html](http://docs.scala-lang.org/overviews/macros/overview.html)
 

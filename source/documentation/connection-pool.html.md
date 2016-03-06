@@ -227,7 +227,7 @@ ConnectionPool.singleton(url, user, password,
 <hr/>
 #### commons-dbcp 1.x
 
-Formally, commons-dbcp 1.4 is the default connection pool of ScalikeJDBC. We don't recomment you using the older one now, but if you need to choose 1.4 instead due to some reasons, specifying `commons-dbcp` works for you.
+Previously, commons-dbcp 1.4 was the default connection pool for ScalikeJDBC. We don't recomment using the older one now, but if you need to choose 1.4 instead for some reason, specifying `commons-dbcp` works.
 
 ```scala
 ConnectionPool.singleton(url, user, password, 
