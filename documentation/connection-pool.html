@@ -246,7 +246,7 @@
 
 <h4 id="commons-dbcp-1-x">commons-dbcp 1.x</h4>
 
-<p>Formally, commons-dbcp 1.4 is the default connection pool of ScalikeJDBC. We don&rsquo;t recomment you using the older one now, but if you need to choose 1.4 instead due to some reasons, specifying <code>commons-dbcp</code> works for you.</p>
+<p>Previously, commons-dbcp 1.4 was the default connection pool for ScalikeJDBC. We don&rsquo;t recomment using the older one now, but if you need to choose 1.4 instead for some reason, specifying <code>commons-dbcp</code> works.</p>
 <pre class="highlight scala"><code><span class="nc">ConnectionPool</span><span class="o">.</span><span class="n">singleton</span><span class="o">(</span><span class="n">url</span><span class="o">,</span> <span class="n">user</span><span class="o">,</span> <span class="n">password</span><span class="o">,</span> 
   <span class="nc">ConnectionPoolSettings</span><span class="o">(</span><span class="n">connectionPoolFactoryName</span> <span class="k">=</span> <span class="s">"commons-dbcp"</span><span class="o">))</span>
 </code></pre>
