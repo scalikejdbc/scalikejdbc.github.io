@@ -77,6 +77,19 @@ play.modules.disabled += "play.api.db.DBModule"
 ### scalikejdbc-dbapi-adapter
 <hr/>
 
+#### build.sbt
+
+```scala
+libraryDependencies ++= Seq(
+  "com.h2database"  %  "h2"                             % "<%= h2_version %>", // your jdbc driver here
+  "org.scalikejdbc" %% "scalikejdbc"                    % "<%= version %>",
+  "org.scalikejdbc" %% "scalikejdbc-config"             % "<%= version %>",
+  "org.scalikejdbc" %% "scalikejdbc-play-dbapi-adapter" % "<%= latest_play_support_version %>"
+)
+```
+
+#### conf/application.conf
+
 This plugin is an adapter to connect `play.api.db.DBApi` and ScalikeJDBC.
 
 ```sh
