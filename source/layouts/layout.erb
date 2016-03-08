@@ -5,8 +5,12 @@
     <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
     <!-- Use title if it's in the page YAML frontmatter -->
     <title><%= current_page.data.title || "ScalikeJDBC" %></title>
-    <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="/slick/slick.css"/>
+    <link rel="stylesheet" type="text/css" href="/slick/slick-theme.css"/>
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+    <script type="text/javascript" src="/slick/slick.min.js"></script>
     <%= stylesheet_link_tag "all" %>
     <%= javascript_include_tag  "all" %>
   </head>
@@ -59,6 +63,7 @@
           <p><%= link_to 'dbconsole', '/documentation/dbconsole.html' %></p>
           <p><%= link_to 'Core API Doc', 'http://www.javadoc.io/doc/org.scalikejdbc/scalikejdbc-core_2.11/' + version %></p>
           <p><%= link_to 'FAQ', '/documentation/faq.html' %></p>
+          <p><%= link_to 'Testimonials', '/documentation/testimonials.html' %></p>
           <p><%= link_to 'Contribution', '/contribution.html' %></p>
           <hr/>
           <h5>Older Versions</h5>
