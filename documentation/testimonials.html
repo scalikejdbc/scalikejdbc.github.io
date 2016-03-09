@@ -4,7 +4,7 @@
     <meta charset="utf-8"/>
     <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
     <!-- Use title if it's in the page YAML frontmatter -->
-    <title>FAQ - ScalikeJDBC</title>
+    <title>Testimonials - ScalikeJDBC</title>
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
     <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
     <link href="/stylesheets/all.css" rel="stylesheet" />
@@ -30,87 +30,26 @@
     </div>
       <div class="col-xs-10 left">
         <div class="content">
-          <h2 id="faq">FAQ</h2>
+          <h2 id="testimonials">Testimonials</h2>
 
 <hr/>
 
-<h3 id="oracle-db-ms-sqlserver-supported">Oracle DB / MS SQLServer supported?</h3>
+<h3 id="tech-to-value-co-ltd"><a href="http://www.t2v.jp/" target="_blank"><img alt="Tech to Value" src="/images/tech_to_value_small.png" /></a> Tech To Value Co., Ltd.</h3>
+
+<p>Tech To Value builds web services and provides consultation services. ScalikeJDBC&rsquo;s DB access layer is not only easy-to-use but secure. Many of our customers choose ScalikeJDBC as core part of their projects.</p>
+
+<p>Tech to Value Co., Ltd. はWeb サービスの製作およびコンサルティングを行っている会社です。ScalikeJDBCが提供する扱いやすくかつ堅牢なDBアクセスの仕組みは、自社のサービスはもとより、弊社のパートナーも数多くのプロジェクトでも採用され、幾多のビジネスの基盤を支えています。</p>
 
 <hr/>
 
-<p>ScalikeJDBC supports PostgreSQL, MySQL, H2 Database Engine and HSQLDB. We never release without passing all the unit tests with these RDBMS. If you&rsquo;re using either of them, ScalikeJDBC should be very stable.</p>
+<pre>
+If you're intereste in listing your company (or service/product) here, please send seratch_at_gmail.com (or @scalikejdbc on twitter) the following information:
 
-<p>On the other hand, ScalikeJDBC simply uses JDBC drivers internally, so it basically should work fine with any other RDBMS. </p>
-
-<hr/>
-
-<h3 id="how-to-use-other-connection-pool">How to use other connection pool?</h3>
-
-<hr/>
-
-<p>ScalikeJDBC&rsquo;s default connection pool implementation is <a href="http://commons.apache.org/proper/commons-dbcp/">Apache Commons DBCP</a>. </p>
-
-<p>You can easily use other implementation. See in detail:</p>
-
-<p><a href="/documentation/connection-pool.html">/documentation/connection-pool.html</a></p>
-
-<hr/>
-
-<h3 id="how-to-share-same-db-with-rails-activerecord">How to share same DB with Rails ActiveRecord?</h3>
-
-<hr/>
-
-<p>As you know, Rails ActiveRecord saves timestamp values in UTC time zone. DB column types will be <code>timetamp without timezone</code>.</p>
-
-<p>When you need to work with them, call the following Java TimeZone&rsquo;s setter method (instead of <code>DateTimeZone.setDefault(DateTimeZone.UTC)</code>) at first.</p>
-<pre class="highlight scala"><code><span class="n">java</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="nc">TimeZone</span><span class="o">.</span><span class="n">setDefault</span><span class="o">(</span><span class="n">java</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="nc">TimeZone</span><span class="o">.</span><span class="n">getTimeZone</span><span class="o">(</span><span class="s">"UTC"</span><span class="o">))</span>
-</code></pre>
-
-<hr/>
-
-<h3 id="non-blocking-support">non-blocking support?</h3>
-
-<hr/>
-
-<p>Unfortunately, no. Indeed, JDBC drivers block on socket IO. So using them to talk with RDBMS in async event driven architecture may not be appropriate. However, actually most of real world applications don’t need event-driven architecture yet. JDBC is still important infrastructure for apps on the JVM.</p>
-
-<p>If you really prefer non-blocking database access, take a look at ScalikeJDBC-Async. It provides non-blocking APIs to talk with PostgreSQL and MySQL in the JDBC way.</p>
-
-<p><a href="https://github.com/scalikejdbc/scalikejdbc-async">https://github.com/scalikejdbc/scalikejdbc-async</a></p>
-
-<p>ScalikeJDBC-Async is still in the alpha stage. If you don’t have motivation to investigate or fix issues by yourself, we recommend you waiting until stable version release someday.</p>
-
-<hr/>
-
-<h3 id="orm-feature">ORM feature?</h3>
-
-<hr/>
-
-<p>ScalikeJDBC&rsquo;s concept is a tidy wrapper of JDBC drivers, so it handles very lower layer than common ORMs. If you&rsquo;re looking for an ORM which supports associations or other rich features, take a look at Skinny ORM.</p>
-
-<p>Skinny ORM is the default DB access library of <a href="http://skinny-framework.org/">Skinny Framework</a>. Skinny ORM is built upon ScalikeJDBC. In most cases, it will make things easier.</p>
-
-<p><a href="http://skinny-framework.org/documentation/orm.html">http://skinny-framework.org/documentation/orm.html</a></p>
-
-<hr/>
-
-<h3 id="is-it-possible-to-integrate-with-play-framework">Is it possible to integrate with Play Framework?</h3>
-
-<hr/>
-
-<p>Yes, it is. We support some Play plugins to seamlesssly integrate ScalikeJDBC with Play Framework. </p>
-
-<p>See in detail here: <a href="/documentation/playframework-support.html">/documentation/playframework-support.html</a></p>
-
-<hr/>
-
-<h3 id="license">License?</h3>
-
-<hr/>
-
-<p>the Apache License, Version 2.0</p>
-
-<p><a href="https://github.com/scalikejdbc/scalikejdbc/blob/master/LICENSE.txt">https://github.com/scalikejdbc/scalikejdbc/blob/master/LICENSE.txt</a></p>
+  1. Your name
+  2. Your website URL
+  3. Logo image (height 200px, hopefully square shape)
+  4. (optional) Brief testimonial
+</pre>
 
           <hr/>
           <div class="alert alert-warning small">

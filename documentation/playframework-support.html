@@ -5,8 +5,8 @@
     <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
     <!-- Use title if it's in the page YAML frontmatter -->
     <title>Play Framework Support - ScalikeJDBC</title>
-    <script type="text/javascript" src="//codeorigin.jquery.com/jquery-1.10.2.min.js"></script>
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
     <link href="/stylesheets/all.css" rel="stylesheet" />
     <script src="/javascripts/all.js"></script>
   </head>
@@ -17,7 +17,7 @@
         <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
             <li><a class="navbar-brand" href="/">ScalikeJDBC</a></li>
-            <li><a href="http://typesafe.com/activator/template/scalikejdbc-activator-template">Typesafe Activator</a></li>
+            <li><a href="http://www.lightbend.com/activator/template/scalikejdbc-activator-template">Lightbend Activator</a></li>
             <li><a href="https://groups.google.com/group/scalikejdbc-users-group">Users Group</a></li>
             <li><a href="https://github.com/scalikejdbc/scalikejdbc">GitHub</a></li>
             <li><a href="http://skinny-framework.org/documentation/orm.html">Skinny ORM</a></li>
@@ -110,6 +110,17 @@ play.modules.disabled +<span class="o">=</span> <span class="s2">"play.api.db.DB
 <h3 id="scalikejdbc-dbapi-adapter">scalikejdbc-dbapi-adapter</h3>
 
 <hr/>
+
+<h4 id="build-sbt">build.sbt</h4>
+<pre class="highlight scala"><code><span class="n">libraryDependencies</span> <span class="o">++=</span> <span class="nc">Seq</span><span class="o">(</span>
+  <span class="s">"com.h2database"</span>  <span class="o">%</span>  <span class="s">"h2"</span>                             <span class="o">%</span> <span class="s">"1.4.191"</span><span class="o">,</span> <span class="c1">// your jdbc driver here
+</span>  <span class="s">"org.scalikejdbc"</span> <span class="o">%%</span> <span class="s">"scalikejdbc"</span>                    <span class="o">%</span> <span class="s">"2.3.5"</span><span class="o">,</span>
+  <span class="s">"org.scalikejdbc"</span> <span class="o">%%</span> <span class="s">"scalikejdbc-config"</span>             <span class="o">%</span> <span class="s">"2.3.5"</span><span class="o">,</span>
+  <span class="s">"org.scalikejdbc"</span> <span class="o">%%</span> <span class="s">"scalikejdbc-play-dbapi-adapter"</span> <span class="o">%</span> <span class="s">"2.5.0"</span>
+<span class="o">)</span>
+</code></pre>
+
+<h4 id="conf-application-conf">conf/application.conf</h4>
 
 <p>This plugin is an adapter to connect <code>play.api.db.DBApi</code> and ScalikeJDBC.</p>
 <pre class="highlight shell"><code><span class="c"># others are same as Play's defaults</span>
@@ -307,13 +318,11 @@ logger.scalikejdbc<span class="o">=</span>DEBUG
 
 <hr/>
 
-<p>Take a look at Typesafe Activator template:</p>
+<p>Take a look at Lightbend Activator template:</p>
 
-<p><img alt="Typesafe" src="/images/typesafe.png" /></p>
+<p>You can try a <a href="https://www.playframework.com/">Play framework</a> sample app which uses ScalikeJDBC on <a href="http://www.lightbend.com/activator">Lightbend Activator</a>.</p>
 
-<p>You can try a <a href="http://www.playframework.com/">Play framework</a> sample app which uses ScalikeJDBC on <a href="http://typesafe.com/activator">Typesafe Activator</a>.</p>
-
-<p>Activator page: <a href="http://typesafe.com/activator/template/scalikejdbc-activator-template">Hello ScalikeJDBC!</a></p>
+<p>Activator page: <a href="http://www.lightbend.com/activator/template/scalikejdbc-activator-template">Hello ScalikeJDBC!</a></p>
 
 <p>See on GitHub: <a href="https://github.com/scalikejdbc/hello-scalikejdbc">scalikejdbc/hello-scalikejdbc</a></p>
 
@@ -345,6 +354,7 @@ logger.scalikejdbc<span class="o">=</span>DEBUG
           <p><a href="/documentation/dbconsole.html">dbconsole</a></p>
           <p><a href="http://www.javadoc.io/doc/org.scalikejdbc/scalikejdbc-core_2.11/2.3.5">Core API Doc</a></p>
           <p><a href="/documentation/faq.html">FAQ</a></p>
+          <p><a href="/documentation/testimonials.html">Testimonials</a></p>
           <p><a href="/contribution.html">Contribution</a></p>
           <hr/>
           <h5>Older Versions</h5>
@@ -354,7 +364,7 @@ logger.scalikejdbc<span class="o">=</span>DEBUG
       </div>
     </div>
     </div>
-    <script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     <script>
 (function() {
 var cx = '000372347144050476309:fnw5lotlq6o';
