@@ -5,6 +5,12 @@ title: Testimonials - ScalikeJDBC
 ## Testimonials
 
 <hr/>
+
+### <a href="https://tadu.vn/" target="_blank">![Tadu.vn](images/tadu.vn_small.png)</a>&nbsp;&nbsp;Nguyen Duc Dung (Tadu.vn)
+
+ScalikeJDBC is rock, It make sql easy to use and type safe. Just sql and we done. It's amazing.
+
+<hr/>
 ### <a href="http://www.t2v.jp/" target="_blank">![Tech to Value](images/tech_to_value_small.png)</a> Tech To Value Co., Ltd.
 
 Tech To Value builds web services and provides consultation services. ScalikeJDBC's DB access layer is not only easy-to-use but secure. Many of our customers choose ScalikeJDBC as core part of their projects.
