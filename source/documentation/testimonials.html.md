@@ -4,6 +4,10 @@ title: Testimonials - ScalikeJDBC
 
 ## Testimonials
 
+### <a href="https://nulab-inc.com/" target="_blank">![Nulab Inc.](images/nulab_small.png)</a>&nbsp;&nbsp;Nulab Inc.
+
+Nulab Inc. develops services aimed at facilitating effective work communication and collaboration. We use ScalikeJDBC because it has great features such as typesafe query DSL and SQLInterpolation. We love its simple APIs and high compatibility between the versions.
+
 <hr/>
 
 ### <a href="http://www.fringe81.com/" target="_blank">![Fringe81 Co.,Ltd.,](images/fringe81_small.png)</a>&nbsp;&nbsp;Fringe81 Co.,Ltd.
