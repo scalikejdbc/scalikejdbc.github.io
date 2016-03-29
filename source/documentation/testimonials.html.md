@@ -4,6 +4,11 @@ title: Testimonials - ScalikeJDBC
 
 ## Testimonials
 
+### <a href="http://corporate.m3.com/en/" target="_blank">![M3, Inc.](images/m3_small.png)</a>&nbsp;&nbsp;M3, Inc.
+
+M3, Inc. is a Tokyo-based, global company whose mission is to help more people around the world live healthier, happier lives by reducing the cost of health care in Japan and abroad using technology and the Internet. At M3 we use ScalikeJDBC in our production services, such as m3.com, our portal serving news and medical information to over 80% of Japanese doctors. ScalikeJDBC is simple but powerful, and is rock-solid for us in our critical user-facing services.
+
+<hr/>
 ### <a href="https://nulab-inc.com/" target="_blank">![Nulab Inc.](images/nulab_small.png)</a>&nbsp;&nbsp;Nulab Inc.
 
 Nulab Inc. develops services aimed at facilitating effective work communication and collaboration. We use ScalikeJDBC because it has great features such as typesafe query DSL and SQLInterpolation. We love its simple APIs and high compatibility between the versions.
