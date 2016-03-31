@@ -4,20 +4,38 @@ title: Testimonials - ScalikeJDBC
 
 ## Testimonials
 
+### <a href="http://zencom.ru/" target="_blank">![Zencom Ltd.](images/zencom_small.png)</a>&nbsp;&nbsp;Zencom Ltd.
+
+Zencom Ltd. is a local Internet Service Provider in Moscow Region, Russia.
+
+We use ScalikeJDBC in several internal projects. It saved a lot of our time and nerve cells. Many thanks.
+
+<hr/>
+
 ### <a href="http://corporate.m3.com/en/" target="_blank">![M3, Inc.](images/m3_small.png)</a>&nbsp;&nbsp;M3, Inc.
 
-M3, Inc. is a Tokyo-based, global company whose mission is to help more people around the world live healthier, happier lives by reducing the cost of health care in Japan and abroad using technology and the Internet. At M3 we use ScalikeJDBC in our production services, such as m3.com, our portal serving news and medical information to over 80% of Japanese doctors. ScalikeJDBC is simple but powerful, and is rock-solid for us in our critical user-facing services.
+M3, Inc. is a Tokyo-based, global company whose mission is to help more people around the world live healthier, happier lives by reducing the cost of health care in Japan and abroad using technology and the Internet.
+
+At M3 we use ScalikeJDBC in our production services, such as m3.com, our portal serving news and medical information to over 80% of Japanese doctors.
+
+ScalikeJDBC is simple but powerful, and is rock-solid for us in our critical user-facing services.
 
 <hr/>
 ### <a href="https://nulab-inc.com/" target="_blank">![Nulab Inc.](images/nulab_small.png)</a>&nbsp;&nbsp;Nulab Inc.
 
-Nulab Inc. develops services aimed at facilitating effective work communication and collaboration. We use ScalikeJDBC because it has great features such as typesafe query DSL and SQLInterpolation. We love its simple APIs and high compatibility between the versions.
+Nulab Inc. develops services aimed at facilitating effective work communication and collaboration.
+
+We use ScalikeJDBC because it has great features such as typesafe query DSL and SQLInterpolation. We love its simple APIs and high compatibility between the versions.
 
 <hr/>
 
 ### <a href="http://www.fringe81.com/" target="_blank">![Fringe81 Co.,Ltd.,](images/fringe81_small.png)</a>&nbsp;&nbsp;Fringe81 Co.,Ltd.
 
-Fringe81 Co, Ltd. is an avid developer of internet advertisement services and has relied on ScalikeJDBC in our recent development projects. ScalikeJDBC enables intuitive use by way of SQL-like DSL, and allows us to put the DB access library in place swiftly thanks to low learning costs. Unlike high-functioning, complex ORM libraries ScalikeJDBC is a much simpler library, and it is for ScalikeJDBC's simplicity that we chose this product.
+Fringe81 Co, Ltd. is an avid developer of internet advertisement services and has relied on ScalikeJDBC in our recent development projects.
+
+ScalikeJDBC enables intuitive use by way of SQL-like DSL, and allows us to put the DB access library in place swiftly thanks to low learning costs.
+
+Unlike high-functioning, complex ORM libraries ScalikeJDBC is a much simpler library, and it is for ScalikeJDBC's simplicity that we chose this product.
 
 <p class="small text-muted jp-content">
 Fringe81はこれまで多くの広告サービスを開発してきており、近年の開発ではScalikeJDBCを導入。
@@ -29,7 +47,9 @@ SQLライクなDSLの提供などにより直感的に使用することがで�
 
 ### <a href="http://www.opt.ne.jp/en/" target="_blank">![OPT, Inc.](images/opt_small.gif)</a>&nbsp;&nbsp;OPT, Inc.
 
-Opt, Inc. is an "e-marketing company" in Japan. With our strengths of Marketing and Technology, we support companies which aspire to sustainable growth. We use ScalikeJDBC in various products. ScalikeJDBC is popular in our Scala projects because of its simple and type-safe interface.
+Opt, Inc. is an "e-marketing company" in Japan. With our strengths of Marketing and Technology, we support companies which aspire to sustainable growth.
+
+We use ScalikeJDBC in various products. ScalikeJDBC is popular in our Scala projects because of its simple and type-safe interface.
 
 <p class="small text-muted jp-content">
 株式会社オプトは持続的な成長を志す企業に対してマーケティング×テクノロジーのパートナーとなる「eマーケティングカンパニー」です。ScalikeJDBCは弊社の様々な製品で利用されており、シンプルさと型安全性を両立したインターフェースは、弊社のScalaプロジェクトでは広く親しまれています。
@@ -44,7 +64,9 @@ ScalikeJDBC is rock, It make sql easy to use and type safe. Just sql and we done
 <hr/>
 ### <a href="http://www.t2v.jp/" target="_blank">![Tech to Value](images/tech_to_value_small.png)</a> Tech To Value Co., Ltd.
 
-Tech To Value builds web services and provides consultation services. ScalikeJDBC's DB access layer is not only easy-to-use but secure. Many of our customers choose ScalikeJDBC as core part of their projects.
+Tech To Value builds web services and provides consultation services. ScalikeJDBC's DB access layer is not only easy-to-use but secure.
+
+Many of our customers choose ScalikeJDBC as core part of their projects.
 
 <p class="small text-muted jp-content">
 Tech to Value Co., Ltd. はWeb サービスの製作およびコンサルティングを行っている会社です。ScalikeJDBCが提供する扱いやすくかつ堅牢なDBアクセスの仕組みは、自社のサービスはもとより、弊社のパートナーも数多くのプロジェクトでも採用され、幾多のビジネスの基盤を支えています。
