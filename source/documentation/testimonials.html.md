@@ -5,7 +5,12 @@ title: Testimonials - ScalikeJDBC
 ## Testimonials
 <hr/>
 
-<h3 class="jp-content"><a href="http://www.mvrck.co.jp/" target="_blank"><img src="/images/maverick_small.jpg"/></a>&nbsp;&nbsp;Maverick., Inc.</h3>
+### <a href="http://www.mvrck.co.jp/" target="_blank">![Maverick., Inc.](images/maverick_small.jpg)</a>&nbsp;&nbsp;Maverick., Inc.
+
+Maverick Inc builds Web advertisement platform based on the Data of human resources and provides O2O services.
+
+We are programming by using Scala so it is the Biggest point that we can write the code as it is!!
+And also it is helpful to tuning of DB performance, because through ScalikeJDBC we can make complicated SQL safety and easy!
 
 <p class="small text-muted jp-content">
 マーベリック株式会社は人材データを基にした広告プラットフォームの運用やO2O事業を行っています。
@@ -13,6 +18,7 @@ title: Testimonials - ScalikeJDBC
 また、データベースアクセス全般では、複雑なSQLが簡単且つ安全に作れることによって、DBのパフォーマンスのチューニングが手軽なものになりました。
 </p>
 
+<hr/>
 ### <a href="http://zencom.ru/" target="_blank">![Zencom Ltd.](images/zencom_small.png)</a>&nbsp;&nbsp;Zencom Ltd.
 
 Zencom Ltd. is a local Internet Service Provider in Moscow Region, Russia.
