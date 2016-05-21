@@ -61,7 +61,7 @@ set :markdown, fenced_code_blocks: true, smartypants: true, autolink: true, with
 I18n.enforce_available_locales = false
 
 # Latest versions
-@latest_version = "2.4.0"
+@latest_version = "2.4.1"
 @latest_play_support_version = "2.5.1"
 @v1_version = "1.7.7"
 @v18_version = "1.8.2"
