@@ -10,7 +10,7 @@ ScalikeJDBC is a tidy SQL-based DB access library for Scala developers. This lib
 
 ScalikeJDBC is a practical and production-ready one. Use this library for your real projects.
 
-### Working on the JDBC layer 
+### Working on the JDBC layer
 
 Whether you like it or not, JDBC is a stable standard interface. Since most of RDBMS supports JDBC interface, we can access RDBMS in the same way. We never release without passing all the unit tests with the following RDBMS.
 
@@ -27,9 +27,9 @@ If you can access some datastore via JDBC interface, that means you can access t
 
 Recently, [Amazon Redshift](http://docs.aws.amazon.com/redshift/latest/dg/c_redshift-postgres-jdbc.html) and [Facebook Presto](https://github.com/facebook/presto/tree/master/presto-jdbc) support JDBC interface. You can access them via ScalikeJDBC!
 
-### Less dependencies
+### Few dependencies
 
-Core part of ScalikeJDBC has so less dependencies that you won't be bothered by dependency hell.
+The core of ScalikeJDBC has so few dependencies that you won't be bothered by dependency hell.
 
 - JDBC Drivers you need
 - Commons DBCP
@@ -42,11 +42,11 @@ Of course, you can use c3p0 (or others) instead of commons-dbcp though Connectio
 
 Unfortunately, no. Indeed, JDBC drivers block on socket IO. So using them to talk with RDBMS in async event driven architecture may not be appropriate. However, actually most of real world applications don't need event-driven architecture yet. JDBC is still important infrastructure for apps on the JVM.
 
-If you really prefer non-blocking database access, take a look at ScalikeJDBC-Async. It provides non-blocking APIs to talk with PostgreSQL and MySQL in the JDBC way. 
+If you really prefer non-blocking database access, take a look at ScalikeJDBC-Async. It provides non-blocking APIs to talk with PostgreSQL and MySQL in the JDBC way.
 
 https://github.com/scalikejdbc/scalikejdbc-async
 
-ScalikeJDBC-Async is still in the alpha stage. If you don't have motivation to investigate or fix issues by yourself, we recommend you waiting until stable version release someday.
+ScalikeJDBC-Async is still in the alpha stage. If you don't have the motivation to investigate or fix issues yourself, we recommend waiting until the stable version is released someday.
 
 
 <hr/>
@@ -57,7 +57,7 @@ ScalikeJDBC-Async is still in the alpha stage. If you don't have motivation to i
 NOTICE: Scala 2.9 incompatible changes will be backported only to ScalikeJDBC 1.8.x.
 </div>
 
-All you need to do is just adding ScalikeJDBC, JDBC driver & slf4j implementation. 
+All you need to do is add ScalikeJDBC, JDBC driver and an slf4j implementation.
 
 ```
 libraryDependencies ++= Seq(
@@ -102,8 +102,8 @@ implicit val session = AutoSession
 // table creation, you can run DDL by using #execute as same as JDBC
 sql"""
 create table members (
-  id serial not null primary key, 
-  name varchar(64), 
+  id serial not null primary key,
+  name varchar(64),
   created_at timestamp not null
 )
 """.execute.apply()
@@ -113,7 +113,7 @@ Seq("Alice", "Bob", "Chris") foreach { name =>
   sql"insert into members (name, created_at) values (${name}, current_timestamp)".update.apply()
 }
 
-// for now, retrieves all data as Map value 
+// for now, retrieves all data as Map value
 val entities: List[Map[String, Any]] = sql"select * from members".map(_.toMap).list.apply()
 
 // defines entity object and extractor
@@ -312,7 +312,7 @@ This library is built with [postgrsql-async and mysql-async](https://github.com/
 <hr/>
 ### dbconsole
 
-dbconsole is an extended sbt console to connect database. 
+dbconsole is an extended sbt console to connect database.
 
 #### Mac OS X, Linux
 
@@ -334,11 +334,8 @@ See in detail: [/documentation/dbconsole](documentation/dbconsole.html)
 
 ![Skinny framework](images/skinny.png)
 
-Skinny ORM is the default DB access library of [Skinny Framework](https://github.com/skinny-framework/skinny-framework). Skinny ORM is built upon ScalikeJDBC. 
+Skinny ORM is the default DB access library of [Skinny Framework](https://github.com/skinny-framework/skinny-framework). Skinny ORM is built upon ScalikeJDBC.
 
 In most cases, ORM makes things easier.
 
 [https://github.com/skinny-framework/skinny-framework#orm](https://github.com/skinny-framework/skinny-framework#orm)
-
-
-

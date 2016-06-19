@@ -11,13 +11,13 @@ title: FAQ - ScalikeJDBC
 
 ScalikeJDBC supports PostgreSQL, MySQL, H2 Database Engine and HSQLDB. We never release without passing all the unit tests with these RDBMS. If you're using either of them, ScalikeJDBC should be very stable.
 
-On the other hand, ScalikeJDBC simply uses JDBC drivers internally, so it basically should work fine with any other RDBMS. 
+On the other hand, ScalikeJDBC simply uses JDBC drivers internally, so it basically should work fine with any other RDBMS.
 
 <hr/>
 ### How to use other connection pool?
 <hr/>
 
-ScalikeJDBC's default connection pool implementation is [Apache Commons DBCP](http://commons.apache.org/proper/commons-dbcp/). 
+ScalikeJDBC's default connection pool implementation is [Apache Commons DBCP](http://commons.apache.org/proper/commons-dbcp/).
 
 You can easily use other implementation. See in detail:
 
@@ -45,7 +45,7 @@ If you really prefer non-blocking database access, take a look at ScalikeJDBC-As
 
 https://github.com/scalikejdbc/scalikejdbc-async
 
-ScalikeJDBC-Async is still in the alpha stage. If you don’t have motivation to investigate or fix issues by yourself, we recommend you waiting until stable version release someday.
+ScalikeJDBC-Async is still in the alpha stage. If you don't have the motivation to investigate or fix issues yourself, we recommend waiting until the stable version is released someday.
 
 <hr/>
 ### ORM feature?
@@ -61,7 +61,7 @@ http://skinny-framework.org/documentation/orm.html
 ### Is it possible to integrate with Play Framework?
 <hr/>
 
-Yes, it is. We support some Play plugins to seamlesssly integrate ScalikeJDBC with Play Framework. 
+Yes, it is. We support some Play plugins to seamlesssly integrate ScalikeJDBC with Play Framework.
 
 See in detail here: [/documentation/playframework-support.html](/documentation/playframework-support.html)
 
@@ -72,5 +72,3 @@ See in detail here: [/documentation/playframework-support.html](/documentation/p
 the Apache License, Version 2.0
 
 https://github.com/scalikejdbc/scalikejdbc/blob/master/LICENSE.txt
-
-
