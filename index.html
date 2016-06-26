@@ -63,9 +63,9 @@
 
 <p>Recently, <a href="http://docs.aws.amazon.com/redshift/latest/dg/c_redshift-postgres-jdbc.html">Amazon Redshift</a> and <a href="http://prestodb.io/docs/current/installation/jdbc.html">Facebook Presto</a> support JDBC interface. You can access them via ScalikeJDBC!</p>
 
-<h3 id="less-dependencies">Less dependencies</h3>
+<h3 id="few-dependencies">Few dependencies</h3>
 
-<p>Core part of ScalikeJDBC has so less dependencies that you won&rsquo;t be bothered by dependency hell.</p>
+<p>The core of ScalikeJDBC has so few dependencies that you won&rsquo;t be bothered by dependency hell.</p>
 
 <ul>
 <li>JDBC Drivers you need</li>
@@ -84,7 +84,7 @@
 
 <p><a href="https://github.com/scalikejdbc/scalikejdbc-async">https://github.com/scalikejdbc/scalikejdbc-async</a></p>
 
-<p>ScalikeJDBC-Async is still in the alpha stage. If you don&rsquo;t have motivation to investigate or fix issues by yourself, we recommend you waiting until stable version release someday.</p>
+<p>ScalikeJDBC-Async is still in the alpha stage. If you don&rsquo;t have the motivation to investigate or fix issues yourself, we recommend waiting until the stable version is released someday.</p>
 
 <h3 id="faq">FAQ</h3>
 
@@ -96,7 +96,7 @@
 
 <hr/>
 
-<p>All you need to do is just adding ScalikeJDBC, JDBC driver &amp; slf4j implementation.</p>
+<p>All you need to do is add ScalikeJDBC, JDBC driver and an slf4j implementation.</p>
 
 <h3 id="scalikejdbc-2-x">ScalikeJDBC 2.x</h3>
 
@@ -123,13 +123,13 @@
 
 <hr/>
 
-<h2 id="try-lightbend-activator-template">Try Lightbend Activator Template</h2>
+<h2 id="try-the-lightbend-activator-template">Try the Lightbend Activator Template</h2>
 
 <hr/>
 
 <p>You can try a <a href="http://www.playframework.com/">Play framework</a> example app which uses ScalikeJDBC on <a href="http://www.lightbend.com/activator">Lightbend Activator</a>.</p>
 
-<p>This is a good example to learn how to use ScalikeJDBC.</p>
+<p>This is a good example for learning how to use ScalikeJDBC.</p>
 
 <p>Activator page: <a href="http://www.lightbend.com/activator/template/scalikejdbc-activator-template">Hello ScalikeJDBC!</a></p>
 
@@ -141,7 +141,7 @@
 
 <hr/>
 
-<p>Put above dependencies into your <code>build.sbt</code> and run <code>sbt console</code> now.</p>
+<p>Put the above dependencies into your <code>build.sbt</code> and run <code>sbt console</code> now.</p>
 <pre class="highlight scala"><code><span class="c1">// ScalikeJDBC 1.7 requires SQLInterpolation._ import
 //import scalikejdbc._, SQLInterpolation._
 </span><span class="k">import</span> <span class="nn">scalikejdbc._</span>
@@ -198,7 +198,7 @@ create table members (
 
 <hr/>
 
-<h3 id="using-only-scala-standard-api-amp-sql">Using only Scala standard API &amp; SQL</h3>
+<h3 id="using-only-the-scala-standard-api-amp-sql">Using only the Scala standard API &amp; SQL</h3>
 
 <p>Library users don&rsquo;t need to learn so many library-specific rules or conventions. If you&rsquo;re already familiar with Scala&rsquo;s standard library APIs and basic SQLs, that much should be enough.</p>
 <pre class="highlight java"><code><span class="n">val</span> <span class="n">name</span> <span class="o">=</span> <span class="s">"Alice"</span>
@@ -252,7 +252,7 @@ create table members (
 <li>DB readOnly { implicit session =&gt; &hellip; }</li>
 </ul>
 
-<p>Here is an example code which re-use methods in both of simple invocation and transactional operations.</p>
+<p>Here is an example which re-uses methods in both simple invocation and transactional operations.</p>
 <pre class="highlight java"><code><span class="n">object</span> <span class="n">Product</span> <span class="o">{</span>
   <span class="n">def</span> <span class="n">create</span><span class="o">(</span><span class="nl">name:</span> <span class="n">String</span><span class="o">,</span> <span class="nl">price:</span> <span class="n">Long</span><span class="o">)(</span><span class="n">implicit</span> <span class="nl">s:</span> <span class="n">DBSession</span> <span class="o">=</span> <span class="n">AutoSession</span><span class="o">):</span> <span class="n">Long</span> <span class="o">=</span> <span class="o">{</span>
     <span class="n">sql</span><span class="s">"insert into products values (${name}, ${price})"</span>
@@ -279,7 +279,7 @@ create table members (
 
 <h3 id="useful-query-inspections">Useful Query Inspections</h3>
 
-<p>By default, ScalikeJDBC shows you what SQL is executed and where it is. We believe that is quite useful for debugging your apps. Logging only slow queries in production also helps you.</p>
+<p>By default, ScalikeJDBC shows you what SQL is executed and where it is. We believe that is quite useful for debugging your apps. Logging only slow queries in production, but it also helps you.</p>
 <pre class="highlight plaintext"><code>[debug] s.StatementExecutor$$anon$1 - SQL execution completed
 
   [Executed SQL]
@@ -327,7 +327,7 @@ sbt "scalikejdbc-gen companies Company"
 
 <h3 id="play-framework-support">Play Framework Support</h3>
 
-<p>You can use ScalikeJDBC with Play framework 2 seamlessly. We promise you that it becomes more productive when using together with scalikejdbc-mapper-generator.</p>
+<p>You can use ScalikeJDBC with Play framework 2 seamlessly. We promise you that it becomes more productive when used with scalikejdbc-mapper-generator.</p>
 
 <p>See in detail: <a href="/documentation/playframework-support.html">/documentation/playframework-support</a></p>
 
@@ -337,7 +337,7 @@ sbt "scalikejdbc-gen companies Company"
 
 <hr/>
 
-<p>Many companies already use ScalikeJDBC in their business!</p>
+<p>Many companies are already use ScalikeJDBC in their business!</p>
 
 <p><span class="col-md-12">
 <span class="col-md-4 text-center">
@@ -434,7 +434,7 @@ http://www.apache.org/licenses/LICENSE-2.0.html
 
           <hr/>
           <div class="alert alert-warning small">
-            If this webpage has typo or something wrong, Please report or fix. <a href="/contribution.html">How?</a>
+            If this webpage has a typo or something wrong, Please report or fix it. <a href="/contribution.html">How?</a>
           </div>
         </div>
       </div>
