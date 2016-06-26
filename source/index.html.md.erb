@@ -27,9 +27,9 @@ If you can access some datastore via JDBC interface, that means you can access t
 
 Recently, [Amazon Redshift](http://docs.aws.amazon.com/redshift/latest/dg/c_redshift-postgres-jdbc.html) and [Facebook Presto](http://prestodb.io/docs/current/installation/jdbc.html) support JDBC interface. You can access them via ScalikeJDBC!
 
-### Less dependencies
+### Few dependencies
 
-Core part of ScalikeJDBC has so less dependencies that you won't be bothered by dependency hell.
+The core of ScalikeJDBC has so few dependencies that you won't be bothered by dependency hell.
 
 - JDBC Drivers you need
 - Commons DBCP
@@ -46,7 +46,7 @@ If you really prefer non-blocking database access, take a look at ScalikeJDBC-As
 
 https://github.com/scalikejdbc/scalikejdbc-async
 
-ScalikeJDBC-Async is still in the alpha stage. If you don't have motivation to investigate or fix issues by yourself, we recommend you waiting until stable version release someday.
+ScalikeJDBC-Async is still in the alpha stage. If you don't have the motivation to investigate or fix issues yourself, we recommend waiting until the stable version is released someday.
 
 
 ### FAQ
@@ -57,7 +57,7 @@ See also FAQs here: [/documentation/faq.html](/documentation/faq.html)
 ## Getting Started
 <hr/>
 
-All you need to do is just adding ScalikeJDBC, JDBC driver & slf4j implementation.
+All you need to do is add ScalikeJDBC, JDBC driver and an slf4j implementation.
 
 ### ScalikeJDBC 2.x
 
@@ -87,12 +87,12 @@ libraryDependencies ++= Seq(
 ```
 
 <hr/>
-## Try Lightbend Activator Template
+## Try the Lightbend Activator Template
 <hr/>
 
 You can try a [Play framework](http://www.playframework.com/) example app which uses ScalikeJDBC on [Lightbend Activator](http://www.lightbend.com/activator).
 
-This is a good example to learn how to use ScalikeJDBC.
+This is a good example for learning how to use ScalikeJDBC.
 
 Activator page: [Hello ScalikeJDBC!](http://www.lightbend.com/activator/template/scalikejdbc-activator-template)
 
@@ -103,7 +103,7 @@ See on GitHub: [scalikejdbc/hello-scalikejdbc](https://github.com/scalikejdbc/he
 ## First example
 <hr/>
 
-Put above dependencies into your `build.sbt` and run `sbt console` now.
+Put the above dependencies into your `build.sbt` and run `sbt console` now.
 
 ```scala
 // ScalikeJDBC 1.7 requires SQLInterpolation._ import
@@ -160,7 +160,7 @@ How did it go? If you'd like to know more details or practical examples, see doc
 ## Quick Tour
 
 <hr/>
-### Using only Scala standard API & SQL
+### Using only the Scala standard API & SQL
 
  Library users don't need to learn so many library-specific rules or conventions. If you're already familiar with Scala's standard library APIs and basic SQLs, that much should be enough.
 
@@ -214,7 +214,7 @@ ScalikeJDBC provides several APIs for session/transaction control.
  - DB withinTx { implicit session => ... }
  - DB readOnly { implicit session => ... }
 
-Here is an example code which re-use methods in both of simple invocation and transactional operations.
+Here is an example which re-uses methods in both simple invocation and transactional operations.
 
 ```java
 object Product {
@@ -242,7 +242,7 @@ See in detail: [/documentation/transaction](documentation/transaction.html)
 <hr/>
 ### Useful Query Inspections
 
-By default, ScalikeJDBC shows you what SQL is executed and where it is. We believe that is quite useful for debugging your apps. Logging only slow queries in production also helps you.
+By default, ScalikeJDBC shows you what SQL is executed and where it is. We believe that is quite useful for debugging your apps. Logging only slow queries in production, but it also helps you.
 
 ```
 [debug] s.StatementExecutor$$anon$1 - SQL execution completed
@@ -291,7 +291,7 @@ See in detail: [/documentation/reverse-engineering](documentation/reverse-engine
 <hr/>
 ### Play Framework Support
 
-You can use ScalikeJDBC with Play framework 2 seamlessly. We promise you that it becomes more productive when using together with scalikejdbc-mapper-generator.
+You can use ScalikeJDBC with Play framework 2 seamlessly. We promise you that it becomes more productive when used with scalikejdbc-mapper-generator.
 
 See in detail: [/documentation/playframework-support](documentation/playframework-support.html)
 
@@ -299,7 +299,7 @@ See in detail: [/documentation/playframework-support](documentation/playframewor
 ## We're using ScalikeJDBC!
 <hr/>
 
-Many companies already use ScalikeJDBC in their business!
+Many companies are already use ScalikeJDBC in their business!
 
 <span class="col-md-12">
 <span class="col-md-4 text-center">
@@ -395,4 +395,3 @@ Skinny ORM is the default DB access library of [Skinny Framework](http://skinny-
 In most cases, ORM makes things easier.
 
 [http://skinny-framework.org/documentation/orm.html](http://skinny-framework.org/documentation/orm.html)
-
