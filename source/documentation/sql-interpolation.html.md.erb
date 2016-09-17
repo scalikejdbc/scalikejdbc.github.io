@@ -8,7 +8,7 @@ title: SQLInterpolation - ScalikeJDBC
 ### What's SQLInterpolation
 <hr/>
 
-SQLInterpolation is an SQL builder which uses String interpolation since Scala 2.10. 
+SQLInterpolation is an SQL builder which uses String interpolation since Scala 2.10.
 
 The usage is pretty simple - just embedding values into sql"" template without `#bind` or `#bindByName`. It looks really cool.
 
@@ -43,10 +43,10 @@ In addition, SQL interpolation unwraps instances of `scala.collection.Traversabl
 
 ```scala
 val ids = Seq(123, 124, 125)
-sql"SELECT * FROM members WHERE id IN ${ids}"
+sql"SELECT * FROM members WHERE id IN (${ids})"
 ```
 
-Other values are mapped directly as `Object`s. 
+Other values are mapped directly as `Object`s.
 
 <hr/>
 ### SQLSyntax
@@ -82,7 +82,7 @@ NOTICE: When you use case classes for entities as follows (Group, GroupMember) e
 import scalikejdbc._
 
 case class Group(id: Long, name: String)
-case class GroupMember(id: Long, name: String, 
+case class GroupMember(id: Long, name: String,
   groupId: Option[Long] = None, group: Option[Group] = None)
 
 object Group extends SQLSyntaxSupport[Group] {
@@ -274,14 +274,14 @@ If you have multiple tables for same entity. For example, `orders_2011`, `orders
 case class Order(id: Long, productId: Long, customerId: Option[Long], createdAt: DateTime)
 
 class OrderTable(val year: Int) extends SQLSyntaxSupport[Order] {
-  // Be careful if you build tableName with input values 
+  // Be careful if you build tableName with input values
   // ScalikeJDBC cannot protect your app from SQL injection vulnerability
   override val tableName = s"orders_$year"
 
   def apply(o: ResultName[Order])(rs: WrappedResultSet) = new Order(
-    id         = rs.long(o.id), 
-    productId  = rs.long(o.productId), 
-    customerId = rs.longOpt(o.customerId), 
+    id         = rs.long(o.id),
+    productId  = rs.long(o.productId),
+    customerId = rs.longOpt(o.customerId),
     createdAt  = rs.jodaDateTime(o.createdAt)
   )
 }
@@ -294,12 +294,12 @@ val ordersIn2011 = DB readOnly { implicit s =>
 }
 DB readOnly { implicit s =>
   val o2 = o2012.syntax("o")
-  val ordersIn2012 = 
+  val ordersIn2012 =
     sql"select ${o.result.*} from ${o2012 as o2) where ${o.customerId} is not null"
       .map(o2012(o2)).list.apply()
 
   val o3 = o2013.syntax("o")
-  val ordersIn2013 = 
+  val ordersIn2013 =
     sql"select ${o.result.*} from ${o2013 as o3) where ${o.customerId} is not null"
       .map(o2013(o3)).list.apply()
 }
