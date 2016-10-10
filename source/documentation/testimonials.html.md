@@ -5,6 +5,14 @@ title: Testimonials - ScalikeJDBC
 ## Testimonials
 <hr/>
 
+### <a href="http://www.ad-dice.com/" target="_blank">![ad-dice Co., Ltd.](images/ad-dice_small.png)</a>&nbsp;&nbsp;ad-dice Co., Ltd.
+
+ad-dice Co., Ltd. provides SoLoMoN which delivers IoT AI as a service.
+
+We use ScalikeJDBC in almost all of our products. ScalikeJDBC is easy to use for many reasons. We love this product.
+
+<hr/>
+
 ### <a href="http://www.mvrck.co.jp/" target="_blank">![Maverick., Inc.](images/maverick_small.jpg)</a>&nbsp;&nbsp;Maverick., Inc.
 
 Maverick Inc builds Web advertisement platform based on the Data of human resources and provides O2O services.
