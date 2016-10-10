@@ -38,7 +38,7 @@
 
 <hr/>
 
-<p>SQLInterpolation is an SQL builder which uses String interpolation since Scala 2.10. </p>
+<p>SQLInterpolation is an SQL builder which uses String interpolation since Scala 2.10.</p>
 
 <p>The usage is pretty simple - just embedding values into sql&quot;&ldquo; template without <code>#bind</code> or <code>#bindByName</code>. It looks really cool.</p>
 <pre class="highlight scala"><code><span class="k">import</span> <span class="nn">scalikejdbc._</span>
@@ -69,10 +69,10 @@
 
 <p>In addition, SQL interpolation unwraps instances of <code>scala.collection.Traversable</code> and <code>java.lang.Iterable</code> and converts each element of the list into a bound parameter separated by &rdquo;, &ldquo;, so the following behaves as you would expect:</p>
 <pre class="highlight scala"><code><span class="k">val</span> <span class="n">ids</span> <span class="k">=</span> <span class="nc">Seq</span><span class="o">(</span><span class="mi">123</span><span class="o">,</span> <span class="mi">124</span><span class="o">,</span> <span class="mi">125</span><span class="o">)</span>
-<span class="n">sql</span><span class="s">"SELECT * FROM members WHERE id IN ${ids}"</span>
+<span class="n">sql</span><span class="s">"SELECT * FROM members WHERE id IN (${ids})"</span>
 </code></pre>
 
-<p>Other values are mapped directly as <code>Object</code>s. </p>
+<p>Other values are mapped directly as <code>Object</code>s.</p>
 
 <hr/>
 
@@ -106,7 +106,7 @@
 <pre class="highlight scala"><code><span class="k">import</span> <span class="nn">scalikejdbc._</span>
 
 <span class="k">case</span> <span class="k">class</span> <span class="nc">Group</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span>
-<span class="k">case</span> <span class="k">class</span> <span class="nc">GroupMember</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> 
+<span class="k">case</span> <span class="k">class</span> <span class="nc">GroupMember</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
   <span class="n">groupId</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Long</span><span class="o">]</span> <span class="k">=</span> <span class="nc">None</span><span class="o">,</span> <span class="n">group</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Group</span><span class="o">]</span> <span class="k">=</span> <span class="nc">None</span><span class="o">)</span>
 
 <span class="k">object</span> <span class="nc">Group</span> <span class="k">extends</span> <span class="nc">SQLSyntaxSupport</span><span class="o">[</span><span class="kt">Group</span><span class="o">]</span> <span class="o">{</span>
@@ -283,14 +283,14 @@
 <pre class="highlight scala"><code><span class="k">case</span> <span class="k">class</span> <span class="nc">Order</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">productId</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">customerId</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Long</span><span class="o">],</span> <span class="n">createdAt</span><span class="k">:</span> <span class="kt">DateTime</span><span class="o">)</span>
 
 <span class="k">class</span> <span class="nc">OrderTable</span><span class="o">(</span><span class="k">val</span> <span class="n">year</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span> <span class="k">extends</span> <span class="nc">SQLSyntaxSupport</span><span class="o">[</span><span class="kt">Order</span><span class="o">]</span> <span class="o">{</span>
-  <span class="c1">// Be careful if you build tableName with input values 
+  <span class="c1">// Be careful if you build tableName with input values
 </span>  <span class="c1">// ScalikeJDBC cannot protect your app from SQL injection vulnerability
 </span>  <span class="k">override</span> <span class="k">val</span> <span class="n">tableName</span> <span class="k">=</span> <span class="n">s</span><span class="s">"orders_$year"</span>
 
   <span class="k">def</span> <span class="n">apply</span><span class="o">(</span><span class="n">o</span><span class="k">:</span> <span class="kt">ResultName</span><span class="o">[</span><span class="kt">Order</span><span class="o">])(</span><span class="n">rs</span><span class="k">:</span> <span class="kt">WrappedResultSet</span><span class="o">)</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">Order</span><span class="o">(</span>
-    <span class="n">id</span>         <span class="k">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">long</span><span class="o">(</span><span class="n">o</span><span class="o">.</span><span class="n">id</span><span class="o">),</span> 
-    <span class="n">productId</span>  <span class="k">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">long</span><span class="o">(</span><span class="n">o</span><span class="o">.</span><span class="n">productId</span><span class="o">),</span> 
-    <span class="n">customerId</span> <span class="k">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">longOpt</span><span class="o">(</span><span class="n">o</span><span class="o">.</span><span class="n">customerId</span><span class="o">),</span> 
+    <span class="n">id</span>         <span class="k">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">long</span><span class="o">(</span><span class="n">o</span><span class="o">.</span><span class="n">id</span><span class="o">),</span>
+    <span class="n">productId</span>  <span class="k">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">long</span><span class="o">(</span><span class="n">o</span><span class="o">.</span><span class="n">productId</span><span class="o">),</span>
+    <span class="n">customerId</span> <span class="k">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">longOpt</span><span class="o">(</span><span class="n">o</span><span class="o">.</span><span class="n">customerId</span><span class="o">),</span>
     <span class="n">createdAt</span>  <span class="k">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">jodaDateTime</span><span class="o">(</span><span class="n">o</span><span class="o">.</span><span class="n">createdAt</span><span class="o">)</span>
   <span class="o">)</span>
 <span class="o">}</span>
@@ -303,12 +303,12 @@
 <span class="o">}</span>
 <span class="nc">DB</span> <span class="n">readOnly</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">s</span> <span class="k">=&gt;</span>
   <span class="k">val</span> <span class="n">o2</span> <span class="k">=</span> <span class="n">o2012</span><span class="o">.</span><span class="n">syntax</span><span class="o">(</span><span class="s">"o"</span><span class="o">)</span>
-  <span class="k">val</span> <span class="n">ordersIn2012</span> <span class="k">=</span> 
+  <span class="k">val</span> <span class="n">ordersIn2012</span> <span class="k">=</span>
     <span class="n">sql</span><span class="s">"select ${o.result.*} from ${o2012 as o2) where ${o.customerId} is not null"</span>
       <span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="n">o2012</span><span class="o">(</span><span class="n">o2</span><span class="o">)).</span><span class="n">list</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
 
   <span class="k">val</span> <span class="n">o3</span> <span class="k">=</span> <span class="n">o2013</span><span class="o">.</span><span class="n">syntax</span><span class="o">(</span><span class="s">"o"</span><span class="o">)</span>
-  <span class="k">val</span> <span class="n">ordersIn2013</span> <span class="k">=</span> 
+  <span class="k">val</span> <span class="n">ordersIn2013</span> <span class="k">=</span>
     <span class="n">sql</span><span class="s">"select ${o.result.*} from ${o2013 as o3) where ${o.customerId} is not null"</span>
       <span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="n">o2013</span><span class="o">(</span><span class="n">o3</span><span class="o">)).</span><span class="n">list</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
 <span class="o">}</span>
