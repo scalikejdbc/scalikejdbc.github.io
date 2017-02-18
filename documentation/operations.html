@@ -197,14 +197,14 @@
 
 <hr/>
 
-<p><code>ParameterBinder[A]</code> enables to customize how parameters should be bound to <code>PreparedStatement</code> object inside ScalikeJDBC.</p>
+<p><code>ParameterBinder</code> enables to customize how parameters should be bound to <code>PreparedStatement</code> object inside ScalikeJDBC.</p>
 
 <p>The following example shows how to use <code>ResultSet#setBinaryStream</code> when binding <code>InputStream</code> value to <code>PreparedStatement</code>.</p>
 <pre class="highlight scala"><code><span class="n">sql</span><span class="s">"create table blob_example (id bigint, data blob)"</span><span class="o">).</span><span class="n">execute</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
 
 <span class="k">val</span> <span class="n">bytes</span> <span class="k">=</span> <span class="n">scala</span><span class="o">.</span><span class="nc">Array</span><span class="o">[</span><span class="kt">Byte</span><span class="o">](</span><span class="mi">1</span><span class="o">,</span> <span class="mi">2</span><span class="o">,</span> <span class="mi">3</span><span class="o">,</span> <span class="mi">4</span><span class="o">,</span> <span class="mi">5</span><span class="o">,</span> <span class="mi">6</span><span class="o">,</span> <span class="mi">7</span><span class="o">)</span>
 
-<span class="k">val</span> <span class="n">bytesBinder</span> <span class="k">=</span> <span class="nc">ParameterBinder</span><span class="o">[</span><span class="kt">InputStream</span><span class="o">](</span>
+<span class="k">val</span> <span class="n">bytesBinder</span> <span class="k">=</span> <span class="nc">ParameterBinder</span><span class="o">(</span>
   <span class="n">value</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">ByteArrayInputStream</span><span class="o">(</span><span class="n">bytes</span><span class="o">),</span>
   <span class="n">binder</span> <span class="k">=</span> <span class="o">(</span><span class="n">stmt</span><span class="k">:</span> <span class="kt">PreparedStatement</span><span class="o">,</span> <span class="n">idx</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">stmt</span><span class="o">.</span><span class="n">setBinaryStream</span><span class="o">(</span><span class="n">idx</span><span class="o">,</span> <span class="n">in</span><span class="o">,</span> <span class="n">bytes</span><span class="o">.</span><span class="n">length</span><span class="o">)</span>
 <span class="o">)</span>
