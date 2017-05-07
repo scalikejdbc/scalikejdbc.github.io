@@ -170,15 +170,15 @@ sql"select * from emp".map(rs => toMap(rs)).single.apply()
 
 `ParameterBinder` enables to customize how parameters should be bound to `PreparedStatement` object inside ScalikeJDBC.
 
-The following example shows how to use `ResultSet#setBinaryStream` when binding `InputStream` value to `PreparedStatement`.
+The following example shows how to use `PreparedStatement#setBinaryStream` when binding `InputStream` value to `PreparedStatement`.
 
 ```scala
 sql"create table blob_example (id bigint, data blob)").execute.apply()
 
 val bytes = scala.Array[Byte](1, 2, 3, 4, 5, 6, 7)
-
+val in = new ByteArrayInputStream(bytes)
 val bytesBinder = ParameterBinder(
-  value = new ByteArrayInputStream(bytes),
+  value = in,
   binder = (stmt: PreparedStatement, idx: Int) => stmt.setBinaryStream(idx, in, bytes.length)
 )
 
