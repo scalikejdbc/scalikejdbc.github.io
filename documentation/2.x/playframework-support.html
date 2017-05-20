@@ -29,17 +29,38 @@
     </div>
       <div class="col-xs-10 left">
         <div class="content">
+          <div class="alert alert-warning small">
+            WARNING: This page is a guide for 2.x series.
+          </div>
           <h2 id="play-framework-support">Play Framework Support</h2>
+
+<p>ScalikeJDBC provides two Play plugins to integrate Play2 and ScalikeJDBC. Choose your preferred one.</p>
 
 <hr/>
 
-<p>For ScalikeJDBC 3.0 or higher, we supports only Play 2.6 or higher.</p>
+<h2 id="migration-guide">Migration Guide</h2>
+
+<p>Unfortunately, Play 2.4 is basically incompatible with Play plugins. Since Play 2.4, you need to switch to use Play modules instead.</p>
+
+<h3 id="scalikejdbc-integration-with-play-2-0-2-3">ScalikeJDBC integration with Play 2.0 - 2.3</h3>
+
+<ul>
+<li>scalikejdbc-play-plugin</li>
+<li>scalikejdbc-play-dbplugin-adapter</li>
+<li>scalikejdbc-play-fixture-plugin</li>
+</ul>
+
+<h3 id="scalikejdbc-integration-with-play-2-4-or-higher">ScalikeJDBC integration with Play 2.4 or higher</h3>
 
 <ul>
 <li>scalikejdbc-play-initializer</li>
 <li>scalikejdbc-play-dbapi-adapter</li>
 <li>scalikejdbc-play-fixture</li>
 </ul>
+
+<hr/>
+
+<h2 id="getting-started-with-play-2-4-or-higher">Getting Started with Play 2.4 or higher</h2>
 
 <hr/>
 
@@ -52,9 +73,9 @@
 <h4 id="build-sbt">build.sbt</h4>
 <pre class="highlight scala"><code><span class="n">libraryDependencies</span> <span class="o">++=</span> <span class="nc">Seq</span><span class="o">(</span>
   <span class="s">"com.h2database"</span>  <span class="o">%</span>  <span class="s">"h2"</span>                           <span class="o">%</span> <span class="s">"1.4.195"</span><span class="o">,</span> <span class="c1">// your jdbc driver here
-</span>  <span class="s">"org.scalikejdbc"</span> <span class="o">%%</span> <span class="s">"scalikejdbc"</span>                  <span class="o">%</span> <span class="s">"3.0.0"</span><span class="o">,</span>
-  <span class="s">"org.scalikejdbc"</span> <span class="o">%%</span> <span class="s">"scalikejdbc-config"</span>           <span class="o">%</span> <span class="s">"3.0.0"</span><span class="o">,</span>
-  <span class="s">"org.scalikejdbc"</span> <span class="o">%%</span> <span class="s">"scalikejdbc-play-initializer"</span> <span class="o">%</span> <span class="s">"2.6.0-M1"</span>
+</span>  <span class="s">"org.scalikejdbc"</span> <span class="o">%%</span> <span class="s">"scalikejdbc"</span>                  <span class="o">%</span> <span class="s">"2.5.2"</span><span class="o">,</span>
+  <span class="s">"org.scalikejdbc"</span> <span class="o">%%</span> <span class="s">"scalikejdbc-config"</span>           <span class="o">%</span> <span class="s">"2.5.2"</span><span class="o">,</span>
+  <span class="s">"org.scalikejdbc"</span> <span class="o">%%</span> <span class="s">"scalikejdbc-play-initializer"</span> <span class="o">%</span> <span class="s">"2.5.1"</span>
 <span class="o">)</span>
 </code></pre>
 
@@ -65,6 +86,7 @@
 <span class="c"># By convention, the default datasource is named `default`</span>
 db.default.driver<span class="o">=</span>org.h2.Driver
 db.default.url<span class="o">=</span><span class="s2">"jdbc:h2:mem:play;DB_CLOSE_DELAY=-1"</span>
+<span class="c"># NOTE: sclaikejdbc-config 2.2.6 doesn't support username, use 2.2.7 or higher</span>
 db.default.username<span class="o">=</span>sa
 db.default.password<span class="o">=</span>sa
 
@@ -94,9 +116,9 @@ play.modules.disabled +<span class="o">=</span> <span class="s2">"play.api.db.DB
 <h4 id="build-sbt">build.sbt</h4>
 <pre class="highlight scala"><code><span class="n">libraryDependencies</span> <span class="o">++=</span> <span class="nc">Seq</span><span class="o">(</span>
   <span class="s">"com.h2database"</span>  <span class="o">%</span>  <span class="s">"h2"</span>                             <span class="o">%</span> <span class="s">"1.4.195"</span><span class="o">,</span> <span class="c1">// your jdbc driver here
-</span>  <span class="s">"org.scalikejdbc"</span> <span class="o">%%</span> <span class="s">"scalikejdbc"</span>                    <span class="o">%</span> <span class="s">"3.0.0"</span><span class="o">,</span>
-  <span class="s">"org.scalikejdbc"</span> <span class="o">%%</span> <span class="s">"scalikejdbc-config"</span>             <span class="o">%</span> <span class="s">"3.0.0"</span><span class="o">,</span>
-  <span class="s">"org.scalikejdbc"</span> <span class="o">%%</span> <span class="s">"scalikejdbc-play-dbapi-adapter"</span> <span class="o">%</span> <span class="s">"2.6.0-M1"</span>
+</span>  <span class="s">"org.scalikejdbc"</span> <span class="o">%%</span> <span class="s">"scalikejdbc"</span>                    <span class="o">%</span> <span class="s">"2.5.2"</span><span class="o">,</span>
+  <span class="s">"org.scalikejdbc"</span> <span class="o">%%</span> <span class="s">"scalikejdbc-config"</span>             <span class="o">%</span> <span class="s">"2.5.2"</span><span class="o">,</span>
+  <span class="s">"org.scalikejdbc"</span> <span class="o">%%</span> <span class="s">"scalikejdbc-play-dbapi-adapter"</span> <span class="o">%</span> <span class="s">"2.5.1"</span>
 <span class="o">)</span>
 </code></pre>
 
@@ -171,6 +193,129 @@ play.modules.enabled +<span class="o">=</span> <span class="s2">"scalikejdbc.Pla
 
 <hr/>
 
+<h3 id="getting-started-with-play-2-0-2-3">Getting Started with Play 2.0 - 2.3</h3>
+
+<hr/>
+
+<h3 id="scalikejdbc-play-plugin">scalikejdbc-play-plugin</h3>
+
+<hr/>
+
+<p>This plugin supports connection pooling too. You don&rsquo;t need <code>dbplugin</code> and <code>evolutionplugin</code> when using this plugin.</p>
+
+<h4 id="project-build-scala">project/Build.scala</h4>
+<pre class="highlight scala"><code><span class="n">libraryDependencies</span> <span class="k">=</span> <span class="nc">Seq</span><span class="o">(</span>
+  <span class="s">"org.scalikejdbc"</span> <span class="o">%%</span> <span class="s">"scalikejdbc"</span>                       <span class="o">%</span> <span class="s">"2.3.5"</span><span class="o">,</span>
+  <span class="s">"org.scalikejdbc"</span> <span class="o">%%</span> <span class="s">"scalikejdbc-config"</span>                <span class="o">%</span> <span class="s">"2.3.5"</span><span class="o">,</span>
+  <span class="s">"org.scalikejdbc"</span> <span class="o">%%</span> <span class="s">"scalikejdbc-play-plugin"</span>           <span class="o">%</span> <span class="s">"2.3.10"</span><span class="o">,</span>
+  <span class="s">"org.scalikejdbc"</span> <span class="o">%%</span> <span class="s">"scalikejdbc-play-fixture-plugin"</span>   <span class="o">%</span> <span class="s">"2.3.10"</span><span class="o">,</span> <span class="c1">// optional
+</span>  <span class="c1">// substitute this for whatever DB driver you're using:
+</span>  <span class="s">"com.h2database"</span>  <span class="o">%</span>  <span class="s">"h2"</span>                                <span class="o">%</span> <span class="s">"1.4.195"</span>
+<span class="o">)</span>
+</code></pre>
+
+<h4 id="conf-play-plugins">conf/play.plugins</h4>
+<pre class="highlight plaintext"><code>10000:scalikejdbc.PlayPlugin
+</code></pre>
+
+<p>If you use fixture-plugin too, PlayFixturePlugin should be loaded after PlayPlugin:</p>
+<pre class="highlight plaintext"><code>10000:scalikejdbc.PlayPlugin
+11000:scalikejdbc.PlayFixturePlugin
+</code></pre>
+
+<h4 id="conf-application-conf">conf/application.conf</h4>
+<pre class="highlight shell"><code><span class="c"># Database configuration</span>
+<span class="c"># ~~~~~</span>
+<span class="c"># You can declare as many datasources as you want.</span>
+<span class="c"># By convention, the default datasource is named `default`</span>
+db.default.driver<span class="o">=</span>org.h2.Driver
+db.default.url<span class="o">=</span><span class="s2">"jdbc:h2:mem:play"</span>
+db.default.user<span class="o">=</span><span class="s2">"sa"</span>
+db.default.password<span class="o">=</span><span class="s2">"sa"</span>
+
+db.secondary.driver<span class="o">=</span>org.h2.Driver
+db.secondary.url<span class="o">=</span><span class="s2">"jdbc:h2:mem:play2"</span>
+db.secondary.user<span class="o">=</span><span class="s2">"sa"</span>
+db.secondary.password<span class="o">=</span><span class="s2">"sa"</span>
+
+<span class="c"># ScalikeJDBC original configuration</span>
+
+<span class="c">#db.default.poolInitialSize=10</span>
+<span class="c">#db.default.poolMaxSize=10</span>
+<span class="c">#db.default.poolValidationQuery=</span>
+
+scalikejdbc.global.loggingSQLAndTime.enabled<span class="o">=</span><span class="nb">true
+</span>scalikejdbc.global.loggingSQLAndTime.logLevel<span class="o">=</span>debug
+scalikejdbc.global.loggingSQLAndTime.warningEnabled<span class="o">=</span><span class="nb">true
+</span>scalikejdbc.global.loggingSQLAndTime.warningThresholdMillis<span class="o">=</span>1000
+scalikejdbc.global.loggingSQLAndTime.warningLogLevel<span class="o">=</span>warn
+
+<span class="c">#scalikejdbc.play.closeAllOnStop.enabled=true</span>
+
+<span class="c"># You can disable the default DB plugin</span>
+<span class="c"># Otherwise, don't disable dbplugin when you use scalikejdbc-play-dbplugin-adapter</span>
+<span class="nv">dbplugin</span><span class="o">=</span>disabled
+<span class="nv">evolutionplugin</span><span class="o">=</span>disabled
+
+<span class="c"># scalikejdbc logging</span>
+logger.scalikejdbc<span class="o">=</span>DEBUG
+</code></pre>
+
+<hr/>
+
+<h3 id="scalikejdbc-play-dbplugin-adapter">scalikejdbc-play-dbplugin-adapter</h3>
+
+<hr/>
+
+<p>This plugin is an adapter to connect <code>dbplugin</code> and ScalikeJDBC.</p>
+
+<h4 id="project-build-scala">project/Build.scala</h4>
+<pre class="highlight scala"><code><span class="n">libraryDependencies</span> <span class="k">=</span> <span class="nc">Seq</span><span class="o">(</span>
+  <span class="s">"org.scalikejdbc"</span> <span class="o">%%</span> <span class="s">"scalikejdbc"</span>                       <span class="o">%</span> <span class="s">"3.0.0"</span><span class="o">,</span>
+  <span class="s">"org.scalikejdbc"</span> <span class="o">%%</span> <span class="s">"scalikejdbc-config"</span>                <span class="o">%</span> <span class="s">"3.0.0"</span><span class="o">,</span>
+  <span class="s">"org.scalikejdbc"</span> <span class="o">%%</span> <span class="s">"scalikejdbc-play-dbplugin-adapter"</span> <span class="o">%</span> <span class="s">"2.5.1"</span><span class="o">,</span>
+  <span class="s">"org.scalikejdbc"</span> <span class="o">%%</span> <span class="s">"scalikejdbc-play-fixture-plugin"</span>   <span class="o">%</span> <span class="s">"2.5.1"</span><span class="o">,</span> <span class="c1">// optional
+</span>  <span class="c1">// substitute this for whatever DB driver you're using:
+</span>  <span class="s">"com.h2database"</span>  <span class="o">%</span>  <span class="s">"h2"</span>                                <span class="o">%</span> <span class="s">"1.4.195"</span>
+<span class="o">)</span>
+</code></pre>
+
+<h4 id="conf-play-plugins">conf/play.plugins</h4>
+<pre class="highlight plaintext"><code>10000:scalikejdbc.PlayDBPluginAdapter
+</code></pre>
+
+<h4 id="conf-application-conf">conf/application.conf</h4>
+
+<p>Basically do same as play-plugin.</p>
+
+<p>NOTICE: Don&rsquo;t disable dbplugin.</p>
+
+<hr/>
+
+<h3 id="fixtures-playfixtureplugin">Fixtures - PlayFixturePlugin</h3>
+
+<hr/>
+
+<p>Fixtures are optional. If you don&rsquo;t nee, no need to use them.</p>
+
+<h4 id="conf-application-conf">conf/application.conf</h4>
+<pre class="highlight shell"><code>db.default.fixtures.test<span class="o">=[</span> <span class="s2">"project.sql"</span>, <span class="s2">"project_member.sql"</span> <span class="o">]</span>
+</code></pre>
+
+<p>With MySQL, you may need to append <code>allowMultiQueries=true</code> to JDBC url.</p>
+<pre class="highlight plaintext"><code>db.default.url="jdbc:mysql://localhost/testdb?allowMultiQueries=true"
+</code></pre>
+
+<h4 id="conf-db-fixtures-default-project-sql">conf/db/fixtures/default/project.sql</h4>
+
+<p>Same as scalikejdbc-play-fixture.</p>
+
+<h4 id="conf-db-fixtures-defaut-project_member-sql">conf/db/fixtures/defaut/project_member.sql</h4>
+
+<p>Same as scalikejdbc-play-fixture.</p>
+
+<hr/>
+
 <h2 id="more-examples">More Examples</h2>
 
 <hr/>
@@ -186,31 +331,30 @@ play.modules.enabled +<span class="o">=</span> <span class="s2">"scalikejdbc.Pla
 
       <div class="col-xs-2 right">
         <div class="content small">
-          <h5>Latest version</h5>
+          <h5>version 2.x</h5>
           <hr/>
-          <p><a href="/documentation/setup.html">Setup</a></p>
-          <p><a href="/documentation/configuration.html">Configuration</a></p>
-          <p><a href="/documentation/connection-pool.html">Connection Pool</a></p>
-          <p><a href="/documentation/operations.html">Operations</a></p>
-          <p><a href="/documentation/transaction.html">Transaction</a></p>
-          <p><a href="/documentation/auto-session.html">Auto Session</a></p>
-          <p><a href="/documentation/sql-interpolation.html">SQLInterpolation</a></p>
-          <p><a href="/documentation/query-dsl.html">QueryDSL</a></p>
-          <p><a href="/documentation/one-to-x.html">One-to-x API</a></p>
-          <p><a href="/documentation/auto-macros.html">Auto Macros</a></p>
-          <p><a href="/documentation/query-inspector.html">Logging / Query Inspector</a></p>
-          <p><a href="/documentation/reverse-engineering.html">Reverse Engineering</a></p>
-          <p><a href="/documentation/testing.html">Testing</a></p>
-          <p><a href="/documentation/playframework-support.html">Play Support</a></p>
-          <p><a href="/documentation/dbconsole.html">dbconsole</a></p>
+          <p><a href="/documentation/2.x/setup.html">Setup</a></p>
+          <p><a href="/documentation/2.x/configuration.html">Configuration</a></p>
+          <p><a href="/documentation/2.x/connection-pool.html">Connection Pool</a></p>
+          <p><a href="/documentation/2.x/operations.html">Operations</a></p>
+          <p><a href="/documentation/2.x/transaction.html">Transaction</a></p>
+          <p><a href="/documentation/2.x/auto-session.html">Auto Session</a></p>
+          <p><a href="/documentation/2.x/sql-interpolation.html">SQLInterpolation</a></p>
+          <p><a href="/documentation/2.x/query-dsl.html">QueryDSL</a></p>
+          <p><a href="/documentation/2.x/one-to-x.html">One-to-x API</a></p>
+          <p><a href="/documentation/2.x/auto-macros.html">Auto Macros</a></p>
+          <p><a href="/documentation/2.x/query-inspector.html">Logging / Query Inspector</a></p>
+          <p><a href="/documentation/2.x/reverse-engineering.html">Reverse Engineering</a></p>
+          <p><a href="/documentation/2.x/testing.html">Testing</a></p>
+          <p><a href="/documentation/2.x/playframework-support.html">Play Support</a></p>
+          <p><a href="/documentation/2.x/dbconsole.html">dbconsole</a></p>
           <p><a href="http://www.javadoc.io/doc/org.scalikejdbc/scalikejdbc-core_2.11/3.0.0">Core API Doc</a></p>
-          <p><a href="/documentation/faq.html">FAQ</a></p>
+          <p><a href="/documentation/2.x/faq.html">FAQ</a></p>
           <p><a href="/documentation/testimonials.html">Testimonials</a></p>
           <p><a href="/contribution.html">Contribution</a></p>
           <hr/>
           <h5>Older Versions</h5>
           <hr/>
-          <p><a href="/documentation/2.x/">version 2.x</a></p>
           <p><a href="/documentation/1.x/">version 1.x</a></p>
         </div>
       </div>

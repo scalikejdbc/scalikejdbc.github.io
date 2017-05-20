@@ -29,6 +29,9 @@
     </div>
       <div class="col-xs-10 left">
         <div class="content">
+          <div class="alert alert-warning small">
+            WARNING: This page is a guide for 2.x series.
+          </div>
           <h1 id="scalikejdbc">ScalikeJDBC</h1>
 
 <hr/>
@@ -97,24 +100,25 @@
 
 <p>All you need to do is add ScalikeJDBC, JDBC driver and an slf4j implementation.</p>
 
-<h3 id="scalikejdbc-3-x">ScalikeJDBC 3.x</h3>
+<h3 id="scalikejdbc-2-x">ScalikeJDBC 2.x</h3>
 
-<p>ScalikeJDBC 3.0 requires Java SE 8 or higher. If you still need to run your applications on Java SE 7, keep using ScalikeJDBC 2.5.</p>
-<pre class="highlight scala"><code><span class="c1">// Scala 2.10, 2.11, 2.12
+<p>See <a href="/">ScalikeJDBC 2.x Documentation</a> in detail.</p>
+<pre class="highlight scala"><code><span class="c1">// Scala 2.10, 2.11
 </span><span class="n">libraryDependencies</span> <span class="o">++=</span> <span class="nc">Seq</span><span class="o">(</span>
-  <span class="s">"org.scalikejdbc"</span> <span class="o">%%</span> <span class="s">"scalikejdbc"</span>       <span class="o">%</span> <span class="s">"3.0.0"</span><span class="o">,</span>
+  <span class="s">"org.scalikejdbc"</span> <span class="o">%%</span> <span class="s">"scalikejdbc"</span>       <span class="o">%</span> <span class="s">"2.5.2"</span><span class="o">,</span>
   <span class="s">"com.h2database"</span>  <span class="o">%</span>  <span class="s">"h2"</span>                <span class="o">%</span> <span class="s">"1.4.195"</span><span class="o">,</span>
   <span class="s">"ch.qos.logback"</span>  <span class="o">%</span>  <span class="s">"logback-classic"</span>   <span class="o">%</span> <span class="s">"1.2.3"</span>
 <span class="o">)</span>
 </code></pre>
 
-<h3 id="scalikejdbc-2-x">ScalikeJDBC 2.x</h3>
+<h3 id="scalikejdbc-1-x">ScalikeJDBC 1.x</h3>
 
-<p>See <a href="/documentation/2.x/">ScalikeJDBC 2.x Documentation</a> for details.</p>
-<pre class="highlight scala"><code><span class="c1">// Scala 2.10, 2.11, 2.12
+<p>See <a href="/documentation/1.x/">ScalikeJDBC 1.x Documentation</a> for details. Scala 2.9 incompatible changes will be backported only to ScalikeJDBC 1.8.x. Don&rsquo;t worry. We&rsquo;ll keep maintaining ScalikeJDBC 1.7.x for Scala 2.9 users.</p>
+<pre class="highlight scala"><code><span class="c1">// Scala 2.9, 2.10
 </span><span class="n">libraryDependencies</span> <span class="o">++=</span> <span class="nc">Seq</span><span class="o">(</span>
-  <span class="s">"org.scalikejdbc"</span> <span class="o">%%</span> <span class="s">"scalikejdbc"</span>               <span class="o">%</span> <span class="s">"2.5.2"</span><span class="o">,</span> 
-  <span class="s">"com.h2database"</span>  <span class="o">%</span>  <span class="s">"h2"</span>                        <span class="o">%</span> <span class="s">"1.4.195"</span><span class="o">,</span>
+  <span class="s">"org.scalikejdbc"</span> <span class="o">%%</span> <span class="s">"scalikejdbc"</span>               <span class="o">%</span> <span class="s">"1.7.7"</span><span class="o">,</span> <span class="c1">// or "1.8.2" only for Scala 2.10
+</span>  <span class="s">"org.scalikejdbc"</span> <span class="o">%%</span> <span class="s">"scalikejdbc-interpolation"</span> <span class="o">%</span> <span class="s">"1.7.7"</span><span class="o">,</span> <span class="c1">// or "1.8.2" only for Scala 2.10
+</span>  <span class="s">"com.h2database"</span>  <span class="o">%</span>  <span class="s">"h2"</span>                        <span class="o">%</span> <span class="s">"1.4.195"</span><span class="o">,</span>
   <span class="s">"ch.qos.logback"</span>  <span class="o">%</span>  <span class="s">"logback-classic"</span>           <span class="o">%</span> <span class="s">"1.2.3"</span>
 <span class="o">)</span>
 </code></pre>
@@ -126,7 +130,9 @@
 <hr/>
 
 <p>Put the above dependencies into your <code>build.sbt</code> and run <code>sbt console</code> now.</p>
-<pre class="highlight scala"><code><span class="k">import</span> <span class="nn">scalikejdbc._</span>
+<pre class="highlight scala"><code><span class="c1">// ScalikeJDBC 1.7 requires SQLInterpolation._ import
+//import scalikejdbc._, SQLInterpolation._
+</span><span class="k">import</span> <span class="nn">scalikejdbc._</span>
 
 <span class="c1">// initialize JDBC driver &amp; connection pool
 </span><span class="nc">Class</span><span class="o">.</span><span class="n">forName</span><span class="o">(</span><span class="s">"org.h2.Driver"</span><span class="o">)</span>
@@ -193,7 +199,7 @@ create table members (
 <span class="o">}</span>
 </code></pre>
 
-<p>See in detail: <a href="/documentation/operations.html">/documentation/operations</a></p>
+<p>See in detail: <a href="documentation/operations.html">/documentation/operations</a></p>
 
 <hr/>
 
@@ -217,7 +223,7 @@ create table members (
 <span class="o">}</span>
 </code></pre>
 
-<p>See in detail: <a href="/documentation/query-dsl.html">/documentation/query-dsl</a></p>
+<p>See in detail: <a href="documentation/query-dsl.html">/documentation/query-dsl</a></p>
 
 <p>Test code: <a href="https://github.com/scalikejdbc/scalikejdbc/blob/master/scalikejdbc-interpolation/src/test/scala/scalikejdbc/QueryInterfaceSpec.scala">src/test/scala/scalikejdbc/QueryInterfaceSpec.scala</a></p>
 
@@ -255,7 +261,7 @@ create table members (
 <span class="o">}</span>
 </code></pre>
 
-<p>See in detail: <a href="/documentation/transaction.html">/documentation/transaction</a></p>
+<p>See in detail: <a href="documentation/transaction.html">/documentation/transaction</a></p>
 
 <hr/>
 
@@ -275,7 +281,7 @@ create table members (
     controllers.Secured$$anonfun$IsAuthenticated$3$$anonfun$apply$3.apply(Application.scala:88)
 </code></pre>
 
-<p>See in detail: <a href="/documentation/query-inspector.html">/documentation/query-inspector</a></p>
+<p>See in detail: <a href="documentation/query-inspector.html">/documentation/query-inspector</a></p>
 
 <hr/>
 
@@ -288,7 +294,7 @@ create table members (
 <li>Testing with fixtures</li>
 </ul>
 
-<p>See in detail: <a href="/documentation/testing.html">/documentation/testing</a></p>
+<p>See in detail: <a href="documentation/testing.html">/documentation/testing</a></p>
 
 <hr/>
 
@@ -303,7 +309,7 @@ create table members (
 sbt "scalikejdbc-gen companies Company"
 </code></pre>
 
-<p>See in detail: <a href="/documentation/reverse-engineering.html">/documentation/reverse-engineering</a></p>
+<p>See in detail: <a href="documentation/reverse-engineering.html">/documentation/reverse-engineering</a></p>
 
 <hr/>
 
@@ -311,7 +317,7 @@ sbt "scalikejdbc-gen companies Company"
 
 <p>You can use ScalikeJDBC with Play framework 2 seamlessly. We promise you that it becomes more productive when used with scalikejdbc-mapper-generator.</p>
 
-<p>See in detail: <a href="/documentation/playframework-support.html">/documentation/playframework-support</a></p>
+<p>See in detail: <a href="documentation/playframework-support.html">/documentation/playframework-support</a></p>
 
 <hr/>
 
@@ -371,7 +377,7 @@ sbt "scalikejdbc-gen companies Company"
 </span>
 </span></p>
 
-<p><a href="/documentation/testimonials.html">Read more..</a></p>
+<p><a href="documentation/testimonials.html">Read more..</a></p>
 
 <hr/>
 
@@ -413,7 +419,7 @@ http://www.apache.org/licenses/LICENSE-2.0.html
 <pre class="highlight plaintext"><code>http://git.io/dbconsole.bat
 </code></pre>
 
-<p>See in detail: <a href="/documentation/dbconsole.html">/documentation/dbconsole</a></p>
+<p>See in detail: <a href="documentation/dbconsole.html">/documentation/dbconsole</a></p>
 
 <hr/>
 
@@ -436,31 +442,30 @@ http://www.apache.org/licenses/LICENSE-2.0.html
 
       <div class="col-xs-2 right">
         <div class="content small">
-          <h5>Latest version</h5>
+          <h5>version 2.x</h5>
           <hr/>
-          <p><a href="/documentation/setup.html">Setup</a></p>
-          <p><a href="/documentation/configuration.html">Configuration</a></p>
-          <p><a href="/documentation/connection-pool.html">Connection Pool</a></p>
-          <p><a href="/documentation/operations.html">Operations</a></p>
-          <p><a href="/documentation/transaction.html">Transaction</a></p>
-          <p><a href="/documentation/auto-session.html">Auto Session</a></p>
-          <p><a href="/documentation/sql-interpolation.html">SQLInterpolation</a></p>
-          <p><a href="/documentation/query-dsl.html">QueryDSL</a></p>
-          <p><a href="/documentation/one-to-x.html">One-to-x API</a></p>
-          <p><a href="/documentation/auto-macros.html">Auto Macros</a></p>
-          <p><a href="/documentation/query-inspector.html">Logging / Query Inspector</a></p>
-          <p><a href="/documentation/reverse-engineering.html">Reverse Engineering</a></p>
-          <p><a href="/documentation/testing.html">Testing</a></p>
-          <p><a href="/documentation/playframework-support.html">Play Support</a></p>
-          <p><a href="/documentation/dbconsole.html">dbconsole</a></p>
+          <p><a href="/documentation/2.x/setup.html">Setup</a></p>
+          <p><a href="/documentation/2.x/configuration.html">Configuration</a></p>
+          <p><a href="/documentation/2.x/connection-pool.html">Connection Pool</a></p>
+          <p><a href="/documentation/2.x/operations.html">Operations</a></p>
+          <p><a href="/documentation/2.x/transaction.html">Transaction</a></p>
+          <p><a href="/documentation/2.x/auto-session.html">Auto Session</a></p>
+          <p><a href="/documentation/2.x/sql-interpolation.html">SQLInterpolation</a></p>
+          <p><a href="/documentation/2.x/query-dsl.html">QueryDSL</a></p>
+          <p><a href="/documentation/2.x/one-to-x.html">One-to-x API</a></p>
+          <p><a href="/documentation/2.x/auto-macros.html">Auto Macros</a></p>
+          <p><a href="/documentation/2.x/query-inspector.html">Logging / Query Inspector</a></p>
+          <p><a href="/documentation/2.x/reverse-engineering.html">Reverse Engineering</a></p>
+          <p><a href="/documentation/2.x/testing.html">Testing</a></p>
+          <p><a href="/documentation/2.x/playframework-support.html">Play Support</a></p>
+          <p><a href="/documentation/2.x/dbconsole.html">dbconsole</a></p>
           <p><a href="http://www.javadoc.io/doc/org.scalikejdbc/scalikejdbc-core_2.11/3.0.0">Core API Doc</a></p>
-          <p><a href="/documentation/faq.html">FAQ</a></p>
+          <p><a href="/documentation/2.x/faq.html">FAQ</a></p>
           <p><a href="/documentation/testimonials.html">Testimonials</a></p>
           <p><a href="/contribution.html">Contribution</a></p>
           <hr/>
           <h5>Older Versions</h5>
           <hr/>
-          <p><a href="/documentation/2.x/">version 2.x</a></p>
           <p><a href="/documentation/1.x/">version 1.x</a></p>
         </div>
       </div>
