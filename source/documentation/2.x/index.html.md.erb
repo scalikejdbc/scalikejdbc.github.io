@@ -59,27 +59,28 @@ See also FAQs here: [/documentation/faq.html](/documentation/faq.html)
 
 All you need to do is add ScalikeJDBC, JDBC driver and an slf4j implementation.
 
-### ScalikeJDBC 3.x
+### ScalikeJDBC 2.x
 
-ScalikeJDBC 3.0 requires Java SE 8 or higher. If you still need to run your applications on Java SE 7, keep using ScalikeJDBC 2.5.
+See [ScalikeJDBC 2.x Documentation](/) in detail.
 
 ```scala
-// Scala 2.10, 2.11, 2.12
+// Scala 2.10, 2.11
 libraryDependencies ++= Seq(
-  "org.scalikejdbc" %% "scalikejdbc"       % "<%= version %>",
+  "org.scalikejdbc" %% "scalikejdbc"       % "<%= v2_version %>",
   "com.h2database"  %  "h2"                % "<%= h2_version %>",
   "ch.qos.logback"  %  "logback-classic"   % "<%= logback_version %>"
 )
 ```
 
-### ScalikeJDBC 2.x
+### ScalikeJDBC 1.x
 
-See [ScalikeJDBC 2.x Documentation](/documentation/2.x/) for details.
+See [ScalikeJDBC 1.x Documentation](/documentation/1.x/) for details. Scala 2.9 incompatible changes will be backported only to ScalikeJDBC 1.8.x. Don't worry. We'll keep maintaining ScalikeJDBC 1.7.x for Scala 2.9 users.
 
 ```scala
-// Scala 2.10, 2.11, 2.12
+// Scala 2.9, 2.10
 libraryDependencies ++= Seq(
-  "org.scalikejdbc" %% "scalikejdbc"               % "<%= v2_version %>", 
+  "org.scalikejdbc" %% "scalikejdbc"               % "<%= v1_version %>", // or "<%= v18_version %>" only for Scala 2.10
+  "org.scalikejdbc" %% "scalikejdbc-interpolation" % "<%= v1_version %>", // or "<%= v18_version %>" only for Scala 2.10
   "com.h2database"  %  "h2"                        % "<%= h2_version %>",
   "ch.qos.logback"  %  "logback-classic"           % "<%= logback_version %>"
 )
@@ -92,6 +93,8 @@ libraryDependencies ++= Seq(
 Put the above dependencies into your `build.sbt` and run `sbt console` now.
 
 ```scala
+// ScalikeJDBC 1.7 requires SQLInterpolation._ import
+//import scalikejdbc._, SQLInterpolation._
 import scalikejdbc._
 
 // initialize JDBC driver & connection pool

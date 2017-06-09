@@ -4,12 +4,27 @@ title: Play Framework Support - ScalikeJDBC
 
 ## Play Framework Support
 
+ScalikeJDBC provides two Play plugins to integrate Play2 and ScalikeJDBC. Choose your preferred one.
+
 <hr/>
-For ScalikeJDBC 3.0 or higher, we supports only Play 2.6 or higher.
+## Migration Guide
+
+Unfortunately, Play 2.4 is basically incompatible with Play plugins. Since Play 2.4, you need to switch to use Play modules instead.
+
+### ScalikeJDBC integration with Play 2.0 - 2.3
+
+- scalikejdbc-play-plugin
+- scalikejdbc-play-dbplugin-adapter
+- scalikejdbc-play-fixture-plugin
+
+### ScalikeJDBC integration with Play 2.4 or higher
 
 - scalikejdbc-play-initializer
 - scalikejdbc-play-dbapi-adapter
 - scalikejdbc-play-fixture
+
+<hr/>
+## Getting Started with Play 2.4 or higher
 
 <hr/>
 ### scalikejdbc-play-initializer
@@ -22,9 +37,9 @@ This module supports connection pooling too.
 ```scala
 libraryDependencies ++= Seq(
   "com.h2database"  %  "h2"                           % "<%= h2_version %>", // your jdbc driver here
-  "org.scalikejdbc" %% "scalikejdbc"                  % "<%= version %>",
-  "org.scalikejdbc" %% "scalikejdbc-config"           % "<%= version %>",
-  "org.scalikejdbc" %% "scalikejdbc-play-initializer" % "<%= latest_play_support_version %>"
+  "org.scalikejdbc" %% "scalikejdbc"                  % "<%= v2_version %>",
+  "org.scalikejdbc" %% "scalikejdbc-config"           % "<%= v2_version %>",
+  "org.scalikejdbc" %% "scalikejdbc-play-initializer" % "<%= v2_play_support_version %>"
 )
 ```
 
@@ -37,6 +52,7 @@ libraryDependencies ++= Seq(
 # By convention, the default datasource is named `default`
 db.default.driver=org.h2.Driver
 db.default.url="jdbc:h2:mem:play;DB_CLOSE_DELAY=-1"
+# NOTE: sclaikejdbc-config 2.2.6 doesn't support username, use 2.2.7 or higher
 db.default.username=sa
 db.default.password=sa
 
@@ -66,9 +82,9 @@ play.modules.disabled += "play.api.db.DBModule"
 ```scala
 libraryDependencies ++= Seq(
   "com.h2database"  %  "h2"                             % "<%= h2_version %>", // your jdbc driver here
-  "org.scalikejdbc" %% "scalikejdbc"                    % "<%= version %>",
-  "org.scalikejdbc" %% "scalikejdbc-config"             % "<%= version %>",
-  "org.scalikejdbc" %% "scalikejdbc-play-dbapi-adapter" % "<%= latest_play_support_version %>"
+  "org.scalikejdbc" %% "scalikejdbc"                    % "<%= v2_version %>",
+  "org.scalikejdbc" %% "scalikejdbc-config"             % "<%= v2_version %>",
+  "org.scalikejdbc" %% "scalikejdbc-play-dbapi-adapter" % "<%= v2_play_support_version %>"
 )
 ```
 
@@ -146,6 +162,140 @@ INSERT INTO project_member (project_id, user_email) VALUES (11, 'sadek@sample.co
 
 DELETE FROM project_member;
 ```
+
+<hr/>
+### Getting Started with Play 2.0 - 2.3
+
+<hr/>
+### scalikejdbc-play-plugin
+<hr/>
+
+This plugin supports connection pooling too. You don't need `dbplugin` and `evolutionplugin` when using this plugin.
+
+#### project/Build.scala
+
+```scala
+libraryDependencies = Seq(
+  "org.scalikejdbc" %% "scalikejdbc"                       % "2.3.5",
+  "org.scalikejdbc" %% "scalikejdbc-config"                % "2.3.5",
+  "org.scalikejdbc" %% "scalikejdbc-play-plugin"           % "2.3.10",
+  "org.scalikejdbc" %% "scalikejdbc-play-fixture-plugin"   % "2.3.10", // optional
+  // substitute this for whatever DB driver you're using:
+  "com.h2database"  %  "h2"                                % "<%= h2_version %>"
+)
+```
+
+#### conf/play.plugins
+
+```
+10000:scalikejdbc.PlayPlugin
+```
+
+If you use fixture-plugin too, PlayFixturePlugin should be loaded after PlayPlugin:
+
+```
+10000:scalikejdbc.PlayPlugin
+11000:scalikejdbc.PlayFixturePlugin
+```
+
+#### conf/application.conf
+
+```sh
+# Database configuration
+# ~~~~~
+# You can declare as many datasources as you want.
+# By convention, the default datasource is named `default`
+db.default.driver=org.h2.Driver
+db.default.url="jdbc:h2:mem:play"
+db.default.user="sa"
+db.default.password="sa"
+
+db.secondary.driver=org.h2.Driver
+db.secondary.url="jdbc:h2:mem:play2"
+db.secondary.user="sa"
+db.secondary.password="sa"
+
+# ScalikeJDBC original configuration
+
+#db.default.poolInitialSize=10
+#db.default.poolMaxSize=10
+#db.default.poolValidationQuery=
+
+scalikejdbc.global.loggingSQLAndTime.enabled=true
+scalikejdbc.global.loggingSQLAndTime.logLevel=debug
+scalikejdbc.global.loggingSQLAndTime.warningEnabled=true
+scalikejdbc.global.loggingSQLAndTime.warningThresholdMillis=1000
+scalikejdbc.global.loggingSQLAndTime.warningLogLevel=warn
+
+#scalikejdbc.play.closeAllOnStop.enabled=true
+
+# You can disable the default DB plugin
+# Otherwise, don't disable dbplugin when you use scalikejdbc-play-dbplugin-adapter
+dbplugin=disabled
+evolutionplugin=disabled
+
+# scalikejdbc logging
+logger.scalikejdbc=DEBUG
+```
+
+<hr/>
+### scalikejdbc-play-dbplugin-adapter
+<hr/>
+
+This plugin is an adapter to connect `dbplugin` and ScalikeJDBC.
+
+#### project/Build.scala
+
+```scala
+libraryDependencies = Seq(
+  "org.scalikejdbc" %% "scalikejdbc"                       % "<%= version %>",
+  "org.scalikejdbc" %% "scalikejdbc-config"                % "<%= version %>",
+  "org.scalikejdbc" %% "scalikejdbc-play-dbplugin-adapter" % "<%= v2_play_support_version %>",
+  "org.scalikejdbc" %% "scalikejdbc-play-fixture-plugin"   % "<%= v2_play_support_version %>", // optional
+  // substitute this for whatever DB driver you're using:
+  "com.h2database"  %  "h2"                                % "<%= h2_version %>"
+)
+```
+
+#### conf/play.plugins
+
+```
+10000:scalikejdbc.PlayDBPluginAdapter
+```
+
+#### conf/application.conf
+
+Basically do same as play-plugin.
+
+NOTICE: Don't disable dbplugin.
+
+<hr/>
+### Fixtures - PlayFixturePlugin
+<hr/>
+
+Fixtures are optional. If you don't nee, no need to use them.
+
+#### conf/application.conf
+
+```sh
+db.default.fixtures.test=[ "project.sql", "project_member.sql" ]
+```
+
+With MySQL, you may need to append `allowMultiQueries=true` to JDBC url.
+
+
+```
+db.default.url="jdbc:mysql://localhost/testdb?allowMultiQueries=true"
+```
+
+
+#### conf/db/fixtures/default/project.sql
+
+Same as scalikejdbc-play-fixture.
+
+#### conf/db/fixtures/defaut/project_member.sql
+
+Same as scalikejdbc-play-fixture.
 
 <hr/>
 ## More Examples

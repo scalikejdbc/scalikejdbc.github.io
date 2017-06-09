@@ -1,0 +1,149 @@
+---
+title: Setup - ScalikeJDBC
+---
+
+## Setup
+
+<hr/>
+ScalikeJDBC libraries are available on the Maven central repository.
+
+[http://search.maven.org/#search%7Cga%7C1%7Corg.scalikejdbc](http://search.maven.org/#search%7Cga%7C1%7Corg.scalikejdbc)
+
+<hr/>
+### Core Library & Interpolation
+<hr/>
+
+Add latest version into your `build.sbt` or `project/Build.scala`. Don't forget JDBC driver and slf4j implementation.
+
+If you're still using Scala 2.9, you can't use `scalikejdbc-interpolation`.
+
+```scala
+libraryDependencies ++= Seq(
+  "org.scalikejdbc" %% "scalikejdbc"       % "<%= v2_version %>",
+  "com.h2database"  %  "h2"                % "<%= h2_version %>",
+  "ch.qos.logback"  %  "logback-classic"   % "<%= logback_version %>"
+)
+```
+
+In your application, just add the following import.
+
+```scala
+import scalikejdbc._
+```
+
+<hr/>
+### Testing Support
+<hr/>
+
+Using `scalikejdbc-test` is highly recommended to improve your application.
+
+```scala
+libraryDependencies ++= Seq(
+  "org.scalikejdbc" %% "scalikejdbc"        % "<%= v2_version %>",
+  "org.scalikejdbc" %% "scalikejdbc-test"   % "<%= v2_version %>"   % "test",
+  "com.h2database"  %  "h2"                 % "<%= h2_version %>",
+  "ch.qos.logback"  %  "logback-classic"    % "<%= logback_version %>"
+)
+```
+
+Usage: [/documentation/testing](/documentation/testing.html)
+
+<hr/>
+### Typesafe Config Reader
+<hr/>
+
+If you use `application.conf` as settings file, add `scalikejdbc-config` too.
+
+```scala
+libraryDependencies ++= Seq(
+  "org.scalikejdbc" %% "scalikejdbc"         % "<%= v2_version %>",
+  "org.scalikejdbc" %% "scalikejdbc-config"  % "<%= v2_version %>",
+  "com.h2database"  %  "h2"                  % "<%= h2_version %>",
+  "ch.qos.logback"  %  "logback-classic"     % "<%= logback_version %>"
+)
+```
+
+Usage: [/documentation/configuration](/documentation/configuration.html)
+
+<hr/>
+### Reverse Engineering
+<hr/>
+
+ScalikeJDBC support reverse engineering Scala code from existing database.
+You need to setup an sbt plugin named `scalikejdbc-mapper-generator`.
+
+##### project/plugins.sbt
+
+```scala
+// Don't forget adding your JDBC driver
+libraryDependencies += "org.hsqldb" % "hsqldb" % "2.3.2"
+
+addSbtPlugin("org.scalikejdbc" %% "scalikejdbc-mapper-generator" % "<%= v2_version %>")
+```
+
+##### build.sbt
+
+```scala
+scalikejdbcSettings
+```
+
+##### project/scalikejdbc.properties
+
+```
+# ---
+# jdbc settings
+
+jdbc.driver=org.h2.Driver
+jdbc.url=jdbc:h2:file:./db/hello
+jdbc.username=sa
+jdbc.password=
+jdbc.schema=
+
+# ---
+# source code generator settings
+
+generator.packageName=models
+# generator.lineBreak: LF/CRLF
+generator.lineBreak=LF
+# generator.template: interpolation/queryDsl
+generator.template=queryDsl
+# generator.testTemplate: specs2unit/specs2acceptance/ScalaTestFlatSpec
+generator.testTemplate=specs2unit
+generator.encoding=UTF-8
+# When you're using Scala 2.11 or higher, you can use case classes for 22+ columns tables
+generator.caseClassOnly=true
+# Set AutoSession for implicit DBSession parameter's default value
+generator.defaultAutoSession=true
+# Use autoConstruct macro (default: false)
+generator.autoConstruct=false
+# joda-time (org.joda.time.DateTime) or JSR-310 (java.time.ZonedDateTime java.time.OffsetDateTime)
+generator.dateTimeClass=org.joda.time.DateTime
+```
+
+Usage: [/documentation/reverse-engineering](/documentation/reverse-engineering.html)
+
+<hr/>
+### Play Framework Integration
+<hr/>
+
+See in detail: [/documentation/playframework-support](/documentation/playframework-support.html)
+
+<hr/>
+### dbconsole
+<hr/>
+
+A simple console to connect database via JDBC.
+
+##### Mac OS X, Linux
+
+```sh
+curl -L http://git.io/dbconsole | sh
+```
+
+##### Windows
+
+```
+http://git.io/dbconsole.bat
+```
+
+Usage: [/documentation/dbconsole](/documentation/dbconsole.html)

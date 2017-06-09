@@ -241,8 +241,16 @@ val ids: Seq[MemberId] = sql"select id from member".map(rs => MemberId(rs.get("i
 #### Using Java SE 8 Date Time API (JSR-310)
 <hr/>
 
+ScalikeJDBC still supports Java SE 7. So we provides Java 8 Date Time API support as an optional module.
+
 ```scala
-import scalikejdbc._
+libraryDependencies += "org.scalikejdbc" %% "scalikejdbc-jsr310" % "<%= v2_version %>"
+```
+
+Usage is so simple. Just add `import scalikejdbc.jsr310._`.
+
+```scala
+import scalikejdbc._, jsr310._
 import java.time._
                                     
 case class Group(

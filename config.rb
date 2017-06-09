@@ -29,6 +29,7 @@
 #  :which_fake_page => "Rendering a fake page with a local variable" }
 
 page "/documentation/1.x/*", :layout => "1.x"
+page "/documentation/2.x/*", :layout => "2.x"
 
 ###
 # Helpers
@@ -61,14 +62,18 @@ set :markdown, fenced_code_blocks: true, smartypants: true, autolink: true, with
 I18n.enforce_available_locales = false
 
 # Latest versions
-@latest_version = "2.5.2"
-@latest_play_support_version = "2.5.1"
+@latest_version = "3.0.0"
+@latest_play_support_version = "2.6.0-M4"
+@v2_play_support_version = "2.5.1"
+@v2_version = "2.5.2"
 @v1_version = "1.7.7"
 @v18_version = "1.8.2"
 
 set :version,        @latest_version
 set :latest_version, @latest_version
 set :latest_play_support_version, @latest_play_support_version
+set :v2_play_support_version,     @v2_play_support_version
+set :v2_version,        @v2_version
 set :v1_version,        @v1_version
 set :v18_version,       @v18_version
 set :v1_latest_version, @v1_version

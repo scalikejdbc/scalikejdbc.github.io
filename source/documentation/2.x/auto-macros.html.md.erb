@@ -1,0 +1,78 @@
+---
+title: Auto Macros - ScalikeJDBC
+---
+
+## Auto Macros
+
+<hr/>
+### Avoid Boilerplate Code
+<hr/>
+
+You can avoid writing boilerplate code when using `scalikejdbc-syntax-support-macro`.
+
+<hr/>
+### Setup
+<hr/>
+
+Add the following aditional dependency to your sbt project.
+
+```scala
+libraryDependencies += "org.scalikejdbc" %% "scalikejdbc-syntax-support-macro" % "<%= v2_version %>"
+```
+
+<hr/>
+### Usage
+<hr/>
+
+#### autoConstruct for extracting entities from ResultSet
+
+Usually, we should write ResultSet extractor method as follows.
+
+```scala
+case class Company(id: Long, name: String, countryId: Option[Long], country: Option[Country] = None)
+
+object Company extends SQLSyntaxSupport[Company] {
+
+  def apply(rs: WrappedResultSet, rn: ResultName[Company]): Company = new Company(
+    id = rs.get(rn.id), 
+    name = rs.get(rn.name), 
+    countryId = rs.get(rn.countryId)
+  )
+}
+```
+
+When using scalikejdbc-syntax-support-macro, you can use `#autoConstruct` macro. 
+
+```scala
+case class Company(id: Long, name: String, countryId: Option[Long], country: Option[Country] = None)
+
+object Company extends SQLSyntaxSupport[Company] {
+
+  def apply(rs: WrappedResultSet, rn: ResultName[Company]): Company = 
+    autoConstruct(rs, rn, "country") // "country" will be ignored when binding values from ResultSet
+}
+```
+
+The `#autoConstruct` method binds all the fields defined at the primary constructor automatically.
+
+The `country` field in the above example class should be ignored. In such cases, you should specify additional String parameter such as `"country"`.
+Of course, the `"country"` will be verified at Scala compilation time. We believe that's pretty cool and useful.
+
+
+<hr/>
+#### autoColumns to avoid accessing JDBC metadata
+
+When your code load ScalikeJDBC DAO objects, ScalikeJDBC automatically fetches all the column names for the table specified by SQLSyntaxSupport's `tableName` (via JDBC metadata API).
+
+If you don't prefer the behavior, you can choose loading column names from the entity class's field names instead.
+The following code won't access JDBC metadata and will resolve column names from Company class's fields, primary constructor's parameters, by simply converting them to snake-cased ones or applying nameConverters to them.
+
+```scala
+case class Company(id: Long, name: String, countryId: Option[Long], country: Option[Country] = None)
+
+object Company extends SQLSyntaxSupport[Company] {
+
+  override lazy val columns = autoColumns[Company]("country") 
+  // this will be Seq("id", "name", "country_id")
+}
+```
