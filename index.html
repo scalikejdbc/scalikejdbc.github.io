@@ -102,7 +102,7 @@
 <p>ScalikeJDBC 3.0 requires Java SE 8 or higher. If you still need to run your applications on Java SE 7, keep using ScalikeJDBC 2.5.</p>
 <pre class="highlight scala"><code><span class="c1">// Scala 2.10, 2.11, 2.12
 </span><span class="n">libraryDependencies</span> <span class="o">++=</span> <span class="nc">Seq</span><span class="o">(</span>
-  <span class="s">"org.scalikejdbc"</span> <span class="o">%%</span> <span class="s">"scalikejdbc"</span>       <span class="o">%</span> <span class="s">"3.0.1"</span><span class="o">,</span>
+  <span class="s">"org.scalikejdbc"</span> <span class="o">%%</span> <span class="s">"scalikejdbc"</span>       <span class="o">%</span> <span class="s">"3.0.2"</span><span class="o">,</span>
   <span class="s">"com.h2database"</span>  <span class="o">%</span>  <span class="s">"h2"</span>                <span class="o">%</span> <span class="s">"1.4.196"</span><span class="o">,</span>
   <span class="s">"ch.qos.logback"</span>  <span class="o">%</span>  <span class="s">"logback-classic"</span>   <span class="o">%</span> <span class="s">"1.2.3"</span>
 <span class="o">)</span>
@@ -113,7 +113,7 @@
 <p>See <a href="/documentation/2.x/">ScalikeJDBC 2.x Documentation</a> for details.</p>
 <pre class="highlight scala"><code><span class="c1">// Scala 2.10, 2.11, 2.12
 </span><span class="n">libraryDependencies</span> <span class="o">++=</span> <span class="nc">Seq</span><span class="o">(</span>
-  <span class="s">"org.scalikejdbc"</span> <span class="o">%%</span> <span class="s">"scalikejdbc"</span>               <span class="o">%</span> <span class="s">"2.5.2"</span><span class="o">,</span> 
+  <span class="s">"org.scalikejdbc"</span> <span class="o">%%</span> <span class="s">"scalikejdbc"</span>               <span class="o">%</span> <span class="s">"2.5.2"</span><span class="o">,</span>
   <span class="s">"com.h2database"</span>  <span class="o">%</span>  <span class="s">"h2"</span>                        <span class="o">%</span> <span class="s">"1.4.196"</span><span class="o">,</span>
   <span class="s">"ch.qos.logback"</span>  <span class="o">%</span>  <span class="s">"logback-classic"</span>           <span class="o">%</span> <span class="s">"1.2.3"</span>
 <span class="o">)</span>
@@ -315,6 +315,14 @@ sbt "scalikejdbc-gen companies Company"
 
 <hr/>
 
+<h3 id="reactive-streams-support">Reactive Streams Support</h3>
+
+<p>ScalikeJDBC provides the Publisher interface of Reactive Streams to subscribe a stream from a database query.</p>
+
+<p>See in detail: <a href="/documentation/reactivestreams-support.html">/documentation/reactivestreams-support</a></p>
+
+<hr/>
+
 <h2 id="we-39-re-using-scalikejdbc">We&rsquo;re using ScalikeJDBC!</h2>
 
 <hr/>
@@ -452,8 +460,9 @@ http://www.apache.org/licenses/LICENSE-2.0.html
           <p><a href="/documentation/reverse-engineering.html">Reverse Engineering</a></p>
           <p><a href="/documentation/testing.html">Testing</a></p>
           <p><a href="/documentation/playframework-support.html">Play Support</a></p>
+          <p><a href="/documentation/reactivestreams-support.html">Reactive Streams Support</a></p>
           <p><a href="/documentation/dbconsole.html">dbconsole</a></p>
-          <p><a href="http://www.javadoc.io/doc/org.scalikejdbc/scalikejdbc-core_2.11/3.0.1">Core API Doc</a></p>
+          <p><a href="http://www.javadoc.io/doc/org.scalikejdbc/scalikejdbc-core_2.11/3.0.2">Core API Doc</a></p>
           <p><a href="/documentation/faq.html">FAQ</a></p>
           <p><a href="/documentation/testimonials.html">Testimonials</a></p>
           <p><a href="/contribution.html">Contribution</a></p>

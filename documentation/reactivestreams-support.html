@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <!-- Use title if it's in the page YAML frontmatter -->
+    <title>Reactive Streams Support - ScalikeJDBC</title>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+    <link href="/stylesheets/all.css" rel="stylesheet" />
+    <script src="/javascripts/all.js"></script>
+  </head>
+  <body>
+    <div class="container">
+    <div class="navbar" role="navigation" id="header">
+      <div class="container">
+        <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li><a class="navbar-brand" href="/">ScalikeJDBC</a></li>
+            <li><a href="https://groups.google.com/group/scalikejdbc-users-group">Users Group</a></li>
+            <li><a href="https://github.com/scalikejdbc/scalikejdbc">GitHub</a></li>
+            <li><a href="http://skinny-framework.org/documentation/orm.html">Skinny ORM</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+    <div class="col-xs-6 pull-right" style="height:50px;">
+      <gcse:searchbox-only></gcse:searchbox-only>
+    </div>
+      <div class="col-xs-10 left">
+        <div class="content">
+          <h2 id="reactive-streams-support">Reactive Streams Support</h2>
+
+<hr/>
+
+<p>Since ScalikejDBC 3.0, we support the <a href="http://www.reactive-streams.org/reactive-streams-1.0.0-javadoc/org/reactivestreams/Publisher.html">Publisher</a> of Reactive Streams to subscribe a stream from a database query.
+<code>scalikejdbc-streams</code> is a Reactive Streams 1.0 compliant implementation.
+It passes the existing unit tests to satisfy PublisherVerification in <a href="https://github.com/reactive-streams/reactive-streams-jvm/tree/v1.0.0/tck">Reactive Streams TCK</a>.</p>
+
+<p>This library is originally assumed to be suitable for batch applications.
+You need to keep borrowing a connection while someone is subscribing a stream provided by <code>scalikejdbc-streams</code>.
+Be aware of the max size of connection pool and carefully monitor the state of the pool.
+<hr/></p>
+
+<h3 id="setup">Setup</h3>
+
+<hr/>
+
+<p>Add the following aditional dependency to your sbt project.</p>
+<pre class="highlight scala"><code><span class="n">libraryDependencies</span> <span class="o">+=</span> <span class="s">"org.scalikejdbc"</span> <span class="o">%%</span> <span class="s">"scalikejdbc-streams"</span> <span class="o">%</span> <span class="s">"3.0.2"</span>
+</code></pre>
+
+<hr/>
+
+<h3 id="usage">Usage</h3>
+
+<hr/>
+
+<h4 id="first-example">First Example</h4>
+<pre class="highlight scala"><code><span class="k">import</span> <span class="nn">scalikejdbc._</span>
+<span class="k">import</span> <span class="nn">scalikejdbc.streams._</span>  <span class="c1">// 1. import streams module. This provides SQL#iterator &amp; DB#readOnlyStream.
+</span><span class="k">import</span> <span class="nn">java.util.concurrent._</span>
+
+<span class="k">case</span> <span class="k">class</span> <span class="nc">Company</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">countryId</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Long</span><span class="o">],</span> <span class="n">country</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Country</span><span class="o">]</span> <span class="k">=</span> <span class="nc">None</span><span class="o">)</span>
+
+<span class="k">object</span> <span class="nc">Company</span> <span class="k">extends</span> <span class="nc">SQLSyntaxSupport</span><span class="o">[</span><span class="kt">Company</span><span class="o">]</span> <span class="o">{</span>
+
+  <span class="c1">// 2. Make a StreamReadySQL object for create publisher.
+</span>  <span class="c1">//    The StreamReadySQL is immutable, so you can reuse it like SQL object.
+</span>  <span class="k">def</span> <span class="n">streamBy</span><span class="o">(</span><span class="n">where</span><span class="k">:</span> <span class="kt">SQLSyntax</span><span class="o">)</span><span class="k">:</span> <span class="kt">StreamReadySQL</span><span class="o">[</span><span class="kt">Company</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
+    <span class="n">withSQL</span> <span class="o">{</span>
+      <span class="n">select</span><span class="o">.</span><span class="n">from</span><span class="o">(</span><span class="nc">Company</span> <span class="n">as</span> <span class="n">m</span><span class="o">).</span><span class="n">where</span><span class="o">.</span><span class="n">append</span><span class="o">(</span><span class="n">sqls</span><span class="s">"${where}"</span><span class="o">)</span>
+    <span class="o">}.</span><span class="n">map</span><span class="o">(</span><span class="nc">Company</span><span class="o">(</span><span class="n">m</span><span class="o">.</span><span class="n">resultName</span><span class="o">)).</span><span class="n">iterator</span><span class="o">()</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="c1">// ------------
+// Prepare a connection pool in advance.
+// http://scalikejdbc.org/documentation/configuration.html#scalikejdbc-config
+</span>
+<span class="c1">// Prepare an ExecutionContext
+</span><span class="k">implicit</span> <span class="k">val</span> <span class="n">publisherEC</span><span class="k">:</span> <span class="kt">ExecutionContext</span> <span class="o">=</span> <span class="o">???</span>
+
+<span class="c1">// 3. Get a publisher from DB (or NamedDB) object.
+//    You need to give a StreamReadySQL object to readOnlyStream method.
+</span><span class="k">val</span> <span class="n">publisher</span><span class="k">:</span> <span class="kt">DatabasePublisher</span><span class="o">[</span><span class="kt">Company</span><span class="o">]</span> <span class="k">=</span> <span class="nc">DB</span> <span class="n">readOnlyStream</span> <span class="o">{</span>
+  <span class="nc">Company</span><span class="o">.</span><span class="n">streamBy</span><span class="o">(</span><span class="n">sqls</span><span class="s">"id &lt; 1000"</span><span class="o">)</span>
+<span class="o">}</span>
+
+<span class="c1">// 4. Give a Reactive Streams Subscriber to it.
+</span><span class="n">publisher</span><span class="o">.</span><span class="n">subscribe</span><span class="o">(</span><span class="n">subscriber</span><span class="o">)</span>
+</code></pre>
+
+<p>The DatabasePublisher capsulates an ExecutionContext to inside.
+We also recommend using ExecutionContext which is separate from the main thread pool.</p>
+
+<p>The Subscriber example is here:
+<a href="https://github.com/reactive-streams/reactive-streams-jvm/blob/master/examples/src/main/java/org/reactivestreams/example/unicast/AsyncSubscriber.java">Reactive Streams Example - AsyncSubscriber</a></p>
+
+<hr/>
+
+<h4 id="adjust-dbsession-attributes">Adjust DBSession attributes</h4>
+
+<p>At the current moment, <code>scalikejdbc-streams</code> natively supports MySQL and PostgreSQL.
+When using <code>SQL#iterator</code> factory method normally, ScalikeJDBC automatically enables required settings to use cursor feature.
+If you don&rsquo;t prefer the behavior, you can customize adjusting DBSession attributes instead.</p>
+<pre class="highlight scala"><code><span class="k">val</span> <span class="n">publisher</span><span class="k">:</span> <span class="kt">DatabasePublisher</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="nc">DB</span> <span class="n">readOnlyStream</span> <span class="o">{</span>
+  <span class="n">sql</span><span class="s">"select id from users"</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="n">r</span> <span class="k">=&gt;</span> <span class="n">r</span><span class="o">.</span><span class="n">int</span><span class="o">(</span><span class="s">"id"</span><span class="o">))</span>
+    <span class="o">.</span><span class="n">iterator</span>
+    <span class="o">.</span><span class="n">withDBSessionForceAdjuster</span><span class="o">(</span><span class="n">session</span> <span class="k">=&gt;</span> <span class="o">{</span>
+      <span class="n">session</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">setAutoCommit</span><span class="o">(</span><span class="kc">true</span><span class="o">)</span>
+    <span class="o">})</span>
+<span class="o">}</span>
+</code></pre>
+
+<hr/>
+
+<h4 id="integrate-with-akka-streams">Integrate with Akka Streams</h4>
+
+<p>It is easy to integrate <code>scalikejdbc-streams</code> with another library that supports Reactive Streams.
+For example, Akka Streams, you can give a ScalikeJDBC&rsquo;s publisher to Akka Streams Source as follows.</p>
+<pre class="highlight scala"><code><span class="k">implicit</span> <span class="k">val</span> <span class="n">system</span> <span class="k">=</span> <span class="nc">ActorSystem</span><span class="o">(</span><span class="s">"streams"</span><span class="o">)</span>
+<span class="k">import</span> <span class="nn">system.dispatcher</span>
+<span class="k">implicit</span> <span class="k">val</span> <span class="n">materializer</span> <span class="k">=</span> <span class="nc">ActorMaterializer</span><span class="o">()</span>
+
+<span class="nc">Source</span><span class="o">.</span><span class="n">fromPublisher</span><span class="o">(</span><span class="n">publisher</span><span class="o">).</span><span class="n">filter</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">id</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="o">).</span><span class="n">runForeach</span><span class="o">(</span><span class="n">println</span><span class="o">)</span>
+</code></pre>
+
+          <hr/>
+          <div class="alert alert-warning small">
+            If this webpage has a typo or something wrong, Please report or fix it. <a href="/contribution.html">How?</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xs-2 right">
+        <div class="content small">
+          <h5>Latest version</h5>
+          <hr/>
+          <p><a href="/documentation/setup.html">Setup</a></p>
+          <p><a href="/documentation/configuration.html">Configuration</a></p>
+          <p><a href="/documentation/connection-pool.html">Connection Pool</a></p>
+          <p><a href="/documentation/operations.html">Operations</a></p>
+          <p><a href="/documentation/transaction.html">Transaction</a></p>
+          <p><a href="/documentation/auto-session.html">Auto Session</a></p>
+          <p><a href="/documentation/sql-interpolation.html">SQLInterpolation</a></p>
+          <p><a href="/documentation/query-dsl.html">QueryDSL</a></p>
+          <p><a href="/documentation/one-to-x.html">One-to-x API</a></p>
+          <p><a href="/documentation/auto-macros.html">Auto Macros</a></p>
+          <p><a href="/documentation/query-inspector.html">Logging / Query Inspector</a></p>
+          <p><a href="/documentation/reverse-engineering.html">Reverse Engineering</a></p>
+          <p><a href="/documentation/testing.html">Testing</a></p>
+          <p><a href="/documentation/playframework-support.html">Play Support</a></p>
+          <p><a href="/documentation/reactivestreams-support.html">Reactive Streams Support</a></p>
+          <p><a href="/documentation/dbconsole.html">dbconsole</a></p>
+          <p><a href="http://www.javadoc.io/doc/org.scalikejdbc/scalikejdbc-core_2.11/3.0.2">Core API Doc</a></p>
+          <p><a href="/documentation/faq.html">FAQ</a></p>
+          <p><a href="/documentation/testimonials.html">Testimonials</a></p>
+          <p><a href="/contribution.html">Contribution</a></p>
+          <hr/>
+          <h5>Older Versions</h5>
+          <hr/>
+          <p><a href="/documentation/2.x/">version 2.x</a></p>
+          <p><a href="/documentation/1.x/">version 1.x</a></p>
+        </div>
+      </div>
+    </div>
+    </div>
+    <script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script>
+(function() {
+var cx = '000372347144050476309:fnw5lotlq6o';
+var gcse = document.createElement('script');
+gcse.type = 'text/javascript';
+gcse.async = true;
+gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//cse.google.com/cse.js?cx=' + cx;
+var s = document.getElementsByTagName('script')[0];
+s.parentNode.insertBefore(gcse, s);
+})();
+</script>
+  </body>
+</html>
