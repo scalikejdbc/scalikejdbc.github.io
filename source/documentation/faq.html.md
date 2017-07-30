@@ -36,6 +36,19 @@ java.util.TimeZone.setDefault(java.util.TimeZone.getTimeZone("UTC"))
 ```
 
 <hr/>
+### How to build a like condition part?
+<hr/>
+
+Use the `scalikejdbc.LikeConditionEscapeUtil` utility.
+
+```scala
+LikeConditionEscapeUtil.escape("foo%aa_bbb\\ccc")     // "foo\\%aa\\_bbb\\\\ccc"
+LikeConditionEscapeUtil.beginsWith("foo%aa_bbb\\ccc") // "foo\\%aa\\_bbb\\\\ccc%"
+LikeConditionEscapeUtil.endsWith("foo%aa_bbb\\ccc")   // "%foo\\%aa\\_bbb\\\\ccc"
+LikeConditionEscapeUtil.contains("foo%aa_bbb\\ccc")   // "%foo\\%aa\\_bbb\\\\ccc%"
+```
+
+<hr/>
 ### non-blocking support?
 <hr/>
 

@@ -16,7 +16,7 @@ How to debug:
 git clone [your forked repository].
 cd scalikejdbc.github.io
 gem install bundler
-bundle install
+bundle install --path vendor/bundle
 bundle exec middleman server
 ```
 
