@@ -79,7 +79,7 @@ See [ScalikeJDBC 2.x Documentation](/documentation/2.x/) for details.
 ```scala
 // Scala 2.10, 2.11, 2.12
 libraryDependencies ++= Seq(
-  "org.scalikejdbc" %% "scalikejdbc"               % "<%= v2_version %>", 
+  "org.scalikejdbc" %% "scalikejdbc"               % "<%= v2_version %>",
   "com.h2database"  %  "h2"                        % "<%= h2_version %>",
   "ch.qos.logback"  %  "logback-classic"           % "<%= logback_version %>"
 )
@@ -278,6 +278,13 @@ See in detail: [/documentation/reverse-engineering](documentation/reverse-engine
 You can use ScalikeJDBC with Play framework 2 seamlessly. We promise you that it becomes more productive when used with scalikejdbc-mapper-generator.
 
 See in detail: [/documentation/playframework-support](documentation/playframework-support.html)
+
+<hr/>
+### Reactive Streams Support
+
+ScalikeJDBC provides the Publisher interface of Reactive Streams to subscribe results from database queries.
+
+See in detail: [/documentation/reactivestreams-support](documentation/reactivestreams-support.html)
 
 <hr/>
 ## We're using ScalikeJDBC!
