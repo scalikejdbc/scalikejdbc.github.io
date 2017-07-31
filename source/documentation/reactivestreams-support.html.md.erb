@@ -39,9 +39,9 @@ object Company extends SQLSyntaxSupport[Company] {
 
   // 2. Make a StreamReadySQL object for create publisher.
   //    The StreamReadySQL is immutable, so you can reuse it like SQL object.
-  def streamBy(where: SQLSyntax): StreamReadySQL[Company] = {
+  def streamBy(condition: SQLSyntax): StreamReadySQL[Company] = {
     withSQL {
-      select.from(Company as m).where.append(sqls"${where}")
+      select.from(Company as m).where(condition)
     }.map(Company(m.resultName)).iterator()
   }
 }
