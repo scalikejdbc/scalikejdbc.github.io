@@ -4,3 +4,5 @@ script:
 - gem install bundler
 - bundle install
 - bundle exec middleman build
+after_success:
+- .travis/publish-site.sh
