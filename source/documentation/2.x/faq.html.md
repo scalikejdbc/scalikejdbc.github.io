@@ -61,7 +61,7 @@ http://skinny-framework.org/documentation/orm.html
 ### Is it possible to integrate with Play Framework?
 <hr/>
 
-Yes, it is. We support some Play plugins to seamlesssly integrate ScalikeJDBC with Play Framework.
+Yes, it is. We support some Play plugins to seamlessly integrate ScalikeJDBC with Play Framework.
 
 See in detail here: [/documentation/playframework-support.html](/documentation/playframework-support.html)
 
