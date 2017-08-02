@@ -2,7 +2,7 @@
 
 if [[ "${TRAVIS_EVENT_TYPE}" == "push" && "${TRAVIS_BRANCH}" == "develop" && "${TRAVIS_REPO_SLUG}" == "scalikejdbc/scalikejdbc.github.io" ]]; then
   openssl version
-  echo -e "Host github.com\n\tStrictHostKeyChecking no\nIdentityFile ~/.ssh/deploy_rsa\n" >> ~/.ssh/config
+  echo -e "Host github.com\n\tStrictHostKeyChecking no\nIdentityFile ~/.ssh/scalikejdbc-website-key\n" >> ~/.ssh/config
   openssl aes-256-cbc -K $encrypted_ceeb064f972d_key -iv $encrypted_ceeb064f972d_iv -in .travis/deploy_rsa.enc -out scalikejdbc-website-key -d
   chmod 600 scalikejdbc-website-key
   mv scalikejdbc-website-key ~/.ssh/
