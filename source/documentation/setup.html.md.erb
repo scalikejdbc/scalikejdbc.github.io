@@ -84,7 +84,7 @@ addSbtPlugin("org.scalikejdbc" %% "scalikejdbc-mapper-generator" % "<%= @latest_
 ##### build.sbt
 
 ```scala
-scalikejdbcSettings
+enablePlugins(ScalikejdbcPlugin)
 ```
 
 ##### project/scalikejdbc.properties
