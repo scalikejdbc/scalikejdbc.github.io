@@ -295,12 +295,12 @@ create table members (
 <h3 id="reverse-engineering">Reverse Engineering</h3>
 
 <p>You can easily get Scala code from existing database by using ScalikeJDBC&rsquo;s reverse engineering tool.</p>
-<pre class="highlight plaintext"><code>sbt "scalikejdbc-gen [table-name (class-name)]"
+<pre class="highlight plaintext"><code>sbt "scalikejdbcGen [table-name (class-name)]"
 </code></pre>
 
 <p>e.g.</p>
-<pre class="highlight plaintext"><code>sbt "scalikejdbc-gen company"
-sbt "scalikejdbc-gen companies Company"
+<pre class="highlight plaintext"><code>sbt "scalikejdbcGen company"
+sbt "scalikejdbcGen companies Company"
 </code></pre>
 
 <p>See in detail: <a href="/documentation/reverse-engineering.html">/documentation/reverse-engineering</a></p>
