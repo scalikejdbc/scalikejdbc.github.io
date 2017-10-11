@@ -157,7 +157,7 @@ val groups: Seq[Group] =
   }
   .one(Group(g))
   .toOptionalOne(Owner.opt(o))
-  .map { (group, owner) => group.copy(owner = owner) }
+  .map { (group, owner) => group.copy(owner = Some(owner)) }
   .list
   .apply()
 ```
