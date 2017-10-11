@@ -180,7 +180,7 @@ Be aware that resolving multiple one-to-many relationships with a single join qu
   <span class="o">}</span>
   <span class="o">.</span><span class="n">one</span><span class="o">(</span><span class="nc">Group</span><span class="o">(</span><span class="n">g</span><span class="o">))</span>
   <span class="o">.</span><span class="n">toOptionalOne</span><span class="o">(</span><span class="nc">Owner</span><span class="o">.</span><span class="n">opt</span><span class="o">(</span><span class="n">o</span><span class="o">))</span>
-  <span class="o">.</span><span class="n">map</span> <span class="o">{</span> <span class="o">(</span><span class="n">group</span><span class="o">,</span> <span class="n">owner</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">group</span><span class="o">.</span><span class="n">copy</span><span class="o">(</span><span class="n">owner</span> <span class="k">=</span> <span class="n">owner</span><span class="o">)</span> <span class="o">}</span>
+  <span class="o">.</span><span class="n">map</span> <span class="o">{</span> <span class="o">(</span><span class="n">group</span><span class="o">,</span> <span class="n">owner</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">group</span><span class="o">.</span><span class="n">copy</span><span class="o">(</span><span class="n">owner</span> <span class="k">=</span> <span class="nc">Some</span><span class="o">(</span><span class="n">owner</span><span class="o">))</span> <span class="o">}</span>
   <span class="o">.</span><span class="n">list</span>
   <span class="o">.</span><span class="n">apply</span><span class="o">()</span>
 </code></pre>
