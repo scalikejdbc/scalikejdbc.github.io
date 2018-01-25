@@ -21,7 +21,6 @@ NOTICE: scalikejdbc-test is compatible with ScalaTest 2.0 or higher.
 ```scala
 import scalikejdbc._
 import scalikejdbc.scalatest.AutoRollback
-import org.joda.time.DateTime
 import org.scalatest.fixture.FlatSpec
 
 class AutoRollbackSpec extends FlatSpec with AutoRollback {
@@ -29,8 +28,8 @@ class AutoRollbackSpec extends FlatSpec with AutoRollback {
   // override def db = NamedDB('anotherdb).toDB
 
   override def fixture(implicit session: DBSession) {
-    sql"insert into members values (1, ${"Alice"}, ${DateTime.now})".update.apply()
-    sql"insert into members values (2, ${"Bob"}, ${DateTime.now})".update.apply()
+    sql"insert into members values (1, ${"Alice"}, current_timestamp)".update.apply()
+    sql"insert into members values (2, ${"Bob"}, current_timestamp)".update.apply()
   }
 
   behavior of "Members"
@@ -57,7 +56,6 @@ class AutoRollbackSpec extends FlatSpec with AutoRollback {
 ```scala
 import scalikejdbc._
 import scalikejdbc.specs2.mutable.AutoRollback
-import org.joda.time.DateTime
 import org.specs2.mutable.Specification
 
 object MemberSpec extends Specification {
@@ -79,8 +77,8 @@ object MemberSpec extends Specification {
 trait AutoRollbackWithFixture extends AutoRollback {
   // override def db = NamedDB('db2).toDB
   override def fixture(implicit session: DBSession) {
-    sql"insert into members values (1, ${"Alice"}, ${DateTime.now})".update.apply()
-    sql"insert into members values (2, ${"Bob"}, ${DateTime.now})".update.apply()
+    sql"insert into members values (1, ${"Alice"}, current_timestamp)".update.apply()
+    sql"insert into members values (2, ${"Bob"}, current_timestamp)".update.apply()
   }
 }
 
@@ -93,7 +91,6 @@ trait AutoRollbackWithFixture extends AutoRollback {
 ```scala
 import scalikejdbc._
 import scalikejdbc.specs2.AutoRollback
-import org.joda.time.DateTime
 import org.specs2.Specification
 
 class MemberSpec extends Specification { def is =
