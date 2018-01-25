@@ -50,28 +50,28 @@ package models
 import scalikejdbc._
 import java.time.{LocalDate, ZonedDateTime}
 
-case class Members(
+case class Member(
   id: Int,
   name: String,
   description: Option[String] = None,
   birthday: Option[LocalDate] = None,
   createdAt: ZonedDateTime) {
 
-  def save()(implicit session: DBSession = Members.autoSession): Members = Members.save(this)(session)
+  def save()(implicit session: DBSession = Member.autoSession): Member = Member.save(this)(session)
 
-  def destroy()(implicit session: DBSession = Members.autoSession): Int = Members.destroy(this)(session)
+  def destroy()(implicit session: DBSession = Member.autoSession): Int = Member.destroy(this)(session)
 
 }
 
 
-object Members extends SQLSyntaxSupport[Members] {
+object Member extends SQLSyntaxSupport[Member] {
 
-  override val tableName = "MEMBERS"
+  override val tableName = "MEMBER"
 
   override val columns = Seq("ID", "NAME", "DESCRIPTION", "BIRTHDAY", "CREATED_AT")
 
-  def apply(m: SyntaxProvider[Members])(rs: WrappedResultSet): Members = apply(m.resultName)(rs)
-  def apply(m: ResultName[Members])(rs: WrappedResultSet): Members = new Members(
+  def apply(m: SyntaxProvider[Member])(rs: WrappedResultSet): Member = apply(m.resultName)(rs)
+  def apply(m: ResultName[Member])(rs: WrappedResultSet): Member = new Member(
     id = rs.get(m.id),
     name = rs.get(m.name),
     description = rs.get(m.description),
@@ -79,39 +79,39 @@ object Members extends SQLSyntaxSupport[Members] {
     createdAt = rs.get(m.createdAt)
   )
 
-  val m = Members.syntax("m")
+  val m = Member.syntax("m")
 
   override val autoSession = AutoSession
 
-  def find(id: Int)(implicit session: DBSession = autoSession): Option[Members] = {
+  def find(id: Int)(implicit session: DBSession = autoSession): Option[Member] = {
     withSQL {
-      select.from(Members as m).where.eq(m.id, id)
-    }.map(Members(m.resultName)).single.apply()
+      select.from(Member as m).where.eq(m.id, id)
+    }.map(Member(m.resultName)).single.apply()
   }
 
-  def findAll()(implicit session: DBSession = autoSession): List[Members] = {
-    withSQL(select.from(Members as m)).map(Members(m.resultName)).list.apply()
+  def findAll()(implicit session: DBSession = autoSession): List[Member] = {
+    withSQL(select.from(Member as m)).map(Member(m.resultName)).list.apply()
   }
 
   def countAll()(implicit session: DBSession = autoSession): Long = {
-    withSQL(select(sqls.count).from(Members as m)).map(rs => rs.long(1)).single.apply().get
+    withSQL(select(sqls.count).from(Member as m)).map(rs => rs.long(1)).single.apply().get
   }
 
-  def findBy(where: SQLSyntax)(implicit session: DBSession = autoSession): Option[Members] = {
+  def findBy(where: SQLSyntax)(implicit session: DBSession = autoSession): Option[Member] = {
     withSQL {
-      select.from(Members as m).where.append(where)
-    }.map(Members(m.resultName)).single.apply()
+      select.from(Member as m).where.append(where)
+    }.map(Member(m.resultName)).single.apply()
   }
 
-  def findAllBy(where: SQLSyntax)(implicit session: DBSession = autoSession): List[Members] = {
+  def findAllBy(where: SQLSyntax)(implicit session: DBSession = autoSession): List[Member] = {
     withSQL {
-      select.from(Members as m).where.append(where)
-    }.map(Members(m.resultName)).list.apply()
+      select.from(Member as m).where.append(where)
+    }.map(Member(m.resultName)).list.apply()
   }
 
   def countBy(where: SQLSyntax)(implicit session: DBSession = autoSession): Long = {
     withSQL {
-      select(sqls.count).from(Members as m).where.append(where)
+      select(sqls.count).from(Member as m).where.append(where)
     }.map(_.long(1)).single.apply().get
   }
 
@@ -119,9 +119,9 @@ object Members extends SQLSyntaxSupport[Members] {
     name: String,
     description: Option[String] = None,
     birthday: Option[LocalDate] = None,
-    createdAt: ZonedDateTime)(implicit session: DBSession = autoSession): Members = {
+    createdAt: ZonedDateTime)(implicit session: DBSession = autoSession): Member = {
     val generatedKey = withSQL {
-      insert.into(Members).namedValues(
+      insert.into(Member).namedValues(
         column.name -> name,
         column.description -> description,
         column.birthday -> birthday,
@@ -129,7 +129,7 @@ object Members extends SQLSyntaxSupport[Members] {
       )
     }.updateAndReturnGeneratedKey.apply()
 
-    Members(
+    Member(
       id = generatedKey.toInt,
       name = name,
       description = description,
@@ -137,14 +137,14 @@ object Members extends SQLSyntaxSupport[Members] {
       createdAt = createdAt)
   }
 
-  def batchInsert(entities: Seq[Members])(implicit session: DBSession = autoSession): List[Int] = {
+  def batchInsert(entities: Seq[Member])(implicit session: DBSession = autoSession): List[Int] = {
     val params: Seq[Seq[(Symbol, Any)]] = entities.map(entity =>
       Seq(
         'name -> entity.name,
         'description -> entity.description,
         'birthday -> entity.birthday,
         'createdAt -> entity.createdAt))
-    SQL("""insert into MEMBERS(
+    SQL("""insert into MEMBER(
       NAME,
       DESCRIPTION,
       BIRTHDAY,
@@ -157,9 +157,9 @@ object Members extends SQLSyntaxSupport[Members] {
     )""").batchByName(params: _*).apply[List]()
   }
 
-  def save(entity: Members)(implicit session: DBSession = autoSession): Members = {
+  def save(entity: Member)(implicit session: DBSession = autoSession): Member = {
     withSQL {
-      update(Members).set(
+      update(Member).set(
         column.id -> entity.id,
         column.name -> entity.name,
         column.description -> entity.description,
@@ -170,8 +170,8 @@ object Members extends SQLSyntaxSupport[Members] {
     entity
   }
 
-  def destroy(entity: Members)(implicit session: DBSession = autoSession): Int = {
-    withSQL { delete.from(Members).where.eq(column.id, entity.id) }.update.apply()
+  def destroy(entity: Member)(implicit session: DBSession = autoSession): Int = {
+    withSQL { delete.from(Member).where.eq(column.id, entity.id) }.update.apply()
   }
 
 }
@@ -189,58 +189,58 @@ import scalikejdbc._
 import java.time.{LocalDate, ZonedDateTime}
 
 
-class MembersSpec extends Specification {
+class MemberSpec extends Specification {
 
-  "Members" should {
+  "Member" should {
 
-    val m = Members.syntax("m")
+    val m = Member.syntax("m")
 
     "find by primary keys" in new AutoRollback {
-      val maybeFound = Members.find(123)
+      val maybeFound = Member.find(123)
       maybeFound.isDefined should beTrue
     }
     "find by where clauses" in new AutoRollback {
-      val maybeFound = Members.findBy(sqls.eq(m.id, 123))
+      val maybeFound = Member.findBy(sqls.eq(m.id, 123))
       maybeFound.isDefined should beTrue
     }
     "find all records" in new AutoRollback {
-      val allResults = Members.findAll()
+      val allResults = Member.findAll()
       allResults.size should be_>(0)
     }
     "count all records" in new AutoRollback {
-      val count = Members.countAll()
+      val count = Member.countAll()
       count should be_>(0L)
     }
     "find all by where clauses" in new AutoRollback {
-      val results = Members.findAllBy(sqls.eq(m.id, 123))
+      val results = Member.findAllBy(sqls.eq(m.id, 123))
       results.size should be_>(0)
     }
     "count by where clauses" in new AutoRollback {
-      val count = Members.countBy(sqls.eq(m.id, 123))
+      val count = Member.countBy(sqls.eq(m.id, 123))
       count should be_>(0L)
     }
     "create new record" in new AutoRollback {
-      val created = Members.create(name = "MyString", createdAt = null)
+      val created = Member.create(name = "MyString", createdAt = null)
       created should not beNull
     }
     "save a record" in new AutoRollback {
-      val entity = Members.findAll().head
+      val entity = Member.findAll().head
       // TODO modify something
       val modified = entity
-      val updated = Members.save(modified)
+      val updated = Member.save(modified)
       updated should not equalTo(entity)
     }
     "destroy a record" in new AutoRollback {
-      val entity = Members.findAll().head
-      val deleted = Members.destroy(entity) == 1
+      val entity = Member.findAll().head
+      val deleted = Member.destroy(entity) == 1
       deleted should beTrue
-      val shouldBeNone = Members.find(123)
+      val shouldBeNone = Member.find(123)
       shouldBeNone.isDefined should beFalse
     }
     "perform batch insert" in new AutoRollback {
-      val entities = Members.findAll()
-      entities.foreach(e => Members.destroy(e))
-      val batchInserted = Members.batchInsert(entities)
+      val entities = Member.findAll()
+      entities.foreach(e => Member.destroy(e))
+      val batchInserted = Member.batchInsert(entities)
       batchInserted.size should be_>(0)
     }
   }
