@@ -101,7 +101,7 @@
 
 <p>First of all, mix the <code>SQLSyntaxSupport[A]</code> trait to <code>A</code> companion object, and define <code>tableName</code> and <code>#apply</code> method to map values from <code>ResultSet</code> object in it. The unfamilier <code>ResultName[A]</code> are described later.</p>
 
-<p>NOTICE: When you use case classes for entities as follows (Group, GroupMember) everything goes fine. But if you use normal classes for entities, be aware of entity equality. See the following page in detail: <a href="/documentation/2.x/one-to-x.html">documentation/one-to-x.html</a></p>
+<p>NOTICE: When you use case classes for entities as follows (Group, GroupMember) everything goes fine. But if you use normal classes for entities, be aware of entity equality. See the following page in detail: <a href="/documentation/one-to-x.html">documentation/one-to-x.html</a></p>
 <pre class="highlight scala"><code><span class="k">import</span> <span class="nn">scalikejdbc._</span>
 
 <span class="k">case</span> <span class="k">class</span> <span class="nc">Group</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span>
@@ -279,7 +279,7 @@
 <hr/>
 
 <p>If you have multiple tables for same entity. For example, <code>orders_2011</code>, <code>orders_2012</code> and <code>orders_2013</code>.</p>
-<pre class="highlight scala"><code><span class="k">case</span> <span class="k">class</span> <span class="nc">Order</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">productId</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">customerId</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Long</span><span class="o">],</span> <span class="n">createdAt</span><span class="k">:</span> <span class="kt">DateTime</span><span class="o">)</span>
+<pre class="highlight scala"><code><span class="k">case</span> <span class="k">class</span> <span class="nc">Order</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">productId</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">customerId</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Long</span><span class="o">],</span> <span class="n">createdAt</span><span class="k">:</span> <span class="kt">ZonedDateTime</span><span class="o">)</span>
 
 <span class="k">class</span> <span class="nc">OrderTable</span><span class="o">(</span><span class="k">val</span> <span class="n">year</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span> <span class="k">extends</span> <span class="nc">SQLSyntaxSupport</span><span class="o">[</span><span class="kt">Order</span><span class="o">]</span> <span class="o">{</span>
   <span class="c1">// Be careful if you build tableName with input values
@@ -290,26 +290,26 @@
     <span class="n">id</span>         <span class="k">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">long</span><span class="o">(</span><span class="n">o</span><span class="o">.</span><span class="n">id</span><span class="o">),</span>
     <span class="n">productId</span>  <span class="k">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">long</span><span class="o">(</span><span class="n">o</span><span class="o">.</span><span class="n">productId</span><span class="o">),</span>
     <span class="n">customerId</span> <span class="k">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">longOpt</span><span class="o">(</span><span class="n">o</span><span class="o">.</span><span class="n">customerId</span><span class="o">),</span>
-    <span class="n">createdAt</span>  <span class="k">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">jodaDateTime</span><span class="o">(</span><span class="n">o</span><span class="o">.</span><span class="n">createdAt</span><span class="o">)</span>
+    <span class="n">createdAt</span>  <span class="k">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">zonedDateTime</span><span class="o">(</span><span class="n">o</span><span class="o">.</span><span class="n">createdAt</span><span class="o">)</span>
   <span class="o">)</span>
 <span class="o">}</span>
 <span class="k">val</span> <span class="o">(</span><span class="n">o2011</span><span class="o">,</span> <span class="n">o2012</span><span class="o">,</span> <span class="n">o2013</span><span class="o">)</span> <span class="k">=</span> <span class="o">(</span><span class="k">new</span> <span class="nc">OrderTable</span><span class="o">(</span><span class="mi">2011</span><span class="o">),</span> <span class="k">new</span> <span class="nc">OrderTable</span><span class="o">(</span><span class="mi">2012</span><span class="o">),</span> <span class="k">new</span> <span class="nc">OrderTable</span><span class="o">(</span><span class="mi">2013</span><span class="o">))</span>
 
 <span class="k">val</span> <span class="n">ordersIn2011</span> <span class="k">=</span> <span class="nc">DB</span> <span class="n">readOnly</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">s</span> <span class="k">=&gt;</span>
   <span class="k">val</span> <span class="n">o</span> <span class="k">=</span> <span class="n">o2011</span><span class="o">.</span><span class="n">syntax</span><span class="o">(</span><span class="s">"o"</span><span class="o">)</span>
-  <span class="n">sql</span><span class="s">"select ${o.result.*} from ${o2011 as o) where ${o.customerId} is not null"</span>
-    <span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="n">o2011</span><span class="o">(</span><span class="n">o</span><span class="o">)).</span><span class="n">list</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+  <span class="n">sql</span><span class="s">"select ${o.result.*} from ${o2011 as o} where ${o.customerId} is not null"</span>
+    <span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="n">o2011</span><span class="o">(</span><span class="n">o</span><span class="o">.</span><span class="n">resultName</span><span class="o">)).</span><span class="n">list</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
 <span class="o">}</span>
 <span class="nc">DB</span> <span class="n">readOnly</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">s</span> <span class="k">=&gt;</span>
   <span class="k">val</span> <span class="n">o2</span> <span class="k">=</span> <span class="n">o2012</span><span class="o">.</span><span class="n">syntax</span><span class="o">(</span><span class="s">"o"</span><span class="o">)</span>
   <span class="k">val</span> <span class="n">ordersIn2012</span> <span class="k">=</span>
-    <span class="n">sql</span><span class="s">"select ${o.result.*} from ${o2012 as o2) where ${o.customerId} is not null"</span>
-      <span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="n">o2012</span><span class="o">(</span><span class="n">o2</span><span class="o">)).</span><span class="n">list</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+    <span class="n">sql</span><span class="s">"select ${o2.result.*} from ${o2012 as o2} where ${o2.customerId} is not null"</span>
+      <span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="n">o2012</span><span class="o">(</span><span class="n">o2</span><span class="o">.</span><span class="n">resultName</span><span class="o">)).</span><span class="n">list</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
 
   <span class="k">val</span> <span class="n">o3</span> <span class="k">=</span> <span class="n">o2013</span><span class="o">.</span><span class="n">syntax</span><span class="o">(</span><span class="s">"o"</span><span class="o">)</span>
   <span class="k">val</span> <span class="n">ordersIn2013</span> <span class="k">=</span>
-    <span class="n">sql</span><span class="s">"select ${o.result.*} from ${o2013 as o3) where ${o.customerId} is not null"</span>
-      <span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="n">o2013</span><span class="o">(</span><span class="n">o3</span><span class="o">)).</span><span class="n">list</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+    <span class="n">sql</span><span class="s">"select ${o3.result.*} from ${o2013 as o3} where ${o3.customerId} is not null"</span>
+      <span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="n">o2013</span><span class="o">(</span><span class="n">o3</span><span class="o">.</span><span class="n">resultName</span><span class="o">)).</span><span class="n">list</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
 <span class="o">}</span>
 </code></pre>
 

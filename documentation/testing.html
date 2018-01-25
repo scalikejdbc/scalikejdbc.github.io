@@ -50,7 +50,6 @@
 <p>NOTICE: scalikejdbc-test is compatible with ScalaTest 2.0 or higher.</p>
 <pre class="highlight scala"><code><span class="k">import</span> <span class="nn">scalikejdbc._</span>
 <span class="k">import</span> <span class="nn">scalikejdbc.scalatest.AutoRollback</span>
-<span class="k">import</span> <span class="nn">org.joda.time.DateTime</span>
 <span class="k">import</span> <span class="nn">org.scalatest.fixture.FlatSpec</span>
 
 <span class="k">class</span> <span class="nc">AutoRollbackSpec</span> <span class="k">extends</span> <span class="nc">FlatSpec</span> <span class="k">with</span> <span class="nc">AutoRollback</span> <span class="o">{</span>
@@ -58,8 +57,8 @@
   <span class="c1">// override def db = NamedDB('anotherdb).toDB
 </span>
   <span class="k">override</span> <span class="k">def</span> <span class="n">fixture</span><span class="o">(</span><span class="k">implicit</span> <span class="n">session</span><span class="k">:</span> <span class="kt">DBSession</span><span class="o">)</span> <span class="o">{</span>
-    <span class="n">sql</span><span class="s">"insert into members values (1, ${"</span><span class="nc">Alice</span><span class="s">"}, ${DateTime.now})"</span><span class="o">.</span><span class="n">update</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
-    <span class="n">sql</span><span class="s">"insert into members values (2, ${"</span><span class="nc">Bob</span><span class="s">"}, ${DateTime.now})"</span><span class="o">.</span><span class="n">update</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+    <span class="n">sql</span><span class="s">"insert into members values (1, ${"</span><span class="nc">Alice</span><span class="s">"}, current_timestamp)"</span><span class="o">.</span><span class="n">update</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+    <span class="n">sql</span><span class="s">"insert into members values (2, ${"</span><span class="nc">Bob</span><span class="s">"}, current_timestamp)"</span><span class="o">.</span><span class="n">update</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
   <span class="o">}</span>
 
   <span class="n">behavior</span> <span class="n">of</span> <span class="s">"Members"</span>
@@ -88,7 +87,6 @@
 <hr/>
 <pre class="highlight scala"><code><span class="k">import</span> <span class="nn">scalikejdbc._</span>
 <span class="k">import</span> <span class="nn">scalikejdbc.specs2.mutable.AutoRollback</span>
-<span class="k">import</span> <span class="nn">org.joda.time.DateTime</span>
 <span class="k">import</span> <span class="nn">org.specs2.mutable.Specification</span>
 
 <span class="k">object</span> <span class="nc">MemberSpec</span> <span class="k">extends</span> <span class="nc">Specification</span> <span class="o">{</span>
@@ -110,8 +108,8 @@
 <span class="k">trait</span> <span class="nc">AutoRollbackWithFixture</span> <span class="k">extends</span> <span class="nc">AutoRollback</span> <span class="o">{</span>
   <span class="c1">// override def db = NamedDB('db2).toDB
 </span>  <span class="k">override</span> <span class="k">def</span> <span class="n">fixture</span><span class="o">(</span><span class="k">implicit</span> <span class="n">session</span><span class="k">:</span> <span class="kt">DBSession</span><span class="o">)</span> <span class="o">{</span>
-    <span class="n">sql</span><span class="s">"insert into members values (1, ${"</span><span class="nc">Alice</span><span class="s">"}, ${DateTime.now})"</span><span class="o">.</span><span class="n">update</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
-    <span class="n">sql</span><span class="s">"insert into members values (2, ${"</span><span class="nc">Bob</span><span class="s">"}, ${DateTime.now})"</span><span class="o">.</span><span class="n">update</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+    <span class="n">sql</span><span class="s">"insert into members values (1, ${"</span><span class="nc">Alice</span><span class="s">"}, current_timestamp)"</span><span class="o">.</span><span class="n">update</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+    <span class="n">sql</span><span class="s">"insert into members values (2, ${"</span><span class="nc">Bob</span><span class="s">"}, current_timestamp)"</span><span class="o">.</span><span class="n">update</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
   <span class="o">}</span>
 <span class="o">}</span>
 
@@ -124,7 +122,6 @@
 <hr/>
 <pre class="highlight scala"><code><span class="k">import</span> <span class="nn">scalikejdbc._</span>
 <span class="k">import</span> <span class="nn">scalikejdbc.specs2.AutoRollback</span>
-<span class="k">import</span> <span class="nn">org.joda.time.DateTime</span>
 <span class="k">import</span> <span class="nn">org.specs2.Specification</span>
 
 <span class="k">class</span> <span class="nc">MemberSpec</span> <span class="k">extends</span> <span class="nc">Specification</span> <span class="o">{</span> <span class="k">def</span> <span class="n">is</span> <span class="k">=</span>
