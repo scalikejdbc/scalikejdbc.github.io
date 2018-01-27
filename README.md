@@ -1,5 +1,7 @@
 ## ScalikeJDBC website
 
+[![Build Status](https://travis-ci.org/scalikejdbc/scalikejdbc.github.io.svg?branch=develop)](https://travis-ci.org/scalikejdbc/scalikejdbc.github.io)
+
 http://scalikejdbc.org/
 
 ### How to contribute scalikejdbc.org?
