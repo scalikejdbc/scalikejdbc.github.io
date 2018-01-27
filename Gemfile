@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 ruby '2.3.4'
 
-gem 'middleman'
+gem 'middleman', '3.4.1'
 gem 'middleman-syntax'
 gem 'middleman-livereload'
 
