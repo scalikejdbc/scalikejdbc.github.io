@@ -48,7 +48,7 @@
 <p>Here is some configuration examples. Basically it&rsquo;s very simple:</p>
 
 <h4 id="conf-application-conf">conf/application.conf</h4>
-<pre class="highlight shell"><code><span class="c"># Database configuration</span>
+<div class="highlight"><pre class="highlight shell"><code><span class="c"># Database configuration</span>
 <span class="c"># ~~~~~</span>
 <span class="c"># You can declare as many datasources as you want.</span>
 <span class="c"># By convention, the default datasource is named `default`</span>
@@ -82,19 +82,17 @@ scalikejdbc.global.loggingSQLAndTime.warningLogLevel<span class="o">=</span>warn
 
 <span class="c"># scalikejdbc logging</span>
 logger.scalikejdbc<span class="o">=</span>DEBUG
-</code></pre>
-
+</code></pre></div>
 <h4 id="fixtures">Fixtures</h4>
 
 <p>Fixtures are optional. If you don&rsquo;t nee, no need to use them.</p>
 
 <h5 id="conf-application-conf">conf/application.conf</h5>
-<pre class="highlight shell"><code>db.default.fixtures.test<span class="o">=[</span> <span class="s2">"project.sql"</span>, <span class="s2">"project_member.sql"</span> <span class="o">]</span>
-</code></pre>
-
+<div class="highlight"><pre class="highlight shell"><code>db.default.fixtures.test<span class="o">=[</span> <span class="s2">"project.sql"</span>, <span class="s2">"project_member.sql"</span> <span class="o">]</span>
+</code></pre></div>
 <h5 id="conf-db-fixtures-default-project-sql">conf/db/fixtures/default/project.sql</h5>
-<pre class="highlight sql"><code><span class="o">#</span> <span class="c1">--- !Ups
-</span>
+<div class="highlight"><pre class="highlight sql"><code><span class="o">#</span> <span class="c1">--- !Ups</span>
+
 <span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">project</span> <span class="p">(</span><span class="n">id</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">folder</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">'Play 2.0'</span><span class="p">,</span> <span class="s1">'Play framework'</span><span class="p">);</span>
 <span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">project</span> <span class="p">(</span><span class="n">id</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">folder</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s1">'Play 1.2.4'</span><span class="p">,</span> <span class="s1">'Play framework'</span><span class="p">);</span>
 <span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">project</span> <span class="p">(</span><span class="n">id</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">folder</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s1">'Website'</span><span class="p">,</span> <span class="s1">'Play framework'</span><span class="p">);</span>
@@ -108,14 +106,13 @@ logger.scalikejdbc<span class="o">=</span>DEBUG
 <span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">project</span> <span class="p">(</span><span class="n">id</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">folder</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="s1">'Private'</span><span class="p">,</span> <span class="s1">'Personal'</span><span class="p">);</span>
 <span class="k">ALTER</span> <span class="n">SEQUENCE</span> <span class="n">project_seq</span> <span class="k">RESTART</span> <span class="k">WITH</span> <span class="mi">12</span><span class="p">;</span>
 
-<span class="o">#</span> <span class="c1">--- !Downs
-</span><span class="k">ALTER</span> <span class="n">SEQUENCE</span> <span class="n">project_seq</span> <span class="k">RESTART</span> <span class="k">WITH</span> <span class="mi">1</span><span class="p">;</span>
+<span class="o">#</span> <span class="c1">--- !Downs</span>
+<span class="k">ALTER</span> <span class="n">SEQUENCE</span> <span class="n">project_seq</span> <span class="k">RESTART</span> <span class="k">WITH</span> <span class="mi">1</span><span class="p">;</span>
 <span class="k">DELETE</span> <span class="k">FROM</span> <span class="n">project</span><span class="p">;</span>
-</code></pre>
-
+</code></pre></div>
 <h5 id="conf-db-fixtures-defaut-project_member-sql">conf/db/fixtures/defaut/project_member.sql</h5>
-<pre class="highlight sql"><code><span class="o">#</span> <span class="c1">--- !Ups
-</span>
+<div class="highlight"><pre class="highlight sql"><code><span class="o">#</span> <span class="c1">--- !Ups</span>
+
 <span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">project_member</span> <span class="p">(</span><span class="n">project_id</span><span class="p">,</span> <span class="n">user_email</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">'guillaume@sample.com'</span><span class="p">);</span>
 <span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">project_member</span> <span class="p">(</span><span class="n">project_id</span><span class="p">,</span> <span class="n">user_email</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">'maxime@sample.com'</span><span class="p">);</span>
 <span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">project_member</span> <span class="p">(</span><span class="n">project_id</span><span class="p">,</span> <span class="n">user_email</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">'sadek@sample.com'</span><span class="p">);</span>
@@ -137,11 +134,10 @@ logger.scalikejdbc<span class="o">=</span>DEBUG
 <span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">project_member</span> <span class="p">(</span><span class="n">project_id</span><span class="p">,</span> <span class="n">user_email</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="s1">'erwan@sample.com'</span><span class="p">);</span>
 <span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">project_member</span> <span class="p">(</span><span class="n">project_id</span><span class="p">,</span> <span class="n">user_email</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="s1">'sadek@sample.com'</span><span class="p">);</span>
 
-<span class="o">#</span> <span class="c1">--- !Downs
-</span>
-<span class="k">DELETE</span> <span class="k">FROM</span> <span class="n">project_member</span><span class="p">;</span>
-</code></pre>
+<span class="o">#</span> <span class="c1">--- !Downs</span>
 
+<span class="k">DELETE</span> <span class="k">FROM</span> <span class="n">project_member</span><span class="p">;</span>
+</code></pre></div>
 <hr/>
 
 <h3 id="more-examples">More Examples</h3>

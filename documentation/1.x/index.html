@@ -100,14 +100,13 @@ NOTICE: Scala 2.9 incompatible changes will be backported only to ScalikeJDBC 1.
 </div>
 
 <p>All you need to do is add ScalikeJDBC, JDBC driver and an slf4j implementation.</p>
-<pre class="highlight plaintext"><code>libraryDependencies ++= Seq(
+<div class="highlight"><pre class="highlight plaintext"><code>libraryDependencies ++= Seq(
   "org.scalikejdbc" %% "scalikejdbc"               % "1.7.7",
   "org.scalikejdbc" %% "scalikejdbc-interpolation" % "1.7.7",
   "com.h2database"  %  "h2"                        % "1.4.177",
   "ch.qos.logback"  %  "logback-classic"           % "1.1.2"
 )
-</code></pre>
-
+</code></pre></div>
 <hr/>
 
 <h2 id="try-typesafe-activator-template">Try Typesafe Activator Template</h2>
@@ -131,7 +130,7 @@ NOTICE: Scala 2.9 incompatible changes will be backported only to ScalikeJDBC 1.
 <hr/>
 
 <p>Put above dependencies into your <code>build.sbt</code> and run <code>sbt console</code> now.</p>
-<pre class="highlight java"><code><span class="kn">import</span> <span class="nn">scalikejdbc._</span><span class="o">,</span> <span class="n">SQLInterpolation</span><span class="o">.</span><span class="na">_</span>
+<div class="highlight"><pre class="highlight java"><code><span class="kn">import</span> <span class="nn">scalikejdbc._</span><span class="o">,</span> <span class="n">SQLInterpolation</span><span class="o">.</span><span class="na">_</span>
 
 <span class="c1">// initialize JDBC driver &amp; connection pool</span>
 <span class="n">Class</span><span class="o">.</span><span class="na">forName</span><span class="o">(</span><span class="s">"org.h2.Driver"</span><span class="o">)</span>
@@ -159,17 +158,16 @@ create table members (
 
 <span class="c1">// defines entity object and extractor</span>
 <span class="kn">import</span> <span class="nn">org.joda.time._</span>
-<span class="k">case</span> <span class="kd">class</span> <span class="nf">Member</span><span class="p">(</span><span class="nl">id:</span> <span class="n">Long</span><span class="o">,</span> <span class="nl">name:</span> <span class="n">Option</span><span class="o">[</span><span class="n">String</span><span class="o">],</span> <span class="nl">createdAt:</span> <span class="n">DateTime</span><span class="o">)</span>
+<span class="k">case</span> <span class="kd">class</span> <span class="nf">Member</span><span class="o">(</span><span class="nl">id:</span> <span class="n">Long</span><span class="o">,</span> <span class="nl">name:</span> <span class="n">Option</span><span class="o">[</span><span class="n">String</span><span class="o">],</span> <span class="nl">createdAt:</span> <span class="n">DateTime</span><span class="o">)</span>
 <span class="n">object</span> <span class="n">Member</span> <span class="kd">extends</span> <span class="n">SQLSyntaxSupport</span><span class="o">[</span><span class="n">Member</span><span class="o">]</span> <span class="o">{</span>
   <span class="n">override</span> <span class="n">val</span> <span class="n">tableName</span> <span class="o">=</span> <span class="s">"members"</span>
-  <span class="n">def</span> <span class="n">apply</span><span class="o">(</span><span class="nl">rs:</span> <span class="n">WrappedResultSet</span><span class="o">)</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Member</span><span class="o">(</span>
+  <span class="n">def</span> <span class="nf">apply</span><span class="o">(</span><span class="nl">rs:</span> <span class="n">WrappedResultSet</span><span class="o">)</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Member</span><span class="o">(</span>
     <span class="n">rs</span><span class="o">.</span><span class="na">long</span><span class="o">(</span><span class="s">"id"</span><span class="o">),</span> <span class="n">rs</span><span class="o">.</span><span class="na">stringOpt</span><span class="o">(</span><span class="s">"name"</span><span class="o">),</span> <span class="n">rs</span><span class="o">.</span><span class="na">dateTime</span><span class="o">(</span><span class="s">"created_at"</span><span class="o">))</span>
 <span class="o">}</span>
 
 <span class="c1">// find all members</span>
 <span class="n">val</span> <span class="nl">members:</span> <span class="n">List</span><span class="o">[</span><span class="n">Member</span><span class="o">]</span> <span class="o">=</span> <span class="n">sql</span><span class="s">"select * from members"</span><span class="o">.</span><span class="na">map</span><span class="o">(</span><span class="n">rs</span> <span class="o">=&gt;</span> <span class="n">Member</span><span class="o">(</span><span class="n">rs</span><span class="o">)).</span><span class="na">list</span><span class="o">.</span><span class="na">apply</span><span class="o">()</span>
-</code></pre>
-
+</code></pre></div>
 <p>How did it go? If you&rsquo;d like to know more details or practical examples, see documentation.</p>
 
 <hr/>
@@ -190,10 +188,10 @@ create table members (
 
 <hr/>
 
-<h3 id="using-only-scala-standard-api-amp-sql">Using only Scala standard API &amp; SQL</h3>
+<h3 id="using-only-scala-standard-api-sql">Using only Scala standard API &amp; SQL</h3>
 
 <p>Library users don&rsquo;t need to learn so many library-specific rules or conventions. If you&rsquo;re already familiar with Scala&rsquo;s standard library APIs and basic SQLs, that much should be enough.</p>
-<pre class="highlight java"><code><span class="n">val</span> <span class="n">name</span> <span class="o">=</span> <span class="s">"Alice"</span>
+<div class="highlight"><pre class="highlight java"><code><span class="n">val</span> <span class="n">name</span> <span class="o">=</span> <span class="s">"Alice"</span>
 <span class="c1">// implicit session represents java.sql.Connection</span>
 <span class="n">val</span> <span class="nl">memberId:</span> <span class="n">Option</span><span class="o">[</span><span class="n">Long</span><span class="o">]</span> <span class="o">=</span> <span class="n">DB</span> <span class="n">readOnly</span> <span class="o">{</span> <span class="n">implicit</span> <span class="n">session</span> <span class="o">=&gt;</span>
   <span class="n">sql</span><span class="s">"select id from members where name = ${name}"</span> <span class="c1">// don't worry, prevents SQL injection</span>
@@ -201,8 +199,7 @@ create table members (
     <span class="o">.</span><span class="na">single</span>                   <span class="c1">// single, list, traversable</span>
     <span class="o">.</span><span class="na">apply</span><span class="o">()</span>                  <span class="c1">// Side effect!!! runs the SQL using Connection</span>
 <span class="o">}</span>
-</code></pre>
-
+</code></pre></div>
 <p>See in detail: <a href="documentation/operations.html">/documentation/operations</a></p>
 
 <hr/>
@@ -212,7 +209,7 @@ create table members (
 <p>Since version 1.6, QueryDSL is available. It&rsquo;s a SQL-like and type-safe DSL to build DRY SQLs.</p>
 
 <p>Here is an example:</p>
-<pre class="highlight java"><code><span class="n">val</span> <span class="o">(</span><span class="n">p</span><span class="o">,</span> <span class="n">c</span><span class="o">)</span> <span class="o">=</span> <span class="o">(</span><span class="n">Programmer</span><span class="o">.</span><span class="na">syntax</span><span class="o">(</span><span class="s">"p"</span><span class="o">),</span> <span class="n">Company</span><span class="o">.</span><span class="na">syntax</span><span class="o">(</span><span class="s">"c"</span><span class="o">))</span>
+<div class="highlight"><pre class="highlight java"><code><span class="n">val</span> <span class="o">(</span><span class="n">p</span><span class="o">,</span> <span class="n">c</span><span class="o">)</span> <span class="o">=</span> <span class="o">(</span><span class="n">Programmer</span><span class="o">.</span><span class="na">syntax</span><span class="o">(</span><span class="s">"p"</span><span class="o">),</span> <span class="n">Company</span><span class="o">.</span><span class="na">syntax</span><span class="o">(</span><span class="s">"c"</span><span class="o">))</span>
 
 <span class="n">val</span> <span class="nl">programmers:</span> <span class="n">List</span><span class="o">[</span><span class="n">Long</span><span class="o">]</span> <span class="o">=</span> <span class="n">DB</span> <span class="n">readOnly</span> <span class="o">{</span> <span class="n">implicit</span> <span class="n">session</span> <span class="o">=&gt;</span>
   <span class="n">withSQL</span> <span class="o">{</span>
@@ -225,8 +222,7 @@ create table members (
       <span class="o">.</span><span class="na">offset</span><span class="o">(</span><span class="mi">0</span><span class="o">)</span>
   <span class="o">}.</span><span class="na">map</span><span class="o">(</span><span class="n">Programmer</span><span class="o">(</span><span class="n">p</span><span class="o">,</span> <span class="n">c</span><span class="o">)).</span><span class="na">list</span><span class="o">.</span><span class="na">apply</span><span class="o">()</span>
 <span class="o">}</span>
-</code></pre>
-
+</code></pre></div>
 <p>See in detail: <a href="documentation/query-dsl.html">/documentation/query-dsl</a></p>
 
 <p>Test code: <a href="https://github.com/scalikejdbc/scalikejdbc/blob/1.7.x/scalikejdbc-interpolation/src/test/scala/scalikejdbc/QueryInterfaceSpec.scala">src/test/scala/scalikejdbc/QueryInterfaceSpec.scala</a></p>
@@ -245,13 +241,13 @@ create table members (
 </ul>
 
 <p>Here is an example code which re-use methods in both of simple invocation and transactional operations.</p>
-<pre class="highlight java"><code><span class="n">object</span> <span class="n">Product</span> <span class="o">{</span>
-  <span class="n">def</span> <span class="n">create</span><span class="o">(</span><span class="nl">name:</span> <span class="n">String</span><span class="o">,</span> <span class="nl">price:</span> <span class="n">Long</span><span class="o">)(</span><span class="n">implicit</span> <span class="nl">s:</span> <span class="n">DBSession</span> <span class="o">=</span> <span class="n">AutoSession</span><span class="o">):</span> <span class="n">Long</span> <span class="o">=</span> <span class="o">{</span>
+<div class="highlight"><pre class="highlight java"><code><span class="n">object</span> <span class="n">Product</span> <span class="o">{</span>
+  <span class="n">def</span> <span class="nf">create</span><span class="o">(</span><span class="nl">name:</span> <span class="n">String</span><span class="o">,</span> <span class="nl">price:</span> <span class="n">Long</span><span class="o">)(</span><span class="n">implicit</span> <span class="nl">s:</span> <span class="n">DBSession</span> <span class="o">=</span> <span class="n">AutoSession</span><span class="o">):</span> <span class="n">Long</span> <span class="o">=</span> <span class="o">{</span>
     <span class="n">sql</span><span class="s">"insert into products values (${name}, ${price})"</span>
       <span class="o">.</span><span class="na">updateAndReturnGeneratedKey</span><span class="o">.</span><span class="na">apply</span><span class="o">()</span> <span class="c1">// returns auto-incremeneted id</span>
   <span class="o">}</span>
 
-  <span class="n">def</span> <span class="n">findById</span><span class="o">(</span><span class="nl">id:</span> <span class="n">Long</span><span class="o">)(</span><span class="n">implicit</span> <span class="nl">s:</span> <span class="n">DBSession</span> <span class="o">=</span> <span class="n">AutoSession</span><span class="o">):</span> <span class="n">Option</span><span class="o">[</span><span class="n">Product</span><span class="o">]</span> <span class="o">=</span> <span class="o">{</span>
+  <span class="n">def</span> <span class="nf">findById</span><span class="o">(</span><span class="nl">id:</span> <span class="n">Long</span><span class="o">)(</span><span class="n">implicit</span> <span class="nl">s:</span> <span class="n">DBSession</span> <span class="o">=</span> <span class="n">AutoSession</span><span class="o">):</span> <span class="n">Option</span><span class="o">[</span><span class="n">Product</span><span class="o">]</span> <span class="o">=</span> <span class="o">{</span>
     <span class="n">sql</span><span class="s">"select id, name, price, created_at from products where id = ${id}"</span>
       <span class="o">.</span><span class="na">map</span> <span class="o">{</span> <span class="n">rs</span> <span class="o">=&gt;</span> <span class="n">Product</span><span class="o">(</span><span class="n">rs</span><span class="o">)</span> <span class="o">}.</span><span class="na">single</span><span class="o">.</span><span class="na">apply</span><span class="o">()</span>
   <span class="o">}</span>
@@ -263,8 +259,7 @@ create table members (
   <span class="n">val</span> <span class="n">id</span> <span class="o">=</span> <span class="n">Product</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="s">"ScalikeJDBC Cookbook"</span><span class="o">,</span> <span class="mi">200</span><span class="o">)</span> <span class="c1">// within transaction</span>
   <span class="n">val</span> <span class="n">product</span> <span class="o">=</span> <span class="n">Product</span><span class="o">.</span><span class="na">findById</span><span class="o">(</span><span class="n">id</span><span class="o">)</span> <span class="c1">// within transaction</span>
 <span class="o">}</span>
-</code></pre>
-
+</code></pre></div>
 <p>See in detail: <a href="documentation/transaction.html">/documentation/transaction</a></p>
 
 <hr/>
@@ -272,7 +267,7 @@ create table members (
 <h3 id="useful-query-inspections">Useful Query Inspections</h3>
 
 <p>By default, ScalikeJDBC shows you what SQL is executed and where it is. We believe that is quite useful for debugging your apps. Logging only slow queries in production also helps you.</p>
-<pre class="highlight plaintext"><code>[debug] s.StatementExecutor$$anon$1 - SQL execution completed
+<div class="highlight"><pre class="highlight plaintext"><code>[debug] s.StatementExecutor$$anon$1 - SQL execution completed
 
   [Executed SQL]
    select id, name from users where email = 'alice@example.com'; (3 ms)
@@ -283,8 +278,7 @@ create table members (
     controllers.Projects$$anonfun$index$1$$anonfun$apply$1$$anonfun$apply$2.apply(Projects.scala:20)
     controllers.Projects$$anonfun$index$1$$anonfun$apply$1$$anonfun$apply$2.apply(Projects.scala:19)
     controllers.Secured$$anonfun$IsAuthenticated$3$$anonfun$apply$3.apply(Application.scala:88)
-</code></pre>
-
+</code></pre></div>
 <p>See in detail: <a href="documentation/query-inspector.html">/documentation/query-inspector</a></p>
 
 <hr/>
@@ -305,14 +299,12 @@ create table members (
 <h3 id="reverse-engineering">Reverse Engineering</h3>
 
 <p>You can easily get Scala code from existing database by using ScalikeJDBC&rsquo;s reverse engineering tool.</p>
-<pre class="highlight plaintext"><code>sbt "scalikejdbc-gen [table-name (class-name)]"
-</code></pre>
-
+<div class="highlight"><pre class="highlight plaintext"><code>sbt "scalikejdbc-gen [table-name (class-name)]"
+</code></pre></div>
 <p>e.g.</p>
-<pre class="highlight plaintext"><code>sbt "scalikejdbc-gen company"
+<div class="highlight"><pre class="highlight plaintext"><code>sbt "scalikejdbc-gen company"
 sbt "scalikejdbc-gen companies Company"
-</code></pre>
-
+</code></pre></div>
 <p>See in detail: <a href="documentation/reverse-engineering.html">/documentation/reverse-engineering</a></p>
 
 <hr/>
@@ -330,11 +322,10 @@ sbt "scalikejdbc-gen companies Company"
 <h2 id="license">License</h2>
 
 <p>Published binary files have the following copyright:</p>
-<pre class="highlight plaintext"><code>Copyright 2013 ScalikeJDBC committers
+<div class="highlight"><pre class="highlight plaintext"><code>Copyright 2013 ScalikeJDBC committers
 Apache License, Version 2.0
 http://www.apache.org/licenses/LICENSE-2.0.html
-</code></pre>
-
+</code></pre></div>
 <hr/>
 
 <h2 id="related-products">Related Products</h2>
@@ -358,13 +349,11 @@ http://www.apache.org/licenses/LICENSE-2.0.html
 <p>dbconsole is an extended sbt console to connect database.</p>
 
 <h4 id="mac-os-x-linux">Mac OS X, Linux</h4>
-<pre class="highlight shell"><code>curl -L http://git.io/dbconsole | sh
-</code></pre>
-
+<div class="highlight"><pre class="highlight shell"><code>curl <span class="nt">-L</span> http://git.io/dbconsole | sh
+</code></pre></div>
 <h4 id="windows">Windows</h4>
-<pre class="highlight plaintext"><code>http://git.io/dbconsole.bat
-</code></pre>
-
+<div class="highlight"><pre class="highlight plaintext"><code>http://git.io/dbconsole.bat
+</code></pre></div>
 <p>See in detail: <a href="documentation/dbconsole.html">/documentation/dbconsole</a></p>
 
 <hr/>

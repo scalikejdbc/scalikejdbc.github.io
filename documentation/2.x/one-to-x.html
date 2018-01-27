@@ -55,7 +55,7 @@ Be aware that resolving multiple one-to-many relationships with a single join qu
 <hr/>
 
 <p>Simple example:</p>
-<pre class="highlight scala"><code><span class="k">case</span> <span class="k">class</span> <span class="nc">Member</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span>
+<div class="highlight"><pre class="highlight scala"><code><span class="k">case</span> <span class="k">class</span> <span class="nc">Member</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span>
 <span class="k">case</span> <span class="k">class</span> <span class="nc">Group</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">members</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Member</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Nil</span><span class="o">)</span>
 
 <span class="k">object</span> <span class="nc">Group</span> <span class="k">extends</span> <span class="nc">SQLSyntaxSupport</span><span class="o">[</span><span class="kt">Group</span><span class="o">]</span> <span class="o">{</span>
@@ -83,10 +83,9 @@ Be aware that resolving multiple one-to-many relationships with a single join qu
    <span class="o">.</span><span class="n">map</span> <span class="o">{</span> <span class="o">(</span><span class="n">group</span><span class="o">,</span> <span class="n">members</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">group</span><span class="o">.</span><span class="n">copy</span><span class="o">(</span><span class="n">members</span> <span class="k">=</span> <span class="n">members</span><span class="o">)</span> <span class="o">}</span>
    <span class="o">.</span><span class="n">list</span>
    <span class="o">.</span><span class="n">apply</span><span class="o">()</span>
-</code></pre>
-
+</code></pre></div>
 <p><code>one.toManies</code> supports 9 tables to join.</p>
-<pre class="highlight scala"><code><span class="k">case</span> <span class="k">class</span> <span class="nc">Member</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span>
+<div class="highlight"><pre class="highlight scala"><code><span class="k">case</span> <span class="k">class</span> <span class="nc">Member</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span>
 <span class="k">case</span> <span class="k">class</span> <span class="nc">Event</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span>
 <span class="k">case</span> <span class="k">class</span> <span class="nc">Group</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
   <span class="n">events</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Event</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Nil</span><span class="o">,</span> <span class="n">members</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Member</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Nil</span><span class="o">)</span>
@@ -109,8 +108,7 @@ Be aware that resolving multiple one-to-many relationships with a single join qu
      <span class="o">.</span><span class="n">map</span> <span class="o">{</span> <span class="o">(</span><span class="n">group</span><span class="o">,</span> <span class="n">members</span><span class="o">,</span> <span class="n">events</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">group</span><span class="o">.</span><span class="n">copy</span><span class="o">(</span><span class="n">members</span> <span class="k">=</span> <span class="n">members</span><span class="o">,</span> <span class="n">events</span> <span class="k">=</span> <span class="n">events</span><span class="o">)</span> <span class="o">}</span>
      <span class="o">.</span><span class="n">list</span>
      <span class="o">.</span><span class="n">apply</span><span class="o">()</span>
-</code></pre>
-
+</code></pre></div>
 <hr/>
 
 <h3 id="one-to-one">One-To-One</h3>
@@ -118,7 +116,7 @@ Be aware that resolving multiple one-to-many relationships with a single join qu
 <hr/>
 
 <p><code>one.toOne</code> for inner join queries.</p>
-<pre class="highlight scala"><code><span class="k">case</span> <span class="k">class</span> <span class="nc">Owner</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span>
+<div class="highlight"><pre class="highlight scala"><code><span class="k">case</span> <span class="k">class</span> <span class="nc">Owner</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span>
 <span class="k">case</span> <span class="k">class</span> <span class="nc">Group</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
   <span class="n">ownerId</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">owner</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Owner</span><span class="o">]</span> <span class="k">=</span> <span class="nc">None</span><span class="o">)</span>
 
@@ -137,10 +135,9 @@ Be aware that resolving multiple one-to-many relationships with a single join qu
   <span class="o">.</span><span class="n">map</span> <span class="o">{</span> <span class="o">(</span><span class="n">group</span><span class="o">,</span> <span class="n">owner</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">group</span><span class="o">.</span><span class="n">copy</span><span class="o">(</span><span class="n">owner</span> <span class="k">=</span> <span class="nc">Some</span><span class="o">(</span><span class="n">owner</span><span class="o">))</span> <span class="o">}</span>
   <span class="o">.</span><span class="n">list</span>
   <span class="o">.</span><span class="n">apply</span><span class="o">()</span>
-</code></pre>
-
+</code></pre></div>
 <p>If you don&rsquo;t want to define <code>owner</code> as an optional value, use <code>#map</code> instead.</p>
-<pre class="highlight scala"><code><span class="k">case</span> <span class="k">class</span> <span class="nc">Owner</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span>
+<div class="highlight"><pre class="highlight scala"><code><span class="k">case</span> <span class="k">class</span> <span class="nc">Owner</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span>
 <span class="k">case</span> <span class="k">class</span> <span class="nc">Group</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">ownerId</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">owner</span><span class="k">:</span> <span class="kt">Owner</span><span class="o">)</span>
 
 <span class="c1">// companion objects must be defined
@@ -166,10 +163,9 @@ Be aware that resolving multiple one-to-many relationships with a single join qu
   <span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="nc">Group</span><span class="o">(</span><span class="n">g</span><span class="o">,</span> <span class="n">o</span><span class="o">))</span>
   <span class="o">.</span><span class="n">list</span>
   <span class="o">.</span><span class="n">apply</span><span class="o">()</span>
-</code></pre>
-
+</code></pre></div>
 <p><code>one.toOptionalOne</code> for outer join queries.</p>
-<pre class="highlight scala"><code><span class="k">case</span> <span class="k">class</span> <span class="nc">Owner</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span>
+<div class="highlight"><pre class="highlight scala"><code><span class="k">case</span> <span class="k">class</span> <span class="nc">Owner</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span>
 <span class="k">case</span> <span class="k">class</span> <span class="nc">Group</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
   <span class="n">ownerId</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Long</span><span class="o">]</span> <span class="k">=</span> <span class="nc">None</span><span class="o">,</span> <span class="n">owner</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Owner</span><span class="o">]</span> <span class="k">=</span> <span class="nc">None</span><span class="o">)</span>
 
@@ -186,8 +182,7 @@ Be aware that resolving multiple one-to-many relationships with a single join qu
   <span class="o">.</span><span class="n">map</span> <span class="o">{</span> <span class="o">(</span><span class="n">group</span><span class="o">,</span> <span class="n">owner</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">group</span><span class="o">.</span><span class="n">copy</span><span class="o">(</span><span class="n">owner</span> <span class="k">=</span> <span class="n">owner</span><span class="o">)</span> <span class="o">}</span>
   <span class="o">.</span><span class="n">list</span>
   <span class="o">.</span><span class="n">apply</span><span class="o">()</span>
-</code></pre>
-
+</code></pre></div>
 <hr/>
 
 <h3 id="about-entity-equality">About Entity Equality</h3>
@@ -195,7 +190,7 @@ Be aware that resolving multiple one-to-many relationships with a single join qu
 <hr/>
 
 <p>In most cases, you will use case classes for entities. And basically it works fine. However, as you know, Scala (under 2.11) has 22 limitation and you cannot create a case class with more thatn 22 parameters. If your table has more than 22 columns, you need to create a normal class like this:</p>
-<pre class="highlight scala"><code><span class="k">class</span> <span class="nc">HugeTable</span><span class="o">(</span>
+<div class="highlight"><pre class="highlight scala"><code><span class="k">class</span> <span class="nc">HugeTable</span><span class="o">(</span>
   <span class="k">val</span> <span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="k">val</span> <span class="n">c2</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="k">val</span> <span class="n">c3</span><span class="k">:</span> <span class="kt">String</span> <span class="kt">....</span> <span class="kt">val</span> <span class="kt">c23:</span> <span class="kt">String</span><span class="o">)</span>
 
 <span class="k">object</span> <span class="nc">HugeTable</span> <span class="k">extends</span> <span class="nc">SQLSyntaxSupport</span><span class="o">[</span><span class="kt">HugeTable</span><span class="o">]</span> <span class="o">{</span>
@@ -206,29 +201,26 @@ Be aware that resolving multiple one-to-many relationships with a single join qu
     <span class="n">c23</span> <span class="k">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">long</span><span class="o">(</span><span class="n">h</span><span class="o">.</span><span class="n">c23</span><span class="o">)</span>
   <span class="o">)</span>
 <span class="o">}</span>
-</code></pre>
-
-<p>The above code also works fine except for the use of one-to-x APIs. Case classes nicely overrides <code>#equals</code> method. But <code>HugeTable</code>&rsquo;s <code>#equals</code> method won&rsquo;t work as you expect because it just predicates instance equality. So when you use normal classes and one-to-x APIs, you must override <code>#equals</code> method by yourself.</p>
+</code></pre></div>
+<p>The above code also works fine except for the use of one-to-x APIs. Case classes nicely overrides <code>#equals</code> method. But <code>HugeTable</code>&lsquo;s <code>#equals</code> method won&rsquo;t work as you expect because it just predicates instance equality. So when you use normal classes and one-to-x APIs, you must override <code>#equals</code> method by yourself.</p>
 
 <p>Since version 1.7.3, ScalikeJDBC provides <code>EntityEquality</code> trait like this:</p>
-<pre class="highlight scala"><code><span class="k">class</span> <span class="nc">HugeTable</span><span class="o">(</span>
+<div class="highlight"><pre class="highlight scala"><code><span class="k">class</span> <span class="nc">HugeTable</span><span class="o">(</span>
   <span class="k">val</span> <span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="k">val</span> <span class="n">c2</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="k">val</span> <span class="n">c3</span><span class="k">:</span> <span class="kt">String</span> <span class="kt">....</span> <span class="kt">val</span> <span class="kt">c23:</span> <span class="kt">String</span><span class="o">)</span>
   <span class="k">extends</span> <span class="nc">EntityEquality</span> <span class="o">{</span>
 
   <span class="k">override</span> <span class="k">val</span> <span class="n">entityIdentity</span><span class="k">:</span> <span class="kt">Any</span> <span class="o">=</span> <span class="n">id</span>
 <span class="o">}</span>
-</code></pre>
-
+</code></pre></div>
 <p><code>#equals</code> method predicates equality with <code>entityIdentity</code> and the class is same. The above code use only <code>id</code> value for equality. If it isn&rsquo;t appropriate, define <code>entityIdentity</code> differently.</p>
-<pre class="highlight scala"><code><span class="k">class</span> <span class="nc">HugeTable</span><span class="o">(</span>
+<div class="highlight"><pre class="highlight scala"><code><span class="k">class</span> <span class="nc">HugeTable</span><span class="o">(</span>
   <span class="k">val</span> <span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="k">val</span> <span class="n">c2</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="k">val</span> <span class="n">c3</span><span class="k">:</span> <span class="kt">String</span> <span class="kt">....</span> <span class="kt">val</span> <span class="kt">c23:</span> <span class="kt">String</span><span class="o">)</span>
   <span class="k">extends</span> <span class="nc">EntityEquality</span> <span class="o">{</span>
 
   <span class="k">override</span> <span class="k">val</span> <span class="n">entityIdentity</span><span class="k">:</span> <span class="kt">Any</span> <span class="o">=</span> <span class="n">s</span><span class="s">"$id, $c2, $c3, ... $23"</span>
   <span class="k">override</span> <span class="k">val</span> <span class="n">entityIdentity</span><span class="k">:</span> <span class="kt">Any</span> <span class="o">=</span> <span class="o">(</span><span class="n">id</span><span class="o">,</span> <span class="n">c2</span><span class="o">,</span> <span class="n">c3</span><span class="o">)</span>
 <span class="o">}</span>
-</code></pre>
-
+</code></pre></div>
 <p>If you&rsquo;re still using older version and you cannot upgrade version right now, see the <code>EntityEquality</code> implementation and do the same thing.</p>
 
 <p><a href="https://github.com/scalikejdbc/scalikejdbc/blob/master/scalikejdbc-core/src/main/scala/scalikejdbc/EntityEquality.scala">https://github.com/scalikejdbc/scalikejdbc/blob/master/scalikejdbc-core/src/main/scala/scalikejdbc/EntityEquality.scala</a></p>

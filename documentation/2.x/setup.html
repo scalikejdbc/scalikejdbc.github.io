@@ -42,24 +42,22 @@
 
 <hr/>
 
-<h3 id="core-library-amp-interpolation">Core Library &amp; Interpolation</h3>
+<h3 id="core-library-interpolation">Core Library &amp; Interpolation</h3>
 
 <hr/>
 
 <p>Add latest version into your <code>build.sbt</code> or <code>project/Build.scala</code>. Don&rsquo;t forget JDBC driver and slf4j implementation.</p>
 
 <p>If you&rsquo;re still using Scala 2.9, you can&rsquo;t use <code>scalikejdbc-interpolation</code>.</p>
-<pre class="highlight scala"><code><span class="n">libraryDependencies</span> <span class="o">++=</span> <span class="nc">Seq</span><span class="o">(</span>
+<div class="highlight"><pre class="highlight scala"><code><span class="n">libraryDependencies</span> <span class="o">++=</span> <span class="nc">Seq</span><span class="o">(</span>
   <span class="s">"org.scalikejdbc"</span> <span class="o">%%</span> <span class="s">"scalikejdbc"</span>       <span class="o">%</span> <span class="s">"2.5.2"</span><span class="o">,</span>
   <span class="s">"com.h2database"</span>  <span class="o">%</span>  <span class="s">"h2"</span>                <span class="o">%</span> <span class="s">"1.4.196"</span><span class="o">,</span>
   <span class="s">"ch.qos.logback"</span>  <span class="o">%</span>  <span class="s">"logback-classic"</span>   <span class="o">%</span> <span class="s">"1.2.3"</span>
 <span class="o">)</span>
-</code></pre>
-
+</code></pre></div>
 <p>In your application, just add the following import.</p>
-<pre class="highlight scala"><code><span class="k">import</span> <span class="nn">scalikejdbc._</span>
-</code></pre>
-
+<div class="highlight"><pre class="highlight scala"><code><span class="k">import</span> <span class="nn">scalikejdbc._</span>
+</code></pre></div>
 <hr/>
 
 <h3 id="testing-support">Testing Support</h3>
@@ -67,14 +65,13 @@
 <hr/>
 
 <p>Using <code>scalikejdbc-test</code> is highly recommended to improve your application.</p>
-<pre class="highlight scala"><code><span class="n">libraryDependencies</span> <span class="o">++=</span> <span class="nc">Seq</span><span class="o">(</span>
+<div class="highlight"><pre class="highlight scala"><code><span class="n">libraryDependencies</span> <span class="o">++=</span> <span class="nc">Seq</span><span class="o">(</span>
   <span class="s">"org.scalikejdbc"</span> <span class="o">%%</span> <span class="s">"scalikejdbc"</span>        <span class="o">%</span> <span class="s">"2.5.2"</span><span class="o">,</span>
   <span class="s">"org.scalikejdbc"</span> <span class="o">%%</span> <span class="s">"scalikejdbc-test"</span>   <span class="o">%</span> <span class="s">"2.5.2"</span>   <span class="o">%</span> <span class="s">"test"</span><span class="o">,</span>
   <span class="s">"com.h2database"</span>  <span class="o">%</span>  <span class="s">"h2"</span>                 <span class="o">%</span> <span class="s">"1.4.196"</span><span class="o">,</span>
   <span class="s">"ch.qos.logback"</span>  <span class="o">%</span>  <span class="s">"logback-classic"</span>    <span class="o">%</span> <span class="s">"1.2.3"</span>
 <span class="o">)</span>
-</code></pre>
-
+</code></pre></div>
 <p>Usage: <a href="/documentation/testing.html">/documentation/testing</a></p>
 
 <hr/>
@@ -84,14 +81,13 @@
 <hr/>
 
 <p>If you use <code>application.conf</code> as settings file, add <code>scalikejdbc-config</code> too.</p>
-<pre class="highlight scala"><code><span class="n">libraryDependencies</span> <span class="o">++=</span> <span class="nc">Seq</span><span class="o">(</span>
+<div class="highlight"><pre class="highlight scala"><code><span class="n">libraryDependencies</span> <span class="o">++=</span> <span class="nc">Seq</span><span class="o">(</span>
   <span class="s">"org.scalikejdbc"</span> <span class="o">%%</span> <span class="s">"scalikejdbc"</span>         <span class="o">%</span> <span class="s">"2.5.2"</span><span class="o">,</span>
   <span class="s">"org.scalikejdbc"</span> <span class="o">%%</span> <span class="s">"scalikejdbc-config"</span>  <span class="o">%</span> <span class="s">"2.5.2"</span><span class="o">,</span>
   <span class="s">"com.h2database"</span>  <span class="o">%</span>  <span class="s">"h2"</span>                  <span class="o">%</span> <span class="s">"1.4.196"</span><span class="o">,</span>
   <span class="s">"ch.qos.logback"</span>  <span class="o">%</span>  <span class="s">"logback-classic"</span>     <span class="o">%</span> <span class="s">"1.2.3"</span>
 <span class="o">)</span>
-</code></pre>
-
+</code></pre></div>
 <p>Usage: <a href="/documentation/configuration.html">/documentation/configuration</a></p>
 
 <hr/>
@@ -104,18 +100,16 @@
 You need to setup an sbt plugin named <code>scalikejdbc-mapper-generator</code>.</p>
 
 <h5 id="project-plugins-sbt">project/plugins.sbt</h5>
-<pre class="highlight scala"><code><span class="c1">// Don't forget adding your JDBC driver
+<div class="highlight"><pre class="highlight scala"><code><span class="c1">// Don't forget adding your JDBC driver
 </span><span class="n">libraryDependencies</span> <span class="o">+=</span> <span class="s">"org.hsqldb"</span> <span class="o">%</span> <span class="s">"hsqldb"</span> <span class="o">%</span> <span class="s">"2.3.2"</span>
 
 <span class="n">addSbtPlugin</span><span class="o">(</span><span class="s">"org.scalikejdbc"</span> <span class="o">%%</span> <span class="s">"scalikejdbc-mapper-generator"</span> <span class="o">%</span> <span class="s">"2.5.2"</span><span class="o">)</span>
-</code></pre>
-
+</code></pre></div>
 <h5 id="build-sbt">build.sbt</h5>
-<pre class="highlight scala"><code><span class="n">scalikejdbcSettings</span>
-</code></pre>
-
+<div class="highlight"><pre class="highlight scala"><code><span class="n">scalikejdbcSettings</span>
+</code></pre></div>
 <h5 id="project-scalikejdbc-properties">project/scalikejdbc.properties</h5>
-<pre class="highlight plaintext"><code># ---
+<div class="highlight"><pre class="highlight plaintext"><code># ---
 # jdbc settings
 
 jdbc.driver=org.h2.Driver
@@ -143,8 +137,7 @@ generator.defaultAutoSession=true
 generator.autoConstruct=false
 # joda-time (org.joda.time.DateTime) or JSR-310 (java.time.ZonedDateTime java.time.OffsetDateTime)
 generator.dateTimeClass=org.joda.time.DateTime
-</code></pre>
-
+</code></pre></div>
 <p>Usage: <a href="/documentation/reverse-engineering.html">/documentation/reverse-engineering</a></p>
 
 <hr/>
@@ -164,13 +157,11 @@ generator.dateTimeClass=org.joda.time.DateTime
 <p>A simple console to connect database via JDBC.</p>
 
 <h5 id="mac-os-x-linux">Mac OS X, Linux</h5>
-<pre class="highlight shell"><code>curl -L http://git.io/dbconsole | sh
-</code></pre>
-
+<div class="highlight"><pre class="highlight shell"><code>curl <span class="nt">-L</span> http://git.io/dbconsole | sh
+</code></pre></div>
 <h5 id="windows">Windows</h5>
-<pre class="highlight plaintext"><code>http://git.io/dbconsole.bat
-</code></pre>
-
+<div class="highlight"><pre class="highlight plaintext"><code>http://git.io/dbconsole.bat
+</code></pre></div>
 <p>Usage: <a href="/documentation/dbconsole.html">/documentation/dbconsole</a></p>
 
           <hr/>

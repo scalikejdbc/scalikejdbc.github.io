@@ -50,7 +50,7 @@
 <hr/>
 
 <p><code>single</code> returns matched single row as an <code>Option</code> value. If matched rows is not single, Exception will be thrown.</p>
-<pre class="highlight scala"><code><span class="k">import</span> <span class="nn">scalikejdbc._</span><span class="o">,</span> <span class="nc">SQLInterpolation</span><span class="o">.</span><span class="k">_</span>
+<div class="highlight"><pre class="highlight scala"><code><span class="k">import</span> <span class="nn">scalikejdbc._</span><span class="o">,</span> <span class="nc">SQLInterpolation</span><span class="o">.</span><span class="k">_</span>
 
 <span class="k">val</span> <span class="n">id</span> <span class="k">=</span> <span class="mi">123</span>
 
@@ -80,8 +80,7 @@
 <span class="k">val</span> <span class="n">emp</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Emp</span><span class="o">]</span> <span class="k">=</span> <span class="nc">DB</span> <span class="n">readOnly</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span>
   <span class="n">withSQL</span> <span class="o">{</span> <span class="n">select</span><span class="o">.</span><span class="n">from</span><span class="o">(</span><span class="nc">Emp</span> <span class="n">as</span> <span class="n">e</span><span class="o">).</span><span class="n">where</span><span class="o">.</span><span class="n">eq</span><span class="o">(</span><span class="n">e</span><span class="o">.</span><span class="n">id</span><span class="o">,</span> <span class="n">id</span><span class="o">)</span> <span class="o">}.</span><span class="n">map</span><span class="o">(</span><span class="nc">Emp</span><span class="o">(</span><span class="n">e</span><span class="o">.</span><span class="n">resultName</span><span class="o">)).</span><span class="n">single</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
 <span class="o">}</span>
-</code></pre>
-
+</code></pre></div>
 <p>You can learn about QueryDSL in detail here: </p>
 
 <p><a href="documentation/1.x/query-dsl.html">/documentation/1.x/query-dsl</a></p>
@@ -93,7 +92,7 @@
 <hr/>
 
 <p><code>first</code> returns the first row of matched rows as an <code>Option</code> value.</p>
-<pre class="highlight scala"><code><span class="k">val</span> <span class="n">name</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">String</span><span class="o">]</span> <span class="k">=</span> <span class="nc">DB</span> <span class="n">readOnly</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span>
+<div class="highlight"><pre class="highlight scala"><code><span class="k">val</span> <span class="n">name</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">String</span><span class="o">]</span> <span class="k">=</span> <span class="nc">DB</span> <span class="n">readOnly</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span>
   <span class="n">sql</span><span class="s">"select name from emp"</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="n">rs</span> <span class="k">=&gt;</span> <span class="n">rs</span><span class="o">.</span><span class="n">string</span><span class="o">(</span><span class="s">"name"</span><span class="o">)).</span><span class="n">first</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
 <span class="o">}</span>
 
@@ -101,8 +100,7 @@
 <span class="k">val</span> <span class="n">name</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">String</span><span class="o">]</span> <span class="k">=</span> <span class="nc">DB</span> <span class="n">readOnly</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span>
   <span class="n">withSQL</span> <span class="o">{</span> <span class="n">select</span><span class="o">(</span><span class="n">e</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">name</span><span class="o">).</span><span class="n">from</span><span class="o">(</span><span class="nc">Emp</span> <span class="n">as</span> <span class="n">e</span><span class="o">)</span> <span class="o">}.</span><span class="n">map</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">string</span><span class="o">(</span><span class="n">e</span><span class="o">.</span><span class="n">name</span><span class="o">)).</span><span class="n">first</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
 <span class="o">}</span>
-</code></pre>
-
+</code></pre></div>
 <hr/>
 
 <h4 id="list-results">List Results</h4>
@@ -110,7 +108,7 @@
 <hr/>
 
 <p><code>list</code> returns matched multiple rows as <code>scala.collection.immutable.List</code>.</p>
-<pre class="highlight scala"><code><span class="k">val</span> <span class="n">name</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">String</span><span class="o">]</span> <span class="k">=</span> <span class="nc">DB</span> <span class="n">readOnly</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span>
+<div class="highlight"><pre class="highlight scala"><code><span class="k">val</span> <span class="n">name</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">String</span><span class="o">]</span> <span class="k">=</span> <span class="nc">DB</span> <span class="n">readOnly</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span>
   <span class="n">sql</span><span class="s">"select name from emp"</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="n">rs</span> <span class="k">=&gt;</span> <span class="n">rs</span><span class="o">.</span><span class="n">string</span><span class="o">(</span><span class="s">"name"</span><span class="o">)).</span><span class="n">list</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
 <span class="o">}</span>
 
@@ -118,8 +116,7 @@
 <span class="k">val</span> <span class="n">name</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">String</span><span class="o">]</span> <span class="k">=</span> <span class="nc">DB</span> <span class="n">readOnly</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span>
   <span class="n">withSQL</span> <span class="o">{</span> <span class="n">select</span><span class="o">(</span><span class="n">e</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">name</span><span class="o">).</span><span class="n">from</span><span class="o">(</span><span class="nc">Emp</span> <span class="n">as</span> <span class="n">e</span><span class="o">)</span> <span class="o">}.</span><span class="n">map</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">string</span><span class="o">(</span><span class="n">e</span><span class="o">.</span><span class="n">name</span><span class="o">)).</span><span class="n">list</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
 <span class="o">}</span>
-</code></pre>
-
+</code></pre></div>
 <hr/>
 
 <h4 id="foreach-operation">Foreach Operation</h4>
@@ -127,7 +124,7 @@
 <hr/>
 
 <p><code>foreach</code> allows you to make some side-effect in iterations. This API is useful for handling large <code>ResultSet</code>.</p>
-<pre class="highlight scala"><code><span class="nc">DB</span> <span class="n">readOnly</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span>
+<div class="highlight"><pre class="highlight scala"><code><span class="nc">DB</span> <span class="n">readOnly</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span>
   <span class="n">sql</span><span class="s">"select name from emp"</span> <span class="n">foreach</span> <span class="o">{</span> <span class="n">rs</span> <span class="k">=&gt;</span> <span class="n">out</span><span class="o">.</span><span class="n">write</span><span class="o">(</span><span class="n">rs</span><span class="o">.</span><span class="n">string</span><span class="o">(</span><span class="s">"name"</span><span class="o">))</span> <span class="o">}</span>
 <span class="o">}</span>
 
@@ -135,8 +132,7 @@
 <span class="nc">DB</span> <span class="n">readOnly</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span>
   <span class="n">withSQL</span> <span class="o">{</span> <span class="n">select</span><span class="o">(</span><span class="n">e</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">name</span><span class="o">).</span><span class="n">from</span><span class="o">(</span><span class="nc">Emp</span> <span class="n">as</span> <span class="n">e</span><span class="o">)</span> <span class="o">}.</span><span class="n">foreach</span> <span class="o">{</span> <span class="n">rs</span> <span class="k">=&gt;</span> <span class="n">out</span><span class="o">.</span><span class="n">write</span><span class="o">(</span><span class="n">rs</span><span class="o">.</span><span class="n">string</span><span class="o">(</span><span class="n">e</span><span class="o">.</span><span class="n">name</span><span class="o">))</span> <span class="o">}</span>
 <span class="o">}</span>
-</code></pre>
-
+</code></pre></div>
 <hr/>
 
 <h3 id="update-api">Update API</h3>
@@ -144,7 +140,7 @@
 <hr/>
 
 <p><code>update</code> executes <code>java.sql.PreparedStatement#executeUpdate()</code>.</p>
-<pre class="highlight scala"><code><span class="k">import</span> <span class="nn">scalikejdbc._</span><span class="o">,</span> <span class="nc">SQLInterpolation</span><span class="o">.</span><span class="k">_</span>
+<div class="highlight"><pre class="highlight scala"><code><span class="k">import</span> <span class="nn">scalikejdbc._</span><span class="o">,</span> <span class="nc">SQLInterpolation</span><span class="o">.</span><span class="k">_</span>
 
 <span class="nc">DB</span> <span class="n">localTx</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span>
   <span class="n">sql</span><span class="s">"""insert into emp (id, name, created_at) values (${id}, ${name}, ${DateTime.now})"""</span>
@@ -172,8 +168,7 @@
   <span class="n">withSQL</span> <span class="o">{</span> <span class="n">delete</span><span class="o">.</span><span class="n">from</span><span class="o">(</span><span class="nc">Emp</span><span class="o">).</span><span class="n">where</span><span class="o">.</span><span class="n">eq</span><span class="o">(</span><span class="n">column</span><span class="o">.</span><span class="n">id</span><span class="o">,</span> <span class="n">id</span><span class="o">)</span> <span class="o">}.</span><span class="n">update</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
 <span class="o">}</span>
 
-</code></pre>
-
+</code></pre></div>
 <hr/>
 
 <h3 id="execute-api">Execute API</h3>
@@ -181,13 +176,12 @@
 <hr/>
 
 <p><code>execute</code> executes <code>java.sql.PreparedStatement#execute()</code>.</p>
-<pre class="highlight scala"><code><span class="nc">DB</span> <span class="n">autoCommit</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span>
+<div class="highlight"><pre class="highlight scala"><code><span class="nc">DB</span> <span class="n">autoCommit</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span>
   <span class="n">sql</span><span class="s">"create table emp (id integer primary key, name varchar(30))"</span><span class="o">.</span><span class="n">execute</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
 <span class="o">}</span>
 
 <span class="c1">// QueryDSL doesn't support DDL yet.
-</span></code></pre>
-
+</span></code></pre></div>
 <hr/>
 
 <h3 id="batch-api">Batch API</h3>
@@ -195,7 +189,7 @@
 <hr/>
 
 <p><code>batch</code> and <code>batchByName</code> executes <code>java.sql.PreparedStatement#executeBatch()</code>.</p>
-<pre class="highlight scala"><code><span class="k">import</span> <span class="nn">scalikejdbc._</span><span class="o">,</span> <span class="nc">SQLInterpolation</span><span class="o">.</span><span class="k">_</span>
+<div class="highlight"><pre class="highlight scala"><code><span class="k">import</span> <span class="nn">scalikejdbc._</span><span class="o">,</span> <span class="nc">SQLInterpolation</span><span class="o">.</span><span class="k">_</span>
 
 <span class="nc">DB</span> <span class="n">localTx</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span>
   <span class="k">val</span> <span class="n">batchParams</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Seq</span><span class="o">[</span><span class="kt">Any</span><span class="o">]]</span> <span class="k">=</span> <span class="o">(</span><span class="mi">2001</span> <span class="n">to</span> <span class="mi">3000</span><span class="o">).</span><span class="n">map</span><span class="o">(</span><span class="n">i</span> <span class="k">=&gt;</span> <span class="nc">Seq</span><span class="o">(</span><span class="n">i</span><span class="o">,</span> <span class="s">"name"</span> <span class="o">+</span> <span class="n">i</span><span class="o">))</span>
@@ -209,8 +203,7 @@
     <span class="n">insert</span><span class="o">.</span><span class="n">into</span><span class="o">(</span><span class="nc">Emp</span><span class="o">).</span><span class="n">namedValues</span><span class="o">(</span><span class="n">column</span><span class="o">.</span><span class="n">id</span> <span class="o">-&gt;</span> <span class="n">sqls</span><span class="o">.?,</span> <span class="n">column</span><span class="o">.</span><span class="n">name</span> <span class="o">-&gt;</span> <span class="n">sqls</span><span class="o">.?)</span>
   <span class="o">}.</span><span class="n">batch</span><span class="o">(</span><span class="n">batchParams</span><span class="k">:</span> <span class="k">_</span><span class="kt">*</span><span class="o">).</span><span class="n">apply</span><span class="o">()</span>
 <span class="o">}</span>
-</code></pre>
-
+</code></pre></div>
           <hr/>
           <div class="alert alert-warning small">
             If this webpage has a typo or something wrong, Please report or fix it. <a href="/contribution.html">How?</a>

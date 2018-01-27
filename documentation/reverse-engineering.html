@@ -44,14 +44,12 @@
 <h3 id="sbt-command">Sbt Command</h3>
 
 <hr/>
-<pre class="highlight shell"><code>sbt <span class="s2">"scalikejdbcGen [table-name (class-name)]"</span>
-</code></pre>
-
+<div class="highlight"><pre class="highlight shell"><code>sbt <span class="s2">"scalikejdbcGen [table-name (class-name)]"</span>
+</code></pre></div>
 <p>e.g.</p>
-<pre class="highlight shell"><code>sbt <span class="s2">"scalikejdbcGen company"</span>
+<div class="highlight"><pre class="highlight shell"><code>sbt <span class="s2">"scalikejdbcGen company"</span>
 sbt <span class="s2">"scalikejdbcGen companies Company"</span>
-</code></pre>
-
+</code></pre></div>
 <hr/>
 
 <h3 id="output-example">Output Example</h3>
@@ -59,7 +57,7 @@ sbt <span class="s2">"scalikejdbcGen companies Company"</span>
 <hr/>
 
 <p>From the following table:</p>
-<pre class="highlight sql"><code><span class="k">create</span> <span class="k">table</span> <span class="n">member</span> <span class="p">(</span>
+<div class="highlight"><pre class="highlight sql"><code><span class="k">create</span> <span class="k">table</span> <span class="n">member</span> <span class="p">(</span>
   <span class="n">id</span> <span class="n">int</span> <span class="k">generated</span> <span class="n">always</span> <span class="k">as</span> <span class="k">identity</span><span class="p">,</span>
   <span class="n">name</span> <span class="n">varchar</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span> <span class="k">not</span> <span class="k">null</span><span class="p">,</span>
   <span class="n">description</span> <span class="n">varchar</span><span class="p">(</span><span class="mi">1000</span><span class="p">),</span>
@@ -67,10 +65,9 @@ sbt <span class="s2">"scalikejdbcGen companies Company"</span>
   <span class="n">created_at</span> <span class="k">timestamp</span> <span class="k">not</span> <span class="k">null</span><span class="p">,</span>
   <span class="k">primary</span> <span class="k">key</span><span class="p">(</span><span class="n">id</span><span class="p">)</span>
 <span class="p">)</span>
-</code></pre>
-
+</code></pre></div>
 <p>This tool will generate the following Scala source code:</p>
-<pre class="highlight scala"><code><span class="k">package</span> <span class="nn">models</span>
+<div class="highlight"><pre class="highlight scala"><code><span class="k">package</span> <span class="nn">models</span>
 
 <span class="k">import</span> <span class="nn">scalikejdbc._</span>
 <span class="k">import</span> <span class="nn">java.time.</span><span class="o">{</span><span class="nc">LocalDate</span><span class="o">,</span> <span class="nc">ZonedDateTime</span><span class="o">}</span>
@@ -200,10 +197,9 @@ sbt <span class="s2">"scalikejdbcGen companies Company"</span>
   <span class="o">}</span>
 
 <span class="o">}</span>
-</code></pre>
-
+</code></pre></div>
 <p>And specs2 or ScalaTest&rsquo;s FlatSpec.</p>
-<pre class="highlight scala"><code><span class="k">package</span> <span class="nn">models</span>
+<div class="highlight"><pre class="highlight scala"><code><span class="k">package</span> <span class="nn">models</span>
 
 <span class="k">import</span> <span class="nn">scalikejdbc.specs2.mutable.AutoRollback</span>
 <span class="k">import</span> <span class="nn">org.specs2.mutable._</span>
@@ -268,8 +264,7 @@ sbt <span class="s2">"scalikejdbcGen companies Company"</span>
   <span class="o">}</span>
 
 <span class="o">}</span>
-</code></pre>
-
+</code></pre></div>
           <hr/>
           <div class="alert alert-warning small">
             If this webpage has a typo or something wrong, Please report or fix it. <a href="/contribution.html">How?</a>

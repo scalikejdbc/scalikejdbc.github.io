@@ -49,9 +49,8 @@
 <hr/>
 
 <p>Add the following aditional dependency to your sbt project.</p>
-<pre class="highlight scala"><code><span class="n">libraryDependencies</span> <span class="o">+=</span> <span class="s">"org.scalikejdbc"</span> <span class="o">%%</span> <span class="s">"scalikejdbc-syntax-support-macro"</span> <span class="o">%</span> <span class="s">"2.5.2"</span>
-</code></pre>
-
+<div class="highlight"><pre class="highlight scala"><code><span class="n">libraryDependencies</span> <span class="o">+=</span> <span class="s">"org.scalikejdbc"</span> <span class="o">%%</span> <span class="s">"scalikejdbc-syntax-support-macro"</span> <span class="o">%</span> <span class="s">"2.5.2"</span>
+</code></pre></div>
 <hr/>
 
 <h3 id="usage">Usage</h3>
@@ -61,7 +60,7 @@
 <h4 id="autoconstruct-for-extracting-entities-from-resultset">autoConstruct for extracting entities from ResultSet</h4>
 
 <p>Usually, we should write ResultSet extractor method as follows.</p>
-<pre class="highlight scala"><code><span class="k">case</span> <span class="k">class</span> <span class="nc">Company</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">countryId</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Long</span><span class="o">],</span> <span class="n">country</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Country</span><span class="o">]</span> <span class="k">=</span> <span class="nc">None</span><span class="o">)</span>
+<div class="highlight"><pre class="highlight scala"><code><span class="k">case</span> <span class="k">class</span> <span class="nc">Company</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">countryId</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Long</span><span class="o">],</span> <span class="n">country</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Country</span><span class="o">]</span> <span class="k">=</span> <span class="nc">None</span><span class="o">)</span>
 
 <span class="k">object</span> <span class="nc">Company</span> <span class="k">extends</span> <span class="nc">SQLSyntaxSupport</span><span class="o">[</span><span class="kt">Company</span><span class="o">]</span> <span class="o">{</span>
 
@@ -71,18 +70,16 @@
     <span class="n">countryId</span> <span class="k">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">get</span><span class="o">(</span><span class="n">rn</span><span class="o">.</span><span class="n">countryId</span><span class="o">)</span>
   <span class="o">)</span>
 <span class="o">}</span>
-</code></pre>
-
+</code></pre></div>
 <p>When using scalikejdbc-syntax-support-macro, you can use <code>#autoConstruct</code> macro. </p>
-<pre class="highlight scala"><code><span class="k">case</span> <span class="k">class</span> <span class="nc">Company</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">countryId</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Long</span><span class="o">],</span> <span class="n">country</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Country</span><span class="o">]</span> <span class="k">=</span> <span class="nc">None</span><span class="o">)</span>
+<div class="highlight"><pre class="highlight scala"><code><span class="k">case</span> <span class="k">class</span> <span class="nc">Company</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">countryId</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Long</span><span class="o">],</span> <span class="n">country</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Country</span><span class="o">]</span> <span class="k">=</span> <span class="nc">None</span><span class="o">)</span>
 
 <span class="k">object</span> <span class="nc">Company</span> <span class="k">extends</span> <span class="nc">SQLSyntaxSupport</span><span class="o">[</span><span class="kt">Company</span><span class="o">]</span> <span class="o">{</span>
 
   <span class="k">def</span> <span class="n">apply</span><span class="o">(</span><span class="n">rs</span><span class="k">:</span> <span class="kt">WrappedResultSet</span><span class="o">,</span> <span class="n">rn</span><span class="k">:</span> <span class="kt">ResultName</span><span class="o">[</span><span class="kt">Company</span><span class="o">])</span><span class="k">:</span> <span class="kt">Company</span> <span class="o">=</span> 
     <span class="n">autoConstruct</span><span class="o">(</span><span class="n">rs</span><span class="o">,</span> <span class="n">rn</span><span class="o">,</span> <span class="s">"country"</span><span class="o">)</span> <span class="c1">// "country" will be ignored when binding values from ResultSet
 </span><span class="o">}</span>
-</code></pre>
-
+</code></pre></div>
 <p>The <code>#autoConstruct</code> method binds all the fields defined at the primary constructor automatically.</p>
 
 <p>The <code>country</code> field in the above example class should be ignored. In such cases, you should specify additional String parameter such as <code>&quot;country&quot;</code>.
@@ -96,15 +93,14 @@ Of course, the <code>&quot;country&quot;</code> will be verified at Scala compil
 
 <p>If you don&rsquo;t prefer the behavior, you can choose loading column names from the entity class&rsquo;s field names instead.
 The following code won&rsquo;t access JDBC metadata and will resolve column names from Company class&rsquo;s fields, primary constructor&rsquo;s parameters, by simply converting them to snake-cased ones or applying nameConverters to them.</p>
-<pre class="highlight scala"><code><span class="k">case</span> <span class="k">class</span> <span class="nc">Company</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">countryId</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Long</span><span class="o">],</span> <span class="n">country</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Country</span><span class="o">]</span> <span class="k">=</span> <span class="nc">None</span><span class="o">)</span>
+<div class="highlight"><pre class="highlight scala"><code><span class="k">case</span> <span class="k">class</span> <span class="nc">Company</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">countryId</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Long</span><span class="o">],</span> <span class="n">country</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Country</span><span class="o">]</span> <span class="k">=</span> <span class="nc">None</span><span class="o">)</span>
 
 <span class="k">object</span> <span class="nc">Company</span> <span class="k">extends</span> <span class="nc">SQLSyntaxSupport</span><span class="o">[</span><span class="kt">Company</span><span class="o">]</span> <span class="o">{</span>
 
   <span class="k">override</span> <span class="k">lazy</span> <span class="k">val</span> <span class="n">columns</span> <span class="k">=</span> <span class="n">autoColumns</span><span class="o">[</span><span class="kt">Company</span><span class="o">](</span><span class="s">"country"</span><span class="o">)</span> 
   <span class="c1">// this will be Seq("id", "name", "country_id")
 </span><span class="o">}</span>
-</code></pre>
-
+</code></pre></div>
           <hr/>
           <div class="alert alert-warning small">
             If this webpage has a typo or something wrong, Please report or fix it. <a href="/contribution.html">How?</a>

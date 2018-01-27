@@ -49,7 +49,7 @@
 <hr/>
 
 <p><code>single</code> returns matched single row as an <code>Option</code> value. If unexpectedly multiple rows are returned, runtime exception will be thrown.</p>
-<pre class="highlight scala"><code><span class="k">import</span> <span class="nn">scalikejdbc._</span>
+<div class="highlight"><pre class="highlight scala"><code><span class="k">import</span> <span class="nn">scalikejdbc._</span>
 
 <span class="k">val</span> <span class="n">id</span> <span class="k">=</span> <span class="mi">123</span>
 
@@ -79,8 +79,7 @@
 <span class="k">val</span> <span class="n">emp</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Emp</span><span class="o">]</span> <span class="k">=</span> <span class="nc">DB</span> <span class="n">readOnly</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span>
   <span class="n">withSQL</span> <span class="o">{</span> <span class="n">select</span><span class="o">.</span><span class="n">from</span><span class="o">(</span><span class="nc">Emp</span> <span class="n">as</span> <span class="n">e</span><span class="o">).</span><span class="n">where</span><span class="o">.</span><span class="n">eq</span><span class="o">(</span><span class="n">e</span><span class="o">.</span><span class="n">id</span><span class="o">,</span> <span class="n">id</span><span class="o">)</span> <span class="o">}.</span><span class="n">map</span><span class="o">(</span><span class="nc">Emp</span><span class="o">(</span><span class="n">e</span><span class="o">.</span><span class="n">resultName</span><span class="o">)).</span><span class="n">single</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
 <span class="o">}</span>
-</code></pre>
-
+</code></pre></div>
 <p>You can learn about QueryDSL in detail here:</p>
 
 <p><a href="/documentation/query-dsl.html">/documentation/query-dsl</a></p>
@@ -92,7 +91,7 @@
 <hr/>
 
 <p><code>first</code> returns the first row of matched rows as an <code>Option</code> value.</p>
-<pre class="highlight scala"><code><span class="k">val</span> <span class="n">name</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">String</span><span class="o">]</span> <span class="k">=</span> <span class="nc">DB</span> <span class="n">readOnly</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span>
+<div class="highlight"><pre class="highlight scala"><code><span class="k">val</span> <span class="n">name</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">String</span><span class="o">]</span> <span class="k">=</span> <span class="nc">DB</span> <span class="n">readOnly</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span>
   <span class="n">sql</span><span class="s">"select name from emp"</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="n">rs</span> <span class="k">=&gt;</span> <span class="n">rs</span><span class="o">.</span><span class="n">string</span><span class="o">(</span><span class="s">"name"</span><span class="o">)).</span><span class="n">first</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
 <span class="o">}</span>
 
@@ -100,8 +99,7 @@
 <span class="k">val</span> <span class="n">name</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">String</span><span class="o">]</span> <span class="k">=</span> <span class="nc">DB</span> <span class="n">readOnly</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span>
   <span class="n">withSQL</span> <span class="o">{</span> <span class="n">select</span><span class="o">(</span><span class="n">e</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">name</span><span class="o">).</span><span class="n">from</span><span class="o">(</span><span class="nc">Emp</span> <span class="n">as</span> <span class="n">e</span><span class="o">)</span> <span class="o">}.</span><span class="n">map</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">string</span><span class="o">(</span><span class="n">e</span><span class="o">.</span><span class="n">name</span><span class="o">)).</span><span class="n">first</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
 <span class="o">}</span>
-</code></pre>
-
+</code></pre></div>
 <hr/>
 
 <h4 id="list-results">List Results</h4>
@@ -109,7 +107,7 @@
 <hr/>
 
 <p><code>list</code> returns matched multiple rows as <code>scala.collection.immutable.List</code>.</p>
-<pre class="highlight scala"><code><span class="k">val</span> <span class="n">name</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">String</span><span class="o">]</span> <span class="k">=</span> <span class="nc">DB</span> <span class="n">readOnly</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span>
+<div class="highlight"><pre class="highlight scala"><code><span class="k">val</span> <span class="n">name</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">String</span><span class="o">]</span> <span class="k">=</span> <span class="nc">DB</span> <span class="n">readOnly</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span>
   <span class="n">sql</span><span class="s">"select name from emp"</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="n">rs</span> <span class="k">=&gt;</span> <span class="n">rs</span><span class="o">.</span><span class="n">string</span><span class="o">(</span><span class="s">"name"</span><span class="o">)).</span><span class="n">list</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
 <span class="o">}</span>
 
@@ -117,8 +115,7 @@
 <span class="k">val</span> <span class="n">name</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">String</span><span class="o">]</span> <span class="k">=</span> <span class="nc">DB</span> <span class="n">readOnly</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span>
   <span class="n">withSQL</span> <span class="o">{</span> <span class="n">select</span><span class="o">(</span><span class="n">e</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">name</span><span class="o">).</span><span class="n">from</span><span class="o">(</span><span class="nc">Emp</span> <span class="n">as</span> <span class="n">e</span><span class="o">)</span> <span class="o">}.</span><span class="n">map</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">string</span><span class="o">(</span><span class="n">e</span><span class="o">.</span><span class="n">name</span><span class="o">)).</span><span class="n">list</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
 <span class="o">}</span>
-</code></pre>
-
+</code></pre></div>
 <hr/>
 
 <h4 id="foreach-operation">Foreach Operation</h4>
@@ -126,7 +123,7 @@
 <hr/>
 
 <p><code>foreach</code> allows you to make some side-effect in iterations. This API is useful for handling large <code>ResultSet</code>.</p>
-<pre class="highlight scala"><code><span class="nc">DB</span> <span class="n">readOnly</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span>
+<div class="highlight"><pre class="highlight scala"><code><span class="nc">DB</span> <span class="n">readOnly</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span>
   <span class="n">sql</span><span class="s">"select name from emp"</span><span class="o">.</span><span class="n">foreach</span> <span class="o">{</span> <span class="n">rs</span> <span class="k">=&gt;</span> 
     <span class="n">out</span><span class="o">.</span><span class="n">write</span><span class="o">(</span><span class="n">rs</span><span class="o">.</span><span class="n">string</span><span class="o">(</span><span class="s">"name"</span><span class="o">))</span> 
   <span class="o">}</span>
@@ -138,8 +135,7 @@
     <span class="n">out</span><span class="o">.</span><span class="n">write</span><span class="o">(</span><span class="n">rs</span><span class="o">.</span><span class="n">string</span><span class="o">(</span><span class="n">e</span><span class="o">.</span><span class="n">name</span><span class="o">))</span> 
   <span class="o">}</span>
 <span class="o">}</span>
-</code></pre>
-
+</code></pre></div>
 <hr/>
 
 <h4 id="setting-jdbc-fetchsize">Setting JDBC fetchSize</h4>
@@ -151,16 +147,15 @@
 <p><a href="http://docs.oracle.com/javase/8/docs/api/java/sql/Statement.html#setFetchSize-int-">http://docs.oracle.com/javase/8/docs/api/java/sql/Statement.html#setFetchSize-int-</a></p>
 
 <p>You can specify JDBC fetchSize as follows since version 2.0.5.</p>
-<pre class="highlight scala"><code><span class="k">val</span> <span class="n">e</span> <span class="k">=</span> <span class="nc">Emp</span><span class="o">.</span><span class="n">syntax</span><span class="o">(</span><span class="s">"e"</span><span class="o">)</span>
+<div class="highlight"><pre class="highlight scala"><code><span class="k">val</span> <span class="n">e</span> <span class="k">=</span> <span class="nc">Emp</span><span class="o">.</span><span class="n">syntax</span><span class="o">(</span><span class="s">"e"</span><span class="o">)</span>
 <span class="nc">DB</span> <span class="n">readOnly</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span>
   <span class="n">sql</span><span class="s">"select name from emp"</span>
     <span class="o">.</span><span class="n">fetchSize</span><span class="o">(</span><span class="mi">1000</span><span class="o">)</span>
     <span class="o">.</span><span class="n">foreach</span> <span class="o">{</span> <span class="n">rs</span> <span class="k">=&gt;</span> <span class="n">out</span><span class="o">.</span><span class="n">write</span><span class="o">(</span><span class="n">rs</span><span class="o">.</span><span class="n">string</span><span class="o">(</span><span class="s">"name"</span><span class="o">))</span> <span class="o">}</span>
 <span class="o">}</span>
-</code></pre>
-
+</code></pre></div>
 <p>Or it&rsquo;s also fine to set fetchSize to <code>scalikejdbc.DBSession</code>.</p>
-<pre class="highlight scala"><code><span class="k">val</span> <span class="o">(</span><span class="n">e</span><span class="o">,</span> <span class="n">c</span><span class="o">)</span> <span class="k">=</span> <span class="o">(</span><span class="nc">Emp</span><span class="o">.</span><span class="n">syntax</span><span class="o">(</span><span class="s">"e"</span><span class="o">),</span> <span class="nc">Cmp</span><span class="o">.</span><span class="n">syntax</span><span class="o">(</span><span class="s">"c"</span><span class="o">))</span>
+<div class="highlight"><pre class="highlight scala"><code><span class="k">val</span> <span class="o">(</span><span class="n">e</span><span class="o">,</span> <span class="n">c</span><span class="o">)</span> <span class="k">=</span> <span class="o">(</span><span class="nc">Emp</span><span class="o">.</span><span class="n">syntax</span><span class="o">(</span><span class="s">"e"</span><span class="o">),</span> <span class="nc">Cmp</span><span class="o">.</span><span class="n">syntax</span><span class="o">(</span><span class="s">"c"</span><span class="o">))</span>
 
 <span class="nc">DB</span> <span class="n">readOnly</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span>
   <span class="n">session</span><span class="o">.</span><span class="n">fetchSize</span><span class="o">(</span><span class="mi">1000</span><span class="o">)</span>
@@ -172,8 +167,7 @@
     <span class="n">out</span><span class="o">.</span><span class="n">write</span><span class="o">(</span><span class="n">rs</span><span class="o">.</span><span class="n">string</span><span class="o">(</span><span class="n">c</span><span class="o">.</span><span class="n">name</span><span class="o">))</span> 
   <span class="o">}</span>
 <span class="o">}</span>
-</code></pre>
-
+</code></pre></div>
 <hr/>
 
 <h4 id="implementing-custom-extractor">Implementing Custom Extractor</h4>
@@ -183,7 +177,7 @@
 <p>In some cases, you might need to implement your own custom extractor. This can be useful for testing out queries.</p>
 
 <p>This example shows how to preserve <code>null</code> values in a result set.</p>
-<pre class="highlight scala"><code><span class="k">def</span> <span class="n">toMap</span><span class="o">(</span><span class="n">rs</span><span class="k">:</span> <span class="kt">WrappedResultSet</span><span class="o">)</span><span class="k">:</span> <span class="kt">Map</span><span class="o">[</span><span class="kt">String</span>, <span class="kt">Any</span><span class="o">]</span> <span class="k">=</span>  <span class="o">{</span>
+<div class="highlight"><pre class="highlight scala"><code><span class="k">def</span> <span class="n">toMap</span><span class="o">(</span><span class="n">rs</span><span class="k">:</span> <span class="kt">WrappedResultSet</span><span class="o">)</span><span class="k">:</span> <span class="kt">Map</span><span class="o">[</span><span class="kt">String</span>, <span class="kt">Any</span><span class="o">]</span> <span class="k">=</span>  <span class="o">{</span>
   <span class="o">(</span><span class="mi">1</span> <span class="n">to</span> <span class="n">rs</span><span class="o">.</span><span class="n">metaData</span><span class="o">.</span><span class="n">getColumnCount</span><span class="o">).</span><span class="n">foldLeft</span><span class="o">(</span><span class="nc">Map</span><span class="o">[</span><span class="kt">String</span>, <span class="kt">Any</span><span class="o">]())</span> <span class="o">{</span> <span class="o">(</span><span class="n">result</span><span class="o">,</span> <span class="n">i</span><span class="o">)</span> <span class="k">=&gt;</span>
     <span class="k">val</span> <span class="n">label</span> <span class="k">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">metaData</span><span class="o">.</span><span class="n">getColumnLabel</span><span class="o">(</span><span class="n">i</span><span class="o">)</span>
     <span class="nc">Some</span><span class="o">(</span><span class="n">rs</span><span class="o">.</span><span class="n">any</span><span class="o">(</span><span class="n">label</span><span class="o">)).</span><span class="n">map</span> <span class="o">{</span> <span class="n">nullableValue</span> <span class="k">=&gt;</span> <span class="n">result</span> <span class="o">+</span> <span class="o">(</span><span class="n">label</span> <span class="o">-&gt;</span> <span class="n">nullableValue</span><span class="o">)</span> <span class="o">}.</span><span class="n">getOrElse</span><span class="o">(</span><span class="n">result</span><span class="o">)</span>
@@ -191,8 +185,7 @@
 <span class="o">}</span>
 
 <span class="n">sql</span><span class="s">"select * from emp"</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="n">rs</span> <span class="k">=&gt;</span> <span class="n">toMap</span><span class="o">(</span><span class="n">rs</span><span class="o">)).</span><span class="n">single</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
-</code></pre>
-
+</code></pre></div>
 <hr/>
 
 <h4 id="using-parameterbinder">Using ParameterBinder</h4>
@@ -202,7 +195,7 @@
 <p><code>ParameterBinder</code> enables to customize how parameters should be bound to <code>PreparedStatement</code> object inside ScalikeJDBC.</p>
 
 <p>The following example shows how to use <code>PreparedStatement#setBinaryStream</code> when binding <code>InputStream</code> value to <code>PreparedStatement</code>.</p>
-<pre class="highlight scala"><code><span class="n">sql</span><span class="s">"create table blob_example (id bigint, data blob)"</span><span class="o">).</span><span class="n">execute</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+<div class="highlight"><pre class="highlight scala"><code><span class="n">sql</span><span class="s">"create table blob_example (id bigint, data blob)"</span><span class="o">).</span><span class="n">execute</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
 
 <span class="k">val</span> <span class="n">bytes</span> <span class="k">=</span> <span class="n">scala</span><span class="o">.</span><span class="nc">Array</span><span class="o">[</span><span class="kt">Byte</span><span class="o">](</span><span class="mi">1</span><span class="o">,</span> <span class="mi">2</span><span class="o">,</span> <span class="mi">3</span><span class="o">,</span> <span class="mi">4</span><span class="o">,</span> <span class="mi">5</span><span class="o">,</span> <span class="mi">6</span><span class="o">,</span> <span class="mi">7</span><span class="o">)</span>
 <span class="k">val</span> <span class="n">in</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">ByteArrayInputStream</span><span class="o">(</span><span class="n">bytes</span><span class="o">)</span>
@@ -212,8 +205,7 @@
 <span class="o">)</span>
 
 <span class="n">sql</span><span class="s">"insert into blob_example (data) values (${bytesBinder})"</span><span class="o">).</span><span class="n">update</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
-</code></pre>
-
+</code></pre></div>
 <hr/>
 
 <h4 id="using-typebinder">Using TypeBinder</h4>
@@ -223,7 +215,7 @@
 <p><code>TypeBinder[A]</code> is a type class to extract type <code>A</code> values from Result. </p>
 
 <p>The following example shows how to bind long value to <code>MemberId</code> value.</p>
-<pre class="highlight scala"><code><span class="k">import</span> <span class="nn">scalikejdbc._</span>
+<div class="highlight"><pre class="highlight scala"><code><span class="k">import</span> <span class="nn">scalikejdbc._</span>
 <span class="k">import</span> <span class="nn">java.sql.ResultSet</span>
 
 <span class="k">implicit</span> <span class="k">val</span> <span class="n">session</span> <span class="k">=</span> <span class="nc">AutoSession</span>
@@ -243,12 +235,11 @@
 <span class="c1">// &lt;console&gt;:24: error: could not find implicit value for evidence parameter of type scalikejdbc.TypeBinder[MemberId]
 //         val ids: Seq[MemberId] = sql"select * from member".map(_.get[MemberId]("id")).list.apply()
 //                                                                               ^
-</span></code></pre>
-
+</span></code></pre></div>
 <p>Your <code>MemberId</code> class is not supported by default. You can see what types are supported by default <a href="https://github.com/scalikejdbc/scalikejdbc/blob/master/scalikejdbc-core/src/main/scala/scalikejdbc/TypeBinder.scala">here</a>.</p>
 
 <p>So you need to define your own <code>TypeBinder</code> for <code>MemberId</code> type as follows.</p>
-<pre class="highlight scala"><code><span class="c1">// define TypeBinder[MemberId] for implicit value
+<div class="highlight"><pre class="highlight scala"><code><span class="c1">// define TypeBinder[MemberId] for implicit value
 </span><span class="k">implicit</span> <span class="k">val</span> <span class="n">memberIdTypeBinder</span><span class="k">:</span> <span class="kt">TypeBinder</span><span class="o">[</span><span class="kt">MemberId</span><span class="o">]</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">TypeBinder</span><span class="o">[</span><span class="kt">MemberId</span><span class="o">]</span> <span class="o">{</span>
   <span class="k">def</span> <span class="n">apply</span><span class="o">(</span><span class="n">rs</span><span class="k">:</span> <span class="kt">ResultSet</span><span class="o">,</span> <span class="n">label</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span><span class="k">:</span> <span class="kt">MemberId</span> <span class="o">=</span> <span class="nc">MemberId</span><span class="o">(</span><span class="n">rs</span><span class="o">.</span><span class="n">getLong</span><span class="o">(</span><span class="n">label</span><span class="o">))</span>
   <span class="k">def</span> <span class="n">apply</span><span class="o">(</span><span class="n">rs</span><span class="k">:</span> <span class="kt">ResultSet</span><span class="o">,</span> <span class="n">index</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">MemberId</span> <span class="o">=</span> <span class="nc">MemberId</span><span class="o">(</span><span class="n">rs</span><span class="o">.</span><span class="n">getLong</span><span class="o">(</span><span class="n">index</span><span class="o">))</span>
@@ -256,12 +247,10 @@
 
 <span class="k">val</span> <span class="n">ids</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">MemberId</span><span class="o">]</span> <span class="k">=</span> <span class="n">sql</span><span class="s">"select id from member"</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">get</span><span class="o">[</span><span class="kt">MemberId</span><span class="o">](</span><span class="s">"id"</span><span class="o">)).</span><span class="n">list</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
 <span class="c1">// ids: Seq[MemberId] = List(MemberId(1), MemberId(1), MemberId(2), MemberId(3))
-</span></code></pre>
-
+</span></code></pre></div>
 <p>Of course, it&rsquo;s also possible to simply deal with this case without <code>TypeBinder</code>.</p>
-<pre class="highlight scala"><code><span class="k">val</span> <span class="n">ids</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">MemberId</span><span class="o">]</span> <span class="k">=</span> <span class="n">sql</span><span class="s">"select id from member"</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="n">rs</span> <span class="k">=&gt;</span> <span class="nc">MemberId</span><span class="o">(</span><span class="n">rs</span><span class="o">.</span><span class="n">get</span><span class="o">(</span><span class="s">"id"</span><span class="o">))).</span><span class="n">list</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
-</code></pre>
-
+<div class="highlight"><pre class="highlight scala"><code><span class="k">val</span> <span class="n">ids</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">MemberId</span><span class="o">]</span> <span class="k">=</span> <span class="n">sql</span><span class="s">"select id from member"</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="n">rs</span> <span class="k">=&gt;</span> <span class="nc">MemberId</span><span class="o">(</span><span class="n">rs</span><span class="o">.</span><span class="n">get</span><span class="o">(</span><span class="s">"id"</span><span class="o">))).</span><span class="n">list</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+</code></pre></div>
 <hr/>
 
 <h4 id="using-java-se-8-date-time-api-jsr-310">Using Java SE 8 Date Time API (JSR-310)</h4>
@@ -269,11 +258,10 @@
 <hr/>
 
 <p>ScalikeJDBC still supports Java SE 7. So we provides Java 8 Date Time API support as an optional module.</p>
-<pre class="highlight scala"><code><span class="n">libraryDependencies</span> <span class="o">+=</span> <span class="s">"org.scalikejdbc"</span> <span class="o">%%</span> <span class="s">"scalikejdbc-jsr310"</span> <span class="o">%</span> <span class="s">"2.5.2"</span>
-</code></pre>
-
+<div class="highlight"><pre class="highlight scala"><code><span class="n">libraryDependencies</span> <span class="o">+=</span> <span class="s">"org.scalikejdbc"</span> <span class="o">%%</span> <span class="s">"scalikejdbc-jsr310"</span> <span class="o">%</span> <span class="s">"2.5.2"</span>
+</code></pre></div>
 <p>Usage is so simple. Just add <code>import scalikejdbc.jsr310._</code>.</p>
-<pre class="highlight scala"><code><span class="k">import</span> <span class="nn">scalikejdbc._</span><span class="o">,</span> <span class="n">jsr310</span><span class="o">.</span><span class="k">_</span>
+<div class="highlight"><pre class="highlight scala"><code><span class="k">import</span> <span class="nn">scalikejdbc._</span><span class="o">,</span> <span class="n">jsr310</span><span class="o">.</span><span class="k">_</span>
 <span class="k">import</span> <span class="nn">java.time._</span>
 
 <span class="k">case</span> <span class="k">class</span> <span class="nc">Group</span><span class="o">(</span>
@@ -291,8 +279,7 @@
 </span>    <span class="c1">// (or) createdAt = rs.zonedDateTime(g.createdAt)
 </span>  <span class="o">)</span>
 <span class="o">}</span>
-</code></pre>
-
+</code></pre></div>
 <hr/>
 
 <h3 id="update-api">Update API</h3>
@@ -300,7 +287,7 @@
 <hr/>
 
 <p><code>update</code> executes <code>java.sql.PreparedStatement#executeUpdate()</code>.</p>
-<pre class="highlight scala"><code><span class="k">import</span> <span class="nn">scalikejdbc._</span>
+<div class="highlight"><pre class="highlight scala"><code><span class="k">import</span> <span class="nn">scalikejdbc._</span>
 
 <span class="nc">DB</span> <span class="n">localTx</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span>
   <span class="n">sql</span><span class="s">"""insert into emp (id, name, created_at) values (${id}, ${name}, ${DateTime.now})"""</span>
@@ -328,8 +315,7 @@
   <span class="n">withSQL</span> <span class="o">{</span> <span class="n">delete</span><span class="o">.</span><span class="n">from</span><span class="o">(</span><span class="nc">Emp</span><span class="o">).</span><span class="n">where</span><span class="o">.</span><span class="n">eq</span><span class="o">(</span><span class="n">column</span><span class="o">.</span><span class="n">id</span><span class="o">,</span> <span class="n">id</span><span class="o">)</span> <span class="o">}.</span><span class="n">update</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
 <span class="o">}</span>
 
-</code></pre>
-
+</code></pre></div>
 <hr/>
 
 <h3 id="execute-api">Execute API</h3>
@@ -337,13 +323,12 @@
 <hr/>
 
 <p><code>execute</code> executes <code>java.sql.PreparedStatement#execute()</code>.</p>
-<pre class="highlight scala"><code><span class="nc">DB</span> <span class="n">autoCommit</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span>
+<div class="highlight"><pre class="highlight scala"><code><span class="nc">DB</span> <span class="n">autoCommit</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span>
   <span class="n">sql</span><span class="s">"create table emp (id integer primary key, name varchar(30))"</span><span class="o">.</span><span class="n">execute</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
 <span class="o">}</span>
 
 <span class="c1">// QueryDSL doesn't support DDL yet.
-</span></code></pre>
-
+</span></code></pre></div>
 <hr/>
 
 <h3 id="batch-api">Batch API</h3>
@@ -351,7 +336,7 @@
 <hr/>
 
 <p><code>batch</code> and <code>batchByName</code> executes <code>java.sql.PreparedStatement#executeBatch()</code>.</p>
-<pre class="highlight scala"><code><span class="k">import</span> <span class="nn">scalikejdbc._</span>
+<div class="highlight"><pre class="highlight scala"><code><span class="k">import</span> <span class="nn">scalikejdbc._</span>
 
 <span class="nc">DB</span> <span class="n">localTx</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span>
   <span class="k">val</span> <span class="n">batchParams</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Seq</span><span class="o">[</span><span class="kt">Any</span><span class="o">]]</span> <span class="k">=</span> <span class="o">(</span><span class="mi">2001</span> <span class="n">to</span> <span class="mi">3000</span><span class="o">).</span><span class="n">map</span><span class="o">(</span><span class="n">i</span> <span class="k">=&gt;</span> <span class="nc">Seq</span><span class="o">(</span><span class="n">i</span><span class="o">,</span> <span class="s">"name"</span> <span class="o">+</span> <span class="n">i</span><span class="o">))</span>
@@ -371,8 +356,7 @@
     <span class="n">insert</span><span class="o">.</span><span class="n">into</span><span class="o">(</span><span class="nc">Emp</span><span class="o">).</span><span class="n">namedValues</span><span class="o">(</span><span class="n">column</span><span class="o">.</span><span class="n">id</span> <span class="o">-&gt;</span> <span class="n">sqls</span><span class="o">.?,</span> <span class="n">column</span><span class="o">.</span><span class="n">name</span> <span class="o">-&gt;</span> <span class="n">sqls</span><span class="o">.?)</span>
   <span class="o">}.</span><span class="n">batch</span><span class="o">(</span><span class="n">batchParams</span><span class="k">:</span> <span class="k">_</span><span class="kt">*</span><span class="o">).</span><span class="n">apply</span><span class="o">()</span>
 <span class="o">}</span>
-</code></pre>
-
+</code></pre></div>
           <hr/>
           <div class="alert alert-warning small">
             If this webpage has a typo or something wrong, Please report or fix it. <a href="/contribution.html">How?</a>

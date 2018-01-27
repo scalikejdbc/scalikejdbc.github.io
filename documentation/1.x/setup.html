@@ -43,25 +43,23 @@
 
 <hr/>
 
-<h3 id="core-library-amp-interpolation">Core Library &amp; Interpolation</h3>
+<h3 id="core-library-interpolation">Core Library &amp; Interpolation</h3>
 
 <hr/>
 
 <p>Add latest version into your <code>build.sbt</code> or <code>project/Build.scala</code>. Don&rsquo;t forget JDBC driver and slf4j implementation.</p>
 
 <p>If you&rsquo;re still using Scala 2.9, you can&rsquo;t use <code>scalikejdbc-interpolation</code>.</p>
-<pre class="highlight plaintext"><code>libraryDependencies ++= Seq(
+<div class="highlight"><pre class="highlight plaintext"><code>libraryDependencies ++= Seq(
   "org.scalikejdbc" %% "scalikejdbc"               % "1.7.7",
   "org.scalikejdbc" %% "scalikejdbc-interpolation" % "1.7.7",
   "com.h2database"  %  "h2"                        % "1.4.177",
   "ch.qos.logback"  %  "logback-classic"           % "1.1.2"
 )
-</code></pre>
-
+</code></pre></div>
 <p>In your application, just add the following import.</p>
-<pre class="highlight scala"><code><span class="k">import</span> <span class="nn">scalikejdbc._</span><span class="o">,</span> <span class="nc">SQLInterpolation</span><span class="o">.</span><span class="k">_</span>
-</code></pre>
-
+<div class="highlight"><pre class="highlight scala"><code><span class="k">import</span> <span class="nn">scalikejdbc._</span><span class="o">,</span> <span class="nc">SQLInterpolation</span><span class="o">.</span><span class="k">_</span>
+</code></pre></div>
 <hr/>
 
 <h3 id="testing-support">Testing Support</h3>
@@ -69,15 +67,14 @@
 <hr/>
 
 <p>Using <code>scalikejdbc-test</code> is highly recommended to improve your application.</p>
-<pre class="highlight plaintext"><code>libraryDependencies ++= Seq(
+<div class="highlight"><pre class="highlight plaintext"><code>libraryDependencies ++= Seq(
   "org.scalikejdbc" %% "scalikejdbc"               % "1.7.7",
   "org.scalikejdbc" %% "scalikejdbc-interpolation" % "1.7.7",
   "org.scalikejdbc" %% "scalikejdbc-test"          % "1.7.7"   % "test",
   "com.h2database"  %  "h2"                        % "1.4.177",
   "ch.qos.logback"  %  "logback-classic"           % "1.1.2"
 )
-</code></pre>
-
+</code></pre></div>
 <p>Usage: <a href="/documentation/testing.html">/documentation/testing</a></p>
 
 <hr/>
@@ -87,15 +84,14 @@
 <hr/>
 
 <p>If you use <code>application.conf</code> as settings file, add <code>scalikejdbc-config</code> too.</p>
-<pre class="highlight plaintext"><code>libraryDependencies ++= Seq(
+<div class="highlight"><pre class="highlight plaintext"><code>libraryDependencies ++= Seq(
   "org.scalikejdbc" %% "scalikejdbc"               % "1.7.7",
   "org.scalikejdbc" %% "scalikejdbc-interpolation" % "1.7.7",
   "org.scalikejdbc" %% "scalikejdbc-config"        % "1.7.7",
   "com.h2database"  %  "h2"                        % "1.4.177",
   "ch.qos.logback"  %  "logback-classic"           % "1.1.2"
 )
-</code></pre>
-
+</code></pre></div>
 <p>Usage: <a href="/documentation/configuration.html">/documentation/configuration</a></p>
 
 <hr/>
@@ -108,18 +104,16 @@
 You need to setup an sbt plugin named <code>scalikejdbc-mapper-generator</code>.</p>
 
 <h5 id="project-plugins-sbt">project/plugins.sbt</h5>
-<pre class="highlight plaintext"><code>// Don't forget adding your JDBC driver
+<div class="highlight"><pre class="highlight plaintext"><code>// Don't forget adding your JDBC driver
 libraryDependencies += "org.hsqldb" % "hsqldb" % "2.3.2"
 
 addSbtPlugin("org.scalikejdbc" %% "scalikejdbc-mapper-generator" % "1.7.7")
-</code></pre>
-
+</code></pre></div>
 <h5 id="build-sbt">build.sbt</h5>
-<pre class="highlight plaintext"><code>scalikejdbcSettings
-</code></pre>
-
+<div class="highlight"><pre class="highlight plaintext"><code>scalikejdbcSettings
+</code></pre></div>
 <h5 id="project-scalikejdbc-properties">project/scalikejdbc.properties</h5>
-<pre class="highlight plaintext"><code>jdbc.driver=org.h2.Driver
+<div class="highlight"><pre class="highlight plaintext"><code>jdbc.driver=org.h2.Driver
 jdbc.url=jdbc:h2:file:./db/hello
 jdbc.username=sa
 jdbc.password=
@@ -132,8 +126,7 @@ generator.template=queryDsl
 # generator.testTemplate: specs2unit/specs2acceptance/ScalaTestFlatSpec
 generator.testTemplate=specs2unit
 generator.encoding=UTF-8
-</code></pre>
-
+</code></pre></div>
 <p>Usage: <a href="/documentation/reverse-engineering.html">/documentation/reverse-engineering</a></p>
 
 <hr/>
@@ -145,24 +138,21 @@ generator.encoding=UTF-8
 <p>Add <code>scalikejdbc-play-plugin</code> and <code>scalikejdbc-play-fixture-plugin</code> (optional) as Play plugins.</p>
 
 <h5 id="project-build-scala">project/Build.scala</h5>
-<pre class="highlight plaintext"><code>val appDependencies = Seq(
+<div class="highlight"><pre class="highlight plaintext"><code>val appDependencies = Seq(
   "org.scalikejdbc" %% "scalikejdbc"                     % "1.7.7",
   "org.scalikejdbc" %% "scalikejdbc-play-plugin"         % "1.7.7",
   "org.scalikejdbc" %% "scalikejdbc-play-fixture-plugin" % "1.7.7", // optional
   // substitute this for whatever DB driver you're using:
   "com.h2database"  %  "h2"                              % "1.4.177"
 )
-</code></pre>
-
+</code></pre></div>
 <h5 id="conf-play-plugins">conf/play.plugins</h5>
-<pre class="highlight plaintext"><code>10000:scalikejdbc.PlayPlugin
-</code></pre>
-
+<div class="highlight"><pre class="highlight plaintext"><code>10000:scalikejdbc.PlayPlugin
+</code></pre></div>
 <p>If you use fixture-plugin too, PlayFixturePlugin should be loaded after PlayPlugin:</p>
-<pre class="highlight plaintext"><code>10000:scalikejdbc.PlayPlugin
+<div class="highlight"><pre class="highlight plaintext"><code>10000:scalikejdbc.PlayPlugin
 11000:scalikejdbc.PlayFixturePlugin
-</code></pre>
-
+</code></pre></div>
 <p>Usage: <a href="/documentation/playframework-support.html">/documentation/playframework-support</a></p>
 
 <hr/>
@@ -174,13 +164,11 @@ generator.encoding=UTF-8
 <p>A simple console to connect database via JDBC.</p>
 
 <h5 id="mac-os-x-linux">Mac OS X, Linux</h5>
-<pre class="highlight plaintext"><code>curl -L http://git.io/dbconsole | sh
-</code></pre>
-
+<div class="highlight"><pre class="highlight plaintext"><code>curl -L http://git.io/dbconsole | sh
+</code></pre></div>
 <h5 id="windows">Windows</h5>
-<pre class="highlight plaintext"><code>http://git.io/dbconsole.bat
-</code></pre>
-
+<div class="highlight"><pre class="highlight plaintext"><code>http://git.io/dbconsole.bat
+</code></pre></div>
 <p>Usage: <a href="/documentation/dbconsole.html">/documentation/dbconsole</a></p>
 
           <hr/>

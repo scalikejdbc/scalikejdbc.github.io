@@ -48,7 +48,7 @@
 <h3 id="settings">Settings</h3>
 
 <hr/>
-<pre class="highlight scala"><code><span class="k">import</span> <span class="nn">scalikejdbc._</span>
+<div class="highlight"><pre class="highlight scala"><code><span class="k">import</span> <span class="nn">scalikejdbc._</span>
 <span class="nc">GlobalSettings</span><span class="o">.</span><span class="n">loggingSQLAndTime</span> <span class="k">=</span> <span class="nc">LoggingSQLAndTimeSettings</span><span class="o">(</span>
   <span class="n">enabled</span> <span class="k">=</span> <span class="kc">true</span><span class="o">,</span>
   <span class="n">logLevel</span> <span class="k">=</span> <span class="ss">'DEBUG,</span>
@@ -56,8 +56,7 @@
   <span class="n">warningThresholdMillis</span> <span class="k">=</span> <span class="mi">1000L</span><span class="o">,</span>
   <span class="n">warningLogLevel</span> <span class="k">=</span> <span class="ss">'WARN
 </span><span class="o">)</span>
-</code></pre>
-
+</code></pre></div>
 <hr/>
 
 <h3 id="output-example">Output Example</h3>
@@ -65,10 +64,10 @@
 <hr/>
 
 <p>For example, logging as follows:</p>
-<pre class="highlight shell"><code><span class="o">[</span>debug] s.StatementExecutor<span class="nv">$$</span>anon<span class="nv">$1</span> - SQL execution completed
+<div class="highlight"><pre class="highlight shell"><code><span class="o">[</span>debug] s.StatementExecutor<span class="nv">$$</span>anon<span class="nv">$1</span> - SQL execution completed
 
   <span class="o">[</span>Executed SQL]
-   <span class="k">select</span> <span class="k">*</span> from user where email <span class="o">=</span> <span class="s1">'guillaume@sample.com'</span>; <span class="o">(</span>0 ms<span class="o">)</span>
+   <span class="k">select</span> <span class="k">*</span> from user where email <span class="o">=</span> <span class="s1">'guillaume@sample.com'</span><span class="p">;</span> <span class="o">(</span>0 ms<span class="o">)</span>
 
   <span class="o">[</span>Stack Trace]
     ...
@@ -88,8 +87,7 @@
     play.core.ActionInvoker<span class="nv">$$</span>anonfun<span class="nv">$receive$1</span>.apply<span class="o">(</span>Invoker.scala:115<span class="o">)</span>
     akka.actor.Actor<span class="nv">$class</span>.apply<span class="o">(</span>Actor.scala:318<span class="o">)</span>
     ...
-</code></pre>
-
+</code></pre></div>
 <hr/>
 
 <h3 id="single-line-mode">Single Line Mode</h3>
@@ -97,17 +95,15 @@
 <hr/>
 
 <p>If you don&rsquo;t need stack trace logging and just print SQL in single line, use <code>singleLineMode = true</code>.</p>
-<pre class="highlight scala"><code><span class="nc">GlobalSettings</span><span class="o">.</span><span class="n">loggingSQLAndTime</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">LoggingSQLAndTimeSettings</span><span class="o">(</span>
+<div class="highlight"><pre class="highlight scala"><code><span class="nc">GlobalSettings</span><span class="o">.</span><span class="n">loggingSQLAndTime</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">LoggingSQLAndTimeSettings</span><span class="o">(</span>
   <span class="n">enabled</span> <span class="k">=</span> <span class="kc">true</span><span class="o">,</span>
   <span class="n">singleLineMode</span> <span class="k">=</span> <span class="kc">true</span><span class="o">,</span>
   <span class="n">logLevel</span> <span class="k">=</span> <span class="ss">'DEBUG
 </span><span class="o">)</span>
-</code></pre>
-
+</code></pre></div>
 <p>In this case, logging as follows:</p>
-<pre class="highlight shell"><code>2013-05-26 16:23:08,072 DEBUG <span class="o">[</span>pool-4-thread-4] s.StatementExecutor<span class="nv">$$</span>anon<span class="nv">$1</span> <span class="o">[</span>Log.scala:81] <span class="o">[</span>SQL Execution] <span class="k">select</span> <span class="k">*</span> from user where email <span class="o">=</span> <span class="s1">'guillaume@sample.com'</span>; <span class="o">(</span>0 ms<span class="o">)</span>
-</code></pre>
-
+<div class="highlight"><pre class="highlight shell"><code>2013-05-26 16:23:08,072 DEBUG <span class="o">[</span>pool-4-thread-4] s.StatementExecutor<span class="nv">$$</span>anon<span class="nv">$1</span> <span class="o">[</span>Log.scala:81] <span class="o">[</span>SQL Execution] <span class="k">select</span> <span class="k">*</span> from user where email <span class="o">=</span> <span class="s1">'guillaume@sample.com'</span><span class="p">;</span> <span class="o">(</span>0 ms<span class="o">)</span>
+</code></pre></div>
 <hr/>
 
 <h3 id="not-only-logging">Not Only Logging</h3>
@@ -117,7 +113,7 @@
 <p>You can use hooks such as <code>GlobalSettings.queryCompletionListener</code> and <code>GlobalSettings.queryFailureListener</code>.</p>
 
 <p>For instance, the following example will send information about slow queries to Fluentd.</p>
-<pre class="highlight scala"><code><span class="k">import</span> <span class="nn">org.fluentd.logger.scala._</span>
+<div class="highlight"><pre class="highlight scala"><code><span class="k">import</span> <span class="nn">org.fluentd.logger.scala._</span>
 <span class="k">val</span> <span class="n">logger</span> <span class="k">=</span> <span class="nc">FluentLoggerFactory</span><span class="o">.</span><span class="n">getLogger</span><span class="o">(</span><span class="s">"scalikejdbc"</span><span class="o">)</span>
 
 <span class="nc">GlobalSettings</span><span class="o">.</span><span class="n">queryCompletionListener</span> <span class="k">=</span> <span class="o">(</span><span class="n">sql</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">params</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Any</span><span class="o">],</span> <span class="n">millis</span><span class="k">:</span> <span class="kt">Long</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="o">{</span>
@@ -133,8 +129,7 @@
   <span class="n">sql</span><span class="s">"select product_id, count(*) from orders group by product_id"</span>
     <span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="n">rs</span> <span class="k">=&gt;</span> <span class="nc">OrderCount</span><span class="o">(</span><span class="n">rs</span><span class="o">)).</span><span class="n">list</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
 <span class="o">}</span>
-</code></pre>
-
+</code></pre></div>
           <hr/>
           <div class="alert alert-warning small">
             If this webpage has a typo or something wrong, Please report or fix it. <a href="/contribution.html">How?</a>

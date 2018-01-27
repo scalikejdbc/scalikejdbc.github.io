@@ -65,9 +65,8 @@
 <p>As you know, Rails ActiveRecord saves timestamp values in UTC time zone. DB column types will be <code>timetamp without timezone</code>.</p>
 
 <p>When you need to work with them, call the following Java TimeZone&rsquo;s setter method (instead of <code>DateTimeZone.setDefault(DateTimeZone.UTC)</code>) at first.</p>
-<pre class="highlight scala"><code><span class="n">java</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="nc">TimeZone</span><span class="o">.</span><span class="n">setDefault</span><span class="o">(</span><span class="n">java</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="nc">TimeZone</span><span class="o">.</span><span class="n">getTimeZone</span><span class="o">(</span><span class="s">"UTC"</span><span class="o">))</span>
-</code></pre>
-
+<div class="highlight"><pre class="highlight scala"><code><span class="n">java</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="nc">TimeZone</span><span class="o">.</span><span class="n">setDefault</span><span class="o">(</span><span class="n">java</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="nc">TimeZone</span><span class="o">.</span><span class="n">getTimeZone</span><span class="o">(</span><span class="s">"UTC"</span><span class="o">))</span>
+</code></pre></div>
 <hr/>
 
 <h3 id="non-blocking-support">non-blocking support?</h3>

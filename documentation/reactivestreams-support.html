@@ -47,9 +47,8 @@ Be aware of the max size of connection pool and carefully monitor the state of t
 <hr/>
 
 <p>Add the following aditional dependency to your sbt project.</p>
-<pre class="highlight scala"><code><span class="n">libraryDependencies</span> <span class="o">+=</span> <span class="s">"org.scalikejdbc"</span> <span class="o">%%</span> <span class="s">"scalikejdbc-streams"</span> <span class="o">%</span> <span class="s">"3.2.0"</span>
-</code></pre>
-
+<div class="highlight"><pre class="highlight scala"><code><span class="n">libraryDependencies</span> <span class="o">+=</span> <span class="s">"org.scalikejdbc"</span> <span class="o">%%</span> <span class="s">"scalikejdbc-streams"</span> <span class="o">%</span> <span class="s">"3.2.0"</span>
+</code></pre></div>
 <hr/>
 
 <h3 id="usage">Usage</h3>
@@ -57,7 +56,7 @@ Be aware of the max size of connection pool and carefully monitor the state of t
 <hr/>
 
 <h4 id="first-example">First Example</h4>
-<pre class="highlight scala"><code><span class="k">import</span> <span class="nn">scalikejdbc._</span>
+<div class="highlight"><pre class="highlight scala"><code><span class="k">import</span> <span class="nn">scalikejdbc._</span>
 <span class="k">import</span> <span class="nn">scalikejdbc.streams._</span>  <span class="c1">// 1. import streams module. This provides SQL#iterator &amp; DB#readOnlyStream.
 </span><span class="k">import</span> <span class="nn">java.util.concurrent._</span>
 
@@ -89,8 +88,7 @@ Be aware of the max size of connection pool and carefully monitor the state of t
 
 <span class="c1">// 4. Give a Reactive Streams Subscriber to it.
 </span><span class="n">publisher</span><span class="o">.</span><span class="n">subscribe</span><span class="o">(</span><span class="n">subscriber</span><span class="o">)</span>
-</code></pre>
-
+</code></pre></div>
 <p>The DatabasePublisher capsulates an ExecutionContext to inside.
 We also recommend using ExecutionContext which is separate from the main thread pool.</p>
 
@@ -104,28 +102,26 @@ We also recommend using ExecutionContext which is separate from the main thread 
 <p>At the current moment, <code>scalikejdbc-streams</code> natively supports MySQL and PostgreSQL.
 When using <code>SQL#iterator</code> factory method normally, ScalikeJDBC automatically enables required settings to use cursor feature.
 If you don&rsquo;t prefer the behavior, you can customize adjusting DBSession attributes instead.</p>
-<pre class="highlight scala"><code><span class="k">val</span> <span class="n">publisher</span><span class="k">:</span> <span class="kt">DatabasePublisher</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="nc">DB</span> <span class="n">readOnlyStream</span> <span class="o">{</span>
+<div class="highlight"><pre class="highlight scala"><code><span class="k">val</span> <span class="n">publisher</span><span class="k">:</span> <span class="kt">DatabasePublisher</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="nc">DB</span> <span class="n">readOnlyStream</span> <span class="o">{</span>
   <span class="n">sql</span><span class="s">"select id from users"</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="n">r</span> <span class="k">=&gt;</span> <span class="n">r</span><span class="o">.</span><span class="n">int</span><span class="o">(</span><span class="s">"id"</span><span class="o">))</span>
     <span class="o">.</span><span class="n">iterator</span>
     <span class="o">.</span><span class="n">withDBSessionForceAdjuster</span><span class="o">(</span><span class="n">session</span> <span class="k">=&gt;</span> <span class="o">{</span>
       <span class="n">session</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">setAutoCommit</span><span class="o">(</span><span class="kc">true</span><span class="o">)</span>
     <span class="o">})</span>
 <span class="o">}</span>
-</code></pre>
-
+</code></pre></div>
 <hr/>
 
 <h4 id="integrate-with-akka-streams">Integrate with Akka Streams</h4>
 
 <p>It is easy to integrate <code>scalikejdbc-streams</code> with another library that supports Reactive Streams.
 For example, Akka Streams, you can give a ScalikeJDBC&rsquo;s publisher to Akka Streams Source as follows.</p>
-<pre class="highlight scala"><code><span class="k">implicit</span> <span class="k">val</span> <span class="n">system</span> <span class="k">=</span> <span class="nc">ActorSystem</span><span class="o">(</span><span class="s">"streams"</span><span class="o">)</span>
+<div class="highlight"><pre class="highlight scala"><code><span class="k">implicit</span> <span class="k">val</span> <span class="n">system</span> <span class="k">=</span> <span class="nc">ActorSystem</span><span class="o">(</span><span class="s">"streams"</span><span class="o">)</span>
 <span class="k">import</span> <span class="nn">system.dispatcher</span>
 <span class="k">implicit</span> <span class="k">val</span> <span class="n">materializer</span> <span class="k">=</span> <span class="nc">ActorMaterializer</span><span class="o">()</span>
 
 <span class="nc">Source</span><span class="o">.</span><span class="n">fromPublisher</span><span class="o">(</span><span class="n">publisher</span><span class="o">).</span><span class="n">filter</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">id</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="o">).</span><span class="n">runForeach</span><span class="o">(</span><span class="n">println</span><span class="o">)</span>
-</code></pre>
-
+</code></pre></div>
           <hr/>
           <div class="alert alert-warning small">
             If this webpage has a typo or something wrong, Please report or fix it. <a href="/contribution.html">How?</a>
