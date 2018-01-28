@@ -315,18 +315,19 @@ Just use normal class and implement `EntityEquality` trait (for one-to-many rela
 
 ```scala
 import scalikekdbc._
+import java.time.ZonedDateTime
 
 class HugeTable(
   val column1: Long,
   val column2: Option[String],
   val column3: String,
   val column4: Int,
-  val column5: DateTime,
+  val column5: ZonedDateTime,
   ...
   val column22: Int,
-  val column23: DateTime) extends EntityEquality {
+  val column23: ZonedDateTime) extends EntityEquality {
 
-  override val entityIdentity = Seq(column1, columns2, .., columns23).mkString("\t")
+  override val entityIdentity = Seq(column1, column2, ..., column23).mkString("\t")
 
 }
 ```
