@@ -96,15 +96,15 @@ val name: Option[String] = DB readOnly { implicit session =>
 
 ```scala
 DB readOnly { implicit session =>
-  sql"select name from emp".foreach { rs => 
-    out.write(rs.string("name")) 
+  sql"select name from emp".foreach { rs =>
+    out.write(rs.string("name"))
   }
 }
 
 val e = Emp.syntax("e")
 DB readOnly { implicit session =>
-  withSQL { select(e.name).from(Emp as e) }.foreach { rs => 
-    out.write(rs.string(e.name)) 
+  withSQL { select(e.name).from(Emp as e) }.foreach { rs =>
+    out.write(rs.string(e.name))
   }
 }
 ```
@@ -136,11 +136,11 @@ val (e, c) = (Emp.syntax("e"), Cmp.syntax("c"))
 DB readOnly { implicit session =>
   session.fetchSize(1000)
 
-  withSQL { select(e.name).from(Emp as e) }.foreach { rs => 
-    out.write(rs.string(e.name) 
+  withSQL { select(e.name).from(Emp as e) }.foreach { rs =>
+    out.write(rs.string(e.name)
   }
-  withSQL { select(c.name).from(Cmp as c) }.foreach { rs => 
-    out.write(rs.string(c.name)) 
+  withSQL { select(c.name).from(Cmp as c) }.foreach { rs =>
+    out.write(rs.string(c.name))
   }
 }
 ```
@@ -168,7 +168,7 @@ sql"select * from emp".map(rs => toMap(rs)).single.apply()
 #### Using ParameterBinder
 <hr/>
 
-`ParameterBinder` enables to customize how parameters should be bound to `PreparedStatement` object inside ScalikeJDBC.
+`ParameterBinder` allows you to customize how parameters should be bound to `PreparedStatement` object inside ScalikeJDBC.
 
 The following example shows how to use `PreparedStatement#setBinaryStream` when binding `InputStream` value to `PreparedStatement`.
 
@@ -185,17 +185,38 @@ val bytesBinder = ParameterBinder(
 sql"insert into blob_example (data) values (${bytesBinder})").update.apply()
 ```
 
+If you need to enable some `ParameterBinder` implicitly, you need to define `ParameterBinderFactory` for it.
+
+```scala
+case class MemberId(value: Int)
+case class Member(id: MemberId, name: String)
+object Member extends SQLSyntaxSupport[Member] {}
+
+implicit val memberIdPbf = ParameterBinderFactory[MemberId] {
+  value => (stmt, idx) => stmt.setInt(idx, value.value)
+}
+
+val m = Member.syntax("m")
+val memberId = MemberId(123)
+withSQL {
+  select.from(Member as m).where.eq(m.id, memberId) // `memberIdPbf` properly affects here
+}.map(Member(_)).single.apply()
+
+// CAUTION:
+// The SQL Interpolation style doesn't work with ParameterBinderFactory while it works with ParameterBinder
+sql"select id from member where id = $memberId" // will bind `memberId` as an object
+```
+
 <hr/>
 #### Using TypeBinder
 <hr/>
 
-`TypeBinder[A]` is a type class to extract type `A` values from Result. 
+`TypeBinder[A]` is a type class to extract type `A` values from ResultSet. To extract a value as a specific type value, you need to define the type class for it.
 
-The following example shows how to bind long value to `MemberId` value.
+Let's say you need to bind a long value as `MemberId` type as below.
 
 ```scala
 import scalikejdbc._
-import java.sql.ResultSet
 
 implicit val session = AutoSession
 
@@ -216,17 +237,18 @@ val ids: Seq[MemberId] = sql"select * from member".map(_.get[MemberId]("id")).li
 //                                                                               ^
 ```
 
-Your `MemberId` class is not supported by default. You can see what types are supported by default [here](https://github.com/scalikejdbc/scalikejdbc/blob/master/scalikejdbc-core/src/main/scala/scalikejdbc/TypeBinder.scala).
+Since your `MemberId` type is not available by default, you've got a compilation error. You can see all predef types by default [here](https://github.com/scalikejdbc/scalikejdbc/blob/master/scalikejdbc-core/src/main/scala/scalikejdbc/TypeBinder.scala).
 
-So you need to define your own `TypeBinder` for `MemberId` type as follows.
+As such, you need to define your own `TypeBinder` for `MemberId` type as below.
 
 ```scala
-// define TypeBinder[MemberId] for implicit value
+// define TypeBinder[MemberId]
 implicit val memberIdTypeBinder: TypeBinder[MemberId] = new TypeBinder[MemberId] {
   def apply(rs: ResultSet, label: String): MemberId = MemberId(rs.getLong(label))
   def apply(rs: ResultSet, index: Int): MemberId = MemberId(rs.getLong(index))
 }
 
+// WrappedResultSet#get[MemberId]("id") works with above implicit definition
 val ids: Seq[MemberId] = sql"select id from member".map(_.get[MemberId]("id")).list.apply()
 // ids: Seq[MemberId] = List(MemberId(1), MemberId(1), MemberId(2), MemberId(3))
 ```
@@ -238,26 +260,72 @@ val ids: Seq[MemberId] = sql"select id from member".map(rs => MemberId(rs.get("i
 ```
 
 <hr/>
-#### Using Java SE 8 Date Time API (JSR-310)
+#### Binders to define both ParameterBinderFactory and TypeBinder
 <hr/>
+
+Using `Binders` is very convenient when you define both `ParameterBinderFactory` and `TypeBinder`.
+
+```scala
+// object Binders {
+//   def of[A](f: Any => A)(g: A => (PreparedStatement, Int) => Unit): Binders[A]
+// }
+
+import scalikejdbc._
+
+case class MemberId(value: Int)
+
+// If you paste this code on the REPL, use :paste
+{
+  Binders.of[MemberId]
+  // For TypeBinder (f: Any => A)
+  {
+    case null => null
+    case v: Float => MemberId(v.toInt)
+    case v: Double => MemberId(v.toInt)
+    case n: Number => MemberId(n.intValue)
+    case v => MemberId(v.toString.toInt)
+  }
+  // For ParameterBinderFactory (A => (PreparedStatement, Int) => Unit)
+  { v =>
+    (ps, idx) =>
+    ps.setInt(idx, v.value)
+  }
+}
+```
+
+<hr/>
+#### Using joda-time library
+<hr/>
+
+You need to add the optional module which supports joda-time library.
+
+```scala
+libraryDependencies += "org.scalikejdbc" %% "scalikejdbc-joda-time" % "<%= version %>"
+```
+
+Also, you explicitly need to import ParameterBinderFatory and TypeBinder.
 
 ```scala
 import scalikejdbc._
+// If you need ParameterBinderFactory for joda-time classes
+import scalikejdbc.jodatime.JodaParameterBinderFactory._
+// If you need TypeBinder for joda-time classes
+import scalikejdbc.jodatime.JodaTypeBinder._
 import java.time._
-                                    
+
 case class Group(
-  id: Long, 
-  name: Option[String], 
+  id: Long,
+  name: Option[String],
   createdAt: ZonedDateTime)
 
 object Group extends SQLSyntaxSupport[Group] {
   def apply(g: SyntaxProvider[Group])(rs: WrappedResultSet): Group = apply(g.resultName)(rs)
   def apply(g: ResultName[Group])(rs: WrappedResultSet): Group = new Group(
-    id = rs.get(g.id), 
-    name = rs.get(g.name), 
+    id = rs.get(g.id),
+    name = rs.get(g.name),
     createdAt = rs.get(g.createdAt)
-    // (or) createdAt = rs.get[ZonedDateTime](g.createdAt)
-    // (or) createdAt = rs.zonedDateTime(g.createdAt)
+    // (or) createdAt = rs.get[DateTime](g.createdAt)
+    // (or) createdAt = rs.jodaDateTime(g.createdAt)
   )
 }
 ```
