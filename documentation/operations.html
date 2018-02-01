@@ -121,15 +121,15 @@
 
 <p><code>foreach</code> allows you to make some side-effect in iterations. This API is useful for handling large <code>ResultSet</code>.</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="nc">DB</span> <span class="n">readOnly</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span>
-  <span class="n">sql</span><span class="s">"select name from emp"</span><span class="o">.</span><span class="n">foreach</span> <span class="o">{</span> <span class="n">rs</span> <span class="k">=&gt;</span> 
-    <span class="n">out</span><span class="o">.</span><span class="n">write</span><span class="o">(</span><span class="n">rs</span><span class="o">.</span><span class="n">string</span><span class="o">(</span><span class="s">"name"</span><span class="o">))</span> 
+  <span class="n">sql</span><span class="s">"select name from emp"</span><span class="o">.</span><span class="n">foreach</span> <span class="o">{</span> <span class="n">rs</span> <span class="k">=&gt;</span>
+    <span class="n">out</span><span class="o">.</span><span class="n">write</span><span class="o">(</span><span class="n">rs</span><span class="o">.</span><span class="n">string</span><span class="o">(</span><span class="s">"name"</span><span class="o">))</span>
   <span class="o">}</span>
 <span class="o">}</span>
 
 <span class="k">val</span> <span class="n">e</span> <span class="k">=</span> <span class="nc">Emp</span><span class="o">.</span><span class="n">syntax</span><span class="o">(</span><span class="s">"e"</span><span class="o">)</span>
 <span class="nc">DB</span> <span class="n">readOnly</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span>
-  <span class="n">withSQL</span> <span class="o">{</span> <span class="n">select</span><span class="o">(</span><span class="n">e</span><span class="o">.</span><span class="n">name</span><span class="o">).</span><span class="n">from</span><span class="o">(</span><span class="nc">Emp</span> <span class="n">as</span> <span class="n">e</span><span class="o">)</span> <span class="o">}.</span><span class="n">foreach</span> <span class="o">{</span> <span class="n">rs</span> <span class="k">=&gt;</span> 
-    <span class="n">out</span><span class="o">.</span><span class="n">write</span><span class="o">(</span><span class="n">rs</span><span class="o">.</span><span class="n">string</span><span class="o">(</span><span class="n">e</span><span class="o">.</span><span class="n">name</span><span class="o">))</span> 
+  <span class="n">withSQL</span> <span class="o">{</span> <span class="n">select</span><span class="o">(</span><span class="n">e</span><span class="o">.</span><span class="n">name</span><span class="o">).</span><span class="n">from</span><span class="o">(</span><span class="nc">Emp</span> <span class="n">as</span> <span class="n">e</span><span class="o">)</span> <span class="o">}.</span><span class="n">foreach</span> <span class="o">{</span> <span class="n">rs</span> <span class="k">=&gt;</span>
+    <span class="n">out</span><span class="o">.</span><span class="n">write</span><span class="o">(</span><span class="n">rs</span><span class="o">.</span><span class="n">string</span><span class="o">(</span><span class="n">e</span><span class="o">.</span><span class="n">name</span><span class="o">))</span>
   <span class="o">}</span>
 <span class="o">}</span>
 </code></pre></div>
@@ -157,11 +157,11 @@
 <span class="nc">DB</span> <span class="n">readOnly</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span>
   <span class="n">session</span><span class="o">.</span><span class="n">fetchSize</span><span class="o">(</span><span class="mi">1000</span><span class="o">)</span>
 
-  <span class="n">withSQL</span> <span class="o">{</span> <span class="n">select</span><span class="o">(</span><span class="n">e</span><span class="o">.</span><span class="n">name</span><span class="o">).</span><span class="n">from</span><span class="o">(</span><span class="nc">Emp</span> <span class="n">as</span> <span class="n">e</span><span class="o">)</span> <span class="o">}.</span><span class="n">foreach</span> <span class="o">{</span> <span class="n">rs</span> <span class="k">=&gt;</span> 
-    <span class="n">out</span><span class="o">.</span><span class="n">write</span><span class="o">(</span><span class="n">rs</span><span class="o">.</span><span class="n">string</span><span class="o">(</span><span class="n">e</span><span class="o">.</span><span class="n">name</span><span class="o">)</span> 
+  <span class="n">withSQL</span> <span class="o">{</span> <span class="n">select</span><span class="o">(</span><span class="n">e</span><span class="o">.</span><span class="n">name</span><span class="o">).</span><span class="n">from</span><span class="o">(</span><span class="nc">Emp</span> <span class="n">as</span> <span class="n">e</span><span class="o">)</span> <span class="o">}.</span><span class="n">foreach</span> <span class="o">{</span> <span class="n">rs</span> <span class="k">=&gt;</span>
+    <span class="n">out</span><span class="o">.</span><span class="n">write</span><span class="o">(</span><span class="n">rs</span><span class="o">.</span><span class="n">string</span><span class="o">(</span><span class="n">e</span><span class="o">.</span><span class="n">name</span><span class="o">)</span>
   <span class="o">}</span>
-  <span class="n">withSQL</span> <span class="o">{</span> <span class="n">select</span><span class="o">(</span><span class="n">c</span><span class="o">.</span><span class="n">name</span><span class="o">).</span><span class="n">from</span><span class="o">(</span><span class="nc">Cmp</span> <span class="n">as</span> <span class="n">c</span><span class="o">)</span> <span class="o">}.</span><span class="n">foreach</span> <span class="o">{</span> <span class="n">rs</span> <span class="k">=&gt;</span> 
-    <span class="n">out</span><span class="o">.</span><span class="n">write</span><span class="o">(</span><span class="n">rs</span><span class="o">.</span><span class="n">string</span><span class="o">(</span><span class="n">c</span><span class="o">.</span><span class="n">name</span><span class="o">))</span> 
+  <span class="n">withSQL</span> <span class="o">{</span> <span class="n">select</span><span class="o">(</span><span class="n">c</span><span class="o">.</span><span class="n">name</span><span class="o">).</span><span class="n">from</span><span class="o">(</span><span class="nc">Cmp</span> <span class="n">as</span> <span class="n">c</span><span class="o">)</span> <span class="o">}.</span><span class="n">foreach</span> <span class="o">{</span> <span class="n">rs</span> <span class="k">=&gt;</span>
+    <span class="n">out</span><span class="o">.</span><span class="n">write</span><span class="o">(</span><span class="n">rs</span><span class="o">.</span><span class="n">string</span><span class="o">(</span><span class="n">c</span><span class="o">.</span><span class="n">name</span><span class="o">))</span>
   <span class="o">}</span>
 <span class="o">}</span>
 </code></pre></div>
@@ -189,7 +189,7 @@
 
 <hr/>
 
-<p><code>ParameterBinder</code> enables to customize how parameters should be bound to <code>PreparedStatement</code> object inside ScalikeJDBC.</p>
+<p><code>ParameterBinder</code> allows you to customize how parameters should be bound to <code>PreparedStatement</code> object inside ScalikeJDBC.</p>
 
 <p>The following example shows how to use <code>PreparedStatement#setBinaryStream</code> when binding <code>InputStream</code> value to <code>PreparedStatement</code>.</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="n">sql</span><span class="s">"create table blob_example (id bigint, data blob)"</span><span class="o">).</span><span class="n">execute</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
@@ -203,17 +203,35 @@
 
 <span class="n">sql</span><span class="s">"insert into blob_example (data) values (${bytesBinder})"</span><span class="o">).</span><span class="n">update</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
 </code></pre></div>
+<p>If you need to enable some <code>ParameterBinder</code> implicitly, you need to define <code>ParameterBinderFactory</code> for it.</p>
+<div class="highlight"><pre class="highlight scala"><code><span class="k">case</span> <span class="k">class</span> <span class="nc">MemberId</span><span class="o">(</span><span class="n">value</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span>
+<span class="k">case</span> <span class="k">class</span> <span class="nc">Member</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">MemberId</span><span class="o">,</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span>
+<span class="k">object</span> <span class="nc">Member</span> <span class="k">extends</span> <span class="nc">SQLSyntaxSupport</span><span class="o">[</span><span class="kt">Member</span><span class="o">]</span> <span class="o">{}</span>
+
+<span class="k">implicit</span> <span class="k">val</span> <span class="n">memberIdPbf</span> <span class="k">=</span> <span class="nc">ParameterBinderFactory</span><span class="o">[</span><span class="kt">MemberId</span><span class="o">]</span> <span class="o">{</span>
+  <span class="n">value</span> <span class="k">=&gt;</span> <span class="o">(</span><span class="n">stmt</span><span class="o">,</span> <span class="n">idx</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">stmt</span><span class="o">.</span><span class="n">setInt</span><span class="o">(</span><span class="n">idx</span><span class="o">,</span> <span class="n">value</span><span class="o">.</span><span class="n">value</span><span class="o">)</span>
+<span class="o">}</span>
+
+<span class="k">val</span> <span class="n">m</span> <span class="k">=</span> <span class="nc">Member</span><span class="o">.</span><span class="n">syntax</span><span class="o">(</span><span class="s">"m"</span><span class="o">)</span>
+<span class="k">val</span> <span class="n">memberId</span> <span class="k">=</span> <span class="nc">MemberId</span><span class="o">(</span><span class="mi">123</span><span class="o">)</span>
+<span class="n">withSQL</span> <span class="o">{</span>
+  <span class="n">select</span><span class="o">.</span><span class="n">from</span><span class="o">(</span><span class="nc">Member</span> <span class="n">as</span> <span class="n">m</span><span class="o">).</span><span class="n">where</span><span class="o">.</span><span class="n">eq</span><span class="o">(</span><span class="n">m</span><span class="o">.</span><span class="n">id</span><span class="o">,</span> <span class="n">memberId</span><span class="o">)</span> <span class="c1">// `memberIdPbf` properly affects here
+</span><span class="o">}.</span><span class="n">map</span><span class="o">(</span><span class="nc">Member</span><span class="o">(</span><span class="k">_</span><span class="o">)).</span><span class="n">single</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+
+<span class="c1">// CAUTION:
+// The SQL Interpolation style doesn't work with ParameterBinderFactory while it works with ParameterBinder
+</span><span class="n">sql</span><span class="s">"select id from member where id = $memberId"</span> <span class="c1">// will bind `memberId` as an object
+</span></code></pre></div>
 <hr/>
 
 <h4 id="using-typebinder">Using TypeBinder</h4>
 
 <hr/>
 
-<p><code>TypeBinder[A]</code> is a type class to extract type <code>A</code> values from Result. </p>
+<p><code>TypeBinder[A]</code> is a type class to extract type <code>A</code> values from ResultSet. To extract a value as a specific type value, you need to define the type class for it.</p>
 
-<p>The following example shows how to bind long value to <code>MemberId</code> value.</p>
+<p>Let&rsquo;s say you need to bind a long value as <code>MemberId</code> type as below.</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">import</span> <span class="nn">scalikejdbc._</span>
-<span class="k">import</span> <span class="nn">java.sql.ResultSet</span>
 
 <span class="k">implicit</span> <span class="k">val</span> <span class="n">session</span> <span class="k">=</span> <span class="nc">AutoSession</span>
 
@@ -233,16 +251,17 @@
 //         val ids: Seq[MemberId] = sql"select * from member".map(_.get[MemberId]("id")).list.apply()
 //                                                                               ^
 </span></code></pre></div>
-<p>Your <code>MemberId</code> class is not supported by default. You can see what types are supported by default <a href="https://github.com/scalikejdbc/scalikejdbc/blob/master/scalikejdbc-core/src/main/scala/scalikejdbc/TypeBinder.scala">here</a>.</p>
+<p>Since your <code>MemberId</code> type is not available by default, you&rsquo;ve got a compilation error. You can see all predef types by default <a href="https://github.com/scalikejdbc/scalikejdbc/blob/master/scalikejdbc-core/src/main/scala/scalikejdbc/TypeBinder.scala">here</a>.</p>
 
-<p>So you need to define your own <code>TypeBinder</code> for <code>MemberId</code> type as follows.</p>
-<div class="highlight"><pre class="highlight scala"><code><span class="c1">// define TypeBinder[MemberId] for implicit value
+<p>As such, you need to define your own <code>TypeBinder</code> for <code>MemberId</code> type as below.</p>
+<div class="highlight"><pre class="highlight scala"><code><span class="c1">// define TypeBinder[MemberId]
 </span><span class="k">implicit</span> <span class="k">val</span> <span class="n">memberIdTypeBinder</span><span class="k">:</span> <span class="kt">TypeBinder</span><span class="o">[</span><span class="kt">MemberId</span><span class="o">]</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">TypeBinder</span><span class="o">[</span><span class="kt">MemberId</span><span class="o">]</span> <span class="o">{</span>
   <span class="k">def</span> <span class="n">apply</span><span class="o">(</span><span class="n">rs</span><span class="k">:</span> <span class="kt">ResultSet</span><span class="o">,</span> <span class="n">label</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span><span class="k">:</span> <span class="kt">MemberId</span> <span class="o">=</span> <span class="nc">MemberId</span><span class="o">(</span><span class="n">rs</span><span class="o">.</span><span class="n">getLong</span><span class="o">(</span><span class="n">label</span><span class="o">))</span>
   <span class="k">def</span> <span class="n">apply</span><span class="o">(</span><span class="n">rs</span><span class="k">:</span> <span class="kt">ResultSet</span><span class="o">,</span> <span class="n">index</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span><span class="k">:</span> <span class="kt">MemberId</span> <span class="o">=</span> <span class="nc">MemberId</span><span class="o">(</span><span class="n">rs</span><span class="o">.</span><span class="n">getLong</span><span class="o">(</span><span class="n">index</span><span class="o">))</span>
 <span class="o">}</span>
 
-<span class="k">val</span> <span class="n">ids</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">MemberId</span><span class="o">]</span> <span class="k">=</span> <span class="n">sql</span><span class="s">"select id from member"</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">get</span><span class="o">[</span><span class="kt">MemberId</span><span class="o">](</span><span class="s">"id"</span><span class="o">)).</span><span class="n">list</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+<span class="c1">// WrappedResultSet#get[MemberId]("id") works with above implicit definition
+</span><span class="k">val</span> <span class="n">ids</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">MemberId</span><span class="o">]</span> <span class="k">=</span> <span class="n">sql</span><span class="s">"select id from member"</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">get</span><span class="o">[</span><span class="kt">MemberId</span><span class="o">](</span><span class="s">"id"</span><span class="o">)).</span><span class="n">list</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
 <span class="c1">// ids: Seq[MemberId] = List(MemberId(1), MemberId(1), MemberId(2), MemberId(3))
 </span></code></pre></div>
 <p>Of course, it&rsquo;s also possible to simply deal with this case without <code>TypeBinder</code>.</p>
@@ -250,25 +269,67 @@
 </code></pre></div>
 <hr/>
 
-<h4 id="using-java-se-8-date-time-api-jsr-310">Using Java SE 8 Date Time API (JSR-310)</h4>
+<h4 id="binders-to-define-both-parameterbinderfactory-and-typebinder">Binders to define both ParameterBinderFactory and TypeBinder</h4>
 
 <hr/>
+
+<p>Using <code>Binders</code> is very convenient when you define both <code>ParameterBinderFactory</code> and <code>TypeBinder</code>.</p>
+<div class="highlight"><pre class="highlight scala"><code><span class="c1">// object Binders {
+//   def of[A](f: Any =&gt; A)(g: A =&gt; (PreparedStatement, Int) =&gt; Unit): Binders[A]
+// }
+</span>
+<span class="k">import</span> <span class="nn">scalikejdbc._</span>
+
+<span class="k">case</span> <span class="k">class</span> <span class="nc">MemberId</span><span class="o">(</span><span class="n">value</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span>
+
+<span class="c1">// If you paste this code on the REPL, use :paste
+</span><span class="o">{</span>
+  <span class="nc">Binders</span><span class="o">.</span><span class="n">of</span><span class="o">[</span><span class="kt">MemberId</span><span class="o">]</span>
+  <span class="c1">// For TypeBinder (f: Any =&gt; A)
+</span>  <span class="o">{</span>
+    <span class="k">case</span> <span class="kc">null</span> <span class="k">=&gt;</span> <span class="kc">null</span>
+    <span class="k">case</span> <span class="n">v</span><span class="k">:</span> <span class="kt">Float</span> <span class="o">=&gt;</span> <span class="nc">MemberId</span><span class="o">(</span><span class="n">v</span><span class="o">.</span><span class="n">toInt</span><span class="o">)</span>
+    <span class="k">case</span> <span class="n">v</span><span class="k">:</span> <span class="kt">Double</span> <span class="o">=&gt;</span> <span class="nc">MemberId</span><span class="o">(</span><span class="n">v</span><span class="o">.</span><span class="n">toInt</span><span class="o">)</span>
+    <span class="k">case</span> <span class="n">n</span><span class="k">:</span> <span class="kt">Number</span> <span class="o">=&gt;</span> <span class="nc">MemberId</span><span class="o">(</span><span class="n">n</span><span class="o">.</span><span class="n">intValue</span><span class="o">)</span>
+    <span class="k">case</span> <span class="n">v</span> <span class="k">=&gt;</span> <span class="nc">MemberId</span><span class="o">(</span><span class="n">v</span><span class="o">.</span><span class="n">toString</span><span class="o">.</span><span class="n">toInt</span><span class="o">)</span>
+  <span class="o">}</span>
+  <span class="c1">// For ParameterBinderFactory (A =&gt; (PreparedStatement, Int) =&gt; Unit)
+</span>  <span class="o">{</span> <span class="n">v</span> <span class="k">=&gt;</span>
+    <span class="o">(</span><span class="n">ps</span><span class="o">,</span> <span class="n">idx</span><span class="o">)</span> <span class="k">=&gt;</span>
+    <span class="n">ps</span><span class="o">.</span><span class="n">setInt</span><span class="o">(</span><span class="n">idx</span><span class="o">,</span> <span class="n">v</span><span class="o">.</span><span class="n">value</span><span class="o">)</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div>
+<hr/>
+
+<h4 id="using-joda-time-library">Using joda-time library</h4>
+
+<hr/>
+
+<p>You need to add the optional module which supports joda-time library.</p>
+<div class="highlight"><pre class="highlight scala"><code><span class="n">libraryDependencies</span> <span class="o">+=</span> <span class="s">"org.scalikejdbc"</span> <span class="o">%%</span> <span class="s">"scalikejdbc-joda-time"</span> <span class="o">%</span> <span class="s">"3.2.0"</span>
+</code></pre></div>
+<p>Also, you explicitly need to import ParameterBinderFatory and TypeBinder.</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">import</span> <span class="nn">scalikejdbc._</span>
+<span class="c1">// If you need ParameterBinderFactory for joda-time classes
+</span><span class="k">import</span> <span class="nn">scalikejdbc.jodatime.JodaParameterBinderFactory._</span>
+<span class="c1">// If you need TypeBinder for joda-time classes
+</span><span class="k">import</span> <span class="nn">scalikejdbc.jodatime.JodaTypeBinder._</span>
 <span class="k">import</span> <span class="nn">java.time._</span>
 
 <span class="k">case</span> <span class="k">class</span> <span class="nc">Group</span><span class="o">(</span>
-  <span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> 
-  <span class="n">name</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">String</span><span class="o">],</span> 
+  <span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span>
+  <span class="n">name</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">String</span><span class="o">],</span>
   <span class="n">createdAt</span><span class="k">:</span> <span class="kt">ZonedDateTime</span><span class="o">)</span>
 
 <span class="k">object</span> <span class="nc">Group</span> <span class="k">extends</span> <span class="nc">SQLSyntaxSupport</span><span class="o">[</span><span class="kt">Group</span><span class="o">]</span> <span class="o">{</span>
   <span class="k">def</span> <span class="n">apply</span><span class="o">(</span><span class="n">g</span><span class="k">:</span> <span class="kt">SyntaxProvider</span><span class="o">[</span><span class="kt">Group</span><span class="o">])(</span><span class="n">rs</span><span class="k">:</span> <span class="kt">WrappedResultSet</span><span class="o">)</span><span class="k">:</span> <span class="kt">Group</span> <span class="o">=</span> <span class="n">apply</span><span class="o">(</span><span class="n">g</span><span class="o">.</span><span class="n">resultName</span><span class="o">)(</span><span class="n">rs</span><span class="o">)</span>
   <span class="k">def</span> <span class="n">apply</span><span class="o">(</span><span class="n">g</span><span class="k">:</span> <span class="kt">ResultName</span><span class="o">[</span><span class="kt">Group</span><span class="o">])(</span><span class="n">rs</span><span class="k">:</span> <span class="kt">WrappedResultSet</span><span class="o">)</span><span class="k">:</span> <span class="kt">Group</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Group</span><span class="o">(</span>
-    <span class="n">id</span> <span class="k">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">get</span><span class="o">(</span><span class="n">g</span><span class="o">.</span><span class="n">id</span><span class="o">),</span> 
-    <span class="n">name</span> <span class="k">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">get</span><span class="o">(</span><span class="n">g</span><span class="o">.</span><span class="n">name</span><span class="o">),</span> 
+    <span class="n">id</span> <span class="k">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">get</span><span class="o">(</span><span class="n">g</span><span class="o">.</span><span class="n">id</span><span class="o">),</span>
+    <span class="n">name</span> <span class="k">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">get</span><span class="o">(</span><span class="n">g</span><span class="o">.</span><span class="n">name</span><span class="o">),</span>
     <span class="n">createdAt</span> <span class="k">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">get</span><span class="o">(</span><span class="n">g</span><span class="o">.</span><span class="n">createdAt</span><span class="o">)</span>
-    <span class="c1">// (or) createdAt = rs.get[ZonedDateTime](g.createdAt)
-</span>    <span class="c1">// (or) createdAt = rs.zonedDateTime(g.createdAt)
+    <span class="c1">// (or) createdAt = rs.get[DateTime](g.createdAt)
+</span>    <span class="c1">// (or) createdAt = rs.jodaDateTime(g.createdAt)
 </span>  <span class="o">)</span>
 <span class="o">}</span>
 </code></pre></div>
