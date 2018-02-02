@@ -326,8 +326,10 @@ val preferredClients: List[(Int, Int)] = withSQL {
 <hr/>
 
 ```scala
+import java.time.ZonedDateTime
+
 withSQL {
-  insert.into(Member).values(1, "Alice", DateTime.now)
+  insert.into(Member).values(1, "Alice", ZonedDateTime.now)
 }.update.apply()
 
 // insert into members values (?, ?, ?)
@@ -335,9 +337,9 @@ withSQL {
 withSQL {
   val m = Member.column
   insert.into(Member).namedValues(
-    m.id -> 1, 
-    m.name -> "Alice", 
-    m.createdAt -> DateTime.now
+    m.id -> 1,
+    m.name -> "Alice",
+    m.createdAt -> ZonedDateTime.now
   )
 }.update.apply()
 
@@ -347,13 +349,15 @@ withSQL {
 Or `applyUpdate` is much simpler. But in some cases, applyUpdate causes compilation errors since Scala 2.10.1. This is not an issue of ScalikeJDBC. If you suffered it, use `withSQL { }.update.apply()` instead.
 
 ```scala
-applyUpdate { insert.into(Member).values(2, "Bob", DateTime.now) }
+import java.time.ZonedDateTime
+
+applyUpdate { insert.into(Member).values(2, "Bob", ZonedDateTime.now) }
 
 // insert into members values (?, ?, ?)
 
 val c = Member.column
 applyUpdate {
-  insert.into(Member).columns(c.id, c.name, c.createdAt).values(2, "Bob", DateTime.now)
+  insert.into(Member).columns(c.id, c.name, c.createdAt).values(2, "Bob", ZonedDateTime.now)
 }
 
 // insert into members (id, name, created_at) values (?, ?, ?)
@@ -394,14 +398,16 @@ withSQL {
 <hr/>
 
 ```scala
+import java.time.ZonedDateTime
+
 withSQL {
   update(Member).set(
     Member.column.name -> "Chris",
-    Member.column.updatedAt -> DateTime.now
+    Member.column.updatedAt -> ZonedDateTime.now
   ).where.eq(Member.column.id, 2)
 }.update.apply()
 
-// update members set name = ?, updated_at = ? 
+// update members set name = ?, updated_at = ?
 // where id = ?
 ```
 

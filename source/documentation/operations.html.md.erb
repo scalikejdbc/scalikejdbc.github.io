@@ -340,12 +340,12 @@ object Group extends SQLSyntaxSupport[Group] {
 import scalikejdbc._
 
 DB localTx { implicit session =>
-  sql"""insert into emp (id, name, created_at) values (${id}, ${name}, ${DateTime.now})"""
+  sql"""insert into emp (id, name, created_at) values (${id}, ${name}, current_timestamp)"""
     .update.apply()
-  val id = sql"insert into emp (name, created_at) values (${name}, current_timestamp)"
+  val newId = sql"insert into emp (name, created_at) values (${name}, current_timestamp)"
     .updateAndReturnGeneratedKey.apply()
-  sql"update emp set name = ${newName} where id = ${id}".update.apply()
-  sql"delete emp where id = ${id}".update.apply()
+  sql"update emp set name = ${newName} where id = ${newId}".update.apply()
+  sql"delete emp where id = ${newId}".update.apply()
 }
 
 val column = Emp.column
@@ -354,15 +354,15 @@ DB localTx { implicit s =>
     insert.into(Emp).namedValues(
       column.id -> id,
       column.name -> name,
-      column.createdAt -> DateTime.now)
+      column.createdAt -> sqls.currentTimestamp)
    }.update.apply()
 
-  val id: Long = withSQL {
-    insert.into(Empy).namedValues(column.name -> name, column.createdAt -> sqls.currentTimestamp)
+  val newId: Long = withSQL {
+    insert.into(Emp).namedValues(column.name -> name, column.createdAt -> sqls.currentTimestamp)
   }.updateAndReturnGeneratedKey.apply()
 
-  withSQL { update(Emp).set(column.name -> newName).where.eq(column.id, id) }.update.apply()
-  withSQL { delete.from(Emp).where.eq(column.id, id) }.update.apply()
+  withSQL { update(Emp).set(column.name -> newName).where.eq(column.id, newId) }.update.apply()
+  withSQL { delete.from(Emp).where.eq(column.id, newId) }.update.apply()
 }
 
 ```
