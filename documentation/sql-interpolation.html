@@ -305,18 +305,19 @@
 
 <p>Just use normal class and implement <code>EntityEquality</code> trait (for one-to-many relations).</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">import</span> <span class="nn">scalikekdbc._</span>
+<span class="k">import</span> <span class="nn">java.time.ZonedDateTime</span>
 
 <span class="k">class</span> <span class="nc">HugeTable</span><span class="o">(</span>
   <span class="k">val</span> <span class="n">column1</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span>
   <span class="k">val</span> <span class="n">column2</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">String</span><span class="o">],</span>
   <span class="k">val</span> <span class="n">column3</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
   <span class="k">val</span> <span class="n">column4</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span>
-  <span class="k">val</span> <span class="n">column5</span><span class="k">:</span> <span class="kt">DateTime</span><span class="o">,</span>
+  <span class="k">val</span> <span class="n">column5</span><span class="k">:</span> <span class="kt">ZonedDateTime</span><span class="o">,</span>
   <span class="o">...</span>
   <span class="k">val</span> <span class="n">column22</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span>
-  <span class="k">val</span> <span class="n">column23</span><span class="k">:</span> <span class="kt">DateTime</span><span class="o">)</span> <span class="k">extends</span> <span class="nc">EntityEquality</span> <span class="o">{</span>
+  <span class="k">val</span> <span class="n">column23</span><span class="k">:</span> <span class="kt">ZonedDateTime</span><span class="o">)</span> <span class="k">extends</span> <span class="nc">EntityEquality</span> <span class="o">{</span>
 
-  <span class="k">override</span> <span class="k">val</span> <span class="n">entityIdentity</span> <span class="k">=</span> <span class="nc">Seq</span><span class="o">(</span><span class="n">column1</span><span class="o">,</span> <span class="n">columns2</span><span class="o">,</span> <span class="o">..,</span> <span class="n">columns23</span><span class="o">).</span><span class="n">mkString</span><span class="o">(</span><span class="s">"\t"</span><span class="o">)</span>
+  <span class="k">override</span> <span class="k">val</span> <span class="n">entityIdentity</span> <span class="k">=</span> <span class="nc">Seq</span><span class="o">(</span><span class="n">column1</span><span class="o">,</span> <span class="n">column2</span><span class="o">,</span> <span class="o">...,</span> <span class="n">column23</span><span class="o">).</span><span class="n">mkString</span><span class="o">(</span><span class="s">"\t"</span><span class="o">)</span>
 
 <span class="o">}</span>
 </code></pre></div>

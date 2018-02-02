@@ -317,8 +317,10 @@
 <h4 id="insert">Insert</h4>
 
 <hr/>
-<div class="highlight"><pre class="highlight scala"><code><span class="n">withSQL</span> <span class="o">{</span>
-  <span class="n">insert</span><span class="o">.</span><span class="n">into</span><span class="o">(</span><span class="nc">Member</span><span class="o">).</span><span class="n">values</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="s">"Alice"</span><span class="o">,</span> <span class="nc">DateTime</span><span class="o">.</span><span class="n">now</span><span class="o">)</span>
+<div class="highlight"><pre class="highlight scala"><code><span class="k">import</span> <span class="nn">java.time.ZonedDateTime</span>
+
+<span class="n">withSQL</span> <span class="o">{</span>
+  <span class="n">insert</span><span class="o">.</span><span class="n">into</span><span class="o">(</span><span class="nc">Member</span><span class="o">).</span><span class="n">values</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="s">"Alice"</span><span class="o">,</span> <span class="nc">ZonedDateTime</span><span class="o">.</span><span class="n">now</span><span class="o">)</span>
 <span class="o">}.</span><span class="n">update</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
 
 <span class="c1">// insert into members values (?, ?, ?)
@@ -326,22 +328,24 @@
 <span class="n">withSQL</span> <span class="o">{</span>
   <span class="k">val</span> <span class="n">m</span> <span class="k">=</span> <span class="nc">Member</span><span class="o">.</span><span class="n">column</span>
   <span class="n">insert</span><span class="o">.</span><span class="n">into</span><span class="o">(</span><span class="nc">Member</span><span class="o">).</span><span class="n">namedValues</span><span class="o">(</span>
-    <span class="n">m</span><span class="o">.</span><span class="n">id</span> <span class="o">-&gt;</span> <span class="mi">1</span><span class="o">,</span> 
-    <span class="n">m</span><span class="o">.</span><span class="n">name</span> <span class="o">-&gt;</span> <span class="s">"Alice"</span><span class="o">,</span> 
-    <span class="n">m</span><span class="o">.</span><span class="n">createdAt</span> <span class="o">-&gt;</span> <span class="nc">DateTime</span><span class="o">.</span><span class="n">now</span>
+    <span class="n">m</span><span class="o">.</span><span class="n">id</span> <span class="o">-&gt;</span> <span class="mi">1</span><span class="o">,</span>
+    <span class="n">m</span><span class="o">.</span><span class="n">name</span> <span class="o">-&gt;</span> <span class="s">"Alice"</span><span class="o">,</span>
+    <span class="n">m</span><span class="o">.</span><span class="n">createdAt</span> <span class="o">-&gt;</span> <span class="nc">ZonedDateTime</span><span class="o">.</span><span class="n">now</span>
   <span class="o">)</span>
 <span class="o">}.</span><span class="n">update</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
 
 <span class="c1">// insert into members (id, name, created_at) values (?, ?, ?)
 </span></code></pre></div>
 <p>Or <code>applyUpdate</code> is much simpler. But in some cases, applyUpdate causes compilation errors since Scala 2.10.1. This is not an issue of ScalikeJDBC. If you suffered it, use <code>withSQL { }.update.apply()</code> instead.</p>
-<div class="highlight"><pre class="highlight scala"><code><span class="n">applyUpdate</span> <span class="o">{</span> <span class="n">insert</span><span class="o">.</span><span class="n">into</span><span class="o">(</span><span class="nc">Member</span><span class="o">).</span><span class="n">values</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span> <span class="s">"Bob"</span><span class="o">,</span> <span class="nc">DateTime</span><span class="o">.</span><span class="n">now</span><span class="o">)</span> <span class="o">}</span>
+<div class="highlight"><pre class="highlight scala"><code><span class="k">import</span> <span class="nn">java.time.ZonedDateTime</span>
+
+<span class="n">applyUpdate</span> <span class="o">{</span> <span class="n">insert</span><span class="o">.</span><span class="n">into</span><span class="o">(</span><span class="nc">Member</span><span class="o">).</span><span class="n">values</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span> <span class="s">"Bob"</span><span class="o">,</span> <span class="nc">ZonedDateTime</span><span class="o">.</span><span class="n">now</span><span class="o">)</span> <span class="o">}</span>
 
 <span class="c1">// insert into members values (?, ?, ?)
 </span>
 <span class="k">val</span> <span class="n">c</span> <span class="k">=</span> <span class="nc">Member</span><span class="o">.</span><span class="n">column</span>
 <span class="n">applyUpdate</span> <span class="o">{</span>
-  <span class="n">insert</span><span class="o">.</span><span class="n">into</span><span class="o">(</span><span class="nc">Member</span><span class="o">).</span><span class="n">columns</span><span class="o">(</span><span class="n">c</span><span class="o">.</span><span class="n">id</span><span class="o">,</span> <span class="n">c</span><span class="o">.</span><span class="n">name</span><span class="o">,</span> <span class="n">c</span><span class="o">.</span><span class="n">createdAt</span><span class="o">).</span><span class="n">values</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span> <span class="s">"Bob"</span><span class="o">,</span> <span class="nc">DateTime</span><span class="o">.</span><span class="n">now</span><span class="o">)</span>
+  <span class="n">insert</span><span class="o">.</span><span class="n">into</span><span class="o">(</span><span class="nc">Member</span><span class="o">).</span><span class="n">columns</span><span class="o">(</span><span class="n">c</span><span class="o">.</span><span class="n">id</span><span class="o">,</span> <span class="n">c</span><span class="o">.</span><span class="n">name</span><span class="o">,</span> <span class="n">c</span><span class="o">.</span><span class="n">createdAt</span><span class="o">).</span><span class="n">values</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span> <span class="s">"Bob"</span><span class="o">,</span> <span class="nc">ZonedDateTime</span><span class="o">.</span><span class="n">now</span><span class="o">)</span>
 <span class="o">}</span>
 
 <span class="c1">// insert into members (id, name, created_at) values (?, ?, ?)
@@ -379,14 +383,16 @@
 <h4 id="update">Update</h4>
 
 <hr/>
-<div class="highlight"><pre class="highlight scala"><code><span class="n">withSQL</span> <span class="o">{</span>
+<div class="highlight"><pre class="highlight scala"><code><span class="k">import</span> <span class="nn">java.time.ZonedDateTime</span>
+
+<span class="n">withSQL</span> <span class="o">{</span>
   <span class="n">update</span><span class="o">(</span><span class="nc">Member</span><span class="o">).</span><span class="n">set</span><span class="o">(</span>
     <span class="nc">Member</span><span class="o">.</span><span class="n">column</span><span class="o">.</span><span class="n">name</span> <span class="o">-&gt;</span> <span class="s">"Chris"</span><span class="o">,</span>
-    <span class="nc">Member</span><span class="o">.</span><span class="n">column</span><span class="o">.</span><span class="n">updatedAt</span> <span class="o">-&gt;</span> <span class="nc">DateTime</span><span class="o">.</span><span class="n">now</span>
+    <span class="nc">Member</span><span class="o">.</span><span class="n">column</span><span class="o">.</span><span class="n">updatedAt</span> <span class="o">-&gt;</span> <span class="nc">ZonedDateTime</span><span class="o">.</span><span class="n">now</span>
   <span class="o">).</span><span class="n">where</span><span class="o">.</span><span class="n">eq</span><span class="o">(</span><span class="nc">Member</span><span class="o">.</span><span class="n">column</span><span class="o">.</span><span class="n">id</span><span class="o">,</span> <span class="mi">2</span><span class="o">)</span>
 <span class="o">}.</span><span class="n">update</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
 
-<span class="c1">// update members set name = ?, updated_at = ? 
+<span class="c1">// update members set name = ?, updated_at = ?
 // where id = ?
 </span></code></pre></div>
 <hr/>
