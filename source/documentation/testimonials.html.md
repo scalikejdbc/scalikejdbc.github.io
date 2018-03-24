@@ -5,6 +5,12 @@ title: Testimonials - ScalikeJDBC
 ## Testimonials
 <hr/>
 
+### <a href="https://www.eventsofa.de/" target="_blank">![Stephan Schmidt, CTO eventsofa](images/eventsofa_small.png)</a>&nbsp;&nbsp;Stephan Schmidt, CTO eventsofa
+
+ScalikeJDBC has made our life much easier. It provides a lot of power to write concise and reusable database code without the downsides of a full blown ORM.
+
+<hr/>
+
 ### <a href="http://www.ad-dice.com/" target="_blank">![ad-dice Co., Ltd.](images/ad-dice_small.png)</a>&nbsp;&nbsp;ad-dice Co., Ltd.
 
 ad-dice Co., Ltd. provides SoLoMoN which delivers IoT AI as a service.
