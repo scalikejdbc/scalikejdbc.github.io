@@ -72,7 +72,7 @@
 
 <h4 id="build-sbt">build.sbt</h4>
 <div class="highlight"><pre class="highlight scala"><code><span class="n">libraryDependencies</span> <span class="o">++=</span> <span class="nc">Seq</span><span class="o">(</span>
-  <span class="s">"com.h2database"</span>  <span class="o">%</span>  <span class="s">"h2"</span>                           <span class="o">%</span> <span class="s">"1.4.196"</span><span class="o">,</span> <span class="c1">// your jdbc driver here
+  <span class="s">"com.h2database"</span>  <span class="o">%</span>  <span class="s">"h2"</span>                           <span class="o">%</span> <span class="s">"1.4.197"</span><span class="o">,</span> <span class="c1">// your jdbc driver here
 </span>  <span class="s">"org.scalikejdbc"</span> <span class="o">%%</span> <span class="s">"scalikejdbc"</span>                  <span class="o">%</span> <span class="s">"2.5.2"</span><span class="o">,</span>
   <span class="s">"org.scalikejdbc"</span> <span class="o">%%</span> <span class="s">"scalikejdbc-config"</span>           <span class="o">%</span> <span class="s">"2.5.2"</span><span class="o">,</span>
   <span class="s">"org.scalikejdbc"</span> <span class="o">%%</span> <span class="s">"scalikejdbc-play-initializer"</span> <span class="o">%</span> <span class="s">"2.5.1"</span>
@@ -113,7 +113,7 @@ play.modules.disabled +<span class="o">=</span> <span class="s2">"play.api.db.DB
 
 <h4 id="build-sbt">build.sbt</h4>
 <div class="highlight"><pre class="highlight scala"><code><span class="n">libraryDependencies</span> <span class="o">++=</span> <span class="nc">Seq</span><span class="o">(</span>
-  <span class="s">"com.h2database"</span>  <span class="o">%</span>  <span class="s">"h2"</span>                             <span class="o">%</span> <span class="s">"1.4.196"</span><span class="o">,</span> <span class="c1">// your jdbc driver here
+  <span class="s">"com.h2database"</span>  <span class="o">%</span>  <span class="s">"h2"</span>                             <span class="o">%</span> <span class="s">"1.4.197"</span><span class="o">,</span> <span class="c1">// your jdbc driver here
 </span>  <span class="s">"org.scalikejdbc"</span> <span class="o">%%</span> <span class="s">"scalikejdbc"</span>                    <span class="o">%</span> <span class="s">"2.5.2"</span><span class="o">,</span>
   <span class="s">"org.scalikejdbc"</span> <span class="o">%%</span> <span class="s">"scalikejdbc-config"</span>             <span class="o">%</span> <span class="s">"2.5.2"</span><span class="o">,</span>
   <span class="s">"org.scalikejdbc"</span> <span class="o">%%</span> <span class="s">"scalikejdbc-play-dbapi-adapter"</span> <span class="o">%</span> <span class="s">"2.5.1"</span>
@@ -203,7 +203,7 @@ play.modules.enabled +<span class="o">=</span> <span class="s2">"scalikejdbc.Pla
   <span class="s">"org.scalikejdbc"</span> <span class="o">%%</span> <span class="s">"scalikejdbc-play-plugin"</span>           <span class="o">%</span> <span class="s">"2.3.10"</span><span class="o">,</span>
   <span class="s">"org.scalikejdbc"</span> <span class="o">%%</span> <span class="s">"scalikejdbc-play-fixture-plugin"</span>   <span class="o">%</span> <span class="s">"2.3.10"</span><span class="o">,</span> <span class="c1">// optional
 </span>  <span class="c1">// substitute this for whatever DB driver you're using:
-</span>  <span class="s">"com.h2database"</span>  <span class="o">%</span>  <span class="s">"h2"</span>                                <span class="o">%</span> <span class="s">"1.4.196"</span>
+</span>  <span class="s">"com.h2database"</span>  <span class="o">%</span>  <span class="s">"h2"</span>                                <span class="o">%</span> <span class="s">"1.4.197"</span>
 <span class="o">)</span>
 </code></pre></div>
 <h4 id="conf-play-plugins">conf/play.plugins</h4>
@@ -260,12 +260,12 @@ logger.scalikejdbc<span class="o">=</span>DEBUG
 
 <h4 id="project-build-scala">project/Build.scala</h4>
 <div class="highlight"><pre class="highlight scala"><code><span class="n">libraryDependencies</span> <span class="k">=</span> <span class="nc">Seq</span><span class="o">(</span>
-  <span class="s">"org.scalikejdbc"</span> <span class="o">%%</span> <span class="s">"scalikejdbc"</span>                       <span class="o">%</span> <span class="s">"3.2.1"</span><span class="o">,</span>
-  <span class="s">"org.scalikejdbc"</span> <span class="o">%%</span> <span class="s">"scalikejdbc-config"</span>                <span class="o">%</span> <span class="s">"3.2.1"</span><span class="o">,</span>
+  <span class="s">"org.scalikejdbc"</span> <span class="o">%%</span> <span class="s">"scalikejdbc"</span>                       <span class="o">%</span> <span class="s">"3.2.2"</span><span class="o">,</span>
+  <span class="s">"org.scalikejdbc"</span> <span class="o">%%</span> <span class="s">"scalikejdbc-config"</span>                <span class="o">%</span> <span class="s">"3.2.2"</span><span class="o">,</span>
   <span class="s">"org.scalikejdbc"</span> <span class="o">%%</span> <span class="s">"scalikejdbc-play-dbplugin-adapter"</span> <span class="o">%</span> <span class="s">"2.5.1"</span><span class="o">,</span>
   <span class="s">"org.scalikejdbc"</span> <span class="o">%%</span> <span class="s">"scalikejdbc-play-fixture-plugin"</span>   <span class="o">%</span> <span class="s">"2.5.1"</span><span class="o">,</span> <span class="c1">// optional
 </span>  <span class="c1">// substitute this for whatever DB driver you're using:
-</span>  <span class="s">"com.h2database"</span>  <span class="o">%</span>  <span class="s">"h2"</span>                                <span class="o">%</span> <span class="s">"1.4.196"</span>
+</span>  <span class="s">"com.h2database"</span>  <span class="o">%</span>  <span class="s">"h2"</span>                                <span class="o">%</span> <span class="s">"1.4.197"</span>
 <span class="o">)</span>
 </code></pre></div>
 <h4 id="conf-play-plugins">conf/play.plugins</h4>
@@ -333,7 +333,7 @@ logger.scalikejdbc<span class="o">=</span>DEBUG
           <p><a href="/documentation/2.x/testing.html">Testing</a></p>
           <p><a href="/documentation/2.x/playframework-support.html">Play Support</a></p>
           <p><a href="/documentation/2.x/dbconsole.html">dbconsole</a></p>
-          <p><a href="http://www.javadoc.io/doc/org.scalikejdbc/scalikejdbc-core_2.11/3.2.1">Core API Doc</a></p>
+          <p><a href="http://www.javadoc.io/doc/org.scalikejdbc/scalikejdbc-core_2.11/3.2.2">Core API Doc</a></p>
           <p><a href="/documentation/2.x/faq.html">FAQ</a></p>
           <p><a href="/documentation/testimonials.html">Testimonials</a></p>
           <p><a href="/contribution.html">Contribution</a></p>
