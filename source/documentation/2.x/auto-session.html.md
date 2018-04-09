@@ -82,7 +82,7 @@ def findById(id: Long)(implicit session: DBSession = NamedAutoSession('named)) =
 ### ReadOnlyAutoSession
 <hr/>
 
-Since version 1.7.4, `ReadOnlyAutoSession` and `NamedReadOnlyAutoSession` is also available. 
+Since version 1.7.4, `ReadOnlyAutoSession` and `ReadOnlyNamedAutoSession` is also available. 
 
 These auto sessions disallow update/execute operations.
 
