@@ -22,7 +22,7 @@ import scalikejdbc._
 // default
 val conn: java.sql.Connection = ConnectionPool.borrow()
 // named
-val conn: java.sql.Connection = ConnectionPool('named).borrow()
+val conn: java.sql.Connection = ConnectionPool('named').borrow()
 ```
 
 Be careful. The connection object should be released by yourself.
