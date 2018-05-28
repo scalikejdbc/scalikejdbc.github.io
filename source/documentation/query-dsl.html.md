@@ -41,7 +41,7 @@ More examples are
 
 ```scala
 val m = Member.syntax("m")
-val ids: List[Long] = sql"select ${m.result.id} from ${Member.as(m)} where ${m.gourpId} = 1"
+val ids: List[Long] = sql"select ${m.result.id} from ${Member.as(m)} where ${m.groupId} = 1"
 val members = sql"select ${m.result.*} from ${Member.as(m)}".map(Member(m)).list.apply()
 ```
 
