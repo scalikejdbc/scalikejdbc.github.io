@@ -34,7 +34,7 @@ val (m, g) = (GroupMember.syntax("m"), Group.syntax("g"))
 val groupMember = withSQL {
   select.from(GroupMember as m).leftJoin(Group as g).on(m.groupId, g.id)
     .where.eq(m.id, id)
-}.map(GroupMember(m, g)).single.apply()
+}.map(GroupMember(m.resultName, g.resultName)).single.apply()
 ```
 
 More examples are
@@ -51,7 +51,7 @@ will be like this:
 val m = Member.syntax("m")
 val ids: List[Long] = withSQL { select(m.result.id).from(Member as m).where.eq(m.groupId, 1) }
   .map(rs => rs.long(m.resultName.id)).list.apply()
-val members = withSQL { select.from(Member as m) }.map(Member(m)).list.apply()
+val members = withSQL { select.from(Member as m) }.map(Member(m.resultName)).list.apply()
 // or select.all(m).from(Member as m)
 ```
 
