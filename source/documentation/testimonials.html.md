@@ -5,6 +5,14 @@ title: Testimonials - ScalikeJDBC
 ## Testimonials
 <hr/>
 
+### <a href="https://www.metacommerce.ru/" target="_blank">![Nikolay Maksimenko, Metacommerce](images/metacommerce_small.jpg)</a>&nbsp;&nbsp;Nikolay Maksimenko, Metacommerce
+
+Metacommerce is a SaaS-service for price and product-mix monitoring. We use Scala as the main programming language.
+
+ScalikeJDBC is used to obtain analytical data from ClickHouse. Simplicity and flexibility ScalikeJDBC allows us to write complex queries to OLAP using specific database functionality.
+
+<hr/>
+
 ### <a href="https://www.eventsofa.de/" target="_blank">![Stephan Schmidt, CTO eventsofa](images/eventsofa_small.png)</a>&nbsp;&nbsp;Stephan Schmidt, CTO eventsofa
 
 ScalikeJDBC has made our life much easier. It provides a lot of power to write concise and reusable database code without the downsides of a full blown ORM.
