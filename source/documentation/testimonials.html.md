@@ -5,7 +5,7 @@ title: Testimonials - ScalikeJDBC
 ## Testimonials
 <hr/>
 
-### <a href="https://www.metacommerce.ru/" target="_blank">![Nikolay Maksimenko, Metacommerce](images/metacommerce_small.jpg)</a>&nbsp;&nbsp;Nikolay Maksimenko, Metacommerce
+### <a href="https://www.metacommerce.ru/" target="_blank">![Metacommerce](images/metacommerce_small.jpg)</a>&nbsp;&nbsp;Metacommerce
 
 Metacommerce is a SaaS-service for price and product-mix monitoring. We use Scala as the main programming language.
 
