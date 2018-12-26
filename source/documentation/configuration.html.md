@@ -217,6 +217,8 @@ The following settings are available.
 
 ```
 # Global settings
+scalikejdbc.global.loggingSQLErrors=true
+scalikejdbc.global.loggingConnections=true
 scalikejdbc.global.loggingSQLAndTime.enabled=true
 scalikejdbc.global.loggingSQLAndTime.logLevel=info
 scalikejdbc.global.loggingSQLAndTime.warningEnabled=true
