@@ -74,7 +74,7 @@ Don't worry again, this code is safely protected. `sqls""` always treats externa
 
 SQLSyntaxSupport is one step short of ORM. In other words, it's a powerful DRY way to write SQL.
 
-First of all, mix the `SQLSyntaxSupport[A]` trait to `A` companion object, and define `tableName` and `#apply` method to map values from `ResultSet` object in it. The unfamilier `ResultName[A]` are described later.
+First of all, mix the `SQLSyntaxSupport[A]` trait to `A` companion object, and define `tableName` and `#apply` method to map values from `ResultSet` object in it. The unfamiliar `ResultName[A]` are described later.
 
 NOTICE: When you use case classes for entities as follows (Group, GroupMember) everything goes fine. But if you use normal classes for entities, be aware of entity equality. See the following page in detail: [documentation/one-to-x.html](one-to-x.html)
 
