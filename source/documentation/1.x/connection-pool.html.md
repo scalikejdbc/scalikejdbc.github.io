@@ -105,7 +105,7 @@ def doSomething = {
     // overwrite singleton CP
     ConnectionPool.singleton("jdbc:h2:mem:db2", "user", "pass")
 
-    // db1 connection pool is still available until this trancation is commited.
+    // db1 connection pool is still available until this trancation is committed.
     // Newly borrowed connections will access db2.
   }
 }
