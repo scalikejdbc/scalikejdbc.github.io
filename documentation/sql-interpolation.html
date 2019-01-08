@@ -94,7 +94,7 @@
 
 <p>SQLSyntaxSupport is one step short of ORM. In other words, it&rsquo;s a powerful DRY way to write SQL.</p>
 
-<p>First of all, mix the <code>SQLSyntaxSupport[A]</code> trait to <code>A</code> companion object, and define <code>tableName</code> and <code>#apply</code> method to map values from <code>ResultSet</code> object in it. The unfamilier <code>ResultName[A]</code> are described later.</p>
+<p>First of all, mix the <code>SQLSyntaxSupport[A]</code> trait to <code>A</code> companion object, and define <code>tableName</code> and <code>#apply</code> method to map values from <code>ResultSet</code> object in it. The unfamiliar <code>ResultName[A]</code> are described later.</p>
 
 <p>NOTICE: When you use case classes for entities as follows (Group, GroupMember) everything goes fine. But if you use normal classes for entities, be aware of entity equality. See the following page in detail: <a href="/documentation/one-to-x.html">documentation/one-to-x.html</a></p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">import</span> <span class="nn">scalikejdbc._</span>
