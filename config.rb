@@ -62,8 +62,8 @@ set :markdown, fenced_code_blocks: true, smartypants: true, autolink: true, with
 I18n.enforce_available_locales = false
 
 # Latest versions
-@latest_version = "3.3.2"
-@latest_play_support_version = "2.7.0-scalikejdbc-3.3"
+@latest_version = "3.3.5"
+@latest_play_support_version = "2.7.1-scalikejdbc-3.3"
 @v2_play_support_version = "2.5.1"
 @v2_version = "2.5.2"
 @v1_version = "1.7.7"
@@ -77,7 +77,7 @@ set :v2_version,        @v2_version
 set :v1_version,        @v1_version
 set :v18_version,       @v18_version
 set :v1_latest_version, @v1_version
-set :h2_version,        "1.4.197"
+set :h2_version,        "1.4.199"
 set :logback_version,   "1.2.3"
 
 # Build-specific configuration
