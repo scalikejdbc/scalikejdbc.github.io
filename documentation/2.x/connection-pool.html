@@ -107,7 +107,7 @@
 </span>  <span class="o">}</span>
 <span class="o">}</span>
 </code></pre></div>
-<p>When you prefer reusing the same Connection without releasing and returing to connection pools, use <code>DB#autoClose(Boolean)</code>.</p>
+<p>When you prefer reusing the same Connection without releasing and returning to connection pools, use <code>DB#autoClose(Boolean)</code>.</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="n">using</span><span class="o">(</span><span class="n">connectionPool</span><span class="o">.</span><span class="n">borrow</span><span class="o">())</span> <span class="o">{</span> <span class="n">conn</span><span class="k">:</span> <span class="kt">java.sql.Connection</span> <span class="o">=&gt;</span> 
   <span class="k">val</span> <span class="n">db</span><span class="k">:</span> <span class="kt">DB</span> <span class="o">=</span> <span class="nc">DB</span><span class="o">(</span><span class="n">conn</span><span class="o">)</span>
 
