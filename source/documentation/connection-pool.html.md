@@ -90,7 +90,7 @@ using(connectionPool.borrow()) { conn: java.sql.Connection =>
 }
 ```
 
-When you prefer reusing the same Connection without releasing and returing to connection pools, use `DB#autoClose(Boolean)`.
+When you prefer reusing the same Connection without releasing and returning to connection pools, use `DB#autoClose(Boolean)`.
 
 ```scala
 using(connectionPool.borrow()) { conn: java.sql.Connection => 
