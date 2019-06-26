@@ -83,7 +83,7 @@ val name: List[String] = DB readOnly { implicit session =>
 }
 
 val e = Emp.syntax("e")
-val name: Option[String] = DB readOnly { implicit session =>
+val name: List[String] = DB readOnly { implicit session =>
   withSQL { select(e.result.name).from(Emp as e) }.map(_.string(e.name)).list.apply()
 }
 ```
