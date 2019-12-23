@@ -62,7 +62,6 @@ GEM
       uglifier (~> 2.5)
     middleman-core (3.4.1)
       activesupport (~> 4.1)
-      bundler (~> 1.1)
       capybara (~> 2.4.4)
       erubis
       hooks (~> 0.3)
@@ -152,7 +151,7 @@ DEPENDENCIES
   wdm (~> 0.1.0)
 
 RUBY VERSION
-   ruby 2.3.4p301
+   ruby 2.5.1p57
 
 BUNDLED WITH
    1.16.1
