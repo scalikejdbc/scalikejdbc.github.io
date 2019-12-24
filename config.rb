@@ -63,7 +63,7 @@ I18n.enforce_available_locales = false
 
 # Latest versions
 @latest_version = "3.4.0"
-@latest_play_support_version = "2.7.0-scalikejdbc-3.4"
+@latest_play_support_version = "2.8.0-scalikejdbc-3.4"
 @v2_play_support_version = "2.5.1"
 @v2_version = "2.5.2"
 @v1_version = "1.7.7"
