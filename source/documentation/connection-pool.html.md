@@ -55,7 +55,7 @@ using(DB(ConnectionPool.borrow())) { db =>
 
 Right, above code is too verbose! Using DB object make it much simpler.
 
-You can simplify the same thins by using `DB` or `NamedDB` objects and it's the common usage of ScalikeJDBC.
+You can simplify the same things by using `DB` or `NamedDB` objects and it's the common usage of ScalikeJDBC.
 
 ```scala
 // default
