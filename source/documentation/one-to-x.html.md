@@ -75,7 +75,7 @@ val groups: Seq[Group] =
     .one(Group(m))
     .toManies(
        rs => Member.opt(g)(rs),
-       rs => Event(e)(rs))
+       rs => Event.opt(e)(rs))
      .map { (group, members, events) => group.copy(members = members, events = events) }
      .list
      .apply()
