@@ -78,7 +78,7 @@
 
 <p><code>SQLSyntax</code> is not a binding parameter but a part of the SQL. You can create a <code>SQLSyntax</code> object with sqls&rdquo;&ldquo; String interpolation.</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">val</span> <span class="n">ordering</span> <span class="k">=</span> <span class="k">if</span> <span class="o">(</span><span class="n">isDesc</span><span class="o">)</span> <span class="n">sqls</span><span class="s">"desc"</span> <span class="k">else</span> <span class="n">sqls</span><span class="s">"asc"</span>
-<span class="k">val</span> <span class="n">members</span> <span class="k">=</span> <span class="n">sql</span><span class="s">"select id, name from members limit 10 order by id ${ordering}"</span>
+<span class="k">val</span> <span class="n">members</span> <span class="k">=</span> <span class="n">sql</span><span class="s">"select id, name from members order by id ${ordering} limit 10"</span>
   <span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="n">rs</span> <span class="k">=&gt;</span> <span class="nc">Member</span><span class="o">(</span><span class="n">rs</span><span class="o">)).</span><span class="n">list</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
 </code></pre></div>
 <p><code>${ordering}</code> will be directly converted to a part of SQL.</p>

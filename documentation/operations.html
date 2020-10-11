@@ -348,7 +348,7 @@
   <span class="k">val</span> <span class="n">newId</span> <span class="k">=</span> <span class="n">sql</span><span class="s">"insert into emp (name, created_at) values (${name}, current_timestamp)"</span>
     <span class="o">.</span><span class="n">updateAndReturnGeneratedKey</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
   <span class="n">sql</span><span class="s">"update emp set name = ${newName} where id = ${newId}"</span><span class="o">.</span><span class="n">update</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
-  <span class="n">sql</span><span class="s">"delete emp where id = ${newId}"</span><span class="o">.</span><span class="n">update</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+  <span class="n">sql</span><span class="s">"delete from emp where id = ${newId}"</span><span class="o">.</span><span class="n">update</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
 <span class="o">}</span>
 
 <span class="k">val</span> <span class="n">column</span> <span class="k">=</span> <span class="nc">Emp</span><span class="o">.</span><span class="n">column</span>

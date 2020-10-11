@@ -111,7 +111,7 @@
     <span class="o">.</span><span class="n">isNull</span><span class="o">(</span><span class="n">o</span><span class="o">.</span><span class="n">customerId</span><span class="o">)</span>
   <span class="o">}.</span><span class="n">map</span><span class="o">(</span><span class="nc">Order</span><span class="o">(</span><span class="n">o</span><span class="o">)).</span><span class="n">list</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
 
-<span class="c1">// select o.id as i_on_o from orders o where o.product_id = ? and o.customer_id is null
+<span class="c1">// select o.id as i_on_o from orders o where o.product_id = ? or o.customer_id is null
 </span></code></pre></div>
 <p>Adding round bracket is like this:</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">val</span> <span class="n">ids</span> <span class="k">=</span> <span class="n">withSQL</span> <span class="o">{</span>
