@@ -345,7 +345,7 @@ DB localTx { implicit session =>
   val newId = sql"insert into emp (name, created_at) values (${name}, current_timestamp)"
     .updateAndReturnGeneratedKey.apply()
   sql"update emp set name = ${newName} where id = ${newId}".update.apply()
-  sql"delete emp where id = ${newId}".update.apply()
+  sql"delete from emp where id = ${newId}".update.apply()
 }
 
 val column = Emp.column

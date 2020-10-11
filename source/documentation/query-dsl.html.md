@@ -95,7 +95,7 @@ val orders = withSQL {
     .isNull(o.customerId)
   }.map(Order(o)).list.apply()
 
-// select o.id as i_on_o from orders o where o.product_id = ? and o.customer_id is null
+// select o.id as i_on_o from orders o where o.product_id = ? or o.customer_id is null
 ```
 
 Adding round bracket is like this:

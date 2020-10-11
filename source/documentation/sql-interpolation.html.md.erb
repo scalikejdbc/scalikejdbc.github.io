@@ -56,7 +56,7 @@ Other values are mapped directly as `Object`s.
 
 ```scala
 val ordering = if (isDesc) sqls"desc" else sqls"asc"
-val members = sql"select id, name from members limit 10 order by id ${ordering}"
+val members = sql"select id, name from members order by id ${ordering} limit 10"
   .map(rs => Member(rs)).list.apply()
 ```
 
