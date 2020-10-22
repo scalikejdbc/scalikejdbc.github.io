@@ -193,9 +193,10 @@ implicit def myIOTxBoundary[A]: TxBoundary[MyIO[A]] = new TxBoundary[MyIO[A]] {
 
   override def closeConnection(result: MyIO[A], doClose: () => Unit): MyIO[A] = {
     for {
-      x <- result
-      _ <- MyIO(doClose).map(x => x.apply())
-    } yield x
+      x <- result.attempt
+      _ <- MyIO(doClose())
+      a <- MyIO(x.fold(throw _, identity))
+    } yield a
   }
 }
 ```
