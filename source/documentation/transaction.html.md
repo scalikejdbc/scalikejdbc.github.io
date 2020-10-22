@@ -136,8 +136,11 @@ val fResult = DB localTx { implicit s =>
 ### #Working with IO monads
 <hr/>
 
-*MyIO (IO monads minimal example)*
+<hr/>
+#### IO monads minimal example
+<hr/>
 
+*MyIO*
 
 ```scala
 sealed abstract class MyIO[+A] {
@@ -183,8 +186,8 @@ implicit def myIOTxBoundary[A]: TxBoundary[MyIO[A]] = new TxBoundary[MyIO[A]] {
 
   def finishTx(result: MyIO[A], tx: Tx): MyIO[A] = {
     result.attempt.flatMap {
-      case Right(_) => MyIO(tx.commit()).flatMap(_ => result)
-      case Left(_) => MyIO(tx.rollback()).flatMap(_ => result)
+      case Right(a) => MyIO(tx.commit()).flatMap(_ => MyIO(a))
+      case Left(e) => MyIO(tx.rollback()).flatMap(_ => MyIO(throw e))
     }
   }
 
