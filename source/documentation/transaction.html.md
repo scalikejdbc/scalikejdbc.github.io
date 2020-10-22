@@ -212,7 +212,7 @@ import scalikejdbc._
 
 type A = ???
 
-def asyncExecution[A]: DBSession => MyIO[A] = ???
+def asyncExecution: DBSession => MyIO[A] = ???
 
 // default
 DB.localTx(asyncExecution)(boundary = myIOTxBoundary)
