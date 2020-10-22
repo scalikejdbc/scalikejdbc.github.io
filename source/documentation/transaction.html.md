@@ -137,7 +137,7 @@ val fResult = DB localTx { implicit s =>
 <hr/>
 
 <hr/>
-#### IO monads minimal example
+#### IO monad minimal example
 <hr/>
 
 *MyIO*
@@ -221,6 +221,57 @@ DB.localTx(asyncExecution)(boundary = myIOTxBoundary)
 NamedDB('named).localTx(asyncExecution)(boundary = myIOTxBoundary)
 
 ```
+
+
+<hr/>
+#### Cats Effect IO example
+<hr/>
+
+*TxBoundary typeclass instance for cats.effect.IO[A]*
+
+`cats.effect.IO` has a cancellation mechanism, which `attempt` can't handle. Here, we use `guarantee`/`guaranteeCase` to make sure the finalizers are run.
+
+```scala
+import scalikejdbc._
+import cats.effect._
+
+implicit def catsEffectIOTxBoundary[A]: TxBoundary[IO[A]] = new TxBoundary[IO[A]] {
+  def finishTx(result: IO[A], tx: Tx): IO[A] =
+    result.guaranteeCase{
+      case ExitCase.Completed => IO(tx.commit())
+      case _ => IO(tx.rollback())
+    }
+
+  override def closeConnection(result: IO[A], doClose: () => Unit): IO[A] =
+    result.guarantee(IO(doClose()))
+}
+```
+
+
+*localTx*
+
+Since `localTx` performs side-effects such as opening a connection before executing its body, `localTx` itself should be suspended in `IO`. Here, we use `IO.suspend` to achieve this:
+
+```scala
+import scalikejdbc._
+import cats.effect._
+
+type A = ???
+
+def ioExecution: DBSession => IO[A] = ???
+
+// default
+IO.suspend {
+  DB.localTx(ioExecution)(boundary = catsEffectIOTxBoundary)
+}
+
+// named
+IO.suspend {
+  NamedDB('named).localTx(ioExecution)(boundary = catsEffectIOTxBoundary)
+}
+
+```
+
 
 <hr/>
 ### #withinTx block / session
