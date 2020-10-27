@@ -5,7 +5,7 @@ title: Transaction - ScalikeJDBC
 ## Transaction
 
 <hr/>
-### #readOnly block / session
+### readOnly block / session
 <hr/>
 
 Executes query in read-only mode.
@@ -33,7 +33,7 @@ DB readOnly { implicit session =>
 ```
 
 <hr/>
-### #autoCommit block / session
+### autoCommit block / session
 <hr/>
 
 Executes query / update in auto-commit mode.
@@ -55,7 +55,7 @@ try {
 ```
 
 <hr/>
-### #localTx block
+### localTx block
 <hr/>
 
 Executes query / update in block-scoped transactions.
@@ -88,7 +88,7 @@ val result: Try[Result] = DB localTx { implicit session =>
 Built-in type class instances are `Try`, `Either` and `Future`. You can use them by `import scalikejdbc.TxBoundary,***._`.
 
 <hr/>
-### #futureLocalTx block 
+### futureLocalTx block
 <hr/>
 
 `futureLocalTx` use `Future`'s state as transaction boundary. If one of the Future operations was failed, the transaction will perform rollback automatically. 
@@ -133,7 +133,7 @@ val fResult = DB localTx { implicit s =>
 ```
 
 <hr/>
-### #Working with IO monads
+### Working with IO monads
 <hr/>
 
 <hr/>
@@ -274,7 +274,7 @@ IO.suspend {
 
 
 <hr/>
-### #withinTx block / session
+### withinTx block / session
 <hr/>
 
 Executes query / update in already existing transactions.
