@@ -237,7 +237,7 @@ import cats.effect._
 
 implicit def catsEffectIOTxBoundary[A]: TxBoundary[IO[A]] = new TxBoundary[IO[A]] {
   def finishTx(result: IO[A], tx: Tx): IO[A] =
-    result.guaranteeCase{
+    result.guaranteeCase {
       case ExitCase.Completed => IO(tx.commit())
       case _ => IO(tx.rollback())
     }
@@ -300,4 +300,3 @@ try {
   db.rollbackIfActive() // it NEVER throws Exception
 } finally { db.close() }
 ```
-
