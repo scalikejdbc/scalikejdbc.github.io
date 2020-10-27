@@ -229,7 +229,7 @@ NamedDB('named).localTx(asyncExecution)(boundary = myIOTxBoundary)
 
 *TxBoundary typeclass instance for cats.effect.IO[A]*
 
-`cats.effect.IO` has a cancellation mechanism, which `attempt` can't handle. Here, we use `guarantee`/`guaranteeCase` to make sure the finalizers are run.
+`cats.effect.IO` offers two ways to handle completion/cancellation as below. You can use `guaranteeCase` for commit/rollback operations while going with `guarantee` for connection closure.
 
 ```scala
 import scalikejdbc._
@@ -250,7 +250,7 @@ implicit def catsEffectIOTxBoundary[A]: TxBoundary[IO[A]] = new TxBoundary[IO[A]
 
 *localTx*
 
-Since `localTx` performs side-effects such as opening a connection before executing its body, `localTx` itself should be suspended in `IO`. Here, we use `IO.suspend` to achieve this:
+To take control of all the side-effects that happen in `localTx` method, you can use `suspend` method to wrap the code blocks using `localTx`.
 
 ```scala
 import scalikejdbc._
@@ -300,5 +300,4 @@ try {
   db.rollbackIfActive() // it NEVER throws Exception
 } finally { db.close() }
 ```
-
 
