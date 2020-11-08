@@ -63,7 +63,7 @@ val members = sql"select id, name from members order by id ${ordering} limit 10"
 `${ordering}` will be directly converted to a part of SQL.
 
 ```sql
-select id , name from members limit 10 order by id desc
+select id , name from members order by id desc limit 10
 ```
 
 Don't worry again, this code is safely protected. `sqls""` always treats external input values as binding parameters.
