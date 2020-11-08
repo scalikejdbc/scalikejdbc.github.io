@@ -82,7 +82,7 @@
   <span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="n">rs</span> <span class="k">=&gt;</span> <span class="nc">Member</span><span class="o">(</span><span class="n">rs</span><span class="o">)).</span><span class="n">list</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
 </code></pre></div>
 <p><code>${ordering}</code> will be directly converted to a part of SQL.</p>
-<div class="highlight"><pre class="highlight sql"><code><span class="k">select</span> <span class="n">id</span> <span class="p">,</span> <span class="n">name</span> <span class="k">from</span> <span class="n">members</span> <span class="k">limit</span> <span class="mi">10</span> <span class="k">order</span> <span class="k">by</span> <span class="n">id</span> <span class="k">desc</span>
+<div class="highlight"><pre class="highlight sql"><code><span class="k">select</span> <span class="n">id</span> <span class="p">,</span> <span class="n">name</span> <span class="k">from</span> <span class="n">members</span> <span class="k">order</span> <span class="k">by</span> <span class="n">id</span> <span class="k">desc</span> <span class="k">limit</span> <span class="mi">10</span>
 </code></pre></div>
 <p>Don&rsquo;t worry again, this code is safely protected. <code>sqls&quot;&quot;</code> always treats external input values as binding parameters.</p>
 
