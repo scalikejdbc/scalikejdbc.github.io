@@ -145,11 +145,17 @@
 </code></pre></div>
 <hr/>
 
-<h3 id="working-with-io-monads">#Working with IO monads</h3>
+<h3 id="working-with-io-monads">Working with IO monads</h3>
 
 <hr/>
 
-<p><em>MyIO (IO monads minimal example)</em></p>
+<hr/>
+
+<h4 id="io-monad-minimal-example">IO monad minimal example</h4>
+
+<hr/>
+
+<p><em>MyIO</em></p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">sealed</span> <span class="k">abstract</span> <span class="k">class</span> <span class="nc">MyIO</span><span class="o">[</span><span class="kt">+A</span><span class="o">]</span> <span class="o">{</span>
   <span class="k">import</span> <span class="nn">MyIO._</span>
 
@@ -177,7 +183,7 @@
 <span class="o">}</span>
 
 <span class="k">object</span> <span class="nc">MyIO</span> <span class="o">{</span>
-  <span class="k">def</span> <span class="n">apply</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">a</span><span class="k">:</span> <span class="o">=&gt;</span> <span class="n">A</span><span class="o">)</span><span class="k">:</span> <span class="kt">MyIO</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Delay</span><span class="o">(</span><span class="n">a</span> <span class="k">_</span><span class="o">)</span>
+  <span class="k">def</span> <span class="n">apply</span><span class="o">[</span><span class="kt">A</span><span class="o">](</span><span class="n">a</span><span class="k">:</span> <span class="o">=&gt;</span> <span class="n">A</span><span class="o">)</span><span class="k">:</span> <span class="kt">MyIO</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Delay</span><span class="o">(()</span> <span class="k">=&gt;</span> <span class="n">a</span><span class="o">)</span>
 
   <span class="k">final</span> <span class="k">case</span> <span class="k">class</span> <span class="nc">Delay</span><span class="o">[</span><span class="kt">+A</span><span class="o">](</span><span class="n">thunk</span><span class="k">:</span> <span class="o">()</span> <span class="o">=&gt;</span> <span class="n">A</span><span class="o">)</span> <span class="k">extends</span> <span class="nc">MyIO</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span>
 <span class="o">}</span>
@@ -189,16 +195,17 @@
 
   <span class="k">def</span> <span class="n">finishTx</span><span class="o">(</span><span class="n">result</span><span class="k">:</span> <span class="kt">MyIO</span><span class="o">[</span><span class="kt">A</span><span class="o">],</span> <span class="n">tx</span><span class="k">:</span> <span class="kt">Tx</span><span class="o">)</span><span class="k">:</span> <span class="kt">MyIO</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
     <span class="n">result</span><span class="o">.</span><span class="n">attempt</span><span class="o">.</span><span class="n">flatMap</span> <span class="o">{</span>
-      <span class="k">case</span> <span class="nc">Right</span><span class="o">(</span><span class="k">_</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="nc">MyIO</span><span class="o">(</span><span class="n">tx</span><span class="o">.</span><span class="n">commit</span><span class="o">()).</span><span class="n">flatMap</span><span class="o">(</span><span class="k">_</span> <span class="k">=&gt;</span> <span class="n">result</span><span class="o">)</span>
-      <span class="k">case</span> <span class="nc">Left</span><span class="o">(</span><span class="k">_</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="nc">MyIO</span><span class="o">(</span><span class="n">tx</span><span class="o">.</span><span class="n">rollback</span><span class="o">()).</span><span class="n">flatMap</span><span class="o">(</span><span class="k">_</span> <span class="k">=&gt;</span> <span class="n">result</span><span class="o">)</span>
+      <span class="k">case</span> <span class="nc">Right</span><span class="o">(</span><span class="n">a</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="nc">MyIO</span><span class="o">(</span><span class="n">tx</span><span class="o">.</span><span class="n">commit</span><span class="o">()).</span><span class="n">flatMap</span><span class="o">(</span><span class="k">_</span> <span class="k">=&gt;</span> <span class="nc">MyIO</span><span class="o">(</span><span class="n">a</span><span class="o">))</span>
+      <span class="k">case</span> <span class="nc">Left</span><span class="o">(</span><span class="n">e</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="nc">MyIO</span><span class="o">(</span><span class="n">tx</span><span class="o">.</span><span class="n">rollback</span><span class="o">()).</span><span class="n">flatMap</span><span class="o">(</span><span class="k">_</span> <span class="k">=&gt;</span> <span class="nc">MyIO</span><span class="o">(</span><span class="k">throw</span> <span class="n">e</span><span class="o">))</span>
     <span class="o">}</span>
   <span class="o">}</span>
 
   <span class="k">override</span> <span class="k">def</span> <span class="n">closeConnection</span><span class="o">(</span><span class="n">result</span><span class="k">:</span> <span class="kt">MyIO</span><span class="o">[</span><span class="kt">A</span><span class="o">],</span> <span class="n">doClose</span><span class="k">:</span> <span class="o">()</span> <span class="o">=&gt;</span> <span class="nc">Unit</span><span class="o">)</span><span class="k">:</span> <span class="kt">MyIO</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
     <span class="k">for</span> <span class="o">{</span>
-      <span class="n">x</span> <span class="k">&lt;-</span> <span class="n">result</span>
-      <span class="k">_</span> <span class="k">&lt;-</span> <span class="nc">MyIO</span><span class="o">(</span><span class="n">doClose</span><span class="o">).</span><span class="n">map</span><span class="o">(</span><span class="n">x</span> <span class="k">=&gt;</span> <span class="n">x</span><span class="o">.</span><span class="n">apply</span><span class="o">())</span>
-    <span class="o">}</span> <span class="k">yield</span> <span class="n">x</span>
+      <span class="n">x</span> <span class="k">&lt;-</span> <span class="n">result</span><span class="o">.</span><span class="n">attempt</span>
+      <span class="k">_</span> <span class="k">&lt;-</span> <span class="nc">MyIO</span><span class="o">(</span><span class="n">doClose</span><span class="o">())</span>
+      <span class="n">a</span> <span class="k">&lt;-</span> <span class="nc">MyIO</span><span class="o">(</span><span class="n">x</span><span class="o">.</span><span class="n">fold</span><span class="o">(</span><span class="k">throw</span> <span class="k">_</span><span class="o">,</span> <span class="n">identity</span><span class="o">))</span>
+    <span class="o">}</span> <span class="k">yield</span> <span class="n">a</span>
   <span class="o">}</span>
 <span class="o">}</span>
 </code></pre></div>
@@ -210,13 +217,57 @@ You must use it with a <code>TxBoundary</code> instance for MyIO[A]</p>
 
 <span class="k">type</span> <span class="kt">A</span> <span class="o">=</span> <span class="o">???</span>
 
-<span class="k">def</span> <span class="n">asyncExecution</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span><span class="k">:</span> <span class="kt">DBSession</span> <span class="o">=&gt;</span> <span class="nc">MyIO</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span> <span class="o">???</span>
+<span class="k">def</span> <span class="n">asyncExecution</span><span class="k">:</span> <span class="kt">DBSession</span> <span class="o">=&gt;</span> <span class="nc">MyIO</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span> <span class="o">???</span>
 
 <span class="c1">// default
 </span><span class="nc">DB</span><span class="o">.</span><span class="n">localTx</span><span class="o">(</span><span class="n">asyncExecution</span><span class="o">)(</span><span class="n">boundary</span> <span class="k">=</span> <span class="n">myIOTxBoundary</span><span class="o">)</span>
 
 <span class="c1">// named
 </span><span class="nc">NamedDB</span><span class="o">(</span><span class="ss">'named)</span><span class="o">.</span><span class="n">localTx</span><span class="o">(</span><span class="n">asyncExecution</span><span class="o">)(</span><span class="n">boundary</span> <span class="k">=</span> <span class="n">myIOTxBoundary</span><span class="o">)</span>
+
+</code></pre></div>
+<hr/>
+
+<h4 id="cats-effect-io-example">Cats Effect IO example</h4>
+
+<hr/>
+
+<p><em>TxBoundary typeclass instance for cats.effect.IO[A]</em></p>
+
+<p><code>cats.effect.IO</code> offers two ways to handle completion/cancellation as below. You can use <code>guaranteeCase</code> for commit/rollback operations while going with <code>guarantee</code> for connection closure.</p>
+<div class="highlight"><pre class="highlight scala"><code><span class="k">import</span> <span class="nn">scalikejdbc._</span>
+<span class="k">import</span> <span class="nn">cats.effect._</span>
+
+<span class="k">implicit</span> <span class="k">def</span> <span class="n">catsEffectIOTxBoundary</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span><span class="k">:</span> <span class="kt">TxBoundary</span><span class="o">[</span><span class="kt">IO</span><span class="o">[</span><span class="kt">A</span><span class="o">]]</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">TxBoundary</span><span class="o">[</span><span class="kt">IO</span><span class="o">[</span><span class="kt">A</span><span class="o">]]</span> <span class="o">{</span>
+  <span class="k">def</span> <span class="n">finishTx</span><span class="o">(</span><span class="n">result</span><span class="k">:</span> <span class="kt">IO</span><span class="o">[</span><span class="kt">A</span><span class="o">],</span> <span class="n">tx</span><span class="k">:</span> <span class="kt">Tx</span><span class="o">)</span><span class="k">:</span> <span class="kt">IO</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span>
+    <span class="n">result</span><span class="o">.</span><span class="n">guaranteeCase</span> <span class="o">{</span>
+      <span class="k">case</span> <span class="nc">ExitCase</span><span class="o">.</span><span class="nc">Completed</span> <span class="k">=&gt;</span> <span class="nc">IO</span><span class="o">(</span><span class="n">tx</span><span class="o">.</span><span class="n">commit</span><span class="o">())</span>
+      <span class="k">case</span> <span class="k">_</span> <span class="k">=&gt;</span> <span class="nc">IO</span><span class="o">(</span><span class="n">tx</span><span class="o">.</span><span class="n">rollback</span><span class="o">())</span>
+    <span class="o">}</span>
+
+  <span class="k">override</span> <span class="k">def</span> <span class="n">closeConnection</span><span class="o">(</span><span class="n">result</span><span class="k">:</span> <span class="kt">IO</span><span class="o">[</span><span class="kt">A</span><span class="o">],</span> <span class="n">doClose</span><span class="k">:</span> <span class="o">()</span> <span class="o">=&gt;</span> <span class="nc">Unit</span><span class="o">)</span><span class="k">:</span> <span class="kt">IO</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span>
+    <span class="n">result</span><span class="o">.</span><span class="n">guarantee</span><span class="o">(</span><span class="nc">IO</span><span class="o">(</span><span class="n">doClose</span><span class="o">()))</span>
+<span class="o">}</span>
+</code></pre></div>
+<p><em>localTx</em></p>
+
+<p>To take control of all the side-effects that happen in <code>localTx</code> method, you can use <code>suspend</code> method to wrap the code blocks using <code>localTx</code>.</p>
+<div class="highlight"><pre class="highlight scala"><code><span class="k">import</span> <span class="nn">scalikejdbc._</span>
+<span class="k">import</span> <span class="nn">cats.effect._</span>
+
+<span class="k">type</span> <span class="kt">A</span> <span class="o">=</span> <span class="o">???</span>
+
+<span class="k">def</span> <span class="n">ioExecution</span><span class="k">:</span> <span class="kt">DBSession</span> <span class="o">=&gt;</span> <span class="nc">IO</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span> <span class="o">???</span>
+
+<span class="c1">// default
+</span><span class="nc">IO</span><span class="o">.</span><span class="n">suspend</span> <span class="o">{</span>
+  <span class="nc">DB</span><span class="o">.</span><span class="n">localTx</span><span class="o">(</span><span class="n">ioExecution</span><span class="o">)(</span><span class="n">boundary</span> <span class="k">=</span> <span class="n">catsEffectIOTxBoundary</span><span class="o">)</span>
+<span class="o">}</span>
+
+<span class="c1">// named
+</span><span class="nc">IO</span><span class="o">.</span><span class="n">suspend</span> <span class="o">{</span>
+  <span class="nc">NamedDB</span><span class="o">(</span><span class="ss">'named)</span><span class="o">.</span><span class="n">localTx</span><span class="o">(</span><span class="n">ioExecution</span><span class="o">)(</span><span class="n">boundary</span> <span class="k">=</span> <span class="n">catsEffectIOTxBoundary</span><span class="o">)</span>
+<span class="o">}</span>
 
 </code></pre></div>
 <hr/>
