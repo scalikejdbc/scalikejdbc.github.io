@@ -133,11 +133,14 @@ val fResult = DB localTx { implicit s =>
 ```
 
 <hr/>
-### #Working with IO monads
+### Working with IO monads
 <hr/>
 
-*MyIO (IO monads minimal example)*
+<hr/>
+#### IO monad minimal example
+<hr/>
 
+*MyIO*
 
 ```scala
 sealed abstract class MyIO[+A] {
@@ -167,7 +170,7 @@ sealed abstract class MyIO[+A] {
 }
 
 object MyIO {
-  def apply[A](a: => A): MyIO[A] = Delay(a _)
+  def apply[A](a: => A): MyIO[A] = Delay(() => a)
 
   final case class Delay[+A](thunk: () => A) extends MyIO[A]
 }
@@ -183,16 +186,17 @@ implicit def myIOTxBoundary[A]: TxBoundary[MyIO[A]] = new TxBoundary[MyIO[A]] {
 
   def finishTx(result: MyIO[A], tx: Tx): MyIO[A] = {
     result.attempt.flatMap {
-      case Right(_) => MyIO(tx.commit()).flatMap(_ => result)
-      case Left(_) => MyIO(tx.rollback()).flatMap(_ => result)
+      case Right(a) => MyIO(tx.commit()).flatMap(_ => MyIO(a))
+      case Left(e) => MyIO(tx.rollback()).flatMap(_ => MyIO(throw e))
     }
   }
 
   override def closeConnection(result: MyIO[A], doClose: () => Unit): MyIO[A] = {
     for {
-      x <- result
-      _ <- MyIO(doClose).map(x => x.apply())
-    } yield x
+      x <- result.attempt
+      _ <- MyIO(doClose())
+      a <- MyIO(x.fold(throw _, identity))
+    } yield a
   }
 }
 ```
@@ -208,7 +212,7 @@ import scalikejdbc._
 
 type A = ???
 
-def asyncExecution[A]: DBSession => MyIO[A] = ???
+def asyncExecution: DBSession => MyIO[A] = ???
 
 // default
 DB.localTx(asyncExecution)(boundary = myIOTxBoundary)
@@ -217,6 +221,57 @@ DB.localTx(asyncExecution)(boundary = myIOTxBoundary)
 NamedDB('named).localTx(asyncExecution)(boundary = myIOTxBoundary)
 
 ```
+
+
+<hr/>
+#### Cats Effect IO example
+<hr/>
+
+*TxBoundary typeclass instance for cats.effect.IO[A]*
+
+`cats.effect.IO` offers two ways to handle completion/cancellation as below. You can use `guaranteeCase` for commit/rollback operations while going with `guarantee` for connection closure.
+
+```scala
+import scalikejdbc._
+import cats.effect._
+
+implicit def catsEffectIOTxBoundary[A]: TxBoundary[IO[A]] = new TxBoundary[IO[A]] {
+  def finishTx(result: IO[A], tx: Tx): IO[A] =
+    result.guaranteeCase {
+      case ExitCase.Completed => IO(tx.commit())
+      case _ => IO(tx.rollback())
+    }
+
+  override def closeConnection(result: IO[A], doClose: () => Unit): IO[A] =
+    result.guarantee(IO(doClose()))
+}
+```
+
+
+*localTx*
+
+To take control of all the side-effects that happen in `localTx` method, you can use `suspend` method to wrap the code blocks using `localTx`.
+
+```scala
+import scalikejdbc._
+import cats.effect._
+
+type A = ???
+
+def ioExecution: DBSession => IO[A] = ???
+
+// default
+IO.suspend {
+  DB.localTx(ioExecution)(boundary = catsEffectIOTxBoundary)
+}
+
+// named
+IO.suspend {
+  NamedDB('named).localTx(ioExecution)(boundary = catsEffectIOTxBoundary)
+}
+
+```
+
 
 <hr/>
 ### #withinTx block / session
@@ -245,5 +300,3 @@ try {
   db.rollbackIfActive() // it NEVER throws Exception
 } finally { db.close() }
 ```
-
-
