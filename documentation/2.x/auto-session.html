@@ -43,47 +43,47 @@
 <p>Basic usage of ScalikeJDBC is using <code>DB.autoCommit/readOnly/localTx/withinTx { ...}</code> blocks.</p>
 
 <p>However, if you&rsquo;d like to re-use methods, they might not be available.</p>
-<div class="highlight"><pre class="highlight scala"><code><span class="k">def</span> <span class="n">findById</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">)</span> <span class="k">=</span> <span class="nc">DB</span> <span class="n">readOnly</span> <span class="o">{</span>
+<div class="highlight"><pre class="highlight scala"><code><span class="k">def</span> <span class="nf">findById</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">)</span> <span class="k">=</span> <span class="nc">DB</span> <span class="n">readOnly</span> <span class="o">{</span>
   <span class="n">sql</span><span class="s">"select id, name from members where id = ${id}"</span>
-    <span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="n">rs</span> <span class="k">=&gt;</span> <span class="nc">Member</span><span class="o">(</span><span class="n">rs</span><span class="o">)).</span><span class="n">single</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+    <span class="o">.</span><span class="py">map</span><span class="o">(</span><span class="n">rs</span> <span class="k">=&gt;</span> <span class="nc">Member</span><span class="o">(</span><span class="n">rs</span><span class="o">)).</span><span class="py">single</span><span class="o">.</span><span class="py">apply</span><span class="o">()</span>
 <span class="o">}</span>
 </code></pre></div>
 <p>When you use the above method in a transaction block, the code won&rsquo;t work as you expected.</p>
 
 <p>The reason is that since <code>#findById(Long)</code> uses another session(=connection), it couldn&rsquo;t access uncommitted data.</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="nc">DB</span> <span class="n">localTx</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span>
-  <span class="k">val</span> <span class="n">id</span> <span class="k">=</span> <span class="n">create</span><span class="o">(</span><span class="s">"Alice"</span><span class="o">)</span>
-  <span class="n">findById</span><span class="o">(</span><span class="n">id</span><span class="o">)</span> <span class="c1">// Not found!
-</span><span class="o">}</span>
+  <span class="k">val</span> <span class="nv">id</span> <span class="k">=</span> <span class="nf">create</span><span class="o">(</span><span class="s">"Alice"</span><span class="o">)</span>
+  <span class="nf">findById</span><span class="o">(</span><span class="n">id</span><span class="o">)</span> <span class="c1">// Not found!</span>
+<span class="o">}</span>
 </code></pre></div>
 <p>You need to change method&rsquo;s API to accept implicit parameters and now you don&rsquo;t need <code>DB</code> block inside the method.</p>
-<div class="highlight"><pre class="highlight scala"><code><span class="k">def</span> <span class="n">findById</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">)(</span><span class="k">implicit</span> <span class="n">session</span><span class="k">:</span> <span class="kt">DBSession</span><span class="o">)</span> <span class="k">=</span>
+<div class="highlight"><pre class="highlight scala"><code><span class="k">def</span> <span class="nf">findById</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">)(</span><span class="k">implicit</span> <span class="n">session</span><span class="k">:</span> <span class="kt">DBSession</span><span class="o">)</span> <span class="k">=</span>
   <span class="n">sql</span><span class="s">"select id, name from members where id = ${id}"</span>
-    <span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="n">rs</span> <span class="k">=&gt;</span> <span class="nc">Member</span><span class="o">(</span><span class="n">rs</span><span class="o">)).</span><span class="n">single</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+    <span class="o">.</span><span class="py">map</span><span class="o">(</span><span class="n">rs</span> <span class="k">=&gt;</span> <span class="nc">Member</span><span class="o">(</span><span class="n">rs</span><span class="o">)).</span><span class="py">single</span><span class="o">.</span><span class="py">apply</span><span class="o">()</span>
 </code></pre></div>
 <p>This one works as expected.</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="nc">DB</span> <span class="n">localTx</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span>
-  <span class="k">val</span> <span class="n">id</span> <span class="k">=</span> <span class="n">create</span><span class="o">(</span><span class="s">"Alice"</span><span class="o">)</span>
-  <span class="n">findById</span><span class="o">(</span><span class="n">id</span><span class="o">)</span> <span class="c1">// Found!
-</span><span class="o">}</span>
+  <span class="k">val</span> <span class="nv">id</span> <span class="k">=</span> <span class="nf">create</span><span class="o">(</span><span class="s">"Alice"</span><span class="o">)</span>
+  <span class="nf">findById</span><span class="o">(</span><span class="n">id</span><span class="o">)</span> <span class="c1">// Found!</span>
+<span class="o">}</span>
 </code></pre></div>
 <p>But unfortunately, now we need to pass implicit parameter to <code>#findById</code> every time to use it.</p>
-<div class="highlight"><pre class="highlight scala"><code><span class="c1">// now we cannot use this method directly
-</span><span class="n">findById</span><span class="o">(</span><span class="n">id</span><span class="o">)</span> <span class="c1">// implicit parameter not found!
-</span>
-<span class="nc">DB</span> <span class="n">readOnly</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span> <span class="n">findById</span><span class="o">(</span><span class="n">id</span><span class="o">)</span> <span class="o">}</span>
+<div class="highlight"><pre class="highlight scala"><code><span class="c1">// now we cannot use this method directly</span>
+<span class="nf">findById</span><span class="o">(</span><span class="n">id</span><span class="o">)</span> <span class="c1">// implicit parameter not found!</span>
+
+<span class="nc">DB</span> <span class="n">readOnly</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span> <span class="nf">findById</span><span class="o">(</span><span class="n">id</span><span class="o">)</span> <span class="o">}</span>
 </code></pre></div>
 <p><code>AutoSession</code> is a solution for this issue. Use <code>AutoSession</code> as default value of the implicit parameter.</p>
-<div class="highlight"><pre class="highlight scala"><code><span class="k">def</span> <span class="n">findById</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">)(</span><span class="k">implicit</span> <span class="n">session</span><span class="k">:</span> <span class="kt">DBSession</span> <span class="o">=</span> <span class="nc">AutoSession</span><span class="o">)</span> <span class="k">=</span>
+<div class="highlight"><pre class="highlight scala"><code><span class="k">def</span> <span class="nf">findById</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">)(</span><span class="k">implicit</span> <span class="n">session</span><span class="k">:</span> <span class="kt">DBSession</span> <span class="o">=</span> <span class="nc">AutoSession</span><span class="o">)</span> <span class="k">=</span>
   <span class="n">sql</span><span class="s">"select id, name from members where id = ${id}"</span>
-    <span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="n">rs</span> <span class="k">=&gt;</span> <span class="nc">Member</span><span class="o">(</span><span class="n">rs</span><span class="o">)).</span><span class="n">single</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+    <span class="o">.</span><span class="py">map</span><span class="o">(</span><span class="n">rs</span> <span class="k">=&gt;</span> <span class="nc">Member</span><span class="o">(</span><span class="n">rs</span><span class="o">)).</span><span class="py">single</span><span class="o">.</span><span class="py">apply</span><span class="o">()</span>
 </code></pre></div>
 <p>This change made <code>#findById</code> flexible.</p>
-<div class="highlight"><pre class="highlight scala"><code><span class="n">findById</span><span class="o">(</span><span class="n">id</span><span class="o">)</span> <span class="c1">// borrows a read-only session and gives it back
-</span><span class="nc">DB</span> <span class="n">localTx</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span> <span class="n">findById</span><span class="o">(</span><span class="n">id</span><span class="o">)</span> <span class="o">}</span> <span class="c1">// using implicit session
-</span></code></pre></div>
+<div class="highlight"><pre class="highlight scala"><code><span class="nf">findById</span><span class="o">(</span><span class="n">id</span><span class="o">)</span> <span class="c1">// borrows a read-only session and gives it back</span>
+<span class="nc">DB</span> <span class="n">localTx</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span> <span class="nf">findById</span><span class="o">(</span><span class="n">id</span><span class="o">)</span> <span class="o">}</span> <span class="c1">// using implicit session</span>
+</code></pre></div>
 <p>If you do the same with <code>NamedDB</code>, use <code>NamedAutoSession</code> as follows.</p>
-<div class="highlight"><pre class="highlight scala"><code><span class="k">def</span> <span class="n">findById</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">)(</span><span class="k">implicit</span> <span class="n">session</span><span class="k">:</span> <span class="kt">DBSession</span> <span class="o">=</span> <span class="nc">NamedAutoSession</span><span class="o">(</span><span class="ss">'named)</span><span class="o">)</span> <span class="k">=</span>
+<div class="highlight"><pre class="highlight scala"><code><span class="k">def</span> <span class="nf">findById</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">)(</span><span class="k">implicit</span> <span class="n">session</span><span class="k">:</span> <span class="kt">DBSession</span> <span class="o">=</span> <span class="nc">NamedAutoSession</span><span class="o">(</span><span class="ss">'named</span><span class="o">))</span> <span class="k">=</span>
   <span class="n">sql</span><span class="s">"select id, name from members where id = ${id}"</span>
 </code></pre></div>
 <hr/>

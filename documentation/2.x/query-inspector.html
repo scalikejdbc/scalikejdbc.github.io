@@ -49,16 +49,16 @@
 <hr/>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">import</span> <span class="nn">scalikejdbc._</span>
 
-<span class="nc">GlobalSettings</span><span class="o">.</span><span class="n">loggingSQLAndTime</span> <span class="k">=</span> <span class="nc">LoggingSQLAndTimeSettings</span><span class="o">(</span>
+<span class="nv">GlobalSettings</span><span class="o">.</span><span class="py">loggingSQLAndTime</span> <span class="k">=</span> <span class="nc">LoggingSQLAndTimeSettings</span><span class="o">(</span>
   <span class="n">enabled</span> <span class="k">=</span> <span class="kc">true</span><span class="o">,</span>
   <span class="n">singleLineMode</span> <span class="k">=</span> <span class="kc">false</span><span class="o">,</span>
   <span class="n">printUnprocessedStackTrace</span> <span class="k">=</span> <span class="kc">false</span><span class="o">,</span>
   <span class="n">stackTraceDepth</span><span class="k">=</span> <span class="mi">15</span><span class="o">,</span>
-  <span class="n">logLevel</span> <span class="k">=</span> <span class="ss">'debug,</span>
+  <span class="n">logLevel</span> <span class="k">=</span> <span class="ss">'debug</span><span class="o">,</span>
   <span class="n">warningEnabled</span> <span class="k">=</span> <span class="kc">false</span><span class="o">,</span>
   <span class="n">warningThresholdMillis</span> <span class="k">=</span> <span class="mi">3000L</span><span class="o">,</span>
-  <span class="n">warningLogLevel</span> <span class="k">=</span> <span class="ss">'warn
-</span><span class="o">)</span>
+  <span class="n">warningLogLevel</span> <span class="k">=</span> <span class="ss">'warn</span>
+<span class="o">)</span>
 </code></pre></div>
 <hr/>
 
@@ -98,11 +98,11 @@
 <hr/>
 
 <p>If you don&rsquo;t need stack trace logging and just print SQL in single line, use <code>singleLineMode = true</code>.</p>
-<div class="highlight"><pre class="highlight scala"><code><span class="nc">GlobalSettings</span><span class="o">.</span><span class="n">loggingSQLAndTime</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">LoggingSQLAndTimeSettings</span><span class="o">(</span>
+<div class="highlight"><pre class="highlight scala"><code><span class="nv">GlobalSettings</span><span class="o">.</span><span class="py">loggingSQLAndTime</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">LoggingSQLAndTimeSettings</span><span class="o">(</span>
   <span class="n">enabled</span> <span class="k">=</span> <span class="kc">true</span><span class="o">,</span>
   <span class="n">singleLineMode</span> <span class="k">=</span> <span class="kc">true</span><span class="o">,</span>
-  <span class="n">logLevel</span> <span class="k">=</span> <span class="ss">'DEBUG
-</span><span class="o">)</span>
+  <span class="n">logLevel</span> <span class="k">=</span> <span class="ss">'DEBUG</span>
+<span class="o">)</span>
 </code></pre></div>
 <p>In this case, logging as follows:</p>
 <div class="highlight"><pre class="highlight shell"><code>2013-05-26 16:23:08,072 DEBUG <span class="o">[</span>pool-4-thread-4] s.StatementExecutor<span class="nv">$$</span>anon<span class="nv">$1</span> <span class="o">[</span>Log.scala:81] <span class="o">[</span>SQL Execution] <span class="k">select</span> <span class="k">*</span> from user where email <span class="o">=</span> <span class="s1">'guillaume@sample.com'</span><span class="p">;</span> <span class="o">(</span>0 ms<span class="o">)</span>
@@ -117,34 +117,34 @@
 
 <p>For instance, the following example will send information about slow queries to Fluentd.</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">import</span> <span class="nn">org.fluentd.logger.scala._</span>
-<span class="k">val</span> <span class="n">logger</span> <span class="k">=</span> <span class="nc">FluentLoggerFactory</span><span class="o">.</span><span class="n">getLogger</span><span class="o">(</span><span class="s">"scalikejdbc"</span><span class="o">)</span>
+<span class="k">val</span> <span class="nv">logger</span> <span class="k">=</span> <span class="nv">FluentLoggerFactory</span><span class="o">.</span><span class="py">getLogger</span><span class="o">(</span><span class="s">"scalikejdbc"</span><span class="o">)</span>
 
-<span class="nc">GlobalSettings</span><span class="o">.</span><span class="n">queryCompletionListener</span> <span class="k">=</span> <span class="o">(</span><span class="n">sql</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">params</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Any</span><span class="o">],</span> <span class="n">millis</span><span class="k">:</span> <span class="kt">Long</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="o">{</span>
-  <span class="k">if</span> <span class="o">(</span><span class="n">millis</span> <span class="o">&gt;</span> <span class="mi">1000L</span><span class="o">)</span> <span class="o">{</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="o">(</span><span class="s">"completion"</span><span class="o">,</span> <span class="nc">Map</span><span class="o">(</span>
+<span class="nv">GlobalSettings</span><span class="o">.</span><span class="py">queryCompletionListener</span> <span class="k">=</span> <span class="o">(</span><span class="n">sql</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">params</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Any</span><span class="o">],</span> <span class="n">millis</span><span class="k">:</span> <span class="kt">Long</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="o">{</span>
+  <span class="nf">if</span> <span class="o">(</span><span class="n">millis</span> <span class="o">&gt;</span> <span class="mi">1000L</span><span class="o">)</span> <span class="o">{</span>
+    <span class="nv">logger</span><span class="o">.</span><span class="py">log</span><span class="o">(</span><span class="s">"completion"</span><span class="o">,</span> <span class="nc">Map</span><span class="o">(</span>
       <span class="s">"sql"</span> <span class="o">-&gt;</span> <span class="n">sql</span><span class="o">,</span>
-      <span class="s">"params"</span> <span class="o">-&gt;</span> <span class="n">params</span><span class="o">.</span><span class="n">mkString</span><span class="o">(</span><span class="s">"["</span><span class="o">,</span> <span class="s">","</span><span class="o">,</span> <span class="s">"]"</span><span class="o">),</span>
+      <span class="s">"params"</span> <span class="o">-&gt;</span> <span class="nv">params</span><span class="o">.</span><span class="py">mkString</span><span class="o">(</span><span class="s">"["</span><span class="o">,</span> <span class="s">","</span><span class="o">,</span> <span class="s">"]"</span><span class="o">),</span>
       <span class="s">"millis"</span> <span class="o">-&gt;</span> <span class="n">millis</span><span class="o">))</span>
   <span class="o">}</span>
 <span class="o">}</span>
 
-<span class="k">val</span> <span class="n">counts</span> <span class="k">=</span> <span class="nc">DB</span> <span class="n">readOnly</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">s</span> <span class="k">=&gt;</span>
+<span class="k">val</span> <span class="nv">counts</span> <span class="k">=</span> <span class="nc">DB</span> <span class="n">readOnly</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">s</span> <span class="k">=&gt;</span>
   <span class="n">sql</span><span class="s">"select product_id, count(*) from orders group by product_id"</span>
-    <span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="n">rs</span> <span class="k">=&gt;</span> <span class="nc">OrderCount</span><span class="o">(</span><span class="n">rs</span><span class="o">)).</span><span class="n">list</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+    <span class="o">.</span><span class="py">map</span><span class="o">(</span><span class="n">rs</span> <span class="k">=&gt;</span> <span class="nc">OrderCount</span><span class="o">(</span><span class="n">rs</span><span class="o">)).</span><span class="py">list</span><span class="o">.</span><span class="py">apply</span><span class="o">()</span>
 <span class="o">}</span>
 </code></pre></div>
 <p>Since version 2.2.1, you can attach tags to each query. This feature will help you when classifying queries.</p>
-<div class="highlight"><pre class="highlight scala"><code><span class="nc">GlobalSettings</span><span class="o">.</span><span class="n">taggedQueryCompletionListener</span> <span class="k">=</span> <span class="o">(</span><span class="n">sql</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">params</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Any</span><span class="o">],</span> <span class="n">millis</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">tags</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">String</span><span class="o">])</span> <span class="k">=&gt;</span> <span class="o">{</span>
-  <span class="c1">// do something here
-</span><span class="o">}</span>
-<span class="nc">GlobalSettings</span><span class="o">.</span><span class="n">taggedQueryFailureListener</span> <span class="k">=</span> <span class="o">(</span><span class="n">sql</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">params</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Any</span><span class="o">],</span> <span class="n">e</span><span class="k">:</span> <span class="kt">Throwable</span><span class="o">,</span> <span class="n">tags</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">String</span><span class="o">])</span> <span class="k">=&gt;</span> <span class="o">{</span>
-  <span class="c1">// do something here
-</span><span class="o">}</span>
+<div class="highlight"><pre class="highlight scala"><code><span class="nv">GlobalSettings</span><span class="o">.</span><span class="py">taggedQueryCompletionListener</span> <span class="k">=</span> <span class="o">(</span><span class="n">sql</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">params</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Any</span><span class="o">],</span> <span class="n">millis</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">tags</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">String</span><span class="o">])</span> <span class="k">=&gt;</span> <span class="o">{</span>
+  <span class="c1">// do something here</span>
+<span class="o">}</span>
+<span class="nv">GlobalSettings</span><span class="o">.</span><span class="py">taggedQueryFailureListener</span> <span class="k">=</span> <span class="o">(</span><span class="n">sql</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">params</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Any</span><span class="o">],</span> <span class="n">e</span><span class="k">:</span> <span class="kt">Throwable</span><span class="o">,</span> <span class="n">tags</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">String</span><span class="o">])</span> <span class="k">=&gt;</span> <span class="o">{</span>
+  <span class="c1">// do something here</span>
+<span class="o">}</span>
 
-<span class="k">val</span> <span class="n">counts</span> <span class="k">=</span> <span class="nc">DB</span> <span class="n">readOnly</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">s</span> <span class="k">=&gt;</span>
+<span class="k">val</span> <span class="nv">counts</span> <span class="k">=</span> <span class="nc">DB</span> <span class="n">readOnly</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">s</span> <span class="k">=&gt;</span>
   <span class="n">sql</span><span class="s">"select product_id, count(*) from orders group by product_id"</span>
-    <span class="o">.</span><span class="n">tags</span><span class="o">(</span><span class="s">"daily_batch"</span><span class="o">,</span> <span class="s">"sales"</span><span class="o">)</span>
-    <span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="n">rs</span> <span class="k">=&gt;</span> <span class="nc">OrderCount</span><span class="o">(</span><span class="n">rs</span><span class="o">)).</span><span class="n">list</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+    <span class="o">.</span><span class="py">tags</span><span class="o">(</span><span class="s">"daily_batch"</span><span class="o">,</span> <span class="s">"sales"</span><span class="o">)</span>
+    <span class="o">.</span><span class="py">map</span><span class="o">(</span><span class="n">rs</span> <span class="k">=&gt;</span> <span class="nc">OrderCount</span><span class="o">(</span><span class="n">rs</span><span class="o">)).</span><span class="py">list</span><span class="o">.</span><span class="py">apply</span><span class="o">()</span>
 <span class="o">}</span>
 </code></pre></div>
           <hr/>

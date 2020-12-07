@@ -62,7 +62,7 @@
 <p>As you know, Rails ActiveRecord saves timestamp values in UTC time zone. DB column types will be <code>timetamp without timezone</code>.</p>
 
 <p>When you need to work with them, call the following Java TimeZone&rsquo;s setter method (instead of <code>DateTimeZone.setDefault(DateTimeZone.UTC)</code>) at first.</p>
-<div class="highlight"><pre class="highlight scala"><code><span class="n">java</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="nc">TimeZone</span><span class="o">.</span><span class="n">setDefault</span><span class="o">(</span><span class="n">java</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="nc">TimeZone</span><span class="o">.</span><span class="n">getTimeZone</span><span class="o">(</span><span class="s">"UTC"</span><span class="o">))</span>
+<div class="highlight"><pre class="highlight scala"><code><span class="nv">java</span><span class="o">.</span><span class="py">util</span><span class="o">.</span><span class="py">TimeZone</span><span class="o">.</span><span class="py">setDefault</span><span class="o">(</span><span class="nv">java</span><span class="o">.</span><span class="py">util</span><span class="o">.</span><span class="py">TimeZone</span><span class="o">.</span><span class="py">getTimeZone</span><span class="o">(</span><span class="s">"UTC"</span><span class="o">))</span>
 </code></pre></div>
 <hr/>
 
@@ -71,11 +71,11 @@
 <hr/>
 
 <p>Use the <code>scalikejdbc.LikeConditionEscapeUtil</code> utility.</p>
-<div class="highlight"><pre class="highlight scala"><code><span class="nc">LikeConditionEscapeUtil</span><span class="o">.</span><span class="n">escape</span><span class="o">(</span><span class="s">"foo%aa_bbb\\ccc"</span><span class="o">)</span>     <span class="c1">// "foo\\%aa\\_bbb\\\\ccc"
-</span><span class="nc">LikeConditionEscapeUtil</span><span class="o">.</span><span class="n">beginsWith</span><span class="o">(</span><span class="s">"foo%aa_bbb\\ccc"</span><span class="o">)</span> <span class="c1">// "foo\\%aa\\_bbb\\\\ccc%"
-</span><span class="nc">LikeConditionEscapeUtil</span><span class="o">.</span><span class="n">endsWith</span><span class="o">(</span><span class="s">"foo%aa_bbb\\ccc"</span><span class="o">)</span>   <span class="c1">// "%foo\\%aa\\_bbb\\\\ccc"
-</span><span class="nc">LikeConditionEscapeUtil</span><span class="o">.</span><span class="n">contains</span><span class="o">(</span><span class="s">"foo%aa_bbb\\ccc"</span><span class="o">)</span>   <span class="c1">// "%foo\\%aa\\_bbb\\\\ccc%"
-</span></code></pre></div>
+<div class="highlight"><pre class="highlight scala"><code><span class="nv">LikeConditionEscapeUtil</span><span class="o">.</span><span class="py">escape</span><span class="o">(</span><span class="s">"foo%aa_bbb\\ccc"</span><span class="o">)</span>     <span class="c1">// "foo\\%aa\\_bbb\\\\ccc"</span>
+<span class="nv">LikeConditionEscapeUtil</span><span class="o">.</span><span class="py">beginsWith</span><span class="o">(</span><span class="s">"foo%aa_bbb\\ccc"</span><span class="o">)</span> <span class="c1">// "foo\\%aa\\_bbb\\\\ccc%"</span>
+<span class="nv">LikeConditionEscapeUtil</span><span class="o">.</span><span class="py">endsWith</span><span class="o">(</span><span class="s">"foo%aa_bbb\\ccc"</span><span class="o">)</span>   <span class="c1">// "%foo\\%aa\\_bbb\\\\ccc"</span>
+<span class="nv">LikeConditionEscapeUtil</span><span class="o">.</span><span class="py">contains</span><span class="o">(</span><span class="s">"foo%aa_bbb\\ccc"</span><span class="o">)</span>   <span class="c1">// "%foo\\%aa\\_bbb\\\\ccc%"</span>
+</code></pre></div>
 <hr/>
 
 <h3 id="non-blocking-support">non-blocking support?</h3>

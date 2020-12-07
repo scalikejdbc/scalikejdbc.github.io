@@ -45,16 +45,16 @@
 <div class="highlight"><pre class="highlight plaintext"><code>libraryDependencies += "org.scalikejdbc" %% "scalikejdbc-interpolation" % "1.7.7"
 </code></pre></div>
 <p>The usage is pretty simple - just embedding values into sql&quot;&ldquo; template without <code>#bind</code> or <code>#bindByName</code>. It looks really cool.</p>
-<div class="highlight"><pre class="highlight scala"><code><span class="k">import</span> <span class="nn">scalikejdbc._</span><span class="o">,</span> <span class="nc">SQLInterpolation</span><span class="o">.</span><span class="k">_</span>
+<div class="highlight"><pre class="highlight scala"><code><span class="k">import</span> <span class="nn">scalikejdbc._</span><span class="o">,</span> <span class="nv">SQLInterpolation</span><span class="o">.</span><span class="py">_</span>
 
-<span class="k">val</span> <span class="n">id</span> <span class="k">=</span> <span class="mi">123</span>
-<span class="k">val</span> <span class="n">member</span> <span class="k">=</span> <span class="n">sql</span><span class="s">"select id, name from members where id = ${id}"</span>
-    <span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="n">rs</span> <span class="k">=&gt;</span> <span class="nc">Member</span><span class="o">(</span><span class="n">rs</span><span class="o">)).</span><span class="n">single</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+<span class="k">val</span> <span class="nv">id</span> <span class="k">=</span> <span class="mi">123</span>
+<span class="k">val</span> <span class="nv">member</span> <span class="k">=</span> <span class="n">sql</span><span class="s">"select id, name from members where id = ${id}"</span>
+    <span class="o">.</span><span class="py">map</span><span class="o">(</span><span class="n">rs</span> <span class="k">=&gt;</span> <span class="nc">Member</span><span class="o">(</span><span class="n">rs</span><span class="o">)).</span><span class="py">single</span><span class="o">.</span><span class="py">apply</span><span class="o">()</span>
 
-<span class="c1">// above code is same as follows:
-// SQL("select id, name from members where id = {id}").bindByName('id -&gt; id)
-//   .map(rs =&gt; Member(rs)).single.apply()
-</span></code></pre></div>
+<span class="c1">// above code is same as follows:</span>
+<span class="c1">// SQL("select id, name from members where id = {id}").bindByName('id -&gt; id)</span>
+<span class="c1">//   .map(rs =&gt; Member(rs)).single.apply()</span>
+</code></pre></div>
 <p>Don&rsquo;t worry, this code is safely protected from SQL injection attacks. <code>${id}</code> will be a place holder.</p>
 <div class="highlight"><pre class="highlight sql"><code><span class="k">select</span> <span class="n">id</span><span class="p">,</span> <span class="n">name</span> <span class="k">from</span> <span class="n">members</span> <span class="k">where</span> <span class="n">id</span> <span class="o">=</span> <span class="o">?</span>
 </code></pre></div>
@@ -65,9 +65,9 @@
 <hr/>
 
 <p><code>SQLSyntax</code> is not a binding parameter but a part of SQL. You can create a <code>SQLSyntax</code> object with sqls&rdquo;&ldquo; String interpolation.</p>
-<div class="highlight"><pre class="highlight scala"><code><span class="k">val</span> <span class="n">ordering</span> <span class="k">=</span> <span class="k">if</span> <span class="o">(</span><span class="n">isDesc</span><span class="o">)</span> <span class="n">sqls</span><span class="s">"desc"</span> <span class="k">else</span> <span class="n">sqls</span><span class="s">"asc"</span>
-<span class="k">val</span> <span class="n">members</span> <span class="k">=</span> <span class="n">sql</span><span class="s">"select id, name from members limit 10 order by id ${ordering}"</span>
-  <span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="n">rs</span> <span class="k">=&gt;</span> <span class="nc">Member</span><span class="o">(</span><span class="n">rs</span><span class="o">)).</span><span class="n">list</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+<div class="highlight"><pre class="highlight scala"><code><span class="k">val</span> <span class="nv">ordering</span> <span class="k">=</span> <span class="nf">if</span> <span class="o">(</span><span class="n">isDesc</span><span class="o">)</span> <span class="n">sqls</span><span class="s">"desc"</span> <span class="k">else</span> <span class="n">sqls</span><span class="s">"asc"</span>
+<span class="k">val</span> <span class="nv">members</span> <span class="k">=</span> <span class="n">sql</span><span class="s">"select id, name from members limit 10 order by id ${ordering}"</span>
+  <span class="o">.</span><span class="py">map</span><span class="o">(</span><span class="n">rs</span> <span class="k">=&gt;</span> <span class="nc">Member</span><span class="o">(</span><span class="n">rs</span><span class="o">)).</span><span class="py">list</span><span class="o">.</span><span class="py">apply</span><span class="o">()</span>
 </code></pre></div>
 <p><code>${ordering}</code> will be directly converted to a part of SQL.</p>
 <div class="highlight"><pre class="highlight sql"><code><span class="k">select</span> <span class="n">id</span> <span class="p">,</span> <span class="n">name</span> <span class="k">from</span> <span class="n">members</span> <span class="k">limit</span> <span class="mi">10</span> <span class="k">order</span> <span class="k">by</span> <span class="n">id</span> <span class="k">desc</span>
@@ -85,7 +85,7 @@
 <p>First of all, mix the <code>SQLSyntaxSupport[A]</code> trait to <code>A</code> companion object, and define <code>tableName</code> and <code>#apply</code> method to map values from <code>ResultSet</code> object in it. The unfamiliar <code>ResultName[A]</code> are described later.</p>
 
 <p>NOTICE: When you use case classes for entities as follows (Group, GroupMember) everything goes fine. But if you use normal classes for entities, be aware of entity equality. See the following page in detail: <a href="/documentation/1.x/one-to-x.html">documentation/1.x/one-to-x.html</a></p>
-<div class="highlight"><pre class="highlight scala"><code><span class="k">import</span> <span class="nn">scalikejdbc._</span><span class="o">,</span> <span class="nc">SQLInterpolation</span><span class="o">.</span><span class="k">_</span>
+<div class="highlight"><pre class="highlight scala"><code><span class="k">import</span> <span class="nn">scalikejdbc._</span><span class="o">,</span> <span class="nv">SQLInterpolation</span><span class="o">.</span><span class="py">_</span>
 
 <span class="k">case</span> <span class="k">class</span> <span class="nc">Group</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span>
 <span class="k">case</span> <span class="k">class</span> <span class="nc">GroupMember</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> 
@@ -93,36 +93,36 @@
 
 <span class="k">object</span> <span class="nc">Group</span> <span class="k">extends</span> <span class="nc">SQLSyntaxSupport</span><span class="o">[</span><span class="kt">Group</span><span class="o">]</span> <span class="o">{</span>
 
-  <span class="c1">// If you need to specify schema name, override this
-</span>  <span class="c1">// def table will return sqls"public.groups" in this case
-</span>  <span class="c1">// Of course, schemaName doesn't work with MySQL
-</span>  <span class="k">override</span> <span class="k">val</span> <span class="n">schemaName</span> <span class="k">=</span> <span class="nc">Some</span><span class="o">(</span><span class="s">"public"</span><span class="o">)</span>
+  <span class="c1">// If you need to specify schema name, override this</span>
+  <span class="c1">// def table will return sqls"public.groups" in this case</span>
+  <span class="c1">// Of course, schemaName doesn't work with MySQL</span>
+  <span class="k">override</span> <span class="k">val</span> <span class="nv">schemaName</span> <span class="k">=</span> <span class="nc">Some</span><span class="o">(</span><span class="s">"public"</span><span class="o">)</span>
 
-  <span class="c1">// If the table name is same as snake_case'd name of this companion object,
-</span>  <span class="c1">// you don't need to specify tableName explicitly.
-</span>  <span class="k">override</span> <span class="k">val</span> <span class="n">tableName</span> <span class="k">=</span> <span class="s">"groups"</span>
+  <span class="c1">// If the table name is same as snake_case'd name of this companion object,</span>
+  <span class="c1">// you don't need to specify tableName explicitly.</span>
+  <span class="k">override</span> <span class="k">val</span> <span class="nv">tableName</span> <span class="k">=</span> <span class="s">"groups"</span>
 
-  <span class="c1">// If you use NamedDB for this entity, override connectionPoolName
-</span>  <span class="c1">//override val connectionPoolName = 'anotherdb
-</span>
-  <span class="k">def</span> <span class="n">apply</span><span class="o">(</span><span class="n">g</span><span class="k">:</span> <span class="kt">ResultName</span><span class="o">[</span><span class="kt">Group</span><span class="o">])(</span><span class="n">rs</span><span class="k">:</span> <span class="kt">WrappedResultSet</span><span class="o">)</span> <span class="k">=</span>
-    <span class="k">new</span> <span class="nc">Group</span><span class="o">(</span><span class="n">rs</span><span class="o">.</span><span class="n">long</span><span class="o">(</span><span class="n">g</span><span class="o">.</span><span class="n">id</span><span class="o">),</span> <span class="n">rs</span><span class="o">.</span><span class="n">string</span><span class="o">(</span><span class="n">g</span><span class="o">.</span><span class="n">name</span><span class="o">))</span>
+  <span class="c1">// If you use NamedDB for this entity, override connectionPoolName</span>
+  <span class="c1">//override val connectionPoolName = 'anotherdb</span>
+
+  <span class="k">def</span> <span class="nf">apply</span><span class="o">(</span><span class="n">g</span><span class="k">:</span> <span class="kt">ResultName</span><span class="o">[</span><span class="kt">Group</span><span class="o">])(</span><span class="n">rs</span><span class="k">:</span> <span class="kt">WrappedResultSet</span><span class="o">)</span> <span class="k">=</span>
+    <span class="k">new</span> <span class="nc">Group</span><span class="o">(</span><span class="nv">rs</span><span class="o">.</span><span class="py">long</span><span class="o">(</span><span class="nv">g</span><span class="o">.</span><span class="py">id</span><span class="o">),</span> <span class="nv">rs</span><span class="o">.</span><span class="py">string</span><span class="o">(</span><span class="nv">g</span><span class="o">.</span><span class="py">name</span><span class="o">))</span>
 <span class="o">}</span>
 
 <span class="k">object</span> <span class="nc">GroupMember</span> <span class="k">extends</span> <span class="nc">SQLSyntaxSupport</span><span class="o">[</span><span class="kt">GroupMember</span><span class="o">]</span> <span class="o">{</span>
-  <span class="k">def</span> <span class="n">apply</span><span class="o">(</span><span class="n">m</span><span class="k">:</span> <span class="kt">ResultName</span><span class="o">[</span><span class="kt">GroupMember</span><span class="o">])(</span><span class="n">rs</span><span class="k">:</span> <span class="kt">WrappedResultSet</span><span class="o">)</span> <span class="k">=</span>
-    <span class="k">new</span> <span class="nc">GroupMember</span><span class="o">(</span><span class="n">rs</span><span class="o">.</span><span class="n">long</span><span class="o">(</span><span class="n">m</span><span class="o">.</span><span class="n">id</span><span class="o">),</span> <span class="n">rs</span><span class="o">.</span><span class="n">string</span><span class="o">(</span><span class="n">m</span><span class="o">.</span><span class="n">name</span><span class="o">),</span> <span class="n">rs</span><span class="o">.</span><span class="n">longOpt</span><span class="o">(</span><span class="n">m</span><span class="o">.</span><span class="n">groupId</span><span class="o">))</span>
+  <span class="k">def</span> <span class="nf">apply</span><span class="o">(</span><span class="n">m</span><span class="k">:</span> <span class="kt">ResultName</span><span class="o">[</span><span class="kt">GroupMember</span><span class="o">])(</span><span class="n">rs</span><span class="k">:</span> <span class="kt">WrappedResultSet</span><span class="o">)</span> <span class="k">=</span>
+    <span class="k">new</span> <span class="nc">GroupMember</span><span class="o">(</span><span class="nv">rs</span><span class="o">.</span><span class="py">long</span><span class="o">(</span><span class="nv">m</span><span class="o">.</span><span class="py">id</span><span class="o">),</span> <span class="nv">rs</span><span class="o">.</span><span class="py">string</span><span class="o">(</span><span class="nv">m</span><span class="o">.</span><span class="py">name</span><span class="o">),</span> <span class="nv">rs</span><span class="o">.</span><span class="py">longOpt</span><span class="o">(</span><span class="nv">m</span><span class="o">.</span><span class="py">groupId</span><span class="o">))</span>
 
-  <span class="k">def</span> <span class="n">apply</span><span class="o">(</span><span class="n">m</span><span class="k">:</span> <span class="kt">ResultName</span><span class="o">[</span><span class="kt">GroupMember</span><span class="o">],</span> <span class="n">g</span><span class="k">:</span> <span class="kt">ResultName</span><span class="o">[</span><span class="kt">Group</span><span class="o">])(</span><span class="n">rs</span><span class="k">:</span> <span class="kt">WrappedResultSet</span><span class="o">)</span> <span class="k">=</span>  <span class="o">{</span>
-    <span class="n">apply</span><span class="o">(</span><span class="n">m</span><span class="o">)(</span><span class="n">rs</span><span class="o">).</span><span class="n">copy</span><span class="o">(</span><span class="n">group</span> <span class="k">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">longOpt</span><span class="o">(</span><span class="n">g</span><span class="o">.</span><span class="n">id</span><span class="o">).</span><span class="n">map</span><span class="o">(</span><span class="k">_</span> <span class="k">=&gt;</span> <span class="nc">Group</span><span class="o">(</span><span class="n">g</span><span class="o">)(</span><span class="n">rs</span><span class="o">)))</span>
+  <span class="k">def</span> <span class="nf">apply</span><span class="o">(</span><span class="n">m</span><span class="k">:</span> <span class="kt">ResultName</span><span class="o">[</span><span class="kt">GroupMember</span><span class="o">],</span> <span class="n">g</span><span class="k">:</span> <span class="kt">ResultName</span><span class="o">[</span><span class="kt">Group</span><span class="o">])(</span><span class="n">rs</span><span class="k">:</span> <span class="kt">WrappedResultSet</span><span class="o">)</span> <span class="k">=</span>  <span class="o">{</span>
+    <span class="nf">apply</span><span class="o">(</span><span class="n">m</span><span class="o">)(</span><span class="n">rs</span><span class="o">).</span><span class="py">copy</span><span class="o">(</span><span class="n">group</span> <span class="k">=</span> <span class="nv">rs</span><span class="o">.</span><span class="py">longOpt</span><span class="o">(</span><span class="nv">g</span><span class="o">.</span><span class="py">id</span><span class="o">).</span><span class="py">map</span><span class="o">(</span><span class="k">_</span> <span class="k">=&gt;</span> <span class="nc">Group</span><span class="o">(</span><span class="n">g</span><span class="o">)(</span><span class="n">rs</span><span class="o">)))</span>
   <span class="o">}</span>
 <span class="o">}</span>
 </code></pre></div>
 <p>Use them as follows:</p>
-<div class="highlight"><pre class="highlight scala"><code><span class="k">val</span> <span class="n">id</span> <span class="k">=</span> <span class="mi">123</span>
+<div class="highlight"><pre class="highlight scala"><code><span class="k">val</span> <span class="nv">id</span> <span class="k">=</span> <span class="mi">123</span>
 
-<span class="k">val</span> <span class="o">(</span><span class="n">m</span><span class="o">,</span> <span class="n">g</span><span class="o">)</span> <span class="k">=</span> <span class="o">(</span><span class="nc">GroupMember</span><span class="o">.</span><span class="n">syntax</span><span class="o">(</span><span class="s">"m"</span><span class="o">),</span> <span class="nc">Group</span><span class="o">.</span><span class="n">syntax</span><span class="o">(</span><span class="s">"g"</span><span class="o">))</span>
-<span class="k">val</span> <span class="n">groupMember</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">GroupMember</span><span class="o">]</span> <span class="k">=</span> <span class="n">sql</span><span class="s">"""
+<span class="nf">val</span> <span class="o">(</span><span class="n">m</span><span class="o">,</span> <span class="n">g</span><span class="o">)</span> <span class="k">=</span> <span class="o">(</span><span class="nv">GroupMember</span><span class="o">.</span><span class="py">syntax</span><span class="o">(</span><span class="s">"m"</span><span class="o">),</span> <span class="nv">Group</span><span class="o">.</span><span class="py">syntax</span><span class="o">(</span><span class="s">"g"</span><span class="o">))</span>
+<span class="k">val</span> <span class="nv">groupMember</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">GroupMember</span><span class="o">]</span> <span class="k">=</span> <span class="n">sql</span><span class="s">"""
   select
     ${m.result.*}, ${g.result.*}
   from
@@ -130,7 +130,7 @@
   where
     ${m.id} = ${id}
   """</span>
-  <span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="nc">GroupMember</span><span class="o">(</span><span class="n">m</span><span class="o">.</span><span class="n">resultName</span><span class="o">,</span> <span class="n">g</span><span class="o">.</span><span class="n">resultName</span><span class="o">)).</span><span class="n">single</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+  <span class="o">.</span><span class="py">map</span><span class="o">(</span><span class="nc">GroupMember</span><span class="o">(</span><span class="nv">m</span><span class="o">.</span><span class="py">resultName</span><span class="o">,</span> <span class="nv">g</span><span class="o">.</span><span class="py">resultName</span><span class="o">)).</span><span class="py">single</span><span class="o">.</span><span class="py">apply</span><span class="o">()</span>
 </code></pre></div>
 <p>Though the above code contains some <code>${...}</code> parts, I believe that you can understand what it means. Actually, this code runs the following SQL statement.</p>
 <div class="highlight"><pre class="highlight sql"><code><span class="k">select</span>
@@ -152,8 +152,8 @@
 
 <p>If you need to define column names by yourself or need to access multi databases, please define column names as follows:</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">object</span> <span class="nc">GroupMember</span> <span class="k">extends</span> <span class="nc">SQLSyntaxSupport</span><span class="o">[</span><span class="kt">GroupMember</span><span class="o">]</span> <span class="o">{</span>
-  <span class="k">override</span> <span class="k">val</span> <span class="n">tableName</span> <span class="k">=</span> <span class="s">"groups_members"</span>
-  <span class="k">override</span> <span class="k">val</span> <span class="n">columns</span> <span class="k">=</span> <span class="nc">Seq</span><span class="o">(</span><span class="s">"id"</span><span class="o">,</span> <span class="s">"name"</span><span class="o">,</span> <span class="s">"group_id"</span><span class="o">)</span>
+  <span class="k">override</span> <span class="k">val</span> <span class="nv">tableName</span> <span class="k">=</span> <span class="s">"groups_members"</span>
+  <span class="k">override</span> <span class="k">val</span> <span class="nv">columns</span> <span class="k">=</span> <span class="nc">Seq</span><span class="o">(</span><span class="s">"id"</span><span class="o">,</span> <span class="s">"name"</span><span class="o">,</span> <span class="s">"group_id"</span><span class="o">)</span>
 <span class="o">}</span>
 </code></pre></div>
 <hr/>
@@ -173,20 +173,20 @@
 <p><a href="http://docs.scala-lang.org/overviews/macros/overview.html">http://docs.scala-lang.org/overviews/macros/overview.html</a></p>
 
 <p>If you don&rsquo;t want to use Type Dynamic, it&rsquo;s also possible to call <code>#field(String)</code> or <code>#column(String)</code> with String value. For instance, the following four examples mean the same thing.</p>
-<div class="highlight"><pre class="highlight scala"><code><span class="n">m</span><span class="o">.</span><span class="n">groupId</span>
-<span class="n">m</span><span class="o">.</span><span class="n">field</span><span class="o">(</span><span class="s">"groupId"</span><span class="o">)</span>
-<span class="n">m</span><span class="o">.</span><span class="n">column</span><span class="o">(</span><span class="s">"group_id"</span><span class="o">)</span>
-<span class="n">m</span><span class="o">.</span><span class="n">c</span><span class="o">(</span><span class="s">"group_id"</span><span class="o">)</span>
+<div class="highlight"><pre class="highlight scala"><code><span class="nv">m</span><span class="o">.</span><span class="py">groupId</span>
+<span class="nv">m</span><span class="o">.</span><span class="py">field</span><span class="o">(</span><span class="s">"groupId"</span><span class="o">)</span>
+<span class="nv">m</span><span class="o">.</span><span class="py">column</span><span class="o">(</span><span class="s">"group_id"</span><span class="o">)</span>
+<span class="nv">m</span><span class="o">.</span><span class="py">c</span><span class="o">(</span><span class="s">"group_id"</span><span class="o">)</span>
 </code></pre></div>
 <p>In some cases, you might want to avoid expose column names to application layer. If this is the case, override <code>nameConverters</code>. If you want to treat <code>service_cd</code> column as <code>serviceCode</code>, define regular expression and replaced name in columns as follows. Since the <code>nameConverters</code> works as partial match retrieval, it&rsquo;s also possible to specify just <code>Map(&quot;Code&quot; -&gt; &quot;cd&quot;)</code>.</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">case</span> <span class="k">class</span> <span class="nc">Event</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">serviceCode</span><span class="k">:</span> <span class="kt">Long</span><span class="o">)</span>
 
 <span class="k">object</span> <span class="nc">Event</span> <span class="k">extends</span> <span class="nc">SQLSyntaxSupport</span><span class="o">[</span><span class="kt">Event</span><span class="o">]</span> <span class="o">{</span>
-  <span class="k">override</span> <span class="k">val</span> <span class="n">tableName</span> <span class="k">=</span> <span class="s">"events"</span>
-  <span class="k">override</span> <span class="k">val</span> <span class="n">columns</span> <span class="k">=</span> <span class="nc">Seq</span><span class="o">(</span><span class="s">"id"</span> <span class="s">"name"</span><span class="o">,</span> <span class="s">"service_cd"</span><span class="o">)</span>
+  <span class="k">override</span> <span class="k">val</span> <span class="nv">tableName</span> <span class="k">=</span> <span class="s">"events"</span>
+  <span class="k">override</span> <span class="k">val</span> <span class="nv">columns</span> <span class="k">=</span> <span class="nc">Seq</span><span class="o">(</span><span class="s">"id"</span> <span class="s">"name"</span><span class="o">,</span> <span class="s">"service_cd"</span><span class="o">)</span>
 
-  <span class="c1">// specify regular expression to match
-</span>  <span class="k">override</span> <span class="k">val</span> <span class="n">nameConverters</span> <span class="k">=</span> <span class="nc">Map</span><span class="o">(</span><span class="s">"^serviceCode$"</span> <span class="o">-&gt;</span> <span class="s">"service_cd"</span><span class="o">)</span>
+  <span class="c1">// specify regular expression to match</span>
+  <span class="k">override</span> <span class="k">val</span> <span class="nv">nameConverters</span> <span class="k">=</span> <span class="nc">Map</span><span class="o">(</span><span class="s">"^serviceCode$"</span> <span class="o">-&gt;</span> <span class="s">"service_cd"</span><span class="o">)</span>
 <span class="o">}</span>
 </code></pre></div>
 <hr/>
@@ -208,32 +208,32 @@
 <p>If you use <code>Member.syntax()</code>, tableName will be set. For example,  <code>m.result.groupId</code> will be <code>&quot;members.group_id as gi_on_members&quot;</code>. If you specified as <code>Member.syntax(&quot;m&quot;)</code>, <code>m.result.groupId</code> will be <code>&quot;members.group_id as gi_on_m&quot;</code>.</p>
 
 <p>That&rsquo;s all the rules of <code>SQLSyntaxSupport</code>. I believed that now the following code will be easy to understand for you.</p>
-<div class="highlight"><pre class="highlight scala"><code><span class="k">val</span> <span class="n">ids</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">Long</span><span class="o">]</span> <span class="k">=</span> <span class="n">sql</span><span class="s">"select ${m.result.id} from ${Member.as(m)} where ${m.gourpId} = 1"</span>
-  <span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="n">rs</span> <span class="k">=&gt;</span> <span class="n">rs</span><span class="o">.</span><span class="n">long</span><span class="o">(</span><span class="n">m</span><span class="o">.</span><span class="n">resultName</span><span class="o">.</span><span class="n">id</span><span class="o">)).</span><span class="n">list</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+<div class="highlight"><pre class="highlight scala"><code><span class="k">val</span> <span class="nv">ids</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">Long</span><span class="o">]</span> <span class="k">=</span> <span class="n">sql</span><span class="s">"select ${m.result.id} from ${Member.as(m)} where ${m.gourpId} = 1"</span>
+  <span class="o">.</span><span class="py">map</span><span class="o">(</span><span class="n">rs</span> <span class="k">=&gt;</span> <span class="nv">rs</span><span class="o">.</span><span class="py">long</span><span class="o">(</span><span class="nv">m</span><span class="o">.</span><span class="py">resultName</span><span class="o">.</span><span class="py">id</span><span class="o">)).</span><span class="py">list</span><span class="o">.</span><span class="py">apply</span><span class="o">()</span>
 </code></pre></div>
 <p>Define <code>#apply(ResultName[Member])</code> method and the method will make your <code>#map</code> operation pretty simple.</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">object</span> <span class="nc">Member</span> <span class="k">extends</span> <span class="nc">SQLSyntaxSupport</span><span class="o">[</span><span class="kt">Member</span><span class="o">]</span> <span class="o">{</span>
-  <span class="k">override</span> <span class="k">val</span> <span class="n">tableName</span> <span class="k">=</span> <span class="s">"members"</span>
-  <span class="k">def</span> <span class="n">apply</span><span class="o">(</span><span class="n">m</span><span class="k">:</span> <span class="kt">ResultName</span><span class="o">[</span><span class="kt">User</span><span class="o">])(</span><span class="n">rs</span><span class="k">:</span> <span class="kt">WrappedResultSet</span><span class="o">)</span> <span class="k">=</span> <span class="o">{</span>
-    <span class="k">new</span> <span class="nc">Member</span><span class="o">(</span><span class="n">id</span> <span class="k">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">long</span><span class="o">(</span><span class="n">m</span><span class="o">.</span><span class="n">id</span><span class="o">),</span> <span class="n">name</span> <span class="k">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">string</span><span class="o">(</span><span class="n">m</span><span class="o">.</span><span class="n">name</span><span class="o">))</span>
+  <span class="k">override</span> <span class="k">val</span> <span class="nv">tableName</span> <span class="k">=</span> <span class="s">"members"</span>
+  <span class="k">def</span> <span class="nf">apply</span><span class="o">(</span><span class="n">m</span><span class="k">:</span> <span class="kt">ResultName</span><span class="o">[</span><span class="kt">User</span><span class="o">])(</span><span class="n">rs</span><span class="k">:</span> <span class="kt">WrappedResultSet</span><span class="o">)</span> <span class="k">=</span> <span class="o">{</span>
+    <span class="k">new</span> <span class="nc">Member</span><span class="o">(</span><span class="n">id</span> <span class="k">=</span> <span class="nv">rs</span><span class="o">.</span><span class="py">long</span><span class="o">(</span><span class="nv">m</span><span class="o">.</span><span class="py">id</span><span class="o">),</span> <span class="n">name</span> <span class="k">=</span> <span class="nv">rs</span><span class="o">.</span><span class="py">string</span><span class="o">(</span><span class="nv">m</span><span class="o">.</span><span class="py">name</span><span class="o">))</span>
   <span class="o">}</span>
 <span class="o">}</span>
 </code></pre></div>
 <p>Use the above code like this:</p>
-<div class="highlight"><pre class="highlight scala"><code><span class="k">val</span> <span class="n">m</span> <span class="k">=</span> <span class="nc">Member</span><span class="o">.</span><span class="n">syntax</span><span class="o">(</span><span class="s">"m"</span><span class="o">)</span>
-<span class="k">val</span> <span class="n">members</span> <span class="k">=</span> <span class="n">sql</span><span class="s">"select ${m.result.*} from ${Member.as(m)}"</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="nc">Member</span><span class="o">(</span><span class="n">m</span><span class="o">)).</span><span class="n">list</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
-<span class="c1">// select m.id as i_on_m, m.name as n_on_m from members m
-</span></code></pre></div>
+<div class="highlight"><pre class="highlight scala"><code><span class="k">val</span> <span class="nv">m</span> <span class="k">=</span> <span class="nv">Member</span><span class="o">.</span><span class="py">syntax</span><span class="o">(</span><span class="s">"m"</span><span class="o">)</span>
+<span class="k">val</span> <span class="nv">members</span> <span class="k">=</span> <span class="n">sql</span><span class="s">"select ${m.result.*} from ${Member.as(m)}"</span><span class="o">.</span><span class="py">map</span><span class="o">(</span><span class="nc">Member</span><span class="o">(</span><span class="n">m</span><span class="o">)).</span><span class="py">list</span><span class="o">.</span><span class="py">apply</span><span class="o">()</span>
+<span class="c1">// select m.id as i_on_m, m.name as n_on_m from members m</span>
+</code></pre></div>
 <p>If you need just column names for insert/update/delete queries, use <code>#column.{name}</code> like this:</p>
-<div class="highlight"><pre class="highlight scala"><code><span class="k">val</span> <span class="n">c</span> <span class="k">=</span> <span class="nc">Member</span><span class="o">.</span><span class="n">column</span>
+<div class="highlight"><pre class="highlight scala"><code><span class="k">val</span> <span class="nv">c</span> <span class="k">=</span> <span class="nv">Member</span><span class="o">.</span><span class="py">column</span>
 <span class="n">sql</span><span class="s">"insert into ${Member.table} (${c.name}, ${c.birthday}) values (${name}, ${birthday})"</span>
-  <span class="o">.</span><span class="n">update</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+  <span class="o">.</span><span class="py">update</span><span class="o">.</span><span class="py">apply</span><span class="o">()</span>
 </code></pre></div>
 <p>Since <code>#column</code> is a member of <code>SQLSyntaxSupport[A]</code>, you can use <code>#column</code> in <code>Member</code> object:</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">object</span> <span class="nc">Member</span> <span class="k">extends</span> <span class="nc">SQLSyntaxSupport</span><span class="o">[</span><span class="kt">Member</span><span class="o">]</span> <span class="o">{</span>
-  <span class="k">def</span> <span class="n">create</span><span class="o">(</span><span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">birthday</span><span class="k">:</span> <span class="kt">LocalDate</span><span class="o">)(</span><span class="k">implicit</span> <span class="n">s</span><span class="k">:</span> <span class="kt">DBSession</span> <span class="o">=</span> <span class="nc">AutoSession</span><span class="o">)</span><span class="k">:</span> <span class="kt">Member</span> <span class="o">=</span> <span class="o">{</span>
-    <span class="k">val</span> <span class="n">id</span> <span class="k">=</span> <span class="n">sql</span><span class="s">"insert into ${table} (${column.name}, ${column.birthday}) values (${name}, ${birthday})"</span>
-      <span class="o">.</span><span class="n">updateAndReturnGeneratedKey</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+  <span class="k">def</span> <span class="nf">create</span><span class="o">(</span><span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">birthday</span><span class="k">:</span> <span class="kt">LocalDate</span><span class="o">)(</span><span class="k">implicit</span> <span class="n">s</span><span class="k">:</span> <span class="kt">DBSession</span> <span class="o">=</span> <span class="nc">AutoSession</span><span class="o">)</span><span class="k">:</span> <span class="kt">Member</span> <span class="o">=</span> <span class="o">{</span>
+    <span class="k">val</span> <span class="nv">id</span> <span class="k">=</span> <span class="n">sql</span><span class="s">"insert into ${table} (${column.name}, ${column.birthday}) values (${name}, ${birthday})"</span>
+      <span class="o">.</span><span class="py">updateAndReturnGeneratedKey</span><span class="o">.</span><span class="py">apply</span><span class="o">()</span>
     <span class="nc">Member</span><span class="o">(</span><span class="n">id</span><span class="o">,</span> <span class="n">name</span><span class="o">,</span> <span class="n">birthday</span><span class="o">)</span>
   <span class="o">}</span>
 </code></pre></div>
@@ -246,35 +246,35 @@
 <p>If you have multiple tables for same entity. For example, <code>orders_2011</code>, <code>orders_2012</code> and <code>orders_2013</code>.</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">case</span> <span class="k">class</span> <span class="nc">Order</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">productId</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">customerId</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Long</span><span class="o">],</span> <span class="n">createdAt</span><span class="k">:</span> <span class="kt">DateTime</span><span class="o">)</span>
 
-<span class="k">class</span> <span class="nc">OrderTable</span><span class="o">(</span><span class="k">val</span> <span class="n">year</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span> <span class="k">extends</span> <span class="nc">SQLSyntaxSupport</span><span class="o">[</span><span class="kt">Order</span><span class="o">]</span> <span class="o">{</span>
-  <span class="c1">// Be careful if you build tableName with input values 
-</span>  <span class="c1">// ScalikeJDBC cannot protect your app from SQL injection vulnerability
-</span>  <span class="k">override</span> <span class="k">val</span> <span class="n">tableName</span> <span class="k">=</span> <span class="n">s</span><span class="s">"orders_$year"</span>
+<span class="k">class</span> <span class="nc">OrderTable</span><span class="o">(</span><span class="k">val</span> <span class="nv">year</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span> <span class="k">extends</span> <span class="nc">SQLSyntaxSupport</span><span class="o">[</span><span class="kt">Order</span><span class="o">]</span> <span class="o">{</span>
+  <span class="c1">// Be careful if you build tableName with input values </span>
+  <span class="c1">// ScalikeJDBC cannot protect your app from SQL injection vulnerability</span>
+  <span class="k">override</span> <span class="k">val</span> <span class="nv">tableName</span> <span class="k">=</span> <span class="n">s</span><span class="s">"orders_$year"</span>
 
-  <span class="k">def</span> <span class="n">apply</span><span class="o">(</span><span class="n">o</span><span class="k">:</span> <span class="kt">ResultName</span><span class="o">[</span><span class="kt">Order</span><span class="o">])(</span><span class="n">rs</span><span class="k">:</span> <span class="kt">WrappedResultSet</span><span class="o">)</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">Order</span><span class="o">(</span>
-    <span class="n">id</span>         <span class="k">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">long</span><span class="o">(</span><span class="n">o</span><span class="o">.</span><span class="n">id</span><span class="o">),</span> 
-    <span class="n">productId</span>  <span class="k">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">long</span><span class="o">(</span><span class="n">o</span><span class="o">.</span><span class="n">productId</span><span class="o">),</span> 
-    <span class="n">customerId</span> <span class="k">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">longOpt</span><span class="o">(</span><span class="n">o</span><span class="o">.</span><span class="n">customerId</span><span class="o">),</span> 
-    <span class="n">createdAt</span>  <span class="k">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">dateTime</span><span class="o">(</span><span class="n">o</span><span class="o">.</span><span class="n">createdAt</span><span class="o">)</span>
+  <span class="k">def</span> <span class="nf">apply</span><span class="o">(</span><span class="n">o</span><span class="k">:</span> <span class="kt">ResultName</span><span class="o">[</span><span class="kt">Order</span><span class="o">])(</span><span class="n">rs</span><span class="k">:</span> <span class="kt">WrappedResultSet</span><span class="o">)</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">Order</span><span class="o">(</span>
+    <span class="n">id</span>         <span class="k">=</span> <span class="nv">rs</span><span class="o">.</span><span class="py">long</span><span class="o">(</span><span class="nv">o</span><span class="o">.</span><span class="py">id</span><span class="o">),</span> 
+    <span class="n">productId</span>  <span class="k">=</span> <span class="nv">rs</span><span class="o">.</span><span class="py">long</span><span class="o">(</span><span class="nv">o</span><span class="o">.</span><span class="py">productId</span><span class="o">),</span> 
+    <span class="n">customerId</span> <span class="k">=</span> <span class="nv">rs</span><span class="o">.</span><span class="py">longOpt</span><span class="o">(</span><span class="nv">o</span><span class="o">.</span><span class="py">customerId</span><span class="o">),</span> 
+    <span class="n">createdAt</span>  <span class="k">=</span> <span class="nv">rs</span><span class="o">.</span><span class="py">dateTime</span><span class="o">(</span><span class="nv">o</span><span class="o">.</span><span class="py">createdAt</span><span class="o">)</span>
   <span class="o">)</span>
 <span class="o">}</span>
-<span class="k">val</span> <span class="o">(</span><span class="n">o2011</span><span class="o">,</span> <span class="n">o2012</span><span class="o">,</span> <span class="n">o2013</span><span class="o">)</span> <span class="k">=</span> <span class="o">(</span><span class="k">new</span> <span class="nc">OrderTable</span><span class="o">(</span><span class="mi">2011</span><span class="o">),</span> <span class="k">new</span> <span class="nc">OrderTable</span><span class="o">(</span><span class="mi">2012</span><span class="o">),</span> <span class="k">new</span> <span class="nc">OrderTable</span><span class="o">(</span><span class="mi">2013</span><span class="o">))</span>
+<span class="nf">val</span> <span class="o">(</span><span class="n">o2011</span><span class="o">,</span> <span class="n">o2012</span><span class="o">,</span> <span class="n">o2013</span><span class="o">)</span> <span class="k">=</span> <span class="o">(</span><span class="k">new</span> <span class="nc">OrderTable</span><span class="o">(</span><span class="mi">2011</span><span class="o">),</span> <span class="k">new</span> <span class="nc">OrderTable</span><span class="o">(</span><span class="mi">2012</span><span class="o">),</span> <span class="k">new</span> <span class="nc">OrderTable</span><span class="o">(</span><span class="mi">2013</span><span class="o">))</span>
 
-<span class="k">val</span> <span class="n">ordersIn2011</span> <span class="k">=</span> <span class="nc">DB</span> <span class="n">readOnly</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">s</span> <span class="k">=&gt;</span>
-  <span class="k">val</span> <span class="n">o</span> <span class="k">=</span> <span class="n">o2011</span><span class="o">.</span><span class="n">syntax</span><span class="o">(</span><span class="s">"o"</span><span class="o">)</span>
+<span class="k">val</span> <span class="nv">ordersIn2011</span> <span class="k">=</span> <span class="nc">DB</span> <span class="n">readOnly</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">s</span> <span class="k">=&gt;</span>
+  <span class="k">val</span> <span class="nv">o</span> <span class="k">=</span> <span class="nv">o2011</span><span class="o">.</span><span class="py">syntax</span><span class="o">(</span><span class="s">"o"</span><span class="o">)</span>
   <span class="n">sql</span><span class="s">"select ${o.result.*} from ${o2011 as o) where ${o.customerId} is not null"</span>
-    <span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="n">o2011</span><span class="o">(</span><span class="n">o</span><span class="o">)).</span><span class="n">list</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+    <span class="o">.</span><span class="py">map</span><span class="o">(</span><span class="nf">o2011</span><span class="o">(</span><span class="n">o</span><span class="o">)).</span><span class="py">list</span><span class="o">.</span><span class="py">apply</span><span class="o">()</span>
 <span class="o">}</span>
 <span class="nc">DB</span> <span class="n">readOnly</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">s</span> <span class="k">=&gt;</span>
-  <span class="k">val</span> <span class="n">o2</span> <span class="k">=</span> <span class="n">o2012</span><span class="o">.</span><span class="n">syntax</span><span class="o">(</span><span class="s">"o"</span><span class="o">)</span>
-  <span class="k">val</span> <span class="n">ordersIn2012</span> <span class="k">=</span> 
+  <span class="k">val</span> <span class="nv">o2</span> <span class="k">=</span> <span class="nv">o2012</span><span class="o">.</span><span class="py">syntax</span><span class="o">(</span><span class="s">"o"</span><span class="o">)</span>
+  <span class="k">val</span> <span class="nv">ordersIn2012</span> <span class="k">=</span> 
     <span class="n">sql</span><span class="s">"select ${o.result.*} from ${o2012 as o2) where ${o.customerId} is not null"</span>
-      <span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="n">o2012</span><span class="o">(</span><span class="n">o2</span><span class="o">)).</span><span class="n">list</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+      <span class="o">.</span><span class="py">map</span><span class="o">(</span><span class="nf">o2012</span><span class="o">(</span><span class="n">o2</span><span class="o">)).</span><span class="py">list</span><span class="o">.</span><span class="py">apply</span><span class="o">()</span>
 
-  <span class="k">val</span> <span class="n">o3</span> <span class="k">=</span> <span class="n">o2013</span><span class="o">.</span><span class="n">syntax</span><span class="o">(</span><span class="s">"o"</span><span class="o">)</span>
-  <span class="k">val</span> <span class="n">ordersIn2013</span> <span class="k">=</span> 
+  <span class="k">val</span> <span class="nv">o3</span> <span class="k">=</span> <span class="nv">o2013</span><span class="o">.</span><span class="py">syntax</span><span class="o">(</span><span class="s">"o"</span><span class="o">)</span>
+  <span class="k">val</span> <span class="nv">ordersIn2013</span> <span class="k">=</span> 
     <span class="n">sql</span><span class="s">"select ${o.result.*} from ${o2013 as o3) where ${o.customerId} is not null"</span>
-      <span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="n">o2013</span><span class="o">(</span><span class="n">o3</span><span class="o">)).</span><span class="n">list</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+      <span class="o">.</span><span class="py">map</span><span class="o">(</span><span class="nf">o2013</span><span class="o">(</span><span class="n">o3</span><span class="o">)).</span><span class="py">list</span><span class="o">.</span><span class="py">apply</span><span class="o">()</span>
 <span class="o">}</span>
 </code></pre></div>
 <hr/>
@@ -284,19 +284,19 @@
 <hr/>
 
 <p>Just use normal class and implement <code>EntityEquality</code> trait (for one-to-many relations).</p>
-<div class="highlight"><pre class="highlight scala"><code><span class="k">import</span> <span class="nn">scalikekdbc._</span><span class="o">,</span> <span class="nc">SQLInterpolation</span><span class="o">.</span><span class="k">_</span>
+<div class="highlight"><pre class="highlight scala"><code><span class="k">import</span> <span class="nn">scalikekdbc._</span><span class="o">,</span> <span class="nv">SQLInterpolation</span><span class="o">.</span><span class="py">_</span>
 
 <span class="k">class</span> <span class="nc">HugeTable</span><span class="o">(</span>
-  <span class="k">val</span> <span class="n">column1</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span>
-  <span class="k">val</span> <span class="n">column2</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">String</span><span class="o">],</span>
-  <span class="k">val</span> <span class="n">column3</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
-  <span class="k">val</span> <span class="n">column4</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span>
-  <span class="k">val</span> <span class="n">column5</span><span class="k">:</span> <span class="kt">DateTime</span><span class="o">,</span>
+  <span class="k">val</span> <span class="nv">column1</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span>
+  <span class="k">val</span> <span class="nv">column2</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">String</span><span class="o">],</span>
+  <span class="k">val</span> <span class="nv">column3</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
+  <span class="k">val</span> <span class="nv">column4</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span>
+  <span class="k">val</span> <span class="nv">column5</span><span class="k">:</span> <span class="kt">DateTime</span><span class="o">,</span>
   <span class="o">...</span>
-  <span class="k">val</span> <span class="n">column22</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span>
-  <span class="k">val</span> <span class="n">column23</span><span class="k">:</span> <span class="kt">DateTime</span><span class="o">)</span> <span class="k">extends</span> <span class="nc">EntityEquality</span> <span class="o">{</span>
+  <span class="k">val</span> <span class="nv">column22</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span>
+  <span class="k">val</span> <span class="nv">column23</span><span class="k">:</span> <span class="kt">DateTime</span><span class="o">)</span> <span class="k">extends</span> <span class="nc">EntityEquality</span> <span class="o">{</span>
 
-  <span class="k">override</span> <span class="k">val</span> <span class="n">entityIdentity</span> <span class="k">=</span> <span class="nc">Seq</span><span class="o">(</span><span class="n">column1</span><span class="o">,</span> <span class="n">columns2</span><span class="o">,</span> <span class="o">..,</span> <span class="n">columns23</span><span class="o">).</span><span class="n">mkString</span><span class="o">(</span><span class="s">"\t"</span><span class="o">)</span>
+  <span class="k">override</span> <span class="k">val</span> <span class="nv">entityIdentity</span> <span class="k">=</span> <span class="nc">Seq</span><span class="o">(</span><span class="n">column1</span><span class="o">,</span> <span class="n">columns2</span><span class="o">,</span> <span class="o">..,</span> <span class="n">columns23</span><span class="o">).</span><span class="py">mkString</span><span class="o">(</span><span class="s">"\t"</span><span class="o">)</span>
 
 <span class="o">}</span>
 </code></pre></div>

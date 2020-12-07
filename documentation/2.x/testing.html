@@ -58,19 +58,19 @@
 
 <span class="k">class</span> <span class="nc">AutoRollbackSpec</span> <span class="k">extends</span> <span class="nc">FlatSpec</span> <span class="k">with</span> <span class="nc">AutoRollback</span> <span class="o">{</span>
 
-  <span class="c1">// override def db = NamedDB('anotherdb).toDB
-</span>
-  <span class="k">override</span> <span class="k">def</span> <span class="n">fixture</span><span class="o">(</span><span class="k">implicit</span> <span class="n">session</span><span class="k">:</span> <span class="kt">DBSession</span><span class="o">)</span> <span class="o">{</span>
-    <span class="n">sql</span><span class="s">"insert into members values (1, ${"</span><span class="nc">Alice</span><span class="s">"}, ${DateTime.now})"</span><span class="o">.</span><span class="n">update</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
-    <span class="n">sql</span><span class="s">"insert into members values (2, ${"</span><span class="nc">Bob</span><span class="s">"}, ${DateTime.now})"</span><span class="o">.</span><span class="n">update</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+  <span class="c1">// override def db = NamedDB('anotherdb).toDB</span>
+
+  <span class="k">override</span> <span class="k">def</span> <span class="nf">fixture</span><span class="o">(</span><span class="k">implicit</span> <span class="n">session</span><span class="k">:</span> <span class="kt">DBSession</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">sql</span><span class="s">"insert into members values (1, ${"</span><span class="nc">Alice</span><span class="s">"}, ${DateTime.now})"</span><span class="o">.</span><span class="py">update</span><span class="o">.</span><span class="py">apply</span><span class="o">()</span>
+    <span class="n">sql</span><span class="s">"insert into members values (2, ${"</span><span class="nc">Bob</span><span class="s">"}, ${DateTime.now})"</span><span class="o">.</span><span class="py">update</span><span class="o">.</span><span class="py">apply</span><span class="o">()</span>
   <span class="o">}</span>
 
   <span class="n">behavior</span> <span class="n">of</span> <span class="s">"Members"</span>
 
   <span class="n">it</span> <span class="n">should</span> <span class="s">"create a new record"</span> <span class="n">in</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span>
-    <span class="k">val</span> <span class="n">before</span> <span class="k">=</span> <span class="nc">Member</span><span class="o">.</span><span class="n">count</span><span class="o">()</span>
-    <span class="nc">Member</span><span class="o">.</span><span class="n">create</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="s">"Chris"</span><span class="o">)</span>
-    <span class="nc">Member</span><span class="o">.</span><span class="n">count</span><span class="o">()</span> <span class="n">should</span> <span class="n">equal</span><span class="o">(</span><span class="n">before</span> <span class="o">+</span> <span class="mi">1</span><span class="o">)</span>
+    <span class="k">val</span> <span class="nv">before</span> <span class="k">=</span> <span class="nv">Member</span><span class="o">.</span><span class="py">count</span><span class="o">()</span>
+    <span class="nv">Member</span><span class="o">.</span><span class="py">create</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="s">"Chris"</span><span class="o">)</span>
+    <span class="nv">Member</span><span class="o">.</span><span class="py">count</span><span class="o">()</span> <span class="n">should</span> <span class="nf">equal</span><span class="o">(</span><span class="n">before</span> <span class="o">+</span> <span class="mi">1</span><span class="o">)</span>
   <span class="o">}</span>
 
 <span class="o">}</span>
@@ -98,9 +98,9 @@
   <span class="n">sequential</span>
 
   <span class="s">"Member should create a new record"</span> <span class="n">in</span> <span class="k">new</span> <span class="nc">AutoRollback</span> <span class="o">{</span>
-    <span class="k">val</span> <span class="n">before</span> <span class="k">=</span> <span class="nc">Member</span><span class="o">.</span><span class="n">count</span><span class="o">()</span>
-    <span class="nc">Member</span><span class="o">.</span><span class="n">create</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="s">"Chris"</span><span class="o">)</span>
-    <span class="nc">Member</span><span class="o">.</span><span class="n">count</span><span class="o">()</span> <span class="n">must_==</span><span class="o">(</span><span class="n">before</span> <span class="o">+</span> <span class="mi">1</span><span class="o">)</span>
+    <span class="k">val</span> <span class="nv">before</span> <span class="k">=</span> <span class="nv">Member</span><span class="o">.</span><span class="py">count</span><span class="o">()</span>
+    <span class="nv">Member</span><span class="o">.</span><span class="py">create</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="s">"Chris"</span><span class="o">)</span>
+    <span class="nv">Member</span><span class="o">.</span><span class="py">count</span><span class="o">()</span> <span class="nf">must_==</span><span class="o">(</span><span class="n">before</span> <span class="o">+</span> <span class="mi">1</span><span class="o">)</span>
   <span class="o">}</span>
 
   <span class="s">"Member should ... "</span> <span class="n">in</span> <span class="k">new</span> <span class="nc">AutoRollbackWithFixture</span> <span class="o">{</span>
@@ -110,10 +110,10 @@
 <span class="o">}</span>
 
 <span class="k">trait</span> <span class="nc">AutoRollbackWithFixture</span> <span class="k">extends</span> <span class="nc">AutoRollback</span> <span class="o">{</span>
-  <span class="c1">// override def db = NamedDB('db2).toDB
-</span>  <span class="k">override</span> <span class="k">def</span> <span class="n">fixture</span><span class="o">(</span><span class="k">implicit</span> <span class="n">session</span><span class="k">:</span> <span class="kt">DBSession</span><span class="o">)</span> <span class="o">{</span>
-    <span class="n">sql</span><span class="s">"insert into members values (1, ${"</span><span class="nc">Alice</span><span class="s">"}, ${DateTime.now})"</span><span class="o">.</span><span class="n">update</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
-    <span class="n">sql</span><span class="s">"insert into members values (2, ${"</span><span class="nc">Bob</span><span class="s">"}, ${DateTime.now})"</span><span class="o">.</span><span class="n">update</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+  <span class="c1">// override def db = NamedDB('db2).toDB</span>
+  <span class="k">override</span> <span class="k">def</span> <span class="nf">fixture</span><span class="o">(</span><span class="k">implicit</span> <span class="n">session</span><span class="k">:</span> <span class="kt">DBSession</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">sql</span><span class="s">"insert into members values (1, ${"</span><span class="nc">Alice</span><span class="s">"}, ${DateTime.now})"</span><span class="o">.</span><span class="py">update</span><span class="o">.</span><span class="py">apply</span><span class="o">()</span>
+    <span class="n">sql</span><span class="s">"insert into members values (2, ${"</span><span class="nc">Bob</span><span class="s">"}, ${DateTime.now})"</span><span class="o">.</span><span class="py">update</span><span class="o">.</span><span class="py">apply</span><span class="o">()</span>
   <span class="o">}</span>
 <span class="o">}</span>
 
@@ -128,21 +128,21 @@
 <span class="k">import</span> <span class="nn">org.joda.time.DateTime</span>
 <span class="k">import</span> <span class="nn">org.specs2.Specification</span>
 
-<span class="k">class</span> <span class="nc">MemberSpec</span> <span class="k">extends</span> <span class="nc">Specification</span> <span class="o">{</span> <span class="k">def</span> <span class="n">is</span> <span class="k">=</span>
+<span class="k">class</span> <span class="nc">MemberSpec</span> <span class="k">extends</span> <span class="nc">Specification</span> <span class="o">{</span> <span class="k">def</span> <span class="nf">is</span> <span class="k">=</span>
 
-  <span class="n">args</span><span class="o">(</span><span class="n">sequential</span> <span class="k">=</span> <span class="kc">true</span><span class="o">)</span> <span class="o">^</span>
-  <span class="s">"Member should create a new record"</span> <span class="o">!</span> <span class="n">autoRollback</span><span class="o">().</span><span class="n">create</span>
+  <span class="nf">args</span><span class="o">(</span><span class="n">sequential</span> <span class="k">=</span> <span class="kc">true</span><span class="o">)</span> <span class="o">^</span>
+  <span class="s">"Member should create a new record"</span> <span class="o">!</span> <span class="nf">autoRollback</span><span class="o">().</span><span class="py">create</span>
   <span class="n">end</span>
 
   <span class="k">case</span> <span class="k">class</span> <span class="nc">autoRollback</span><span class="o">()</span> <span class="k">extends</span> <span class="nc">AutoRollback</span> <span class="o">{</span>
 
-    <span class="c1">// override def db = NamedDB('db2).toDB
-</span>    <span class="c1">// override def fixture(implicit session: DBSession) { ... }
-</span>
-    <span class="k">def</span> <span class="n">create</span> <span class="k">=</span> <span class="k">this</span> <span class="o">{</span>
-      <span class="k">val</span> <span class="n">before</span> <span class="k">=</span> <span class="nc">Member</span><span class="o">.</span><span class="n">count</span><span class="o">()</span>
-      <span class="nc">Member</span><span class="o">.</span><span class="n">create</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="s">"Chris"</span><span class="o">)</span>
-      <span class="nc">Member</span><span class="o">.</span><span class="n">count</span><span class="o">()</span> <span class="n">must_==</span><span class="o">(</span><span class="n">before</span> <span class="o">+</span> <span class="mi">1</span><span class="o">)</span>
+    <span class="c1">// override def db = NamedDB('db2).toDB</span>
+    <span class="c1">// override def fixture(implicit session: DBSession) { ... }</span>
+
+    <span class="k">def</span> <span class="nf">create</span> <span class="k">=</span> <span class="k">this</span> <span class="o">{</span>
+      <span class="k">val</span> <span class="nv">before</span> <span class="k">=</span> <span class="nv">Member</span><span class="o">.</span><span class="py">count</span><span class="o">()</span>
+      <span class="nv">Member</span><span class="o">.</span><span class="py">create</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="s">"Chris"</span><span class="o">)</span>
+      <span class="nv">Member</span><span class="o">.</span><span class="py">count</span><span class="o">()</span> <span class="nf">must_==</span><span class="o">(</span><span class="n">before</span> <span class="o">+</span> <span class="mi">1</span><span class="o">)</span>
     <span class="o">}</span>
   <span class="o">}</span>
 

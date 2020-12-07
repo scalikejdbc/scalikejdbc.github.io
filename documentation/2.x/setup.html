@@ -100,10 +100,10 @@
 You need to setup an sbt plugin named <code>scalikejdbc-mapper-generator</code>.</p>
 
 <h5 id="project-plugins-sbt">project/plugins.sbt</h5>
-<div class="highlight"><pre class="highlight scala"><code><span class="c1">// Don't forget adding your JDBC driver
-</span><span class="n">libraryDependencies</span> <span class="o">+=</span> <span class="s">"org.hsqldb"</span> <span class="o">%</span> <span class="s">"hsqldb"</span> <span class="o">%</span> <span class="s">"2.3.2"</span>
+<div class="highlight"><pre class="highlight scala"><code><span class="c1">// Don't forget adding your JDBC driver</span>
+<span class="n">libraryDependencies</span> <span class="o">+=</span> <span class="s">"org.hsqldb"</span> <span class="o">%</span> <span class="s">"hsqldb"</span> <span class="o">%</span> <span class="s">"2.3.2"</span>
 
-<span class="n">addSbtPlugin</span><span class="o">(</span><span class="s">"org.scalikejdbc"</span> <span class="o">%%</span> <span class="s">"scalikejdbc-mapper-generator"</span> <span class="o">%</span> <span class="s">"2.5.2"</span><span class="o">)</span>
+<span class="nf">addSbtPlugin</span><span class="o">(</span><span class="s">"org.scalikejdbc"</span> <span class="o">%%</span> <span class="s">"scalikejdbc-mapper-generator"</span> <span class="o">%</span> <span class="s">"2.5.2"</span><span class="o">)</span>
 </code></pre></div>
 <h5 id="build-sbt">build.sbt</h5>
 <div class="highlight"><pre class="highlight scala"><code><span class="n">scalikejdbcSettings</span>

@@ -51,41 +51,41 @@
 
 <p>Simply just call <code>#borrow</code> method.</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">import</span> <span class="nn">scalikejdbc._</span>
-<span class="c1">// default
-</span><span class="k">val</span> <span class="n">conn</span><span class="k">:</span> <span class="kt">java.sql.Connection</span> <span class="o">=</span> <span class="nc">ConnectionPool</span><span class="o">.</span><span class="n">borrow</span><span class="o">()</span>
-<span class="c1">// named
-</span><span class="k">val</span> <span class="n">conn</span><span class="k">:</span> <span class="kt">java.sql.Connection</span> <span class="o">=</span> <span class="nc">ConnectionPool</span><span class="o">(</span><span class="ss">'named)</span><span class="o">.</span><span class="n">borrow</span><span class="o">()</span>
+<span class="c1">// default</span>
+<span class="k">val</span> <span class="nv">conn</span><span class="k">:</span> <span class="kt">java.sql.Connection</span> <span class="o">=</span> <span class="nv">ConnectionPool</span><span class="o">.</span><span class="py">borrow</span><span class="o">()</span>
+<span class="c1">// named</span>
+<span class="k">val</span> <span class="nv">conn</span><span class="k">:</span> <span class="kt">java.sql.Connection</span> <span class="o">=</span> <span class="nc">ConnectionPool</span><span class="o">(</span><span class="ss">'named</span><span class="o">).</span><span class="py">borrow</span><span class="o">()</span>
 </code></pre></div>
 <p>Be careful. The connection object should be released by yourself.</p>
 
 <p>Basically using loan pattern is recommended to avoid human errors.</p>
-<div class="highlight"><pre class="highlight scala"><code><span class="n">using</span><span class="o">(</span><span class="nc">ConnectionPool</span><span class="o">.</span><span class="n">borrow</span><span class="o">())</span> <span class="o">{</span> <span class="n">conn</span> <span class="k">=&gt;</span>
-  <span class="c1">// do something
-</span><span class="o">}</span>
+<div class="highlight"><pre class="highlight scala"><code><span class="nf">using</span><span class="o">(</span><span class="nv">ConnectionPool</span><span class="o">.</span><span class="py">borrow</span><span class="o">())</span> <span class="o">{</span> <span class="n">conn</span> <span class="k">=&gt;</span>
+  <span class="c1">// do something</span>
+<span class="o">}</span>
 </code></pre></div>
 <p>ScalikeJDBC wraps a <code>java.sql.Connection</code> object as a <code>scalikejdbc.DB</code> object.</p>
-<div class="highlight"><pre class="highlight scala"><code><span class="n">using</span><span class="o">(</span><span class="nc">DB</span><span class="o">(</span><span class="nc">ConnectionPool</span><span class="o">.</span><span class="n">borrow</span><span class="o">()))</span> <span class="o">{</span> <span class="n">db</span> <span class="k">=&gt;</span>
-  <span class="c1">// ...
-</span><span class="o">}</span>
+<div class="highlight"><pre class="highlight scala"><code><span class="nf">using</span><span class="o">(</span><span class="nc">DB</span><span class="o">(</span><span class="nv">ConnectionPool</span><span class="o">.</span><span class="py">borrow</span><span class="o">()))</span> <span class="o">{</span> <span class="n">db</span> <span class="k">=&gt;</span>
+  <span class="c1">// ...</span>
+<span class="o">}</span>
 </code></pre></div>
 <p><code>DB</code> object can provide <code>DBSession</code> for each operation.</p>
-<div class="highlight"><pre class="highlight scala"><code><span class="n">using</span><span class="o">(</span><span class="nc">DB</span><span class="o">(</span><span class="nc">ConnectionPool</span><span class="o">.</span><span class="n">borrow</span><span class="o">()))</span> <span class="o">{</span> <span class="n">db</span> <span class="k">=&gt;</span>
-  <span class="n">db</span><span class="o">.</span><span class="n">readOnly</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span>
-    <span class="c1">// ...
-</span>  <span class="o">}</span>
+<div class="highlight"><pre class="highlight scala"><code><span class="nf">using</span><span class="o">(</span><span class="nc">DB</span><span class="o">(</span><span class="nv">ConnectionPool</span><span class="o">.</span><span class="py">borrow</span><span class="o">()))</span> <span class="o">{</span> <span class="n">db</span> <span class="k">=&gt;</span>
+  <span class="nv">db</span><span class="o">.</span><span class="py">readOnly</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span>
+    <span class="c1">// ...</span>
+  <span class="o">}</span>
 <span class="o">}</span>
 </code></pre></div>
 <p>Right, above code is too verbose! Using DB object make it much simpler.</p>
 
 <p>You can simplify the same thins by using <code>DB</code> or <code>NamedDB</code> objects and it&rsquo;s the common usage of ScalikeJDBC.</p>
-<div class="highlight"><pre class="highlight scala"><code><span class="c1">// default
-</span><span class="nc">DB</span> <span class="n">readOnly</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span>
-  <span class="c1">// ...
-</span><span class="o">}</span>
-<span class="c1">// named
-</span><span class="nc">NamedDB</span><span class="o">(</span><span class="ss">'named)</span> <span class="n">readOnly</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span>
-  <span class="c1">// ...
-</span><span class="o">}</span>
+<div class="highlight"><pre class="highlight scala"><code><span class="c1">// default</span>
+<span class="nc">DB</span> <span class="n">readOnly</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span>
+  <span class="c1">// ...</span>
+<span class="o">}</span>
+<span class="c1">// named</span>
+<span class="nc">NamedDB</span><span class="o">(</span><span class="ss">'named</span><span class="o">)</span> <span class="n">readOnly</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span>
+  <span class="c1">// ...</span>
+<span class="o">}</span>
 </code></pre></div>
 <hr/>
 
@@ -94,16 +94,16 @@
 <hr/>
 
 <p>You can share DB connections as thread-local values. The connection should be released by yourself.</p>
-<div class="highlight"><pre class="highlight scala"><code><span class="k">def</span> <span class="n">init</span><span class="o">()</span> <span class="k">=</span> <span class="o">{</span>
-  <span class="k">val</span> <span class="n">newDB</span> <span class="k">=</span> <span class="nc">ThreadLocalDB</span><span class="o">.</span><span class="n">create</span><span class="o">(</span><span class="n">conn</span><span class="o">)</span>
-  <span class="n">newDB</span><span class="o">.</span><span class="n">begin</span><span class="o">()</span>
+<div class="highlight"><pre class="highlight scala"><code><span class="k">def</span> <span class="nf">init</span><span class="o">()</span> <span class="k">=</span> <span class="o">{</span>
+  <span class="k">val</span> <span class="nv">newDB</span> <span class="k">=</span> <span class="nv">ThreadLocalDB</span><span class="o">.</span><span class="py">create</span><span class="o">(</span><span class="n">conn</span><span class="o">)</span>
+  <span class="nv">newDB</span><span class="o">.</span><span class="py">begin</span><span class="o">()</span>
 <span class="o">}</span>
-<span class="c1">// after that..
-</span><span class="k">def</span> <span class="n">action</span><span class="o">()</span> <span class="k">=</span> <span class="o">{</span>
-  <span class="k">val</span> <span class="n">db</span> <span class="k">=</span> <span class="nc">ThreadLocalDB</span><span class="o">.</span><span class="n">load</span><span class="o">()</span>
+<span class="c1">// after that..</span>
+<span class="k">def</span> <span class="nf">action</span><span class="o">()</span> <span class="k">=</span> <span class="o">{</span>
+  <span class="k">val</span> <span class="nv">db</span> <span class="k">=</span> <span class="nv">ThreadLocalDB</span><span class="o">.</span><span class="py">load</span><span class="o">()</span>
 <span class="o">}</span>
-<span class="k">def</span> <span class="n">finalize</span><span class="o">()</span> <span class="k">=</span> <span class="o">{</span>
-  <span class="k">try</span> <span class="o">{</span> <span class="nc">ThreadLocalDB</span><span class="o">.</span><span class="n">load</span><span class="o">().</span><span class="n">close</span><span class="o">()</span> <span class="o">}</span> <span class="k">catch</span> <span class="o">{</span> <span class="k">case</span> <span class="n">e</span> <span class="k">=&gt;</span> <span class="o">}</span>
+<span class="k">def</span> <span class="nf">finalize</span><span class="o">()</span> <span class="k">=</span> <span class="o">{</span>
+  <span class="k">try</span> <span class="o">{</span> <span class="nv">ThreadLocalDB</span><span class="o">.</span><span class="py">load</span><span class="o">().</span><span class="py">close</span><span class="o">()</span> <span class="o">}</span> <span class="k">catch</span> <span class="o">{</span> <span class="k">case</span> <span class="n">e</span> <span class="k">=&gt;</span> <span class="o">}</span>
 <span class="o">}</span>
 </code></pre></div>
 <hr/>
@@ -115,17 +115,17 @@
 <p>You can replace ConnectionPool settings safely on runtime. </p>
 
 <p>The old pool won&rsquo;t be abandoned until all the borrwoed connections are closed.</p>
-<div class="highlight"><pre class="highlight scala"><code><span class="k">def</span> <span class="n">doSomething</span> <span class="k">=</span> <span class="o">{</span>
-  <span class="nc">ConnectionPool</span><span class="o">.</span><span class="n">singleton</span><span class="o">(</span><span class="s">"jdbc:h2:mem:db1"</span><span class="o">,</span> <span class="s">"user"</span><span class="o">,</span> <span class="s">"pass"</span><span class="o">)</span>
+<div class="highlight"><pre class="highlight scala"><code><span class="k">def</span> <span class="nf">doSomething</span> <span class="k">=</span> <span class="o">{</span>
+  <span class="nv">ConnectionPool</span><span class="o">.</span><span class="py">singleton</span><span class="o">(</span><span class="s">"jdbc:h2:mem:db1"</span><span class="o">,</span> <span class="s">"user"</span><span class="o">,</span> <span class="s">"pass"</span><span class="o">)</span>
   <span class="nc">DB</span> <span class="n">localTx</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">s</span> <span class="k">=&gt;</span>
-    <span class="c1">// long transaction...
-</span>
-    <span class="c1">// overwrite singleton CP
-</span>    <span class="nc">ConnectionPool</span><span class="o">.</span><span class="n">singleton</span><span class="o">(</span><span class="s">"jdbc:h2:mem:db2"</span><span class="o">,</span> <span class="s">"user"</span><span class="o">,</span> <span class="s">"pass"</span><span class="o">)</span>
+    <span class="c1">// long transaction...</span>
 
-    <span class="c1">// db1 connection pool is still available until this trancation is committed.
-</span>    <span class="c1">// Newly borrowed connections will access db2.
-</span>  <span class="o">}</span>
+    <span class="c1">// overwrite singleton CP</span>
+    <span class="nv">ConnectionPool</span><span class="o">.</span><span class="py">singleton</span><span class="o">(</span><span class="s">"jdbc:h2:mem:db2"</span><span class="o">,</span> <span class="s">"user"</span><span class="o">,</span> <span class="s">"pass"</span><span class="o">)</span>
+
+    <span class="c1">// db1 connection pool is still available until this trancation is committed.</span>
+    <span class="c1">// Newly borrowed connections will access db2.</span>
+  <span class="o">}</span>
 <span class="o">}</span>
 </code></pre></div>
 <hr/>
@@ -139,9 +139,9 @@
  * c3p0 Connection Pool Factory
  */</span>
 <span class="k">object</span> <span class="nc">C3P0ConnectionPoolFactory</span> <span class="k">extends</span> <span class="nc">ConnectionPoolFactory</span> <span class="o">{</span>
-  <span class="k">override</span> <span class="k">def</span> <span class="n">apply</span><span class="o">(</span><span class="n">url</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">user</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">password</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
+  <span class="k">override</span> <span class="k">def</span> <span class="nf">apply</span><span class="o">(</span><span class="n">url</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">user</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">password</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
     <span class="n">settings</span><span class="k">:</span> <span class="kt">ConnectionPoolSettings</span> <span class="o">=</span> <span class="nc">ConnectionPoolSettings</span><span class="o">())</span> <span class="k">=</span> <span class="o">{</span>
-    <span class="k">new</span> <span class="n">C3P0ConnectionPool</span><span class="o">(</span><span class="n">url</span><span class="o">,</span> <span class="n">user</span><span class="o">,</span> <span class="n">password</span><span class="o">,</span> <span class="n">settings</span><span class="o">)</span>
+    <span class="k">new</span> <span class="nf">C3P0ConnectionPool</span><span class="o">(</span><span class="n">url</span><span class="o">,</span> <span class="n">user</span><span class="o">,</span> <span class="n">password</span><span class="o">,</span> <span class="n">settings</span><span class="o">)</span>
   <span class="o">}</span>
 <span class="o">}</span>
 
@@ -149,32 +149,32 @@
  * c3p0 Connection Pool
  */</span>
 <span class="k">class</span> <span class="nc">C3P0ConnectionPool</span><span class="o">(</span>
-  <span class="k">override</span> <span class="k">val</span> <span class="n">url</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
-  <span class="k">override</span> <span class="k">val</span> <span class="n">user</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
+  <span class="k">override</span> <span class="k">val</span> <span class="nv">url</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
+  <span class="k">override</span> <span class="k">val</span> <span class="nv">user</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
   <span class="n">password</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
-  <span class="k">override</span> <span class="k">val</span> <span class="n">settings</span><span class="k">:</span> <span class="kt">ConnectionPoolSettings</span> <span class="o">=</span> <span class="nc">ConnectionPoolSettings</span><span class="o">())</span>
+  <span class="k">override</span> <span class="k">val</span> <span class="nv">settings</span><span class="k">:</span> <span class="kt">ConnectionPoolSettings</span> <span class="o">=</span> <span class="nc">ConnectionPoolSettings</span><span class="o">())</span>
   <span class="k">extends</span> <span class="nc">ConnectionPool</span><span class="o">(</span><span class="n">url</span><span class="o">,</span> <span class="n">user</span><span class="o">,</span> <span class="n">password</span><span class="o">,</span> <span class="n">settings</span><span class="o">)</span> <span class="o">{</span>
 
   <span class="k">import</span> <span class="nn">com.mchange.v2.c3p0._</span>
-  <span class="k">private</span><span class="o">[</span><span class="kt">this</span><span class="o">]</span> <span class="k">val</span> <span class="nc">_dataSource</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">ComboPooledDataSource</span>
-  <span class="nc">_dataSource</span><span class="o">.</span><span class="n">setJdbcUrl</span><span class="o">(</span><span class="n">url</span><span class="o">)</span>
-  <span class="nc">_dataSource</span><span class="o">.</span><span class="n">setUser</span><span class="o">(</span><span class="n">user</span><span class="o">)</span>
-  <span class="nc">_dataSource</span><span class="o">.</span><span class="n">setPassword</span><span class="o">(</span><span class="n">password</span><span class="o">)</span>
-  <span class="nc">_dataSource</span><span class="o">.</span><span class="n">setInitialPoolSize</span><span class="o">(</span><span class="n">settings</span><span class="o">.</span><span class="n">initialSize</span><span class="o">)</span>
-  <span class="nc">_dataSource</span><span class="o">.</span><span class="n">setMaxPoolSize</span><span class="o">(</span><span class="n">settings</span><span class="o">.</span><span class="n">maxSize</span><span class="o">);</span>
-  <span class="nc">_dataSource</span><span class="o">.</span><span class="n">setCheckoutTimeout</span><span class="o">(</span><span class="n">settings</span><span class="o">.</span><span class="n">connectionTimeoutMillis</span><span class="o">.</span><span class="n">toInt</span><span class="o">);</span>
+  <span class="k">private</span><span class="o">[</span><span class="kt">this</span><span class="o">]</span> <span class="k">val</span> <span class="nv">_dataSource</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">ComboPooledDataSource</span>
+  <span class="nv">_dataSource</span><span class="o">.</span><span class="py">setJdbcUrl</span><span class="o">(</span><span class="n">url</span><span class="o">)</span>
+  <span class="nv">_dataSource</span><span class="o">.</span><span class="py">setUser</span><span class="o">(</span><span class="n">user</span><span class="o">)</span>
+  <span class="nv">_dataSource</span><span class="o">.</span><span class="py">setPassword</span><span class="o">(</span><span class="n">password</span><span class="o">)</span>
+  <span class="nv">_dataSource</span><span class="o">.</span><span class="py">setInitialPoolSize</span><span class="o">(</span><span class="nv">settings</span><span class="o">.</span><span class="py">initialSize</span><span class="o">)</span>
+  <span class="nv">_dataSource</span><span class="o">.</span><span class="py">setMaxPoolSize</span><span class="o">(</span><span class="nv">settings</span><span class="o">.</span><span class="py">maxSize</span><span class="o">);</span>
+  <span class="nv">_dataSource</span><span class="o">.</span><span class="py">setCheckoutTimeout</span><span class="o">(</span><span class="nv">settings</span><span class="o">.</span><span class="py">connectionTimeoutMillis</span><span class="o">.</span><span class="py">toInt</span><span class="o">);</span>
 
-  <span class="k">override</span> <span class="k">def</span> <span class="n">dataSource</span><span class="k">:</span> <span class="kt">DataSource</span> <span class="o">=</span> <span class="nc">_dataSource</span>
-  <span class="k">override</span> <span class="k">def</span> <span class="n">borrow</span><span class="o">()</span><span class="k">:</span> <span class="kt">Connection</span> <span class="o">=</span> <span class="n">dataSource</span><span class="o">.</span><span class="n">getConnection</span><span class="o">()</span>
-  <span class="k">override</span> <span class="k">def</span> <span class="n">numActive</span><span class="k">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="nc">_dataSource</span><span class="o">.</span><span class="n">getNumBusyConnections</span><span class="o">(</span><span class="n">user</span><span class="o">,</span> <span class="n">password</span><span class="o">)</span>
-  <span class="k">override</span> <span class="k">def</span> <span class="n">numIdle</span><span class="k">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="nc">_dataSource</span><span class="o">.</span><span class="n">getNumIdleConnections</span><span class="o">(</span><span class="n">user</span><span class="o">,</span> <span class="n">password</span><span class="o">)</span>
-  <span class="k">override</span> <span class="k">def</span> <span class="n">maxActive</span><span class="k">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="nc">_dataSource</span><span class="o">.</span><span class="n">getMaxPoolSize</span>
-  <span class="k">override</span> <span class="k">def</span> <span class="n">maxIdle</span><span class="k">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="nc">_dataSource</span><span class="o">.</span><span class="n">getMaxPoolSize</span>
-  <span class="k">override</span> <span class="k">def</span> <span class="n">close</span><span class="o">()</span><span class="k">:</span> <span class="kt">Unit</span> <span class="o">=</span> <span class="nc">_dataSource</span><span class="o">.</span><span class="n">close</span><span class="o">()</span>
+  <span class="k">override</span> <span class="k">def</span> <span class="nf">dataSource</span><span class="k">:</span> <span class="kt">DataSource</span> <span class="o">=</span> <span class="nc">_dataSource</span>
+  <span class="k">override</span> <span class="k">def</span> <span class="nf">borrow</span><span class="o">()</span><span class="k">:</span> <span class="kt">Connection</span> <span class="o">=</span> <span class="nv">dataSource</span><span class="o">.</span><span class="py">getConnection</span><span class="o">()</span>
+  <span class="k">override</span> <span class="k">def</span> <span class="nf">numActive</span><span class="k">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="nv">_dataSource</span><span class="o">.</span><span class="py">getNumBusyConnections</span><span class="o">(</span><span class="n">user</span><span class="o">,</span> <span class="n">password</span><span class="o">)</span>
+  <span class="k">override</span> <span class="k">def</span> <span class="nf">numIdle</span><span class="k">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="nv">_dataSource</span><span class="o">.</span><span class="py">getNumIdleConnections</span><span class="o">(</span><span class="n">user</span><span class="o">,</span> <span class="n">password</span><span class="o">)</span>
+  <span class="k">override</span> <span class="k">def</span> <span class="nf">maxActive</span><span class="k">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="nv">_dataSource</span><span class="o">.</span><span class="py">getMaxPoolSize</span>
+  <span class="k">override</span> <span class="k">def</span> <span class="nf">maxIdle</span><span class="k">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="nv">_dataSource</span><span class="o">.</span><span class="py">getMaxPoolSize</span>
+  <span class="k">override</span> <span class="k">def</span> <span class="nf">close</span><span class="o">()</span><span class="k">:</span> <span class="kt">Unit</span> <span class="o">=</span> <span class="nv">_dataSource</span><span class="o">.</span><span class="py">close</span><span class="o">()</span>
 <span class="o">}</span>
 
-<span class="k">implicit</span> <span class="k">val</span> <span class="n">factory</span> <span class="k">=</span> <span class="n">C3P0ConnectionPoolFactory</span>
-<span class="nc">ConnectionPool</span><span class="o">.</span><span class="n">add</span><span class="o">(</span><span class="ss">'xxxx,</span> <span class="n">url</span><span class="o">,</span> <span class="n">user</span><span class="o">,</span> <span class="n">password</span><span class="o">)</span>
+<span class="k">implicit</span> <span class="k">val</span> <span class="nv">factory</span> <span class="k">=</span> <span class="n">C3P0ConnectionPoolFactory</span>
+<span class="nv">ConnectionPool</span><span class="o">.</span><span class="py">add</span><span class="o">(</span><span class="ss">'xxxx</span><span class="o">,</span> <span class="n">url</span><span class="o">,</span> <span class="n">user</span><span class="o">,</span> <span class="n">password</span><span class="o">)</span>
 </code></pre></div>
           <hr/>
           <div class="alert alert-warning small">

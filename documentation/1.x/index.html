@@ -130,14 +130,14 @@ NOTICE: Scala 2.9 incompatible changes will be backported only to ScalikeJDBC 1.
 <hr/>
 
 <p>Put above dependencies into your <code>build.sbt</code> and run <code>sbt console</code> now.</p>
-<div class="highlight"><pre class="highlight java"><code><span class="kn">import</span> <span class="nn">scalikejdbc._</span><span class="o">,</span> <span class="n">SQLInterpolation</span><span class="o">.</span><span class="na">_</span>
+<div class="highlight"><pre class="highlight java"><code><span class="kn">import</span> <span class="nn">scalikejdbc._</span><span class="o">,</span> <span class="nc">SQLInterpolation</span><span class="o">.</span><span class="na">_</span>
 
 <span class="c1">// initialize JDBC driver &amp; connection pool</span>
-<span class="n">Class</span><span class="o">.</span><span class="na">forName</span><span class="o">(</span><span class="s">"org.h2.Driver"</span><span class="o">)</span>
-<span class="n">ConnectionPool</span><span class="o">.</span><span class="na">singleton</span><span class="o">(</span><span class="s">"jdbc:h2:mem:hello"</span><span class="o">,</span> <span class="s">"user"</span><span class="o">,</span> <span class="s">"pass"</span><span class="o">)</span>
+<span class="nc">Class</span><span class="o">.</span><span class="na">forName</span><span class="o">(</span><span class="s">"org.h2.Driver"</span><span class="o">)</span>
+<span class="nc">ConnectionPool</span><span class="o">.</span><span class="na">singleton</span><span class="o">(</span><span class="s">"jdbc:h2:mem:hello"</span><span class="o">,</span> <span class="s">"user"</span><span class="o">,</span> <span class="s">"pass"</span><span class="o">)</span>
 
 <span class="c1">// ad-hoc session provider on the REPL</span>
-<span class="n">implicit</span> <span class="n">val</span> <span class="n">session</span> <span class="o">=</span> <span class="n">AutoSession</span>
+<span class="n">implicit</span> <span class="n">val</span> <span class="n">session</span> <span class="o">=</span> <span class="nc">AutoSession</span>
 
 <span class="c1">// table creation, you can run DDL by using #execute as same as JDBC</span>
 <span class="n">sql</span><span class="s">"""
@@ -149,24 +149,24 @@ create table members (
 """</span><span class="o">.</span><span class="na">execute</span><span class="o">.</span><span class="na">apply</span><span class="o">()</span>
 
 <span class="c1">// insert initial data</span>
-<span class="n">Seq</span><span class="o">(</span><span class="s">"Alice"</span><span class="o">,</span> <span class="s">"Bob"</span><span class="o">,</span> <span class="s">"Chris"</span><span class="o">)</span> <span class="n">foreach</span> <span class="o">{</span> <span class="n">name</span> <span class="o">=&gt;</span>
+<span class="nc">Seq</span><span class="o">(</span><span class="s">"Alice"</span><span class="o">,</span> <span class="s">"Bob"</span><span class="o">,</span> <span class="s">"Chris"</span><span class="o">)</span> <span class="n">foreach</span> <span class="o">{</span> <span class="n">name</span> <span class="o">=&gt;</span>
   <span class="n">sql</span><span class="s">"insert into members (name, created_at) values (${name}, current_timestamp)"</span><span class="o">.</span><span class="na">update</span><span class="o">.</span><span class="na">apply</span><span class="o">()</span>
 <span class="o">}</span>
 
 <span class="c1">// for now, retrieves all data as Map value</span>
-<span class="n">val</span> <span class="nl">entities:</span> <span class="n">List</span><span class="o">[</span><span class="n">Map</span><span class="o">[</span><span class="n">String</span><span class="o">,</span> <span class="n">Any</span><span class="o">]]</span> <span class="o">=</span> <span class="n">sql</span><span class="s">"select * from members"</span><span class="o">.</span><span class="na">map</span><span class="o">(</span><span class="n">_</span><span class="o">.</span><span class="na">toMap</span><span class="o">).</span><span class="na">list</span><span class="o">.</span><span class="na">apply</span><span class="o">()</span>
+<span class="n">val</span> <span class="nl">entities:</span> <span class="nc">List</span><span class="o">[</span><span class="nc">Map</span><span class="o">[</span><span class="nc">String</span><span class="o">,</span> <span class="nc">Any</span><span class="o">]]</span> <span class="o">=</span> <span class="n">sql</span><span class="s">"select * from members"</span><span class="o">.</span><span class="na">map</span><span class="o">(</span><span class="n">_</span><span class="o">.</span><span class="na">toMap</span><span class="o">).</span><span class="na">list</span><span class="o">.</span><span class="na">apply</span><span class="o">()</span>
 
 <span class="c1">// defines entity object and extractor</span>
 <span class="kn">import</span> <span class="nn">org.joda.time._</span>
-<span class="k">case</span> <span class="kd">class</span> <span class="nf">Member</span><span class="o">(</span><span class="nl">id:</span> <span class="n">Long</span><span class="o">,</span> <span class="nl">name:</span> <span class="n">Option</span><span class="o">[</span><span class="n">String</span><span class="o">],</span> <span class="nl">createdAt:</span> <span class="n">DateTime</span><span class="o">)</span>
-<span class="n">object</span> <span class="n">Member</span> <span class="kd">extends</span> <span class="n">SQLSyntaxSupport</span><span class="o">[</span><span class="n">Member</span><span class="o">]</span> <span class="o">{</span>
+<span class="k">case</span> <span class="kd">class</span> <span class="nf">Member</span><span class="o">(</span><span class="nl">id:</span> <span class="nc">Long</span><span class="o">,</span> <span class="nl">name:</span> <span class="nc">Option</span><span class="o">[</span><span class="nc">String</span><span class="o">],</span> <span class="nl">createdAt:</span> <span class="nc">DateTime</span><span class="o">)</span>
+<span class="n">object</span> <span class="nc">Member</span> <span class="kd">extends</span> <span class="nc">SQLSyntaxSupport</span><span class="o">[</span><span class="nc">Member</span><span class="o">]</span> <span class="o">{</span>
   <span class="n">override</span> <span class="n">val</span> <span class="n">tableName</span> <span class="o">=</span> <span class="s">"members"</span>
-  <span class="n">def</span> <span class="nf">apply</span><span class="o">(</span><span class="nl">rs:</span> <span class="n">WrappedResultSet</span><span class="o">)</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Member</span><span class="o">(</span>
+  <span class="n">def</span> <span class="nf">apply</span><span class="o">(</span><span class="nl">rs:</span> <span class="nc">WrappedResultSet</span><span class="o">)</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Member</span><span class="o">(</span>
     <span class="n">rs</span><span class="o">.</span><span class="na">long</span><span class="o">(</span><span class="s">"id"</span><span class="o">),</span> <span class="n">rs</span><span class="o">.</span><span class="na">stringOpt</span><span class="o">(</span><span class="s">"name"</span><span class="o">),</span> <span class="n">rs</span><span class="o">.</span><span class="na">dateTime</span><span class="o">(</span><span class="s">"created_at"</span><span class="o">))</span>
 <span class="o">}</span>
 
 <span class="c1">// find all members</span>
-<span class="n">val</span> <span class="nl">members:</span> <span class="n">List</span><span class="o">[</span><span class="n">Member</span><span class="o">]</span> <span class="o">=</span> <span class="n">sql</span><span class="s">"select * from members"</span><span class="o">.</span><span class="na">map</span><span class="o">(</span><span class="n">rs</span> <span class="o">=&gt;</span> <span class="n">Member</span><span class="o">(</span><span class="n">rs</span><span class="o">)).</span><span class="na">list</span><span class="o">.</span><span class="na">apply</span><span class="o">()</span>
+<span class="n">val</span> <span class="nl">members:</span> <span class="nc">List</span><span class="o">[</span><span class="nc">Member</span><span class="o">]</span> <span class="o">=</span> <span class="n">sql</span><span class="s">"select * from members"</span><span class="o">.</span><span class="na">map</span><span class="o">(</span><span class="n">rs</span> <span class="o">=&gt;</span> <span class="nc">Member</span><span class="o">(</span><span class="n">rs</span><span class="o">)).</span><span class="na">list</span><span class="o">.</span><span class="na">apply</span><span class="o">()</span>
 </code></pre></div>
 <p>How did it go? If you&rsquo;d like to know more details or practical examples, see documentation.</p>
 
@@ -193,7 +193,7 @@ create table members (
 <p>Library users don&rsquo;t need to learn so many library-specific rules or conventions. If you&rsquo;re already familiar with Scala&rsquo;s standard library APIs and basic SQLs, that much should be enough.</p>
 <div class="highlight"><pre class="highlight java"><code><span class="n">val</span> <span class="n">name</span> <span class="o">=</span> <span class="s">"Alice"</span>
 <span class="c1">// implicit session represents java.sql.Connection</span>
-<span class="n">val</span> <span class="nl">memberId:</span> <span class="n">Option</span><span class="o">[</span><span class="n">Long</span><span class="o">]</span> <span class="o">=</span> <span class="n">DB</span> <span class="n">readOnly</span> <span class="o">{</span> <span class="n">implicit</span> <span class="n">session</span> <span class="o">=&gt;</span>
+<span class="n">val</span> <span class="nl">memberId:</span> <span class="nc">Option</span><span class="o">[</span><span class="nc">Long</span><span class="o">]</span> <span class="o">=</span> <span class="no">DB</span> <span class="n">readOnly</span> <span class="o">{</span> <span class="n">implicit</span> <span class="n">session</span> <span class="o">=&gt;</span>
   <span class="n">sql</span><span class="s">"select id from members where name = ${name}"</span> <span class="c1">// don't worry, prevents SQL injection</span>
     <span class="o">.</span><span class="na">map</span><span class="o">(</span><span class="n">rs</span> <span class="o">=&gt;</span> <span class="n">rs</span><span class="o">.</span><span class="na">long</span><span class="o">(</span><span class="s">"id"</span><span class="o">))</span> <span class="c1">// extracts values from rich java.sql.ResultSet</span>
     <span class="o">.</span><span class="na">single</span>                   <span class="c1">// single, list, traversable</span>
@@ -209,18 +209,18 @@ create table members (
 <p>Since version 1.6, QueryDSL is available. It&rsquo;s a SQL-like and type-safe DSL to build DRY SQLs.</p>
 
 <p>Here is an example:</p>
-<div class="highlight"><pre class="highlight java"><code><span class="n">val</span> <span class="o">(</span><span class="n">p</span><span class="o">,</span> <span class="n">c</span><span class="o">)</span> <span class="o">=</span> <span class="o">(</span><span class="n">Programmer</span><span class="o">.</span><span class="na">syntax</span><span class="o">(</span><span class="s">"p"</span><span class="o">),</span> <span class="n">Company</span><span class="o">.</span><span class="na">syntax</span><span class="o">(</span><span class="s">"c"</span><span class="o">))</span>
+<div class="highlight"><pre class="highlight java"><code><span class="n">val</span> <span class="o">(</span><span class="n">p</span><span class="o">,</span> <span class="n">c</span><span class="o">)</span> <span class="o">=</span> <span class="o">(</span><span class="nc">Programmer</span><span class="o">.</span><span class="na">syntax</span><span class="o">(</span><span class="s">"p"</span><span class="o">),</span> <span class="nc">Company</span><span class="o">.</span><span class="na">syntax</span><span class="o">(</span><span class="s">"c"</span><span class="o">))</span>
 
-<span class="n">val</span> <span class="nl">programmers:</span> <span class="n">List</span><span class="o">[</span><span class="n">Long</span><span class="o">]</span> <span class="o">=</span> <span class="n">DB</span> <span class="n">readOnly</span> <span class="o">{</span> <span class="n">implicit</span> <span class="n">session</span> <span class="o">=&gt;</span>
+<span class="n">val</span> <span class="nl">programmers:</span> <span class="nc">List</span><span class="o">[</span><span class="nc">Long</span><span class="o">]</span> <span class="o">=</span> <span class="no">DB</span> <span class="n">readOnly</span> <span class="o">{</span> <span class="n">implicit</span> <span class="n">session</span> <span class="o">=&gt;</span>
   <span class="n">withSQL</span> <span class="o">{</span>
     <span class="n">select</span>
-      <span class="o">.</span><span class="na">from</span><span class="o">(</span><span class="n">Programmer</span> <span class="n">as</span> <span class="n">p</span><span class="o">)</span>
-      <span class="o">.</span><span class="na">leftJoin</span><span class="o">(</span><span class="n">Company</span> <span class="n">as</span> <span class="n">c</span><span class="o">).</span><span class="na">on</span><span class="o">(</span><span class="n">p</span><span class="o">.</span><span class="na">companyId</span><span class="o">,</span> <span class="n">c</span><span class="o">.</span><span class="na">id</span><span class="o">)</span>
+      <span class="o">.</span><span class="na">from</span><span class="o">(</span><span class="nc">Programmer</span> <span class="n">as</span> <span class="n">p</span><span class="o">)</span>
+      <span class="o">.</span><span class="na">leftJoin</span><span class="o">(</span><span class="nc">Company</span> <span class="n">as</span> <span class="n">c</span><span class="o">).</span><span class="na">on</span><span class="o">(</span><span class="n">p</span><span class="o">.</span><span class="na">companyId</span><span class="o">,</span> <span class="n">c</span><span class="o">.</span><span class="na">id</span><span class="o">)</span>
       <span class="o">.</span><span class="na">where</span><span class="o">.</span><span class="na">eq</span><span class="o">(</span><span class="n">p</span><span class="o">.</span><span class="na">isDeleted</span><span class="o">,</span> <span class="kc">false</span><span class="o">)</span>
       <span class="o">.</span><span class="na">orderBy</span><span class="o">(</span><span class="n">p</span><span class="o">.</span><span class="na">createdAt</span><span class="o">)</span>
       <span class="o">.</span><span class="na">limit</span><span class="o">(</span><span class="mi">10</span><span class="o">)</span>
       <span class="o">.</span><span class="na">offset</span><span class="o">(</span><span class="mi">0</span><span class="o">)</span>
-  <span class="o">}.</span><span class="na">map</span><span class="o">(</span><span class="n">Programmer</span><span class="o">(</span><span class="n">p</span><span class="o">,</span> <span class="n">c</span><span class="o">)).</span><span class="na">list</span><span class="o">.</span><span class="na">apply</span><span class="o">()</span>
+  <span class="o">}.</span><span class="na">map</span><span class="o">(</span><span class="nc">Programmer</span><span class="o">(</span><span class="n">p</span><span class="o">,</span> <span class="n">c</span><span class="o">)).</span><span class="na">list</span><span class="o">.</span><span class="na">apply</span><span class="o">()</span>
 <span class="o">}</span>
 </code></pre></div>
 <p>See in detail: <a href="documentation/query-dsl.html">/documentation/query-dsl</a></p>
@@ -241,23 +241,23 @@ create table members (
 </ul>
 
 <p>Here is an example code which re-use methods in both of simple invocation and transactional operations.</p>
-<div class="highlight"><pre class="highlight java"><code><span class="n">object</span> <span class="n">Product</span> <span class="o">{</span>
-  <span class="n">def</span> <span class="nf">create</span><span class="o">(</span><span class="nl">name:</span> <span class="n">String</span><span class="o">,</span> <span class="nl">price:</span> <span class="n">Long</span><span class="o">)(</span><span class="n">implicit</span> <span class="nl">s:</span> <span class="n">DBSession</span> <span class="o">=</span> <span class="n">AutoSession</span><span class="o">):</span> <span class="n">Long</span> <span class="o">=</span> <span class="o">{</span>
+<div class="highlight"><pre class="highlight java"><code><span class="n">object</span> <span class="nc">Product</span> <span class="o">{</span>
+  <span class="n">def</span> <span class="nf">create</span><span class="o">(</span><span class="nl">name:</span> <span class="nc">String</span><span class="o">,</span> <span class="nl">price:</span> <span class="nc">Long</span><span class="o">)(</span><span class="n">implicit</span> <span class="nl">s:</span> <span class="nc">DBSession</span> <span class="o">=</span> <span class="nc">AutoSession</span><span class="o">):</span> <span class="nc">Long</span> <span class="o">=</span> <span class="o">{</span>
     <span class="n">sql</span><span class="s">"insert into products values (${name}, ${price})"</span>
       <span class="o">.</span><span class="na">updateAndReturnGeneratedKey</span><span class="o">.</span><span class="na">apply</span><span class="o">()</span> <span class="c1">// returns auto-incremeneted id</span>
   <span class="o">}</span>
 
-  <span class="n">def</span> <span class="nf">findById</span><span class="o">(</span><span class="nl">id:</span> <span class="n">Long</span><span class="o">)(</span><span class="n">implicit</span> <span class="nl">s:</span> <span class="n">DBSession</span> <span class="o">=</span> <span class="n">AutoSession</span><span class="o">):</span> <span class="n">Option</span><span class="o">[</span><span class="n">Product</span><span class="o">]</span> <span class="o">=</span> <span class="o">{</span>
+  <span class="n">def</span> <span class="nf">findById</span><span class="o">(</span><span class="nl">id:</span> <span class="nc">Long</span><span class="o">)(</span><span class="n">implicit</span> <span class="nl">s:</span> <span class="nc">DBSession</span> <span class="o">=</span> <span class="nc">AutoSession</span><span class="o">):</span> <span class="nc">Option</span><span class="o">[</span><span class="nc">Product</span><span class="o">]</span> <span class="o">=</span> <span class="o">{</span>
     <span class="n">sql</span><span class="s">"select id, name, price, created_at from products where id = ${id}"</span>
-      <span class="o">.</span><span class="na">map</span> <span class="o">{</span> <span class="n">rs</span> <span class="o">=&gt;</span> <span class="n">Product</span><span class="o">(</span><span class="n">rs</span><span class="o">)</span> <span class="o">}.</span><span class="na">single</span><span class="o">.</span><span class="na">apply</span><span class="o">()</span>
+      <span class="o">.</span><span class="na">map</span> <span class="o">{</span> <span class="n">rs</span> <span class="o">=&gt;</span> <span class="nc">Product</span><span class="o">(</span><span class="n">rs</span><span class="o">)</span> <span class="o">}.</span><span class="na">single</span><span class="o">.</span><span class="na">apply</span><span class="o">()</span>
   <span class="o">}</span>
 <span class="o">}</span>
 
-<span class="n">Product</span><span class="o">.</span><span class="na">findById</span><span class="o">(</span><span class="mi">123</span><span class="o">)</span> <span class="c1">// borrows connection from pool and gives it back after execution</span>
+<span class="nc">Product</span><span class="o">.</span><span class="na">findById</span><span class="o">(</span><span class="mi">123</span><span class="o">)</span> <span class="c1">// borrows connection from pool and gives it back after execution</span>
 
-<span class="n">DB</span> <span class="n">localTx</span> <span class="o">{</span> <span class="n">implicit</span> <span class="n">session</span> <span class="o">=&gt;</span> <span class="c1">// transactional session</span>
-  <span class="n">val</span> <span class="n">id</span> <span class="o">=</span> <span class="n">Product</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="s">"ScalikeJDBC Cookbook"</span><span class="o">,</span> <span class="mi">200</span><span class="o">)</span> <span class="c1">// within transaction</span>
-  <span class="n">val</span> <span class="n">product</span> <span class="o">=</span> <span class="n">Product</span><span class="o">.</span><span class="na">findById</span><span class="o">(</span><span class="n">id</span><span class="o">)</span> <span class="c1">// within transaction</span>
+<span class="no">DB</span> <span class="n">localTx</span> <span class="o">{</span> <span class="n">implicit</span> <span class="n">session</span> <span class="o">=&gt;</span> <span class="c1">// transactional session</span>
+  <span class="n">val</span> <span class="n">id</span> <span class="o">=</span> <span class="nc">Product</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="s">"ScalikeJDBC Cookbook"</span><span class="o">,</span> <span class="mi">200</span><span class="o">)</span> <span class="c1">// within transaction</span>
+  <span class="n">val</span> <span class="n">product</span> <span class="o">=</span> <span class="nc">Product</span><span class="o">.</span><span class="na">findById</span><span class="o">(</span><span class="n">id</span><span class="o">)</span> <span class="c1">// within transaction</span>
 <span class="o">}</span>
 </code></pre></div>
 <p>See in detail: <a href="documentation/transaction.html">/documentation/transaction</a></p>

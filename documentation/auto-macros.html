@@ -61,10 +61,10 @@
 
 <span class="k">object</span> <span class="nc">Company</span> <span class="k">extends</span> <span class="nc">SQLSyntaxSupport</span><span class="o">[</span><span class="kt">Company</span><span class="o">]</span> <span class="o">{</span>
 
-  <span class="k">def</span> <span class="n">apply</span><span class="o">(</span><span class="n">rs</span><span class="k">:</span> <span class="kt">WrappedResultSet</span><span class="o">,</span> <span class="n">rn</span><span class="k">:</span> <span class="kt">ResultName</span><span class="o">[</span><span class="kt">Company</span><span class="o">])</span><span class="k">:</span> <span class="kt">Company</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Company</span><span class="o">(</span>
-    <span class="n">id</span> <span class="k">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">get</span><span class="o">(</span><span class="n">rn</span><span class="o">.</span><span class="n">id</span><span class="o">),</span> 
-    <span class="n">name</span> <span class="k">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">get</span><span class="o">(</span><span class="n">rn</span><span class="o">.</span><span class="n">name</span><span class="o">),</span> 
-    <span class="n">countryId</span> <span class="k">=</span> <span class="n">rs</span><span class="o">.</span><span class="n">get</span><span class="o">(</span><span class="n">rn</span><span class="o">.</span><span class="n">countryId</span><span class="o">)</span>
+  <span class="k">def</span> <span class="nf">apply</span><span class="o">(</span><span class="n">rs</span><span class="k">:</span> <span class="kt">WrappedResultSet</span><span class="o">,</span> <span class="n">rn</span><span class="k">:</span> <span class="kt">ResultName</span><span class="o">[</span><span class="kt">Company</span><span class="o">])</span><span class="k">:</span> <span class="kt">Company</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Company</span><span class="o">(</span>
+    <span class="n">id</span> <span class="k">=</span> <span class="nv">rs</span><span class="o">.</span><span class="py">get</span><span class="o">(</span><span class="nv">rn</span><span class="o">.</span><span class="py">id</span><span class="o">),</span> 
+    <span class="n">name</span> <span class="k">=</span> <span class="nv">rs</span><span class="o">.</span><span class="py">get</span><span class="o">(</span><span class="nv">rn</span><span class="o">.</span><span class="py">name</span><span class="o">),</span> 
+    <span class="n">countryId</span> <span class="k">=</span> <span class="nv">rs</span><span class="o">.</span><span class="py">get</span><span class="o">(</span><span class="nv">rn</span><span class="o">.</span><span class="py">countryId</span><span class="o">)</span>
   <span class="o">)</span>
 <span class="o">}</span>
 </code></pre></div>
@@ -73,9 +73,9 @@
 
 <span class="k">object</span> <span class="nc">Company</span> <span class="k">extends</span> <span class="nc">SQLSyntaxSupport</span><span class="o">[</span><span class="kt">Company</span><span class="o">]</span> <span class="o">{</span>
 
-  <span class="k">def</span> <span class="n">apply</span><span class="o">(</span><span class="n">rs</span><span class="k">:</span> <span class="kt">WrappedResultSet</span><span class="o">,</span> <span class="n">rn</span><span class="k">:</span> <span class="kt">ResultName</span><span class="o">[</span><span class="kt">Company</span><span class="o">])</span><span class="k">:</span> <span class="kt">Company</span> <span class="o">=</span> 
-    <span class="n">autoConstruct</span><span class="o">(</span><span class="n">rs</span><span class="o">,</span> <span class="n">rn</span><span class="o">,</span> <span class="s">"country"</span><span class="o">)</span> <span class="c1">// "country" will be ignored when binding values from ResultSet
-</span><span class="o">}</span>
+  <span class="k">def</span> <span class="nf">apply</span><span class="o">(</span><span class="n">rs</span><span class="k">:</span> <span class="kt">WrappedResultSet</span><span class="o">,</span> <span class="n">rn</span><span class="k">:</span> <span class="kt">ResultName</span><span class="o">[</span><span class="kt">Company</span><span class="o">])</span><span class="k">:</span> <span class="kt">Company</span> <span class="o">=</span> 
+    <span class="nf">autoConstruct</span><span class="o">(</span><span class="n">rs</span><span class="o">,</span> <span class="n">rn</span><span class="o">,</span> <span class="s">"country"</span><span class="o">)</span> <span class="c1">// "country" will be ignored when binding values from ResultSet</span>
+<span class="o">}</span>
 </code></pre></div>
 <p>The <code>#autoConstruct</code> method binds all the fields defined at the primary constructor automatically.</p>
 
@@ -94,9 +94,9 @@ The following code won&rsquo;t access JDBC metadata and will resolve column name
 
 <span class="k">object</span> <span class="nc">Company</span> <span class="k">extends</span> <span class="nc">SQLSyntaxSupport</span><span class="o">[</span><span class="kt">Company</span><span class="o">]</span> <span class="o">{</span>
 
-  <span class="k">override</span> <span class="k">lazy</span> <span class="k">val</span> <span class="n">columns</span> <span class="k">=</span> <span class="n">autoColumns</span><span class="o">[</span><span class="kt">Company</span><span class="o">](</span><span class="s">"country"</span><span class="o">)</span> 
-  <span class="c1">// this will be Seq("id", "name", "country_id")
-</span><span class="o">}</span>
+  <span class="k">override</span> <span class="k">lazy</span> <span class="k">val</span> <span class="nv">columns</span> <span class="k">=</span> <span class="n">autoColumns</span><span class="o">[</span><span class="kt">Company</span><span class="o">](</span><span class="s">"country"</span><span class="o">)</span> 
+  <span class="c1">// this will be Seq("id", "name", "country_id")</span>
+<span class="o">}</span>
 </code></pre></div>
           <hr/>
           <div class="alert alert-warning small">

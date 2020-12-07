@@ -60,36 +60,36 @@
 <p>ConnectionPool should be initialized when starting your applications.</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">import</span> <span class="nn">scalikejdbc._</span>
 
-<span class="c1">// after loading JDBC drivers
-</span><span class="nc">ConnectionPool</span><span class="o">.</span><span class="n">singleton</span><span class="o">(</span><span class="n">url</span><span class="o">,</span> <span class="n">user</span><span class="o">,</span> <span class="n">password</span><span class="o">)</span>
-<span class="nc">ConnectionPool</span><span class="o">.</span><span class="n">add</span><span class="o">(</span><span class="ss">'foo,</span> <span class="n">url</span><span class="o">,</span> <span class="n">user</span><span class="o">,</span> <span class="n">password</span><span class="o">)</span>
+<span class="c1">// after loading JDBC drivers</span>
+<span class="nv">ConnectionPool</span><span class="o">.</span><span class="py">singleton</span><span class="o">(</span><span class="n">url</span><span class="o">,</span> <span class="n">user</span><span class="o">,</span> <span class="n">password</span><span class="o">)</span>
+<span class="nv">ConnectionPool</span><span class="o">.</span><span class="py">add</span><span class="o">(</span><span class="ss">'foo</span><span class="o">,</span> <span class="n">url</span><span class="o">,</span> <span class="n">user</span><span class="o">,</span> <span class="n">password</span><span class="o">)</span>
 
-<span class="k">val</span> <span class="n">settings</span> <span class="k">=</span> <span class="nc">ConnectionPoolSettings</span><span class="o">(</span>
+<span class="k">val</span> <span class="nv">settings</span> <span class="k">=</span> <span class="nc">ConnectionPoolSettings</span><span class="o">(</span>
   <span class="n">initialSize</span> <span class="k">=</span> <span class="mi">5</span><span class="o">,</span>
   <span class="n">maxSize</span> <span class="k">=</span> <span class="mi">20</span><span class="o">,</span>
   <span class="n">connectionTimeoutMillis</span> <span class="k">=</span> <span class="mi">3000L</span><span class="o">,</span>
   <span class="n">validationQuery</span> <span class="k">=</span> <span class="s">"select 1 from dual"</span><span class="o">)</span>
 
-<span class="c1">// all the connections are released, old connection pool will be abandoned
-</span><span class="nc">ConnectionPool</span><span class="o">.</span><span class="n">add</span><span class="o">(</span><span class="ss">'foo,</span> <span class="n">url</span><span class="o">,</span> <span class="n">user</span><span class="o">,</span> <span class="n">password</span><span class="o">,</span> <span class="n">settings</span><span class="o">)</span>
+<span class="c1">// all the connections are released, old connection pool will be abandoned</span>
+<span class="nv">ConnectionPool</span><span class="o">.</span><span class="py">add</span><span class="o">(</span><span class="ss">'foo</span><span class="o">,</span> <span class="n">url</span><span class="o">,</span> <span class="n">user</span><span class="o">,</span> <span class="n">password</span><span class="o">,</span> <span class="n">settings</span><span class="o">)</span>
 </code></pre></div>
 <p>When you use external DataSource (e.g. application server&rsquo;s connection pool), use javax.sql.DataSource via JNDI:</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">import</span> <span class="nn">javax.naming._</span>
 <span class="k">import</span> <span class="nn">javax.sql._</span>
-<span class="k">val</span> <span class="n">ds</span> <span class="k">=</span> <span class="o">(</span><span class="k">new</span> <span class="nc">InitialContext</span><span class="o">)</span>
-  <span class="o">.</span><span class="n">lookup</span><span class="o">(</span><span class="s">"java:/comp/env"</span><span class="o">).</span><span class="n">asInstanceOf</span><span class="o">[</span><span class="kt">Context</span><span class="o">]</span>
-  <span class="o">.</span><span class="n">lookup</span><span class="o">(</span><span class="n">name</span><span class="o">).</span><span class="n">asInstanceOf</span><span class="o">[</span><span class="kt">DataSource</span><span class="o">]</span>
+<span class="k">val</span> <span class="nv">ds</span> <span class="k">=</span> <span class="o">(</span><span class="k">new</span> <span class="nc">InitialContext</span><span class="o">)</span>
+  <span class="o">.</span><span class="py">lookup</span><span class="o">(</span><span class="s">"java:/comp/env"</span><span class="o">).</span><span class="py">asInstanceOf</span><span class="o">[</span><span class="kt">Context</span><span class="o">]</span>
+  <span class="o">.</span><span class="py">lookup</span><span class="o">(</span><span class="n">name</span><span class="o">).</span><span class="py">asInstanceOf</span><span class="o">[</span><span class="kt">DataSource</span><span class="o">]</span>
 
 <span class="k">import</span> <span class="nn">scalikejdbc._</span>
-<span class="nc">ConnectionPool</span><span class="o">.</span><span class="n">singleton</span><span class="o">(</span><span class="k">new</span> <span class="nc">DataSourceConnectionPool</span><span class="o">(</span><span class="n">ds</span><span class="o">))</span>
-<span class="nc">ConnectionPool</span><span class="o">.</span><span class="n">add</span><span class="o">(</span><span class="ss">'foo,</span> <span class="k">new</span> <span class="nc">DataSourceConnectionPool</span><span class="o">(</span><span class="n">ds</span><span class="o">))</span>
+<span class="nv">ConnectionPool</span><span class="o">.</span><span class="py">singleton</span><span class="o">(</span><span class="k">new</span> <span class="nc">DataSourceConnectionPool</span><span class="o">(</span><span class="n">ds</span><span class="o">))</span>
+<span class="nv">ConnectionPool</span><span class="o">.</span><span class="py">add</span><span class="o">(</span><span class="ss">'foo</span><span class="o">,</span> <span class="k">new</span> <span class="nc">DataSourceConnectionPool</span><span class="o">(</span><span class="n">ds</span><span class="o">))</span>
 </code></pre></div>
 <p><code>ConnectionPool</code> and <code>ConnectionPoolSettings</code>&lsquo;s parameters are like this:</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">abstract</span> <span class="k">class</span> <span class="nc">ConnectionPool</span><span class="o">(</span>
-  <span class="k">val</span> <span class="n">url</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
-  <span class="k">val</span> <span class="n">user</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
+  <span class="k">val</span> <span class="nv">url</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
+  <span class="k">val</span> <span class="nv">user</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
   <span class="n">password</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
-  <span class="k">val</span> <span class="n">settings</span><span class="k">:</span> <span class="kt">ConnectionPoolSettings</span><span class="o">)</span>
+  <span class="k">val</span> <span class="nv">settings</span><span class="k">:</span> <span class="kt">ConnectionPoolSettings</span><span class="o">)</span>
 </code></pre></div><div class="highlight"><pre class="highlight scala"><code><span class="k">case</span> <span class="k">class</span> <span class="nc">ConnectionPoolSettings</span><span class="o">(</span>
   <span class="n">initialSize</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span>
   <span class="n">maxSize</span><span class="k">:</span> <span class="kt">Int</span><span class="o">,</span>
@@ -167,24 +167,24 @@ db.default.url="jdbc:postgresql://localhost:5432/scalikejdbc"
 <div class="highlight"><pre class="highlight scala"><code><span class="k">import</span> <span class="nn">scalikejdbc._</span>
 <span class="k">import</span> <span class="nn">scalikejdbc.config._</span>
 
-<span class="c1">// DBs.setup/DBs.setupAll loads specified JDBC driver classes.
-</span><span class="nc">DBs</span><span class="o">.</span><span class="n">setupAll</span><span class="o">()</span>
-<span class="c1">// DBs.setup()
-// DBs.setup('legacy)
-// // Unlike DBs.setupAll(), DBs.setup() doesn't load configurations under global settings automatically
-// DBs.loadGlobalSettings()
-</span>
-<span class="c1">// loaded from "db.default.*"
-</span><span class="k">val</span> <span class="n">memberIds</span> <span class="k">=</span> <span class="nc">DB</span> <span class="n">readOnly</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span>
-  <span class="n">sql</span><span class="s">"select id from members"</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">long</span><span class="o">(</span><span class="mi">1</span><span class="o">)).</span><span class="n">list</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+<span class="c1">// DBs.setup/DBs.setupAll loads specified JDBC driver classes.</span>
+<span class="nv">DBs</span><span class="o">.</span><span class="py">setupAll</span><span class="o">()</span>
+<span class="c1">// DBs.setup()</span>
+<span class="c1">// DBs.setup('legacy)</span>
+<span class="c1">// // Unlike DBs.setupAll(), DBs.setup() doesn't load configurations under global settings automatically</span>
+<span class="c1">// DBs.loadGlobalSettings()</span>
+
+<span class="c1">// loaded from "db.default.*"</span>
+<span class="k">val</span> <span class="nv">memberIds</span> <span class="k">=</span> <span class="nc">DB</span> <span class="n">readOnly</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span>
+  <span class="n">sql</span><span class="s">"select id from members"</span><span class="o">.</span><span class="py">map</span><span class="o">(</span><span class="nv">_</span><span class="o">.</span><span class="py">long</span><span class="o">(</span><span class="mi">1</span><span class="o">)).</span><span class="py">list</span><span class="o">.</span><span class="py">apply</span><span class="o">()</span>
 <span class="o">}</span>
-<span class="c1">// loaded from "db.legacy.*"
-</span><span class="k">val</span> <span class="n">legacyMemberIds</span> <span class="k">=</span> <span class="nc">NamedDB</span><span class="o">(</span><span class="ss">'legacy)</span> <span class="n">readOnly</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span>
-  <span class="n">sql</span><span class="s">"select id from members"</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">long</span><span class="o">(</span><span class="mi">1</span><span class="o">)).</span><span class="n">list</span><span class="o">.</span><span class="n">apply</span><span class="o">()</span>
+<span class="c1">// loaded from "db.legacy.*"</span>
+<span class="k">val</span> <span class="nv">legacyMemberIds</span> <span class="k">=</span> <span class="nc">NamedDB</span><span class="o">(</span><span class="ss">'legacy</span><span class="o">)</span> <span class="n">readOnly</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span>
+  <span class="n">sql</span><span class="s">"select id from members"</span><span class="o">.</span><span class="py">map</span><span class="o">(</span><span class="nv">_</span><span class="o">.</span><span class="py">long</span><span class="o">(</span><span class="mi">1</span><span class="o">)).</span><span class="py">list</span><span class="o">.</span><span class="py">apply</span><span class="o">()</span>
 <span class="o">}</span>
 
-<span class="c1">// wipes out ConnectionPool
-</span><span class="nc">DBs</span><span class="o">.</span><span class="n">closeAll</span><span class="o">()</span>
+<span class="c1">// wipes out ConnectionPool</span>
+<span class="nv">DBs</span><span class="o">.</span><span class="py">closeAll</span><span class="o">()</span>
 </code></pre></div>
 <hr/>
 
@@ -210,8 +210,8 @@ prod {
 }
 </code></pre></div>
 <p>Use <code>DBsWithEnv</code> instead of <code>DBs</code>.</p>
-<div class="highlight"><pre class="highlight scala"><code><span class="nc">DBsWithEnv</span><span class="o">(</span><span class="s">"development"</span><span class="o">).</span><span class="n">setupAll</span><span class="o">()</span>
-<span class="nc">DBsWithEnv</span><span class="o">(</span><span class="s">"prod"</span><span class="o">).</span><span class="n">setup</span><span class="o">(</span><span class="ss">'sandbox)</span>
+<div class="highlight"><pre class="highlight scala"><code><span class="nc">DBsWithEnv</span><span class="o">(</span><span class="s">"development"</span><span class="o">).</span><span class="py">setupAll</span><span class="o">()</span>
+<span class="nc">DBsWithEnv</span><span class="o">(</span><span class="s">"prod"</span><span class="o">).</span><span class="py">setup</span><span class="o">(</span><span class="ss">'sandbox</span><span class="o">)</span>
 </code></pre></div>
 <hr/>
 
