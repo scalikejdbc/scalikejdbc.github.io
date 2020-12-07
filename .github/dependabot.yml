@@ -4,7 +4,7 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
-  - package_manager: "ruby:bundler"
+  - package-ecosystem: "ruby:bundler"
     directory: "/"
     schedule:
       interval: "daily"
