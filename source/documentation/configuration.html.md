@@ -124,14 +124,12 @@ db.default.driver="org.h2.Driver"
 db.default.url="jdbc:h2:file:./db/default"
 db.default.user="sa"
 db.default.password=""
-# Connection Pool settings
-db.default.poolInitialSize=10
-db.default.poolMaxSize=20
-db.default.connectionTimeoutMillis=1000
 
 # Connection Pool settings
 db.default.poolInitialSize=5
 db.default.poolMaxSize=7
+# poolConnectionTimeoutMillis defines the amount of time a query will wait to acquire a connection
+# before throwing an exception. This used to be called `connectionTimeoutMillis`. 
 db.default.poolConnectionTimeoutMillis=1000
 db.default.poolValidationQuery="select 1 as one"
 db.default.poolFactoryName="commons-dbcp2"
