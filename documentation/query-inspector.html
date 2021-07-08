@@ -51,10 +51,10 @@
   <span class="n">singleLineMode</span> <span class="k">=</span> <span class="kc">false</span><span class="o">,</span>
   <span class="n">printUnprocessedStackTrace</span> <span class="k">=</span> <span class="kc">false</span><span class="o">,</span>
   <span class="n">stackTraceDepth</span><span class="k">=</span> <span class="mi">15</span><span class="o">,</span>
-  <span class="n">logLevel</span> <span class="k">=</span> <span class="ss">'debug</span><span class="o">,</span>
+  <span class="n">logLevel</span> <span class="k">=</span> <span class="nc">Symbol</span><span class="o">(</span><span class="s">"debug"</span><span class="o">),</span>
   <span class="n">warningEnabled</span> <span class="k">=</span> <span class="kc">false</span><span class="o">,</span>
   <span class="n">warningThresholdMillis</span> <span class="k">=</span> <span class="mi">3000L</span><span class="o">,</span>
-  <span class="n">warningLogLevel</span> <span class="k">=</span> <span class="ss">'warn</span>
+  <span class="n">warningLogLevel</span> <span class="k">=</span> <span class="nc">Symbol</span><span class="o">(</span><span class="s">"warn"</span><span class="o">)</span>
 <span class="o">)</span>
 </code></pre></div>
 <hr/>
@@ -95,10 +95,10 @@
 <hr/>
 
 <p>If you don&rsquo;t need stack trace logging and just print SQL in single line, use <code>singleLineMode = true</code>.</p>
-<div class="highlight"><pre class="highlight scala"><code><span class="nv">GlobalSettings</span><span class="o">.</span><span class="py">loggingSQLAndTime</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">LoggingSQLAndTimeSettings</span><span class="o">(</span>
+<div class="highlight"><pre class="highlight scala"><code><span class="nv">GlobalSettings</span><span class="o">.</span><span class="py">loggingSQLAndTime</span> <span class="k">=</span> <span class="nc">LoggingSQLAndTimeSettings</span><span class="o">(</span>
   <span class="n">enabled</span> <span class="k">=</span> <span class="kc">true</span><span class="o">,</span>
   <span class="n">singleLineMode</span> <span class="k">=</span> <span class="kc">true</span><span class="o">,</span>
-  <span class="n">logLevel</span> <span class="k">=</span> <span class="ss">'DEBUG</span>
+  <span class="n">logLevel</span> <span class="k">=</span> <span class="nc">Symbol</span><span class="o">(</span><span class="s">"debug"</span><span class="o">)</span>
 <span class="o">)</span>
 </code></pre></div>
 <p>In this case, logging as follows:</p>
