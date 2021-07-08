@@ -22,10 +22,10 @@ GlobalSettings.loggingSQLAndTime = LoggingSQLAndTimeSettings(
   singleLineMode = false,
   printUnprocessedStackTrace = false,
   stackTraceDepth= 15,
-  logLevel = 'debug,
+  logLevel = Symbol("debug"),
   warningEnabled = false,
   warningThresholdMillis = 3000L,
-  warningLogLevel = 'warn
+  warningLogLevel = Symbol("warn")
 )
 ```
 
@@ -68,10 +68,10 @@ For example, logging as follows:
 If you don't need stack trace logging and just print SQL in single line, use `singleLineMode = true`.
 
 ```scala
-GlobalSettings.loggingSQLAndTime = new LoggingSQLAndTimeSettings(
+GlobalSettings.loggingSQLAndTime = LoggingSQLAndTimeSettings(
   enabled = true,
   singleLineMode = true,
-  logLevel = 'DEBUG
+  logLevel = Symbol("debug")
 )
 ```
 
