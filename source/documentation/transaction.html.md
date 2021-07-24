@@ -115,7 +115,7 @@ object FutureDB {
 object Example {
   import FutureDB._
   val fResult = DB futureLocalTx { implicit s =>  
-    updateFirstName(3, "John").map(_ => updateLastName(3, "Smith"))
+    updateFirstName(3, "John").flatMap(_ => updateLastName(3, "Smith"))
   }
 }
 
@@ -128,7 +128,7 @@ or `TxBoundary[Future[A]]` is also available.
 ```scala
 import scalikejdbc.TxBoundary.Future._
 val fResult = DB localTx { implicit s =>  
-  updateFirstName(3, "John").map(_ => updateLastName(3, "Smith"))
+  updateFirstName(3, "John").flatMap(_ => updateLastName(3, "Smith"))
 }
 ```
 
