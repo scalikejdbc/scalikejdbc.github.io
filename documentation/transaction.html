@@ -130,7 +130,7 @@
 <span class="k">object</span> <span class="nc">Example</span> <span class="o">{</span>
   <span class="k">import</span> <span class="nn">FutureDB._</span>
   <span class="k">val</span> <span class="nv">fResult</span> <span class="k">=</span> <span class="nc">DB</span> <span class="n">futureLocalTx</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">s</span> <span class="k">=&gt;</span>  
-    <span class="nf">updateFirstName</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="s">"John"</span><span class="o">).</span><span class="py">map</span><span class="o">(</span><span class="k">_</span> <span class="k">=&gt;</span> <span class="nf">updateLastName</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="s">"Smith"</span><span class="o">))</span>
+    <span class="nf">updateFirstName</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="s">"John"</span><span class="o">).</span><span class="py">flatMap</span><span class="o">(</span><span class="k">_</span> <span class="k">=&gt;</span> <span class="nf">updateLastName</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="s">"Smith"</span><span class="o">))</span>
   <span class="o">}</span>
 <span class="o">}</span>
 
@@ -140,7 +140,7 @@
 <p>or <code>TxBoundary[Future[A]]</code> is also available.</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">import</span> <span class="nn">scalikejdbc.TxBoundary.Future._</span>
 <span class="k">val</span> <span class="nv">fResult</span> <span class="k">=</span> <span class="nc">DB</span> <span class="n">localTx</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">s</span> <span class="k">=&gt;</span>  
-  <span class="nf">updateFirstName</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="s">"John"</span><span class="o">).</span><span class="py">map</span><span class="o">(</span><span class="k">_</span> <span class="k">=&gt;</span> <span class="nf">updateLastName</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="s">"Smith"</span><span class="o">))</span>
+  <span class="nf">updateFirstName</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="s">"John"</span><span class="o">).</span><span class="py">flatMap</span><span class="o">(</span><span class="k">_</span> <span class="k">=&gt;</span> <span class="nf">updateLastName</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="s">"Smith"</span><span class="o">))</span>
 <span class="o">}</span>
 </code></pre></div>
 <hr/>
