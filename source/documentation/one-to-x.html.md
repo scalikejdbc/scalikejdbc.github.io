@@ -49,7 +49,7 @@ val groups: Seq[Group] =
    .one(Group(g))
    .toMany(Member.opt(m))
    .map { (group, members) => group.copy(members = members) }
-   .list
+   .list()
    .apply()
 ```
 
@@ -72,12 +72,12 @@ val groups: Seq[Group] =
       .leftJoin(Member as m).on(g.id, m.groupId)
       .leftJoin(Event as e).on(g.id, e.groupId)
     }
-    .one(Group(m))
+    .one(Group(g))
     .toManies(
        rs => Member.opt(g)(rs),
        rs => Event.opt(e)(rs))
      .map { (group, members, events) => group.copy(members = members, events = events) }
-     .list
+     .list()
      .apply()
 ```
 
