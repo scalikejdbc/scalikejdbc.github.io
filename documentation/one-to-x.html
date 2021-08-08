@@ -78,7 +78,7 @@ Be aware that resolving multiple one-to-many relationships with a single join qu
    <span class="o">.</span><span class="py">one</span><span class="o">(</span><span class="nc">Group</span><span class="o">(</span><span class="n">g</span><span class="o">))</span>
    <span class="o">.</span><span class="py">toMany</span><span class="o">(</span><span class="nv">Member</span><span class="o">.</span><span class="py">opt</span><span class="o">(</span><span class="n">m</span><span class="o">))</span>
    <span class="o">.</span><span class="py">map</span> <span class="o">{</span> <span class="o">(</span><span class="n">group</span><span class="o">,</span> <span class="n">members</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="nv">group</span><span class="o">.</span><span class="py">copy</span><span class="o">(</span><span class="n">members</span> <span class="k">=</span> <span class="n">members</span><span class="o">)</span> <span class="o">}</span>
-   <span class="o">.</span><span class="py">list</span>
+   <span class="o">.</span><span class="py">list</span><span class="o">()</span>
    <span class="o">.</span><span class="py">apply</span><span class="o">()</span>
 </code></pre></div>
 <p><code>one.toManies</code> supports 9 tables to join.</p>
@@ -98,12 +98,12 @@ Be aware that resolving multiple one-to-many relationships with a single join qu
       <span class="o">.</span><span class="py">leftJoin</span><span class="o">(</span><span class="nc">Member</span> <span class="n">as</span> <span class="n">m</span><span class="o">).</span><span class="py">on</span><span class="o">(</span><span class="nv">g</span><span class="o">.</span><span class="py">id</span><span class="o">,</span> <span class="nv">m</span><span class="o">.</span><span class="py">groupId</span><span class="o">)</span>
       <span class="o">.</span><span class="py">leftJoin</span><span class="o">(</span><span class="nc">Event</span> <span class="n">as</span> <span class="n">e</span><span class="o">).</span><span class="py">on</span><span class="o">(</span><span class="nv">g</span><span class="o">.</span><span class="py">id</span><span class="o">,</span> <span class="nv">e</span><span class="o">.</span><span class="py">groupId</span><span class="o">)</span>
     <span class="o">}</span>
-    <span class="o">.</span><span class="py">one</span><span class="o">(</span><span class="nc">Group</span><span class="o">(</span><span class="n">m</span><span class="o">))</span>
+    <span class="o">.</span><span class="py">one</span><span class="o">(</span><span class="nc">Group</span><span class="o">(</span><span class="n">g</span><span class="o">))</span>
     <span class="o">.</span><span class="py">toManies</span><span class="o">(</span>
        <span class="n">rs</span> <span class="k">=&gt;</span> <span class="nv">Member</span><span class="o">.</span><span class="py">opt</span><span class="o">(</span><span class="n">g</span><span class="o">)(</span><span class="n">rs</span><span class="o">),</span>
        <span class="n">rs</span> <span class="k">=&gt;</span> <span class="nv">Event</span><span class="o">.</span><span class="py">opt</span><span class="o">(</span><span class="n">e</span><span class="o">)(</span><span class="n">rs</span><span class="o">))</span>
      <span class="o">.</span><span class="py">map</span> <span class="o">{</span> <span class="o">(</span><span class="n">group</span><span class="o">,</span> <span class="n">members</span><span class="o">,</span> <span class="n">events</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="nv">group</span><span class="o">.</span><span class="py">copy</span><span class="o">(</span><span class="n">members</span> <span class="k">=</span> <span class="n">members</span><span class="o">,</span> <span class="n">events</span> <span class="k">=</span> <span class="n">events</span><span class="o">)</span> <span class="o">}</span>
-     <span class="o">.</span><span class="py">list</span>
+     <span class="o">.</span><span class="py">list</span><span class="o">()</span>
      <span class="o">.</span><span class="py">apply</span><span class="o">()</span>
 </code></pre></div>
 <hr/>
