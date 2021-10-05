@@ -66,22 +66,6 @@ We use ScalikeJDBC because it has great features such as typesafe query DSL and 
 
 <hr/>
 
-### <a href="http://www.fringe81.com/" target="_blank">![Fringe81 Co.,Ltd.,](images/fringe81_small.png)</a>&nbsp;&nbsp;Fringe81 Co.,Ltd.
-
-Fringe81 Co, Ltd. is an avid developer of internet advertisement services and has relied on ScalikeJDBC in our recent development projects.
-
-ScalikeJDBC enables intuitive use by way of SQL-like DSL, and allows us to put the DB access library in place swiftly thanks to low learning costs.
-
-Unlike high-functioning, complex ORM libraries ScalikeJDBC is a much simpler library, and it is for ScalikeJDBC's simplicity that we chose this product.
-
-<p class="small text-muted jp-content">
-Fringe81はこれまで多くの広告サービスを開発してきており、近年の開発ではScalikeJDBCを導入。
-SQLライクなDSLの提供などにより直感的に使用することができ、学習コストが低く導入しやすい。
-我々が求めていたのは高機能で複雑なORMライブラリではなく、まさにこのシンプルさでした。
-</p>
-
-<hr/>
-
 ### <a href="http://www.opt.ne.jp/en/" target="_blank">![OPT, Inc.](images/opt_small.gif)</a>&nbsp;&nbsp;OPT, Inc.
 
 Opt, Inc. is an "e-marketing company" in Japan. With our strengths of Marketing and Technology, we support companies which aspire to sustainable growth.
