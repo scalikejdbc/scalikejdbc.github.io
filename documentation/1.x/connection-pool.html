@@ -114,7 +114,7 @@
 
 <p>You can replace ConnectionPool settings safely on runtime. </p>
 
-<p>The old pool won&rsquo;t be abandoned until all the borrwoed connections are closed.</p>
+<p>The old pool won&rsquo;t be abandoned until all the borrowed connections are closed.</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">def</span> <span class="nf">doSomething</span> <span class="k">=</span> <span class="o">{</span>
   <span class="nv">ConnectionPool</span><span class="o">.</span><span class="py">singleton</span><span class="o">(</span><span class="s">"jdbc:h2:mem:db1"</span><span class="o">,</span> <span class="s">"user"</span><span class="o">,</span> <span class="s">"pass"</span><span class="o">)</span>
   <span class="nc">DB</span> <span class="n">localTx</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">s</span> <span class="k">=&gt;</span>
