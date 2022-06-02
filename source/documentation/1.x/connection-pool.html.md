@@ -94,7 +94,7 @@ def finalize() = {
 
 You can replace ConnectionPool settings safely on runtime. 
 
-The old pool won't be abandoned until all the borrwoed connections are closed.
+The old pool won't be abandoned until all the borrowed connections are closed.
 
 ```scala
 def doSomething = {
