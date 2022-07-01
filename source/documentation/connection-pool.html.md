@@ -199,7 +199,7 @@ class C3P0ConnectionPool(
 }
 
 implicit val factory = C3P0ConnectionPoolFactory
-ConnectionPool.add('xxxx, url, user, password)
+ConnectionPool.add("xxxx", url, user, password)
 ```
 
 <hr/>

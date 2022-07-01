@@ -38,7 +38,7 @@ import scalikejdbc._
 
 // after loading JDBC drivers
 ConnectionPool.singleton(url, user, password)
-ConnectionPool.add('foo, url, user, password)
+ConnectionPool.add("foo", url, user, password)
 
 val settings = ConnectionPoolSettings(
   initialSize = 5,
@@ -47,7 +47,7 @@ val settings = ConnectionPoolSettings(
   validationQuery = "select 1 from dual")
 
 // all the connections are released, old connection pool will be abandoned
-ConnectionPool.add('foo, url, user, password, settings)
+ConnectionPool.add("foo", url, user, password, settings)
 ```
 
 When you use external DataSource (e.g. application server's connection pool), use javax.sql.DataSource via JNDI:
@@ -61,7 +61,7 @@ val ds = (new InitialContext)
 
 import scalikejdbc._
 ConnectionPool.singleton(new DataSourceConnectionPool(ds))
-ConnectionPool.add('foo, new DataSourceConnectionPool(ds))
+ConnectionPool.add("foo", new DataSourceConnectionPool(ds))
 ```
 
 `ConnectionPool` and `ConnectionPoolSettings`'s parameters are like this:
