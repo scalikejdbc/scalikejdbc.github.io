@@ -74,7 +74,7 @@ DB localTx { implicit session => findById(id) } // using implicit session
 If you do the same with `NamedDB`, use `NamedAutoSession` as follows.
 
 ```scala
-def findById(id: Long)(implicit session: DBSession = NamedAutoSession('named)) =
+def findById(id: Long)(implicit session: DBSession = NamedAutoSession("named")) =
   sql"select id, name from members where id = ${id}"
 ```
 

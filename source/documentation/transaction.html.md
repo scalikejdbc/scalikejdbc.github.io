@@ -218,7 +218,7 @@ def asyncExecution: DBSession => MyIO[A] = ???
 DB.localTx(asyncExecution)(boundary = myIOTxBoundary)
 
 // named
-NamedDB('named).localTx(asyncExecution)(boundary = myIOTxBoundary)
+NamedDB("named").localTx(asyncExecution)(boundary = myIOTxBoundary)
 
 ```
 
@@ -267,7 +267,7 @@ IO.suspend {
 
 // named
 IO.suspend {
-  NamedDB('named).localTx(ioExecution)(boundary = catsEffectIOTxBoundary)
+  NamedDB("named").localTx(ioExecution)(boundary = catsEffectIOTxBoundary)
 }
 
 ```

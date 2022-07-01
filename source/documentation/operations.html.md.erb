@@ -397,7 +397,7 @@ DB localTx { implicit session =>
 
 DB localTx { implicit session =>
   sql"insert into emp (id, name) values ({id}, {name})"
-    .batchByName(Seq(Seq('id -> 1, 'name -> "Alice"), Seq('id -> 2, 'name -> "Bob")):_*)
+    .batchByName(Seq(Seq("id" -> 1, "name" -> "Alice"), Seq("id" -> 2, "name" -> "Bob")):_*)
     .apply()
 }
 

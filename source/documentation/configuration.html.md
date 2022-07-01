@@ -159,7 +159,7 @@ import scalikejdbc.config._
 // DBs.setup/DBs.setupAll loads specified JDBC driver classes.
 DBs.setupAll()
 // DBs.setup()
-// DBs.setup('legacy)
+// DBs.setup("legacy")
 // // Unlike DBs.setupAll(), DBs.setup() doesn't load configurations under global settings automatically
 // DBs.loadGlobalSettings()
 
@@ -168,7 +168,7 @@ val memberIds = DB readOnly { implicit session =>
   sql"select id from members".map(_.long(1)).list.apply()
 }
 // loaded from "db.legacy.*"
-val legacyMemberIds = NamedDB('legacy) readOnly { implicit session =>
+val legacyMemberIds = NamedDB("legacy") readOnly { implicit session =>
   sql"select id from members".map(_.long(1)).list.apply()
 }
 
@@ -204,7 +204,7 @@ Use `DBsWithEnv` instead of `DBs`.
 
 ```scala
 DBsWithEnv("development").setupAll()
-DBsWithEnv("prod").setup('sandbox)
+DBsWithEnv("prod").setup("sandbox")
 ```
 
 <hr/>

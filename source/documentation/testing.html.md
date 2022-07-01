@@ -25,7 +25,7 @@ import org.scalatest.fixture.FlatSpec
 
 class AutoRollbackSpec extends FlatSpec with AutoRollback {
 
-  // override def db = NamedDB('anotherdb).toDB
+  // override def db = NamedDB("anotherdb").toDB
 
   override def fixture(implicit session: DBSession) {
     sql"insert into members values (1, ${"Alice"}, current_timestamp)".update.apply()
@@ -75,7 +75,7 @@ object MemberSpec extends Specification {
 }
 
 trait AutoRollbackWithFixture extends AutoRollback {
-  // override def db = NamedDB('db2).toDB
+  // override def db = NamedDB("db2").toDB
   override def fixture(implicit session: DBSession) {
     sql"insert into members values (1, ${"Alice"}, current_timestamp)".update.apply()
     sql"insert into members values (2, ${"Bob"}, current_timestamp)".update.apply()
@@ -101,7 +101,7 @@ class MemberSpec extends Specification { def is =
 
   case class autoRollback() extends AutoRollback {
 
-    // override def db = NamedDB('db2).toDB
+    // override def db = NamedDB("db2").toDB
     // override def fixture(implicit session: DBSession) { ... }
 
     def create = this {

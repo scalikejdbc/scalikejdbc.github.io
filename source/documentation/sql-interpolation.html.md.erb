@@ -20,7 +20,7 @@ val member = sql"select id, name from members where id = ${id}"
     .map(rs => Member(rs)).single.apply()
 
 // above code is same as follows:
-// SQL("select id, name from members where id = {id}").bindByName('id -> id)
+// SQL("select id, name from members where id = {id}").bindByName("id" -> id)
 //   .map(rs => Member(rs)).single.apply()
 ```
 
