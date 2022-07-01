@@ -217,7 +217,7 @@ scalikejdbc.ConnectionPoolFactoryRepository.add("name", YourConnectionPoolFactor
 
 http://commons.apache.org/proper/commons-dbcp/
 
-http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22org.apache.commons%22%20AND%20a%3A%22commons-dbcp2%22
+https://search.maven.org/search?q=g:org.apache.commons%20AND%20a:commons-dbcp2
 
 ```scala
 ConnectionPool.singleton(url, user, password, 
