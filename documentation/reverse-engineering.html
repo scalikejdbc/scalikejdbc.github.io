@@ -160,12 +160,12 @@ sbt <span class="s2">"scalikejdbcGen companies Company"</span>
   <span class="o">}</span>
 
   <span class="k">def</span> <span class="nf">batchInsert</span><span class="o">(</span><span class="n">entities</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Member</span><span class="o">])(</span><span class="k">implicit</span> <span class="n">session</span><span class="k">:</span> <span class="kt">DBSession</span> <span class="o">=</span> <span class="n">autoSession</span><span class="o">)</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="o">{</span>
-    <span class="k">val</span> <span class="nv">params</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Seq</span><span class="o">[(</span><span class="kt">Symbol</span>, <span class="kt">Any</span><span class="o">)]]</span> <span class="k">=</span> <span class="nv">entities</span><span class="o">.</span><span class="py">map</span><span class="o">(</span><span class="n">entity</span> <span class="k">=&gt;</span>
+    <span class="k">val</span> <span class="nv">params</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Seq</span><span class="o">[(</span><span class="kt">String</span>, <span class="kt">Any</span><span class="o">)]]</span> <span class="k">=</span> <span class="nv">entities</span><span class="o">.</span><span class="py">map</span><span class="o">(</span><span class="n">entity</span> <span class="k">=&gt;</span>
       <span class="nc">Seq</span><span class="o">(</span>
-        <span class="ss">'name</span> <span class="o">-&gt;</span> <span class="nv">entity</span><span class="o">.</span><span class="py">name</span><span class="o">,</span>
-        <span class="ss">'description</span> <span class="o">-&gt;</span> <span class="nv">entity</span><span class="o">.</span><span class="py">description</span><span class="o">,</span>
-        <span class="ss">'birthday</span> <span class="o">-&gt;</span> <span class="nv">entity</span><span class="o">.</span><span class="py">birthday</span><span class="o">,</span>
-        <span class="ss">'createdAt</span> <span class="o">-&gt;</span> <span class="nv">entity</span><span class="o">.</span><span class="py">createdAt</span><span class="o">))</span>
+        <span class="s">"name"</span> <span class="o">-&gt;</span> <span class="nv">entity</span><span class="o">.</span><span class="py">name</span><span class="o">,</span>
+        <span class="s">"description"</span> <span class="o">-&gt;</span> <span class="nv">entity</span><span class="o">.</span><span class="py">description</span><span class="o">,</span>
+        <span class="s">"birthday"</span> <span class="o">-&gt;</span> <span class="nv">entity</span><span class="o">.</span><span class="py">birthday</span><span class="o">,</span>
+        <span class="s">"createdAt"</span> <span class="o">-&gt;</span> <span class="nv">entity</span><span class="o">.</span><span class="py">createdAt</span><span class="o">))</span>
     <span class="nc">SQL</span><span class="o">(</span><span class="s">"""insert into MEMBER(
       NAME,
       DESCRIPTION,
