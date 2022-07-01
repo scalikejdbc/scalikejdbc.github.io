@@ -62,7 +62,7 @@
 
 <span class="c1">// after loading JDBC drivers</span>
 <span class="nv">ConnectionPool</span><span class="o">.</span><span class="py">singleton</span><span class="o">(</span><span class="n">url</span><span class="o">,</span> <span class="n">user</span><span class="o">,</span> <span class="n">password</span><span class="o">)</span>
-<span class="nv">ConnectionPool</span><span class="o">.</span><span class="py">add</span><span class="o">(</span><span class="ss">'foo</span><span class="o">,</span> <span class="n">url</span><span class="o">,</span> <span class="n">user</span><span class="o">,</span> <span class="n">password</span><span class="o">)</span>
+<span class="nv">ConnectionPool</span><span class="o">.</span><span class="py">add</span><span class="o">(</span><span class="s">"foo"</span><span class="o">,</span> <span class="n">url</span><span class="o">,</span> <span class="n">user</span><span class="o">,</span> <span class="n">password</span><span class="o">)</span>
 
 <span class="k">val</span> <span class="nv">settings</span> <span class="k">=</span> <span class="nc">ConnectionPoolSettings</span><span class="o">(</span>
   <span class="n">initialSize</span> <span class="k">=</span> <span class="mi">5</span><span class="o">,</span>
@@ -71,7 +71,7 @@
   <span class="n">validationQuery</span> <span class="k">=</span> <span class="s">"select 1 from dual"</span><span class="o">)</span>
 
 <span class="c1">// all the connections are released, old connection pool will be abandoned</span>
-<span class="nv">ConnectionPool</span><span class="o">.</span><span class="py">add</span><span class="o">(</span><span class="ss">'foo</span><span class="o">,</span> <span class="n">url</span><span class="o">,</span> <span class="n">user</span><span class="o">,</span> <span class="n">password</span><span class="o">,</span> <span class="n">settings</span><span class="o">)</span>
+<span class="nv">ConnectionPool</span><span class="o">.</span><span class="py">add</span><span class="o">(</span><span class="s">"foo"</span><span class="o">,</span> <span class="n">url</span><span class="o">,</span> <span class="n">user</span><span class="o">,</span> <span class="n">password</span><span class="o">,</span> <span class="n">settings</span><span class="o">)</span>
 </code></pre></div>
 <p>When you use external DataSource (e.g. application server&rsquo;s connection pool), use javax.sql.DataSource via JNDI:</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">import</span> <span class="nn">javax.naming._</span>
@@ -82,7 +82,7 @@
 
 <span class="k">import</span> <span class="nn">scalikejdbc._</span>
 <span class="nv">ConnectionPool</span><span class="o">.</span><span class="py">singleton</span><span class="o">(</span><span class="k">new</span> <span class="nc">DataSourceConnectionPool</span><span class="o">(</span><span class="n">ds</span><span class="o">))</span>
-<span class="nv">ConnectionPool</span><span class="o">.</span><span class="py">add</span><span class="o">(</span><span class="ss">'foo</span><span class="o">,</span> <span class="k">new</span> <span class="nc">DataSourceConnectionPool</span><span class="o">(</span><span class="n">ds</span><span class="o">))</span>
+<span class="nv">ConnectionPool</span><span class="o">.</span><span class="py">add</span><span class="o">(</span><span class="s">"foo"</span><span class="o">,</span> <span class="k">new</span> <span class="nc">DataSourceConnectionPool</span><span class="o">(</span><span class="n">ds</span><span class="o">))</span>
 </code></pre></div>
 <p><code>ConnectionPool</code> and <code>ConnectionPoolSettings</code>&lsquo;s parameters are like this:</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">abstract</span> <span class="k">class</span> <span class="nc">ConnectionPool</span><span class="o">(</span>
