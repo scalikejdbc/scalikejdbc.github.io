@@ -108,7 +108,7 @@ FYI: [Source Code](https://github.com/scalikejdbc/scalikejdbc/blob/1.7.x/scalike
 
 If you use `scalikejdbc-config` which is an easy-to-use configuration loader for ScalikeJDBC which reads typesafe config, configuration is much simple.
 
-[Typesafe Config](https://github.com/typesafehub/config)
+[Typesafe Config](https://github.com/lightbend/config)
 
 If you'd like to setup `scalikejdbc-config`, see setup page.
 
