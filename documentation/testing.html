@@ -54,7 +54,7 @@
 
 <span class="k">class</span> <span class="nc">AutoRollbackSpec</span> <span class="k">extends</span> <span class="nc">FlatSpec</span> <span class="k">with</span> <span class="nc">AutoRollback</span> <span class="o">{</span>
 
-  <span class="c1">// override def db = NamedDB('anotherdb).toDB</span>
+  <span class="c1">// override def db = NamedDB("anotherdb").toDB</span>
 
   <span class="k">override</span> <span class="k">def</span> <span class="nf">fixture</span><span class="o">(</span><span class="k">implicit</span> <span class="n">session</span><span class="k">:</span> <span class="kt">DBSession</span><span class="o">)</span> <span class="o">{</span>
     <span class="n">sql</span><span class="s">"insert into members values (1, ${"</span><span class="nc">Alice</span><span class="s">"}, current_timestamp)"</span><span class="o">.</span><span class="py">update</span><span class="o">.</span><span class="py">apply</span><span class="o">()</span>
@@ -105,7 +105,7 @@
 <span class="o">}</span>
 
 <span class="k">trait</span> <span class="nc">AutoRollbackWithFixture</span> <span class="k">extends</span> <span class="nc">AutoRollback</span> <span class="o">{</span>
-  <span class="c1">// override def db = NamedDB('db2).toDB</span>
+  <span class="c1">// override def db = NamedDB("db2").toDB</span>
   <span class="k">override</span> <span class="k">def</span> <span class="nf">fixture</span><span class="o">(</span><span class="k">implicit</span> <span class="n">session</span><span class="k">:</span> <span class="kt">DBSession</span><span class="o">)</span> <span class="o">{</span>
     <span class="n">sql</span><span class="s">"insert into members values (1, ${"</span><span class="nc">Alice</span><span class="s">"}, current_timestamp)"</span><span class="o">.</span><span class="py">update</span><span class="o">.</span><span class="py">apply</span><span class="o">()</span>
     <span class="n">sql</span><span class="s">"insert into members values (2, ${"</span><span class="nc">Bob</span><span class="s">"}, current_timestamp)"</span><span class="o">.</span><span class="py">update</span><span class="o">.</span><span class="py">apply</span><span class="o">()</span>
@@ -130,7 +130,7 @@
 
   <span class="k">case</span> <span class="k">class</span> <span class="nc">autoRollback</span><span class="o">()</span> <span class="k">extends</span> <span class="nc">AutoRollback</span> <span class="o">{</span>
 
-    <span class="c1">// override def db = NamedDB('db2).toDB</span>
+    <span class="c1">// override def db = NamedDB("db2").toDB</span>
     <span class="c1">// override def fixture(implicit session: DBSession) { ... }</span>
 
     <span class="k">def</span> <span class="nf">create</span> <span class="k">=</span> <span class="k">this</span> <span class="o">{</span>

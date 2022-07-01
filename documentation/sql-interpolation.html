@@ -47,7 +47,7 @@
     <span class="o">.</span><span class="py">map</span><span class="o">(</span><span class="n">rs</span> <span class="k">=&gt;</span> <span class="nc">Member</span><span class="o">(</span><span class="n">rs</span><span class="o">)).</span><span class="py">single</span><span class="o">.</span><span class="py">apply</span><span class="o">()</span>
 
 <span class="c1">// above code is same as follows:</span>
-<span class="c1">// SQL("select id, name from members where id = {id}").bindByName('id -&gt; id)</span>
+<span class="c1">// SQL("select id, name from members where id = {id}").bindByName("id" -&gt; id)</span>
 <span class="c1">//   .map(rs =&gt; Member(rs)).single.apply()</span>
 </code></pre></div>
 <p>Don&rsquo;t worry, this code is safely protected from SQL injection attacks. <code>${id}</code> will be a place holder.</p>

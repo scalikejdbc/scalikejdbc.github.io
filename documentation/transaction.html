@@ -223,7 +223,7 @@ You must use it with a <code>TxBoundary</code> instance for MyIO[A]</p>
 <span class="nv">DB</span><span class="o">.</span><span class="py">localTx</span><span class="o">(</span><span class="n">asyncExecution</span><span class="o">)(</span><span class="n">boundary</span> <span class="k">=</span> <span class="n">myIOTxBoundary</span><span class="o">)</span>
 
 <span class="c1">// named</span>
-<span class="nc">NamedDB</span><span class="o">(</span><span class="ss">'named</span><span class="o">).</span><span class="py">localTx</span><span class="o">(</span><span class="n">asyncExecution</span><span class="o">)(</span><span class="n">boundary</span> <span class="k">=</span> <span class="n">myIOTxBoundary</span><span class="o">)</span>
+<span class="nc">NamedDB</span><span class="o">(</span><span class="s">"named"</span><span class="o">).</span><span class="py">localTx</span><span class="o">(</span><span class="n">asyncExecution</span><span class="o">)(</span><span class="n">boundary</span> <span class="k">=</span> <span class="n">myIOTxBoundary</span><span class="o">)</span>
 
 </code></pre></div>
 <hr/>
@@ -266,7 +266,7 @@ You must use it with a <code>TxBoundary</code> instance for MyIO[A]</p>
 
 <span class="c1">// named</span>
 <span class="nv">IO</span><span class="o">.</span><span class="py">suspend</span> <span class="o">{</span>
-  <span class="nc">NamedDB</span><span class="o">(</span><span class="ss">'named</span><span class="o">).</span><span class="py">localTx</span><span class="o">(</span><span class="n">ioExecution</span><span class="o">)(</span><span class="n">boundary</span> <span class="k">=</span> <span class="n">catsEffectIOTxBoundary</span><span class="o">)</span>
+  <span class="nc">NamedDB</span><span class="o">(</span><span class="s">"named"</span><span class="o">).</span><span class="py">localTx</span><span class="o">(</span><span class="n">ioExecution</span><span class="o">)(</span><span class="n">boundary</span> <span class="k">=</span> <span class="n">catsEffectIOTxBoundary</span><span class="o">)</span>
 <span class="o">}</span>
 
 </code></pre></div>

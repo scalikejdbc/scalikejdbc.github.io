@@ -50,7 +50,7 @@
 <span class="c1">// default</span>
 <span class="k">val</span> <span class="nv">conn</span><span class="k">:</span> <span class="kt">java.sql.Connection</span> <span class="o">=</span> <span class="nv">ConnectionPool</span><span class="o">.</span><span class="py">borrow</span><span class="o">()</span>
 <span class="c1">// named</span>
-<span class="k">val</span> <span class="nv">conn</span><span class="k">:</span> <span class="kt">java.sql.Connection</span> <span class="o">=</span> <span class="nc">ConnectionPool</span><span class="o">(</span><span class="ss">'named</span><span class="o">).</span><span class="py">borrow</span><span class="o">()</span>
+<span class="k">val</span> <span class="nv">conn</span><span class="k">:</span> <span class="kt">java.sql.Connection</span> <span class="o">=</span> <span class="nc">ConnectionPool</span><span class="o">(</span><span class="s">"named"</span><span class="o">).</span><span class="py">borrow</span><span class="o">()</span>
 </code></pre></div>
 <p>Be careful. The connection object should be released by yourself.</p>
 
@@ -79,7 +79,7 @@
   <span class="c1">// ...</span>
 <span class="o">}</span>
 <span class="c1">// named</span>
-<span class="nc">NamedDB</span><span class="o">(</span><span class="ss">'named</span><span class="o">)</span> <span class="n">readOnly</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span>
+<span class="nc">NamedDB</span><span class="o">(</span><span class="s">"named"</span><span class="o">)</span> <span class="n">readOnly</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span>
   <span class="c1">// ...</span>
 <span class="o">}</span>
 </code></pre></div>

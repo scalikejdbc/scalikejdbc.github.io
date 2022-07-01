@@ -168,7 +168,7 @@ db.default.url="jdbc:postgresql://localhost:5432/scalikejdbc"
 <span class="c1">// DBs.setup/DBs.setupAll loads specified JDBC driver classes.</span>
 <span class="nv">DBs</span><span class="o">.</span><span class="py">setupAll</span><span class="o">()</span>
 <span class="c1">// DBs.setup()</span>
-<span class="c1">// DBs.setup('legacy)</span>
+<span class="c1">// DBs.setup("legacy")</span>
 <span class="c1">// // Unlike DBs.setupAll(), DBs.setup() doesn't load configurations under global settings automatically</span>
 <span class="c1">// DBs.loadGlobalSettings()</span>
 
@@ -177,7 +177,7 @@ db.default.url="jdbc:postgresql://localhost:5432/scalikejdbc"
   <span class="n">sql</span><span class="s">"select id from members"</span><span class="o">.</span><span class="py">map</span><span class="o">(</span><span class="nv">_</span><span class="o">.</span><span class="py">long</span><span class="o">(</span><span class="mi">1</span><span class="o">)).</span><span class="py">list</span><span class="o">.</span><span class="py">apply</span><span class="o">()</span>
 <span class="o">}</span>
 <span class="c1">// loaded from "db.legacy.*"</span>
-<span class="k">val</span> <span class="nv">legacyMemberIds</span> <span class="k">=</span> <span class="nc">NamedDB</span><span class="o">(</span><span class="ss">'legacy</span><span class="o">)</span> <span class="n">readOnly</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span>
+<span class="k">val</span> <span class="nv">legacyMemberIds</span> <span class="k">=</span> <span class="nc">NamedDB</span><span class="o">(</span><span class="s">"legacy"</span><span class="o">)</span> <span class="n">readOnly</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span>
   <span class="n">sql</span><span class="s">"select id from members"</span><span class="o">.</span><span class="py">map</span><span class="o">(</span><span class="nv">_</span><span class="o">.</span><span class="py">long</span><span class="o">(</span><span class="mi">1</span><span class="o">)).</span><span class="py">list</span><span class="o">.</span><span class="py">apply</span><span class="o">()</span>
 <span class="o">}</span>
 
@@ -209,7 +209,7 @@ prod {
 </code></pre></div>
 <p>Use <code>DBsWithEnv</code> instead of <code>DBs</code>.</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="nc">DBsWithEnv</span><span class="o">(</span><span class="s">"development"</span><span class="o">).</span><span class="py">setupAll</span><span class="o">()</span>
-<span class="nc">DBsWithEnv</span><span class="o">(</span><span class="s">"prod"</span><span class="o">).</span><span class="py">setup</span><span class="o">(</span><span class="ss">'sandbox</span><span class="o">)</span>
+<span class="nc">DBsWithEnv</span><span class="o">(</span><span class="s">"prod"</span><span class="o">).</span><span class="py">setup</span><span class="o">(</span><span class="s">"sandbox"</span><span class="o">)</span>
 </code></pre></div>
 <hr/>
 

@@ -80,7 +80,7 @@
 <span class="nc">DB</span> <span class="n">localTx</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span> <span class="nf">findById</span><span class="o">(</span><span class="n">id</span><span class="o">)</span> <span class="o">}</span> <span class="c1">// using implicit session</span>
 </code></pre></div>
 <p>If you do the same with <code>NamedDB</code>, use <code>NamedAutoSession</code> as follows.</p>
-<div class="highlight"><pre class="highlight scala"><code><span class="k">def</span> <span class="nf">findById</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">)(</span><span class="k">implicit</span> <span class="n">session</span><span class="k">:</span> <span class="kt">DBSession</span> <span class="o">=</span> <span class="nc">NamedAutoSession</span><span class="o">(</span><span class="ss">'named</span><span class="o">))</span> <span class="k">=</span>
+<div class="highlight"><pre class="highlight scala"><code><span class="k">def</span> <span class="nf">findById</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">)(</span><span class="k">implicit</span> <span class="n">session</span><span class="k">:</span> <span class="kt">DBSession</span> <span class="o">=</span> <span class="nc">NamedAutoSession</span><span class="o">(</span><span class="s">"named"</span><span class="o">))</span> <span class="k">=</span>
   <span class="n">sql</span><span class="s">"select id, name from members where id = ${id}"</span>
 </code></pre></div>
 <hr/>
