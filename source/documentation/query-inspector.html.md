@@ -22,10 +22,10 @@ GlobalSettings.loggingSQLAndTime = LoggingSQLAndTimeSettings(
   singleLineMode = false,
   printUnprocessedStackTrace = false,
   stackTraceDepth= 15,
-  logLevel = Symbol("debug"),
+  logLevel = "debug",
   warningEnabled = false,
   warningThresholdMillis = 3000L,
-  warningLogLevel = Symbol("warn")
+  warningLogLevel = "warn"
 )
 ```
 
@@ -71,7 +71,7 @@ If you don't need stack trace logging and just print SQL in single line, use `si
 GlobalSettings.loggingSQLAndTime = LoggingSQLAndTimeSettings(
   enabled = true,
   singleLineMode = true,
-  logLevel = Symbol("debug")
+  logLevel = "debug"
 )
 ```
 

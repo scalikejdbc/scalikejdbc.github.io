@@ -138,12 +138,12 @@ object Member extends SQLSyntaxSupport[Member] {
   }
 
   def batchInsert(entities: Seq[Member])(implicit session: DBSession = autoSession): List[Int] = {
-    val params: Seq[Seq[(Symbol, Any)]] = entities.map(entity =>
+    val params: Seq[Seq[(String, Any)]] = entities.map(entity =>
       Seq(
-        'name -> entity.name,
-        'description -> entity.description,
-        'birthday -> entity.birthday,
-        'createdAt -> entity.createdAt))
+        "name" -> entity.name,
+        "description" -> entity.description,
+        "birthday" -> entity.birthday,
+        "createdAt" -> entity.createdAt))
     SQL("""insert into MEMBER(
       NAME,
       DESCRIPTION,
