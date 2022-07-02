@@ -82,7 +82,7 @@ val result: Try[Result] = DB localTx { implicit session =>
   Try { doSomeStaff() }
 }
 // localTx rolls back when `result` is `Failure`
-// http://scala-lang.org/api/current/#scala.util.Try
+// https://www.scala-lang.org/api/current/scala/util/Try.html
 ```
 
 Built-in type class instances are `Try`, `Either` and `Future`. You can use them by `import scalikejdbc.TxBoundary,***._`.
