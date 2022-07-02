@@ -90,7 +90,7 @@
 <hr/>
 
 <p>By default, <code>scalikejdbc.DB</code> or <code>scalikejdbc.NamedDB</code> instance always closes its connection (= releases and returns it to connection pools).</p>
-<div class="highlight"><pre class="highlight scala"><code><span class="nf">using</span><span class="o">(</span><span class="nv">connectionPool</span><span class="o">.</span><span class="py">borrow</span><span class="o">())</span> <span class="o">{</span> <span class="n">conn</span><span class="k">:</span> <span class="kt">java.sql.Connection</span> <span class="o">=&gt;</span> 
+<div class="highlight"><pre class="highlight scala"><code><span class="nf">using</span><span class="o">(</span><span class="nv">connectionPool</span><span class="o">.</span><span class="py">borrow</span><span class="o">())</span> <span class="o">{</span> <span class="o">(</span><span class="n">conn</span><span class="k">:</span> <span class="kt">java.sql.Connection</span><span class="o">)</span> <span class="k">=&gt;</span> 
   <span class="k">val</span> <span class="nv">db</span><span class="k">:</span> <span class="kt">DB</span> <span class="o">=</span> <span class="nc">DB</span><span class="o">(</span><span class="n">conn</span><span class="o">)</span>
 
   <span class="nv">db</span><span class="o">.</span><span class="py">localTx</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span>
@@ -105,7 +105,7 @@
 <span class="o">}</span>
 </code></pre></div>
 <p>When you prefer reusing the same Connection without releasing and returning to connection pools, use <code>DB#autoClose(Boolean)</code>.</p>
-<div class="highlight"><pre class="highlight scala"><code><span class="nf">using</span><span class="o">(</span><span class="nv">connectionPool</span><span class="o">.</span><span class="py">borrow</span><span class="o">())</span> <span class="o">{</span> <span class="n">conn</span><span class="k">:</span> <span class="kt">java.sql.Connection</span> <span class="o">=&gt;</span> 
+<div class="highlight"><pre class="highlight scala"><code><span class="nf">using</span><span class="o">(</span><span class="nv">connectionPool</span><span class="o">.</span><span class="py">borrow</span><span class="o">())</span> <span class="o">{</span> <span class="o">(</span><span class="n">conn</span><span class="k">:</span> <span class="kt">java.sql.Connection</span><span class="o">)</span> <span class="k">=&gt;</span> 
   <span class="k">val</span> <span class="nv">db</span><span class="k">:</span> <span class="kt">DB</span> <span class="o">=</span> <span class="nc">DB</span><span class="o">(</span><span class="n">conn</span><span class="o">)</span>
 
   <span class="c1">// set as auto-close disabled</span>
@@ -255,7 +255,7 @@
 
 <h4 id="hikaricp">HikariCP</h4>
 
-<p><a href="http://brettwooldridge.github.io/HikariCP/">http://brettwooldridge.github.io/HikariCP/</a></p>
+<p><a href="https://github.com/brettwooldridge/HikariCP">https://github.com/brettwooldridge/HikariCP</a></p>
 
 <p>HikariCP expects dataSourceClassName. So we recommend using DataSourceConnectionPool.</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">val</span> <span class="nv">dataSource</span><span class="k">:</span> <span class="kt">DataSource</span> <span class="o">=</span> <span class="o">{</span>
@@ -269,7 +269,7 @@
 <span class="nv">ConnectionPool</span><span class="o">.</span><span class="py">singleton</span><span class="o">(</span><span class="k">new</span> <span class="nc">DataSourceConnectionPool</span><span class="o">(</span><span class="n">dataSource</span><span class="o">))</span>
 </code></pre></div>
 <p><code>HikariCP</code> dependency should be added by yourself.</p>
-<div class="highlight"><pre class="highlight scala"><code><span class="n">libraryDependencies</span> <span class="o">+=</span> <span class="s">"com.zaxxer"</span> <span class="o">%</span> <span class="s">"HikariCP"</span> <span class="o">%</span> <span class="s">"1.3.+"</span>
+<div class="highlight"><pre class="highlight scala"><code><span class="n">libraryDependencies</span> <span class="o">+=</span> <span class="s">"com.zaxxer"</span> <span class="o">%</span> <span class="s">"HikariCP"</span> <span class="o">%</span> <span class="s">"3.+"</span>
 </code></pre></div>
           <hr/>
           <div class="alert alert-warning small">
