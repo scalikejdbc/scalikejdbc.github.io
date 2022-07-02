@@ -75,7 +75,7 @@ NamedDB("named") readOnly { implicit session =>
 By default, `scalikejdbc.DB` or `scalikejdbc.NamedDB` instance always closes its connection (= releases and returns it to connection pools).
 
 ```scala
-using(connectionPool.borrow()) { conn: java.sql.Connection => 
+using(connectionPool.borrow()) { (conn: java.sql.Connection) => 
   val db: DB = DB(conn)
 
   db.localTx { implicit session =>
@@ -93,7 +93,7 @@ using(connectionPool.borrow()) { conn: java.sql.Connection =>
 When you prefer reusing the same Connection without releasing and returning to connection pools, use `DB#autoClose(Boolean)`.
 
 ```scala
-using(connectionPool.borrow()) { conn: java.sql.Connection => 
+using(connectionPool.borrow()) { (conn: java.sql.Connection) => 
   val db: DB = DB(conn)
 
   // set as auto-close disabled
@@ -259,7 +259,7 @@ libraryDependencies += "com.jolbox" % "bonecp" % "0.8.0.RELEASE"
 <hr/>
 #### HikariCP
 
-http://brettwooldridge.github.io/HikariCP/
+https://github.com/brettwooldridge/HikariCP
 
 HikariCP expects dataSourceClassName. So we recommend using DataSourceConnectionPool.
 
@@ -278,6 +278,6 @@ ConnectionPool.singleton(new DataSourceConnectionPool(dataSource))
 `HikariCP` dependency should be added by yourself.
 
 ```scala
-libraryDependencies += "com.zaxxer" % "HikariCP" % "1.3.+"
+libraryDependencies += "com.zaxxer" % "HikariCP" % "3.+"
 ```
 
