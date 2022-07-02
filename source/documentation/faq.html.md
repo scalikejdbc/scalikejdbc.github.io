@@ -66,9 +66,9 @@ ScalikeJDBC-Async is still in the alpha stage. If you don't have the motivation 
 
 ScalikeJDBC's concept is a tidy wrapper of JDBC drivers, so it handles very lower layer than common ORMs. If you're looking for an ORM which supports associations or other rich features, take a look at Skinny ORM.
 
-Skinny ORM is the default DB access library of [Skinny Framework](http://skinny-framework.org/). Skinny ORM is built upon ScalikeJDBC. In most cases, it will make things easier.
+Skinny ORM is the default DB access library of [Skinny Framework](https://skinny-framework.github.io/). Skinny ORM is built upon ScalikeJDBC. In most cases, it will make things easier.
 
-http://skinny-framework.org/documentation/orm.html
+https://skinny-framework.github.io/documentation/orm.html
 
 <hr/>
 ### Is it possible to integrate with Play Framework?
