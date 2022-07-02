@@ -215,7 +215,7 @@ scalikejdbc.ConnectionPoolFactoryRepository.add("name", YourConnectionPoolFactor
 <hr/>
 #### Default: commons-dbcp2
 
-http://commons.apache.org/proper/commons-dbcp/
+https://commons.apache.org/proper/commons-dbcp/
 
 https://search.maven.org/search?q=g:org.apache.commons%20AND%20a:commons-dbcp2
 
