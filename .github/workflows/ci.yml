@@ -9,8 +9,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-    - uses: actions/checkout@v3
-    - uses: ruby/setup-ruby@v1
+    - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
+    - uses: ruby/setup-ruby@ee26e27437bde475b19a6bf8cb73c9fa658876a2 # v1.134.0
       with:
         bundler-cache: true
         ruby-version: "2.7.2"
@@ -18,7 +18,7 @@ jobs:
     - run: bundle install
     - run: bundle exec middleman build
     - if: ${{ github.repository_owner == 'scalikejdbc' && github.ref == 'refs/heads/develop' && github.event_name == 'push' }}
-      uses: JamesIves/github-pages-deploy-action@v4.4.1
+      uses: JamesIves/github-pages-deploy-action@ba1486788b0490a235422264426c45848eac35c6 # v4.4.1
       with:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         BRANCH: master
