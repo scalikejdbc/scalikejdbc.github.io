@@ -77,7 +77,7 @@ set :v1_version,        @v1_version
 set :v18_version,       @v18_version
 set :v1_latest_version, @v1_version
 set :h2_version,        "1.4.200"
-set :logback_version,   "1.2.3"
+set :logback_version,   "1.2.12"
 
 # Build-specific configuration
 configure :build do
