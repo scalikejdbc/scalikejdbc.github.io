@@ -41,7 +41,7 @@ And also it is helpful to tuning of DB performance, because through ScalikeJDBC 
 </p>
 
 <hr/>
-### <a href="http://zencom.ru/" target="_blank">![Zencom Ltd.](images/zencom_small.png)</a>&nbsp;&nbsp;Zencom Ltd.
+### <a href="https://zencom.ru/" target="_blank">![Zencom Ltd.](images/zencom_small.png)</a>&nbsp;&nbsp;Zencom Ltd.
 
 Zencom Ltd. is a local Internet Service Provider in Moscow Region, Russia.
 
@@ -49,7 +49,7 @@ We use ScalikeJDBC in several internal projects. It saved a lot of our time and 
 
 <hr/>
 
-### <a href="http://corporate.m3.com/en/" target="_blank">![M3, Inc.](images/m3_small.png)</a>&nbsp;&nbsp;M3, Inc.
+### <a href="https://corporate.m3.com/en/" target="_blank">![M3, Inc.](images/m3_small.png)</a>&nbsp;&nbsp;M3, Inc.
 
 M3, Inc. is a Tokyo-based, global company whose mission is to help more people around the world live healthier, happier lives by reducing the cost of health care in Japan and abroad using technology and the Internet.
 
@@ -83,7 +83,7 @@ We use ScalikeJDBC in various products. ScalikeJDBC is popular in our Scala proj
 ScalikeJDBC is rock, It make sql easy to use and type safe. Just sql and we done. It's amazing.
 
 <hr/>
-### <a href="http://www.t2v.jp/" target="_blank">![Tech to Value](images/tech_to_value_small.png)</a> Tech To Value Co., Ltd.
+### <a href="https://www.t2v.jp/" target="_blank">![Tech to Value](images/tech_to_value_small.png)</a> Tech To Value Co., Ltd.
 
 Tech To Value builds web services and provides consultation services. ScalikeJDBC's DB access layer is not only easy-to-use but secure.
 
