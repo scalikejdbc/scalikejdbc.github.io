@@ -66,7 +66,7 @@ We use ScalikeJDBC because it has great features such as typesafe query DSL and 
 
 <hr/>
 
-### <a href="http://www.opt.ne.jp/en/" target="_blank">![OPT, Inc.](images/opt_small.gif)</a>&nbsp;&nbsp;OPT, Inc.
+### <a href="https://www.opt.ne.jp/en/" target="_blank">![OPT, Inc.](images/opt_small.gif)</a>&nbsp;&nbsp;OPT, Inc.
 
 Opt, Inc. is an "e-marketing company" in Japan. With our strengths of Marketing and Technology, we support companies which aspire to sustainable growth.
 
