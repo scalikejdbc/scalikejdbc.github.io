@@ -1,6 +1,6 @@
 ## ScalikeJDBC website
 
-http://scalikejdbc.org/
+https://scalikejdbc.org/
 
 ### How to contribute scalikejdbc.org?
 
