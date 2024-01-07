@@ -17,7 +17,7 @@ On the other hand, ScalikeJDBC simply uses JDBC drivers internally, so it basica
 ### How to use other connection pool?
 <hr/>
 
-ScalikeJDBC's default connection pool implementation is [Apache Commons DBCP](http://commons.apache.org/proper/commons-dbcp/).
+ScalikeJDBC's default connection pool implementation is [Apache Commons DBCP](https://commons.apache.org/proper/commons-dbcp/).
 
 You can easily use other implementation. See in detail:
 
