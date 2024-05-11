@@ -168,6 +168,8 @@
 
 <p><a href="https://github.com/scalikejdbc/scalikejdbc/tree/master/scalikejdbc-orm/src/test/scala/basic_test/accounts">This test code</a> provides invaluable insights for learning. If you&rsquo;re unable to find specific examples here, referring to the code will be greatly helpful.</p>
 
+<hr/>
+
 <h4 id="hasone">hasOne</h4>
 
 <p>The <code>hasOne</code> relationship signifies that table A is referenced from table B via table A&rsquo;s primary key. Your code aims to include table B&rsquo;s data within the entity of table A. In the following example, the <code>Member</code> entity (representing table A) includes a <code>name</code> property, which can be resolved using the <code>member_id</code> column within the <code>Name</code> entity (representing table B).</p>
@@ -217,6 +219,8 @@
 </code></pre></div>
 <p>This <code>#byDefault</code> method is available for all other association APIs.</p>
 
+<hr/>
+
 <h4 id="belongsto">belongsTo</h4>
 
 <p>The <code>belongsTo</code> relationship indicates that table B is referenced from table A via table B&rsquo;s primary key. Your code aims to incorporate table B&rsquo;s data into the entity of table A. In the following example, the <code>Member</code> entity (representing table A) includes a <code>company</code> property, which can be resolved using the <code>company_id</code> column within the entity. From another perspective, the <code>Company</code> entity (representing table B) does not contain any information about <code>Member</code> (table A).</p>
@@ -255,6 +259,8 @@
   <span class="nv">Member</span><span class="o">.</span><span class="py">joins</span><span class="o">(</span><span class="nv">Member</span><span class="o">.</span><span class="py">company</span><span class="o">).</span><span class="py">where</span><span class="o">(</span><span class="nv">sqls</span><span class="o">.</span><span class="py">eq</span><span class="o">(</span><span class="nv">m</span><span class="o">.</span><span class="py">name</span><span class="o">,</span> <span class="s">"Kaz"</span><span class="o">)).</span><span class="py">apply</span><span class="o">()</span>
 </code></pre></div>
 <p>As mentioned above, once you add <code>byDefault</code> call to the <code>belongsTo</code> code line, you can omit <code>.joins(Member.company)</code> in the code.</p>
+
+<hr/>
 
 <h4 id="hasmany">hasMany</h4>
 
@@ -337,9 +343,11 @@
 </code></pre></div>
 <p>Here is a code snippet demonstrating how to perform join queries:</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">val</span> <span class="nv">alice</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Member</span><span class="o">]</span> <span class="k">=</span>
-<span class="nv">Member</span><span class="o">.</span><span class="py">joins</span><span class="o">(</span><span class="nv">Member</span><span class="o">.</span><span class="py">skills</span><span class="o">).</span><span class="py">findById</span><span class="o">(</span><span class="mi">123</span><span class="o">)</span>
+  <span class="nv">Member</span><span class="o">.</span><span class="py">joins</span><span class="o">(</span><span class="nv">Member</span><span class="o">.</span><span class="py">skills</span><span class="o">).</span><span class="py">findById</span><span class="o">(</span><span class="mi">123</span><span class="o">)</span>
 </code></pre></div>
 <p>The <code>alice.map(_.skills)</code> should be a list of <code>Skill</code> entities if some skills are saved in the &ldquo;member_skill&rdquo; table.</p>
+
+<hr/>
 
 <h4 id="includes-eager-loading">includes (Eager Loading)</h4>
 
@@ -383,6 +391,8 @@
 
 <p>While it could be feasible with a dynamic programming language like Ruby, achieving the same functionality with a strictly typed language like Scala is quite challenging. At present, we don&rsquo;t have any plans to enhance this feature unless the Scala language provides a revolutionary hack for us to leverage.</p>
 
+<hr/>
+
 <p>For more examples and hands-on learning, please refer to <a href="https://github.com/scalikejdbc/scalikejdbc/tree/master/scalikejdbc-orm/src/test/scala/basic_test/accounts">this example working code</a>. If you have any questions or feature requests, don&rsquo;t hesitate to submit them on GitHub!</p>
 
           <hr/>
@@ -407,6 +417,7 @@
           <p><a href="/documentation/one-to-x.html">One-to-x API</a></p>
           <p><a href="/documentation/auto-macros.html">Auto Macros</a></p>
           <p><a href="/documentation/query-inspector.html">Logging / Query Inspector</a></p>
+          <p><a href="/documentation/orm.html">O/R Mapper</a></p>
           <p><a href="/documentation/reverse-engineering.html">Reverse Engineering</a></p>
           <p><a href="/documentation/testing.html">Testing</a></p>
           <p><a href="/documentation/playframework-support.html">Play Framework</a></p>

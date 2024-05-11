@@ -32,17 +32,19 @@
 
 <hr/>
 
-<h2 id="just-write-sql-and-get-things-done">Just write SQL and get things done</h2>
+<h2 id="just-write-sql-and-get-things-done">Just Write SQL And Get Things Done 💪</h2>
 
 <hr/>
-
-<p><img alt="Logo" src="/images/logo.png" /></p>
 
 <p>This library seamlessly wraps JDBC APIs, offering intuitive and highly flexible functionalities. With QueryDSL, your code becomes inherently type-safe and reusable.</p>
 
 <p>ScalikeJDBC is not just practical; it&rsquo;s production-ready. Utilize this library confidently in your real-world projects.</p>
 
-<h3 id="working-on-the-jdbc-layer">Working on the JDBC layer</h3>
+<p><img alt="Logo" src="/images/logo.png" /></p>
+
+<hr/>
+
+<h3 id="working-on-jdbc-layer">Working on JDBC Layer</h3>
 
 <p>Whether you prefer it or not, JDBC stands as a steadfast standard interface. Given its widespread support across most RDBMS, accessing databases remains consistent. We adhere to this standard rigorously, ensuring each release passes through comprehensive unit tests across various RDBMS platforms:</p>
 
@@ -55,11 +57,13 @@
 
 <p>We firmly believe that ScalikeJDBC seamlessly integrates with a variety of RDBMS, including Oracle, SQL Server, and others. Its robust design ensures compatibility and reliability across different database platforms.</p>
 
-<h3 id="amazon-redshift-facebook-presto-also-supports-jdbc">Amazon Redshift, Facebook Presto also supports JDBC</h3>
+<h4 id="amazon-redshift-facebook-presto-also-supports-jdbc">Amazon Redshift, Facebook Presto also supports JDBC</h4>
 
 <p>If you can access a datastore via the JDBC interface, you can also seamlessly access it through ScalikeJDBC. For instance, <a href="https://docs.aws.amazon.com/redshift/latest/dg/c_redshift-postgres-jdbc.html">Amazon Redshift</a> and <a href="https://prestodb.io/docs/current/installation/jdbc.html">Facebook Presto</a> have added support for the JDBC interface, enabling easy integration with ScalikeJDBC.</p>
 
-<h3 id="few-dependencies">Few dependencies</h3>
+<hr/>
+
+<h3 id="less-dependencies">Less Dependencies</h3>
 
 <p>The core of ScalikeJDBC boasts minimal dependencies, sparing you from the woes of dependency hell. Enjoy a streamlined development experience without unnecessary complications.</p>
 
@@ -71,7 +75,7 @@
 
 <p>Certainly, you have the flexibility to utilize c3p0 or other connection pool libraries instead of commons-dbcp with ScalikeJDBC. While ScalikeJDBC doesn&rsquo;t offer a default ConnectionPool implementation for these alternatives, you have the freedom to integrate them seamlessly according to your project requirements.</p>
 
-<h3 id="non-blocking">Non-blocking?</h3>
+<h3 id="no-non-blocking">No Non-Blocking?</h3>
 
 <p>While JDBC drivers inherently block on socket IO, making them potentially unsuitable for async event-driven architectures, it&rsquo;s worth noting that most real-world applications currently don&rsquo;t require such architecture. JDBC remains a crucial infrastructure for JVM-based apps.</p>
 
@@ -294,6 +298,7 @@ create table members (
           <p><a href="/documentation/one-to-x.html">One-to-x API</a></p>
           <p><a href="/documentation/auto-macros.html">Auto Macros</a></p>
           <p><a href="/documentation/query-inspector.html">Logging / Query Inspector</a></p>
+          <p><a href="/documentation/orm.html">O/R Mapper</a></p>
           <p><a href="/documentation/reverse-engineering.html">Reverse Engineering</a></p>
           <p><a href="/documentation/testing.html">Testing</a></p>
           <p><a href="/documentation/playframework-support.html">Play Framework</a></p>
