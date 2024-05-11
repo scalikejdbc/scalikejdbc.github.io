@@ -37,12 +37,10 @@
 
 <hr/>
 
-<p>Users can write all the mapping operations by using <code>#map</code> or <code>#foldLeft</code>&hellip; with a lot of boilerplate code.</p>
-
-<p>ScalikeJDBC provides you some useful APIs to map results to objects.</p>
+<p>While users can perform mapping operations using methods like <code>#map</code> or <code>#foldLeft</code>, these often require extensive boilerplate code. ScalikeJDBC offers specialized APIs that simplify the mapping of results to objects.</p>
 
 <div class="alert alert-warning">
-Be aware that resolving multiple one-to-many relationships with a single join query may cause performance or data size problems when dealing with large number of rows.
+Be aware that resolving multiple one-to-many relationships with a single join query may lead to performance or data size issues when handling a large number of rows.
 </div>
 
 <hr/>
@@ -51,37 +49,39 @@ Be aware that resolving multiple one-to-many relationships with a single join qu
 
 <hr/>
 
-<p>Simple example:</p>
-<div class="highlight"><pre class="highlight scala"><code><span class="k">case</span> <span class="k">class</span> <span class="nc">Member</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span>
-<span class="k">case</span> <span class="k">class</span> <span class="nc">Group</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">members</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Member</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Nil</span><span class="o">)</span>
+<p>Here is a simple example:
+&ldquo;`scala
+case class Member(id: Long, name: String)
+case class Group(id: Long, name: String, members: Seq[Member] = Nil)</p>
 
-<span class="k">object</span> <span class="nc">Group</span> <span class="k">extends</span> <span class="nc">SQLSyntaxSupport</span><span class="o">[</span><span class="kt">Group</span><span class="o">]</span> <span class="o">{</span>
-  <span class="k">override</span> <span class="k">val</span> <span class="nv">tableName</span> <span class="k">=</span> <span class="s">"groups"</span>
-  <span class="k">def</span> <span class="nf">apply</span><span class="o">(</span><span class="n">g</span><span class="k">:</span> <span class="kt">SyntaxProvider</span><span class="o">[</span><span class="kt">Group</span><span class="o">])(</span><span class="n">rs</span><span class="k">:</span> <span class="kt">WrappedResultSet</span><span class="o">)</span><span class="k">:</span> <span class="kt">Group</span> <span class="o">=</span> <span class="nf">apply</span><span class="o">(</span><span class="nv">g</span><span class="o">.</span><span class="py">resultName</span><span class="o">)(</span><span class="n">rs</span><span class="o">)</span>
-  <span class="k">def</span> <span class="nf">apply</span><span class="o">(</span><span class="n">g</span><span class="k">:</span> <span class="kt">ResultName</span><span class="o">[</span><span class="kt">Group</span><span class="o">])(</span><span class="n">rs</span><span class="k">:</span> <span class="kt">WrappedResultSet</span><span class="o">)</span><span class="k">:</span> <span class="kt">Group</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Group</span><span class="o">(</span><span class="nv">rs</span><span class="o">.</span><span class="py">get</span><span class="o">(</span><span class="nv">g</span><span class="o">.</span><span class="py">id</span><span class="o">),</span> <span class="nv">rs</span><span class="o">.</span><span class="py">get</span><span class="o">(</span><span class="nv">g</span><span class="o">.</span><span class="py">name</span><span class="o">))</span>
-<span class="o">}</span>
+<p>object Group extends SQLSyntaxSupport[Group] {
+  override val tableName = &quot;groups&rdquo;
+  def apply(g: SyntaxProvider[Group])(rs: WrappedResultSet): Group = apply(g.resultName)(rs)
+  def apply(g: ResultName[Group])(rs: WrappedResultSet): Group = new Group(rs.get(g.id), rs.get(g.name))
+}</p>
 
-<span class="k">object</span> <span class="nc">Member</span> <span class="k">extends</span> <span class="nc">SQLSyntaxSupport</span><span class="o">[</span><span class="kt">Member</span><span class="o">]</span> <span class="o">{</span>
-  <span class="k">override</span> <span class="k">val</span> <span class="nv">tableName</span> <span class="k">=</span> <span class="s">"members"</span>
-  <span class="k">def</span> <span class="nf">apply</span><span class="o">(</span><span class="n">m</span><span class="k">:</span> <span class="kt">SyntaxProvider</span><span class="o">[</span><span class="kt">Member</span><span class="o">])(</span><span class="n">rs</span><span class="k">:</span> <span class="kt">WrappedResultSet</span><span class="o">)</span><span class="k">:</span> <span class="kt">Member</span> <span class="o">=</span> <span class="nf">apply</span><span class="o">(</span><span class="nv">m</span><span class="o">.</span><span class="py">resultName</span><span class="o">)(</span><span class="n">rs</span><span class="o">)</span>
-  <span class="k">def</span> <span class="nf">apply</span><span class="o">(</span><span class="n">m</span><span class="k">:</span> <span class="kt">ResultName</span><span class="o">[</span><span class="kt">Member</span><span class="o">])(</span><span class="n">rs</span><span class="k">:</span> <span class="kt">WrappedResultSet</span><span class="o">)</span><span class="k">:</span> <span class="kt">Member</span> <span class="o">=</span>
-    <span class="k">new</span> <span class="nc">Member</span><span class="o">(</span><span class="nv">rs</span><span class="o">.</span><span class="py">get</span><span class="o">(</span><span class="nv">m</span><span class="o">.</span><span class="py">id</span><span class="o">),</span> <span class="nv">rs</span><span class="o">.</span><span class="py">get</span><span class="o">(</span><span class="nv">m</span><span class="o">.</span><span class="py">name</span><span class="o">))</span>
+<p>object Member extends SQLSyntaxSupport[Member] {
+  override val tableName = &ldquo;members&rdquo;
+  def apply(m: SyntaxProvider[Member])(rs: WrappedResultSet): Member = apply(m.resultName)(rs)
+  def apply(m: ResultName[Member])(rs: WrappedResultSet): Member =
+    new Member(rs.get(m.id), rs.get(m.name))</p>
 
-  <span class="k">def</span> <span class="nf">opt</span><span class="o">(</span><span class="n">m</span><span class="k">:</span> <span class="kt">SyntaxProvider</span><span class="o">[</span><span class="kt">Member</span><span class="o">])(</span><span class="n">rs</span><span class="k">:</span> <span class="kt">WrappedResultSet</span><span class="o">)</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Member</span><span class="o">]</span> <span class="k">=</span>
-    <span class="nv">rs</span><span class="o">.</span><span class="py">longOpt</span><span class="o">(</span><span class="nv">m</span><span class="o">.</span><span class="py">resultName</span><span class="o">.</span><span class="py">id</span><span class="o">).</span><span class="py">map</span><span class="o">(</span><span class="k">_</span> <span class="k">=&gt;</span> <span class="nc">Member</span><span class="o">(</span><span class="n">m</span><span class="o">)(</span><span class="n">rs</span><span class="o">))</span>
-<span class="o">}</span>
+<p>def opt(m: SyntaxProvider[Member])(rs: WrappedResultSet): Option[Member] =
+    rs.longOpt(m.resultName.id).map(_ =&gt; Member(m)(rs))
+}</p>
 
-<span class="nf">val</span> <span class="o">(</span><span class="n">g</span><span class="o">,</span> <span class="n">m</span><span class="o">)</span> <span class="k">=</span> <span class="o">(</span><span class="nv">Group</span><span class="o">.</span><span class="py">syntax</span><span class="o">,</span> <span class="nv">Member</span><span class="o">.</span><span class="py">syntax</span><span class="o">)</span>
+<p>val (g, m) = (Group.syntax, Member.syntax)</p>
 
-<span class="k">val</span> <span class="nv">groups</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Group</span><span class="o">]</span> <span class="k">=</span>
-  <span class="n">withSQL</span> <span class="o">{</span> <span class="nv">select</span><span class="o">.</span><span class="py">from</span><span class="o">(</span><span class="nc">Group</span> <span class="n">as</span> <span class="n">g</span><span class="o">).</span><span class="py">leftJoin</span><span class="o">(</span><span class="nc">Member</span> <span class="n">as</span> <span class="n">m</span><span class="o">).</span><span class="py">on</span><span class="o">(</span><span class="nv">g</span><span class="o">.</span><span class="py">id</span><span class="o">,</span> <span class="nv">m</span><span class="o">.</span><span class="py">groupId</span><span class="o">)</span> <span class="o">}</span>
-   <span class="o">.</span><span class="py">one</span><span class="o">(</span><span class="nc">Group</span><span class="o">(</span><span class="n">g</span><span class="o">))</span>
-   <span class="o">.</span><span class="py">toMany</span><span class="o">(</span><span class="nv">Member</span><span class="o">.</span><span class="py">opt</span><span class="o">(</span><span class="n">m</span><span class="o">))</span>
-   <span class="o">.</span><span class="py">map</span> <span class="o">{</span> <span class="o">(</span><span class="n">group</span><span class="o">,</span> <span class="n">members</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="nv">group</span><span class="o">.</span><span class="py">copy</span><span class="o">(</span><span class="n">members</span> <span class="k">=</span> <span class="n">members</span><span class="o">)</span> <span class="o">}</span>
-   <span class="o">.</span><span class="py">list</span><span class="o">()</span>
-   <span class="o">.</span><span class="py">apply</span><span class="o">()</span>
-</code></pre></div>
-<p><code>one.toManies</code> supports 9 tables to join.</p>
+<p>val groups: Seq[Group] =
+  withSQL { select.from(Group as g).leftJoin(Member as m).on(g.id, m.groupId) }
+   .one(Group(g))
+   .toMany(Member.opt(m))
+   .map { (group, members) =&gt; group.copy(members = members) }
+   .list()
+   .apply()
+&ldquo;`</p>
+
+<p><code>one.toManies</code> supports up to 9 tables for joining.</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">case</span> <span class="k">class</span> <span class="nc">Member</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span>
 <span class="k">case</span> <span class="k">class</span> <span class="nc">Event</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span>
 <span class="k">case</span> <span class="k">class</span> <span class="nc">Group</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
@@ -112,7 +112,7 @@ Be aware that resolving multiple one-to-many relationships with a single join qu
 
 <hr/>
 
-<p><code>one.toOne</code> for inner join queries.</p>
+<p><code>one.toOne</code> for inner join queries:</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">case</span> <span class="k">class</span> <span class="nc">Owner</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span>
 <span class="k">case</span> <span class="k">class</span> <span class="nc">Group</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
   <span class="n">ownerId</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">owner</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Owner</span><span class="o">]</span> <span class="k">=</span> <span class="nc">None</span><span class="o">)</span>
@@ -133,7 +133,7 @@ Be aware that resolving multiple one-to-many relationships with a single join qu
   <span class="o">.</span><span class="py">list</span>
   <span class="o">.</span><span class="py">apply</span><span class="o">()</span>
 </code></pre></div>
-<p>If you don&rsquo;t want to define <code>owner</code> as an optional value, use <code>#map</code> instead.</p>
+<p>For optional relationships, use <code>#map</code>:</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">case</span> <span class="k">class</span> <span class="nc">Owner</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span>
 <span class="k">case</span> <span class="k">class</span> <span class="nc">Group</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">ownerId</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">owner</span><span class="k">:</span> <span class="kt">Owner</span><span class="o">)</span>
 
@@ -161,7 +161,7 @@ Be aware that resolving multiple one-to-many relationships with a single join qu
   <span class="o">.</span><span class="py">list</span>
   <span class="o">.</span><span class="py">apply</span><span class="o">()</span>
 </code></pre></div>
-<p><code>one.toOptionalOne</code> for outer join queries.</p>
+<p>or <code>one.toOptionalOne</code> for outer join queries:</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">case</span> <span class="k">class</span> <span class="nc">Owner</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span>
 <span class="k">case</span> <span class="k">class</span> <span class="nc">Group</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
   <span class="n">ownerId</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Long</span><span class="o">]</span> <span class="k">=</span> <span class="nc">None</span><span class="o">,</span> <span class="n">owner</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Owner</span><span class="o">]</span> <span class="k">=</span> <span class="nc">None</span><span class="o">)</span>
@@ -186,7 +186,7 @@ Be aware that resolving multiple one-to-many relationships with a single join qu
 
 <hr/>
 
-<p>In most cases, you will use case classes for entities. And basically it works fine. However, as you know, Scala (under 2.11) has 22 limitation and you cannot create a case class with more thatn 22 parameters. If your table has more than 22 columns, you need to create a normal class like this:</p>
+<p>Typically, entities are represented using case classes. However, Scala versions below 2.11 limit case classes to 22 parameters. If your table has more than 22 columns, you&rsquo;ll need to use a normal class:</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">class</span> <span class="nc">HugeTable</span><span class="o">(</span>
   <span class="k">val</span> <span class="nv">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="k">val</span> <span class="nv">c2</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="k">val</span> <span class="nv">c3</span><span class="k">:</span> <span class="kt">String</span> <span class="kt">....</span> <span class="kt">val</span> <span class="kt">c23:</span> <span class="kt">String</span><span class="o">)</span>
 
@@ -199,9 +199,9 @@ Be aware that resolving multiple one-to-many relationships with a single join qu
   <span class="o">)</span>
 <span class="o">}</span>
 </code></pre></div>
-<p>The above code also works fine except for the use of one-to-x APIs. Case classes nicely overrides <code>#equals</code> method. But <code>HugeTable</code>&lsquo;s <code>#equals</code> method won&rsquo;t work as you expect because it just predicates instance equality. So when you use normal classes and one-to-x APIs, you must override <code>#equals</code> method by yourself.</p>
+<p>The code works correctly except when using one-to-x APIs. Case classes automatically override the <code>#equals</code> method, facilitating proper equality checks. However, the <code>#equals</code> method in a regular class like <code>HugeTable</code> only assesses instance equality, which may not yield the expected behavior. Therefore, when using non-case classes with one-to-x APIs, it&rsquo;s crucial to manually override the <code>#equals</code> method.</p>
 
-<p>Since version 1.7.3, ScalikeJDBC provides <code>EntityEquality</code> trait like this:</p>
+<p>Starting from version 1.7.3, ScalikeJDBC includes the <code>EntityEquality</code> trait to simplify this process:</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">class</span> <span class="nc">HugeTable</span><span class="o">(</span>
   <span class="k">val</span> <span class="nv">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="k">val</span> <span class="nv">c2</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="k">val</span> <span class="nv">c3</span><span class="k">:</span> <span class="kt">String</span> <span class="kt">....</span> <span class="kt">val</span> <span class="kt">c23:</span> <span class="kt">String</span><span class="o">)</span>
   <span class="k">extends</span> <span class="nc">EntityEquality</span> <span class="o">{</span>
@@ -209,7 +209,7 @@ Be aware that resolving multiple one-to-many relationships with a single join qu
   <span class="k">override</span> <span class="k">val</span> <span class="nv">entityIdentity</span><span class="k">:</span> <span class="kt">Any</span> <span class="o">=</span> <span class="n">id</span>
 <span class="o">}</span>
 </code></pre></div>
-<p><code>#equals</code> method predicates equality with <code>entityIdentity</code> and the class is same. The above code use only <code>id</code> value for equality. If it isn&rsquo;t appropriate, define <code>entityIdentity</code> differently.</p>
+<p>The <code>#equals</code> method determines equality based on <code>entityIdentity</code> and whether the objects belong to the same class. In the provided code, equality is solely based on the id value. If this approach doesn&rsquo;t suit your needs, you can redefine <code>entityIdentity</code> to incorporate additional or different attributes to better reflect your equality criteria.</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">class</span> <span class="nc">HugeTable</span><span class="o">(</span>
   <span class="k">val</span> <span class="nv">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="k">val</span> <span class="nv">c2</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="k">val</span> <span class="nv">c3</span><span class="k">:</span> <span class="kt">String</span> <span class="kt">....</span> <span class="kt">val</span> <span class="kt">c23:</span> <span class="kt">String</span><span class="o">)</span>
   <span class="k">extends</span> <span class="nc">EntityEquality</span> <span class="o">{</span>
@@ -218,7 +218,7 @@ Be aware that resolving multiple one-to-many relationships with a single join qu
   <span class="k">override</span> <span class="k">val</span> <span class="nv">entityIdentity</span><span class="k">:</span> <span class="kt">Any</span> <span class="o">=</span> <span class="o">(</span><span class="n">id</span><span class="o">,</span> <span class="n">c2</span><span class="o">,</span> <span class="n">c3</span><span class="o">)</span>
 <span class="o">}</span>
 </code></pre></div>
-<p>If you&rsquo;re still using older version and you cannot upgrade version right now, see the <code>EntityEquality</code> implementation and do the same thing.</p>
+<p>If you are using an older version and cannot upgrade at this time, you can refer to the <code>EntityEquality</code> implementation and replicate its functionality in your environment.</p>
 
 <p><a href="https://github.com/scalikejdbc/scalikejdbc/blob/master/scalikejdbc-core/src/main/scala/scalikejdbc/EntityEquality.scala">https://github.com/scalikejdbc/scalikejdbc/blob/master/scalikejdbc-core/src/main/scala/scalikejdbc/EntityEquality.scala</a></p>
 
@@ -249,7 +249,7 @@ Be aware that resolving multiple one-to-many relationships with a single join qu
           <p><a href="/documentation/playframework-support.html">Play Framework</a></p>
           <p><a href="/documentation/reactivestreams-support.html">Reactive Streams</a></p>
           <p><a href="/documentation/dbconsole.html">dbconsole</a></p>
-          <p><a href="https://www.javadoc.io/doc/org.scalikejdbc/scalikejdbc-core_2.13/4.2.1">Core API Doc</a></p>
+          <p><a href="https://www.javadoc.io/doc/org.scalikejdbc/scalikejdbc-core_2.13/4.3.0">Core API Doc</a></p>
           <p><a href="/documentation/faq.html">FAQ</a></p>
           <p><a href="/documentation/testimonials.html">Testimonials</a></p>
           <p><a href="/contribution.html">Contribution</a></p>

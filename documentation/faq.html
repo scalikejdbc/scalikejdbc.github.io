@@ -37,9 +37,7 @@
 
 <hr/>
 
-<p>ScalikeJDBC supports PostgreSQL, MySQL, H2 Database Engine and HSQLDB. We never release without passing all the unit tests with these RDBMS. If you&rsquo;re using either of them, ScalikeJDBC should be very stable.</p>
-
-<p>On the other hand, ScalikeJDBC simply uses JDBC drivers internally, so it basically should work fine with any other RDBMS.</p>
+<p>ScalikeJDBC primarily supports PostgreSQL, MySQL, H2 Database Engine, and HSQLDB. We ensure the reliability for production-grade operations by never releasing versions that have not passed all the unit tests with these RDBMS. However, since ScalikeJDBC uses standard JDBC drivers internally, it should generally work well with any other RDBMS.</p>
 
 <hr/>
 
@@ -47,11 +45,9 @@
 
 <hr/>
 
-<p>ScalikeJDBC&rsquo;s default connection pool implementation is <a href="https://commons.apache.org/proper/commons-dbcp/">Apache Commons DBCP</a>.</p>
+<p>The default connection pool in ScalikeJDBC is <a href="https://commons.apache.org/proper/commons-dbcp/">Apache Commons DBCP</a>.</p>
 
-<p>You can easily use other implementation. See in detail:</p>
-
-<p><a href="/documentation/connection-pool.html">/documentation/connection-pool.html</a></p>
+<p>For instructions on using alternative connection pool implementations, please visit <a href="/documentation/connection-pool.html">/documentation/connection-pool.html</a> for details.</p>
 
 <hr/>
 
@@ -59,9 +55,7 @@
 
 <hr/>
 
-<p>As you know, Rails ActiveRecord saves timestamp values in UTC time zone. DB column types will be <code>timetamp without timezone</code>.</p>
-
-<p>When you need to work with them, call the following Java TimeZone&rsquo;s setter method (instead of <code>DateTimeZone.setDefault(DateTimeZone.UTC)</code>) at first.</p>
+<p>As you may know, Rails ActiveRecord stores timestamp values in UTC time zone without timezone information. In other words, those DB column types are usually <code>timetamp without timezone</code>. To align Scala applications with this format, set the Java TimeZone globally at startup:</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="nv">java</span><span class="o">.</span><span class="py">util</span><span class="o">.</span><span class="py">TimeZone</span><span class="o">.</span><span class="py">setDefault</span><span class="o">(</span><span class="nv">java</span><span class="o">.</span><span class="py">util</span><span class="o">.</span><span class="py">TimeZone</span><span class="o">.</span><span class="py">getTimeZone</span><span class="o">(</span><span class="s">"UTC"</span><span class="o">))</span>
 </code></pre></div>
 <hr/>
@@ -70,7 +64,7 @@
 
 <hr/>
 
-<p>Use the <code>scalikejdbc.LikeConditionEscapeUtil</code> utility.</p>
+<p>For SQL LIKE conditions, use the <code>scalikejdbc.LikeConditionEscapeUtil</code> utility to handle special characters effectively:</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="nv">LikeConditionEscapeUtil</span><span class="o">.</span><span class="py">escape</span><span class="o">(</span><span class="s">"foo%aa_bbb\\ccc"</span><span class="o">)</span>     <span class="c1">// "foo\\%aa\\_bbb\\\\ccc"</span>
 <span class="nv">LikeConditionEscapeUtil</span><span class="o">.</span><span class="py">beginsWith</span><span class="o">(</span><span class="s">"foo%aa_bbb\\ccc"</span><span class="o">)</span> <span class="c1">// "foo\\%aa\\_bbb\\\\ccc%"</span>
 <span class="nv">LikeConditionEscapeUtil</span><span class="o">.</span><span class="py">endsWith</span><span class="o">(</span><span class="s">"foo%aa_bbb\\ccc"</span><span class="o">)</span>   <span class="c1">// "%foo\\%aa\\_bbb\\\\ccc"</span>
@@ -78,17 +72,15 @@
 </code></pre></div>
 <hr/>
 
-<h3 id="non-blocking-support">non-blocking support?</h3>
+<h3 id="non-blocking-support">Non-blocking support?</h3>
 
 <hr/>
 
-<p>Unfortunately, no. Indeed, JDBC drivers block on socket IO. So using them to talk with RDBMS in async event driven architecture may not be appropriate. However, actually most of real world applications don’t need event-driven architecture yet. JDBC is still important infrastructure for apps on the JVM.</p>
-
-<p>If you really prefer non-blocking database access, take a look at ScalikeJDBC-Async. It provides non-blocking APIs to talk with PostgreSQL and MySQL in the JDBC way.</p>
+<p>ScalikeJDBC does not currently offer non-blocking support, as JDBC inherently blocks on socket IO. For apps requiring non-blocking database interactions, consider using ScalikeJDBC-Async, which offers non-blocking APIs for PostgreSQL and MySQL.</p>
 
 <p><a href="https://github.com/scalikejdbc/scalikejdbc-async">https://github.com/scalikejdbc/scalikejdbc-async</a></p>
 
-<p>ScalikeJDBC-Async is still in the alpha stage. If you don&rsquo;t have the motivation to investigate or fix issues yourself, we recommend waiting until the stable version is released someday.</p>
+<p>ScalikeJDBC-Async is currently in the alpha stage. If you are not prepared to actively investigate and resolve issues, it may be advisable to wait for the release of a stable version in the future.</p>
 
 <hr/>
 
@@ -96,11 +88,7 @@
 
 <hr/>
 
-<p>ScalikeJDBC&rsquo;s concept is a tidy wrapper of JDBC drivers, so it handles very lower layer than common ORMs. If you&rsquo;re looking for an ORM which supports associations or other rich features, take a look at Skinny ORM.</p>
-
-<p>Skinny ORM is the default DB access library of <a href="https://skinny-framework.github.io/">Skinny Framework</a>. Skinny ORM is built upon ScalikeJDBC. In most cases, it will make things easier.</p>
-
-<p><a href="https://skinny-framework.github.io/documentation/orm.html">https://skinny-framework.github.io/documentation/orm.html</a></p>
+<p>ScalikeJDBC is a lower-level library than typical ORMs, focusing on being a clean wrapper around JDBC drivers. For full ORM features like associations, consider using ScalikeJDBC ORM, which is built on top of ScalikeJDBC and we&rsquo;ve recently migrated from Skinny Framework project.</p>
 
 <hr/>
 
@@ -108,7 +96,7 @@
 
 <hr/>
 
-<p>Yes, it is. We support some Play plugins to seamlessly integrate ScalikeJDBC with Play Framework.</p>
+<p>ScalikeJDBC can be integrated with the Play Framework through specific plugins, enhancing its functionality within Play applications.</p>
 
 <p>See in detail here: <a href="/documentation/playframework-support.html">/documentation/playframework-support.html</a></p>
 
@@ -118,7 +106,7 @@
 
 <hr/>
 
-<p>the Apache License, Version 2.0</p>
+<p>ScalikeJDBC is licensed under the Apache License, Version 2.0.</p>
 
 <p><a href="https://github.com/scalikejdbc/scalikejdbc/blob/master/LICENSE.txt">https://github.com/scalikejdbc/scalikejdbc/blob/master/LICENSE.txt</a></p>
 
@@ -149,7 +137,7 @@
           <p><a href="/documentation/playframework-support.html">Play Framework</a></p>
           <p><a href="/documentation/reactivestreams-support.html">Reactive Streams</a></p>
           <p><a href="/documentation/dbconsole.html">dbconsole</a></p>
-          <p><a href="https://www.javadoc.io/doc/org.scalikejdbc/scalikejdbc-core_2.13/4.2.1">Core API Doc</a></p>
+          <p><a href="https://www.javadoc.io/doc/org.scalikejdbc/scalikejdbc-core_2.13/4.3.0">Core API Doc</a></p>
           <p><a href="/documentation/faq.html">FAQ</a></p>
           <p><a href="/documentation/testimonials.html">Testimonials</a></p>
           <p><a href="/contribution.html">Contribution</a></p>

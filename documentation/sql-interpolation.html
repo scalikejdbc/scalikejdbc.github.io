@@ -37,9 +37,7 @@
 
 <hr/>
 
-<p>SQLInterpolation is an SQL builder which uses String interpolation since Scala 2.10.</p>
-
-<p>The usage is pretty simple - just embedding values into sql&quot;&ldquo; template without <code>#bind</code> or <code>#bindByName</code>. It looks really cool.</p>
+<p>SQLInterpolation is an SQL builder that utilizes string interpolation, available since Scala 2.10. Its usage is straightforward: simply embed values into the <code>sql&quot;&quot;</code> template without using <code>#bind</code> or <code>#bindByName</code>. This approach is quite efficient.</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">import</span> <span class="nn">scalikejdbc._</span>
 
 <span class="k">val</span> <span class="nv">id</span> <span class="k">=</span> <span class="mi">123</span>
@@ -50,12 +48,12 @@
 <span class="c1">// SQL("select id, name from members where id = {id}").bindByName("id" -&gt; id)</span>
 <span class="c1">//   .map(rs =&gt; Member(rs)).single.apply()</span>
 </code></pre></div>
-<p>Don&rsquo;t worry, this code is safely protected from SQL injection attacks. <code>${id}</code> will be a place holder.</p>
+<p>Don&rsquo;t worry, this code is secure against SQL injection attacks. <code>${id}</code> serves as a placeholder.</p>
 <div class="highlight"><pre class="highlight sql"><code><span class="k">select</span> <span class="n">id</span><span class="p">,</span> <span class="n">name</span> <span class="k">from</span> <span class="n">members</span> <span class="k">where</span> <span class="n">id</span> <span class="o">=</span> <span class="o">?</span>
 </code></pre></div>
 <h4 id="natively-handled-types">Natively-handled types</h4>
 
-<p>The following types are natively handled using SQL parameter binding (not only for SQL interpolation, but also for explicit parameter binding):</p>
+<p>The following types are natively supported through SQL parameter binding, applicable to both SQL interpolation and explicit parameter binding:</p>
 
 <ul>
 <li>Numeric types: <code>Int</code>, <code>Short</code>, <code>Long</code>, <code>Float</code>, <code>Double</code>, <code>java.math.{BigInt, BigDecimal}</code></li>
@@ -64,11 +62,11 @@
 <li><code>Option</code> – converted to the corresponding value for <code>Some</code> instances, and <code>null</code> for <code>None</code>.</li>
 </ul>
 
-<p>In addition, SQL interpolation unwraps instances of <code>scala.collection.Traversable</code> and <code>java.lang.Iterable</code> and converts each element of the list into a bound parameter separated by &rdquo;, &ldquo;, so the following behaves as you would expect:</p>
+<p>Additionally, SQL interpolation unwraps instances of <code>scala.collection.Traversable</code> and <code>java.lang.Iterable</code>, converting each element into a bound parameter separated by either backticks or commas, ensuring behavior as expected:</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">val</span> <span class="nv">ids</span> <span class="k">=</span> <span class="nc">Seq</span><span class="o">(</span><span class="mi">123</span><span class="o">,</span> <span class="mi">124</span><span class="o">,</span> <span class="mi">125</span><span class="o">)</span>
 <span class="n">sql</span><span class="s">"SELECT * FROM members WHERE id IN (${ids})"</span>
 </code></pre></div>
-<p>Other values are mapped directly as <code>Object</code>s.</p>
+<p>Other values are directly mapped as Objects.</p>
 
 <hr/>
 
@@ -76,7 +74,7 @@
 
 <hr/>
 
-<p><code>SQLSyntax</code> is not a binding parameter but a part of the SQL. You can create a <code>SQLSyntax</code> object with sqls&rdquo;&ldquo; String interpolation.</p>
+<p><code>SQLSyntax</code> is not a binding parameter but a part of the SQL. You can create a <code>SQLSyntax</code> object with sqls&quot;&ldquo; String interpolation.</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">val</span> <span class="nv">ordering</span> <span class="k">=</span> <span class="nf">if</span> <span class="o">(</span><span class="n">isDesc</span><span class="o">)</span> <span class="n">sqls</span><span class="s">"desc"</span> <span class="k">else</span> <span class="n">sqls</span><span class="s">"asc"</span>
 <span class="k">val</span> <span class="nv">members</span> <span class="k">=</span> <span class="n">sql</span><span class="s">"select id, name from members order by id ${ordering} limit 10"</span>
   <span class="o">.</span><span class="py">map</span><span class="o">(</span><span class="n">rs</span> <span class="k">=&gt;</span> <span class="nc">Member</span><span class="o">(</span><span class="n">rs</span><span class="o">)).</span><span class="py">list</span><span class="o">.</span><span class="py">apply</span><span class="o">()</span>
@@ -84,7 +82,7 @@
 <p><code>${ordering}</code> will be directly converted to a part of SQL.</p>
 <div class="highlight"><pre class="highlight sql"><code><span class="k">select</span> <span class="n">id</span> <span class="p">,</span> <span class="n">name</span> <span class="k">from</span> <span class="n">members</span> <span class="k">order</span> <span class="k">by</span> <span class="n">id</span> <span class="k">desc</span> <span class="k">limit</span> <span class="mi">10</span>
 </code></pre></div>
-<p>Don&rsquo;t worry again, this code is safely protected. <code>sqls&quot;&quot;</code> always treats external input values as binding parameters.</p>
+<p>Don&rsquo;t worry again, this code is secure. <code>sqls&quot;&quot;</code> always treats external input values as binding parameters.</p>
 
 <hr/>
 
@@ -92,11 +90,11 @@
 
 <hr/>
 
-<p>SQLSyntaxSupport is one step short of ORM. In other words, it&rsquo;s a powerful DRY way to write SQL.</p>
+<p>SQLSyntaxSupport is just shy of being an ORM. It provides a DRY method to write SQL effectively.</p>
 
-<p>First of all, mix the <code>SQLSyntaxSupport[A]</code> trait to <code>A</code> companion object, and define <code>tableName</code> and <code>#apply</code> method to map values from <code>ResultSet</code> object in it. The unfamiliar <code>ResultName[A]</code> are described later.</p>
+<p>Firstly, integrate the <code>SQLSyntaxSupport[A]</code> trait into the companion object of <code>A</code>, and specify <code>tableName</code> along with the <code>#apply</code> method to map values from the <code>ResultSet</code>. The <code>ResultName[A]</code>, which may be unfamiliar, will be explained later.</p>
 
-<p>NOTICE: When you use case classes for entities as follows (Group, GroupMember) everything goes fine. But if you use normal classes for entities, be aware of entity equality. See the following page in detail: <a href="/documentation/one-to-x.html">documentation/one-to-x.html</a></p>
+<p>NOTE: Utilizing case classes for entities (like <code>Group</code> and <code>GroupMember</code>) generally works well. However, if you use regular classes for entities, be mindful of entity equality. For more details, refer to: <a href="/documentation/one-to-x.html">documentation/one-to-x.html</a></p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">import</span> <span class="nn">scalikejdbc._</span>
 
 <span class="k">case</span> <span class="k">class</span> <span class="nc">Group</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span>
@@ -144,7 +142,7 @@
   """</span>
   <span class="o">.</span><span class="py">map</span><span class="o">(</span><span class="nc">GroupMember</span><span class="o">(</span><span class="nv">m</span><span class="o">.</span><span class="py">resultName</span><span class="o">,</span> <span class="nv">g</span><span class="o">.</span><span class="py">resultName</span><span class="o">)).</span><span class="py">single</span><span class="o">.</span><span class="py">apply</span><span class="o">()</span>
 </code></pre></div>
-<p>Though the above code contains some <code>${...}</code> parts, I believe that you can understand what it means. Actually, this code runs the following SQL statement.</p>
+<p>While the code includes several <code>${...}</code> placeholders, I trust you can grasp their meaning. Essentially, this code executes the following SQL statement.</p>
 <div class="highlight"><pre class="highlight sql"><code><span class="k">select</span>
    <span class="n">m</span><span class="p">.</span><span class="n">id</span> <span class="k">as</span> <span class="n">i_on_m</span><span class="p">,</span> <span class="n">m</span><span class="p">.</span><span class="n">name</span> <span class="k">as</span> <span class="n">n_on_m</span><span class="p">,</span> <span class="n">m</span><span class="p">.</span><span class="n">group_id</span> <span class="k">as</span> <span class="n">gi_on_m</span><span class="p">,</span> <span class="k">g</span><span class="p">.</span><span class="n">id</span> <span class="k">as</span> <span class="n">i_on_g</span><span class="p">,</span> <span class="k">g</span><span class="p">.</span><span class="n">name</span> <span class="k">as</span> <span class="n">n_on_g</span>
 <span class="k">from</span>
@@ -152,7 +150,7 @@
 <span class="k">where</span>
   <span class="n">m</span><span class="p">.</span><span class="n">id</span> <span class="o">=</span> <span class="o">?</span>
 </code></pre></div>
-<p>It seems to be natural that <code>${m.result.*}</code> is converted to listing all the columns, <code>${m.camelCase}</code> is converted to the <code>snake_case</code> column name. However, since you may have questions, I&rsquo;ll explain about some points.</p>
+<p>It&rsquo;s logical that <code>${m.result.*}</code> translates to listing all the columns, and <code>${m.camelCase}</code> converts to the corresponding snake_case column name. However, should you have any questions, I&rsquo;m here to clarify specific points in the next section.</p>
 
 <hr/>
 
@@ -160,9 +158,9 @@
 
 <hr/>
 
-<p>In spite of column names are not defined anywhere, <code>${m.result.*}</code> is converted to listing all the column names. The secret is that loading from metadata (and they will be cached) when first access to the table. It&rsquo;s possible to obtain all column names as a <code>Seq[String]</code> value via <code>columns</code>.</p>
+<p>Although column names are not explicitly defined, <code>${m.result.*}</code> is converted to list all the column names. This is achieved by loading from metadata, which is cached upon the first access to the table. It&rsquo;s possible to retrieve all column names as a <code>Seq[String]</code> value via columns.</p>
 
-<p>If you need to define column names by yourself or need to access multi databases, please define column names as follows:</p>
+<p>If you need to manually define column names or require access to multiple databases, please define column names as follows:</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">object</span> <span class="nc">GroupMember</span> <span class="k">extends</span> <span class="nc">SQLSyntaxSupport</span><span class="o">[</span><span class="kt">GroupMember</span><span class="o">]</span> <span class="o">{</span>
   <span class="k">override</span> <span class="k">val</span> <span class="nv">tableName</span> <span class="k">=</span> <span class="s">"groups_members"</span>
   <span class="k">override</span> <span class="k">val</span> <span class="nv">columns</span> <span class="k">=</span> <span class="nc">Seq</span><span class="o">(</span><span class="s">"id"</span><span class="o">,</span> <span class="s">"name"</span><span class="o">,</span> <span class="s">"group_id"</span><span class="o">)</span>
@@ -174,29 +172,29 @@
 
 <hr/>
 
-<p>By Type Dynamic (SIP-17) since Scala 2.10.0, you can call undefined methods such as <code>m.groupId</code>. Type Dynamic is similar to Ruby&rsquo;s method_missing.</p>
+<p>With Type Dynamic (SIP-17) available since Scala 2.10.0, you can call undefined methods like <code>m.groupId</code>. Type Dynamic functions similarly to Ruby&rsquo;s method_missing.</p>
 
 <p><a href="https://docs.google.com/document/d/1XaNgZ06AR7bXJA9-jHrAiBVUwqReqG4-av6beoLaf3U">https://docs.google.com/document/d/1XaNgZ06AR7bXJA9-jHrAiBVUwqReqG4-av6beoLaf3U</a></p>
 
-<p>When you call camel case fields, it will actually be transformed to column name as an underscore separated string. If column name doesn&rsquo;t exist in columns, <code>InvalidColumnNameException</code> will be thrown.</p>
+<p>When camel case fields are invoked, they are automatically transformed into underscore-separated column names. If a column name doesn&rsquo;t exist, an <code>InvalidColumnNameException</code> will be thrown.</p>
 
-<p>Before that, the case field name should be the same as any of the primary constructor arg names of type <code>A</code> of <code>SQLSyntaxSupport[A]</code>. The validation for this rule works in compilation phase with the power of Scala macros.</p>
+<p>Furthermore, the case field name must match one of the primary constructor argument names of type A in <code>SQLSyntaxSupport[A]</code>. This rule is validated during the compilation phase with the help of Scala macros.</p>
 
 <p><a href="https://docs.scala-lang.org/overviews/macros/overview.html">https://docs.scala-lang.org/overviews/macros/overview.html</a></p>
 
-<p>If you don&rsquo;t want to use Type Dynamic, it&rsquo;s also possible to call <code>#field(String)</code> or <code>#column(String)</code> with String value. For instance, the following four examples mean the same thing.</p>
+<p>If Type Dynamic does not suit your needs, you can alternatively use <code>#field(String)</code> or <code>#column(String)</code> to specify column names explicitly. Here are four examples demonstrating this approach, all of which achieve the same result:</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="nv">m</span><span class="o">.</span><span class="py">groupId</span>
 <span class="nv">m</span><span class="o">.</span><span class="py">field</span><span class="o">(</span><span class="s">"groupId"</span><span class="o">)</span>
 <span class="nv">m</span><span class="o">.</span><span class="py">column</span><span class="o">(</span><span class="s">"group_id"</span><span class="o">)</span>
 <span class="nv">m</span><span class="o">.</span><span class="py">c</span><span class="o">(</span><span class="s">"group_id"</span><span class="o">)</span>
 </code></pre></div>
-<p>If you don&rsquo;t need to convert field names to snake cased column names, set <code>useSnakeCaseColumnName</code> as false like this:</p>
+<p>If you prefer not to convert field names to snake-cased column names, you can set <code>useSnakeCaseColumnName</code> to false as shown below:</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">object</span> <span class="nc">UserType</span> <span class="k">extends</span> <span class="nc">SQLSyntaxSupport</span><span class="o">[</span><span class="kt">UserType</span><span class="o">]</span> <span class="o">{</span>
   <span class="k">override</span> <span class="k">val</span> <span class="nv">useSnakeCaseColumnName</span> <span class="k">=</span> <span class="kc">false</span>
   <span class="o">...</span>
 <span class="o">}</span>
 </code></pre></div>
-<p>In some cases, you might want to avoid expose column names to application layer. If this is the case, override <code>nameConverters</code>. If you want to treat <code>service_cd</code> column as <code>serviceCode</code>, define regular expression and replaced name in columns as follows. Since the <code>nameConverters</code> works as partial match retrieval, it&rsquo;s also possible to specify just <code>Map(&quot;Code&quot; -&gt; &quot;cd&quot;)</code>.</p>
+<p>In situations where you prefer not to expose column names to the application layer, you can override <code>nameConverters</code>. For example, if you wish to refer to the <code>service_cd</code> column as <code>serviceCode</code>, you can define a regular expression and the replacement name in <code>nameConverters</code> as follows. Since <code>nameConverters</code> operates on partial match retrieval, you can also simply specify mappings such as <code>Map(&quot;Code&quot; -&gt; &quot;cd&quot;)</code>.</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">case</span> <span class="k">class</span> <span class="nc">Event</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">serviceCode</span><span class="k">:</span> <span class="kt">Long</span><span class="o">)</span>
 
 <span class="k">object</span> <span class="nc">Event</span> <span class="k">extends</span> <span class="nc">SQLSyntaxSupport</span><span class="o">[</span><span class="kt">Event</span><span class="o">]</span> <span class="o">{</span>
@@ -213,23 +211,24 @@
 
 <hr/>
 
-<p>For instance, <code>m</code>&lsquo;s APIs of <code>val m = Member.syntax(&quot;mm&quot;)</code> means as follows:</p>
+<p>Here&rsquo;s an explanation of the differences between <code>m.id</code>, <code>m.result.id</code>, and <code>m.resultName.id</code> based on the <code>Member.syntax(&quot;mm&quot;)</code> API:</p>
 
 <ul>
-<li><code>m.groupId</code> will be converted to <code>sqls&quot;mm.group_id&quot;</code></li>
-<li><code>m.result.groupId</code> will be converted to <code>sqls&quot;mm.group_id as gi_on_mm&quot;</code></li>
-<li><code>m.resultName</code> returns a <code>ResultName[Member]</code> object</li>
-<li><p><code>m.resultName.groupId</code> will be converted to <code>sqls&quot;gi_on_mm&quot;</code></p></li>
-<li><p><code>Member.as(m)</code> will be converted to <code>members m</code> in SQL</p></li>
+<li><code>m.groupId</code> is generally used to reference the column directly in SQL, converting it to  <code>sqls&quot;mm.group_id&quot;</code></li>
+<li><code>m.result.groupId</code> refers to the same column but with an alias for use in result processing, which is converted to <code>sqls&quot;mm.group_id as gi_on_mm&quot;</code></li>
+<li><code>m.resultName</code> provides a <code>ResultName[Member]</code> object</li>
+<li><code>m.resultName.groupId</code> specifically accesses the aliased column name for result processing, resulting in <code>sqls&quot;gi_on_mm&quot;</code></li>
 </ul>
 
-<p>If you use <code>Member.syntax()</code>, tableName will be set. For example,  <code>m.result.groupId</code> will be <code>&quot;members.group_id as gi_on_members&quot;</code>. If you specified as <code>Member.syntax(&quot;m&quot;)</code>, <code>m.result.groupId</code> will be <code>&quot;members.group_id as gi_on_m&quot;</code>.</p>
+<p>Additionally, using <code>Member.as(m)</code> translates to <code>members m</code> in SQL, contextualizing the Member table alias.</p>
 
-<p>That&rsquo;s all the rules of <code>SQLSyntaxSupport</code>. I believed that now the following code will be easy to understand for you.</p>
+<p>If you use <code>Member.syntax()</code>, the table name is included in aliases. For example,  <code>m.result.groupId</code> becomes <code>&quot;members.group_id as gi_on_members&quot;</code>. If you set it as <code>Member.syntax(&quot;m&quot;)</code>, <code>m.result.groupId</code> translates to <code>&quot;members.group_id as gi_on_m&quot;</code>.</p>
+
+<p>That covers all the rules of <code>SQLSyntaxSupport</code>. I believe this explanation will make the following code easier for you to understand.</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">val</span> <span class="nv">ids</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">Long</span><span class="o">]</span> <span class="k">=</span> <span class="n">sql</span><span class="s">"select ${m.result.id} from ${Member.as(m)} where ${m.groupId} = 1"</span>
   <span class="o">.</span><span class="py">map</span><span class="o">(</span><span class="n">rs</span> <span class="k">=&gt;</span> <span class="nv">rs</span><span class="o">.</span><span class="py">long</span><span class="o">(</span><span class="nv">m</span><span class="o">.</span><span class="py">resultName</span><span class="o">.</span><span class="py">id</span><span class="o">)).</span><span class="py">list</span><span class="o">.</span><span class="py">apply</span><span class="o">()</span>
 </code></pre></div>
-<p>Define <code>#apply(ResultName[Member])</code> method and the method will make your <code>#map</code> operation pretty simple.</p>
+<p>By defining the <code>#apply(ResultName[Member])</code> method, your <code>#map</code> operations become straightforward and efficient.</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">object</span> <span class="nc">Member</span> <span class="k">extends</span> <span class="nc">SQLSyntaxSupport</span><span class="o">[</span><span class="kt">Member</span><span class="o">]</span> <span class="o">{</span>
   <span class="k">override</span> <span class="k">val</span> <span class="nv">tableName</span> <span class="k">=</span> <span class="s">"members"</span>
   <span class="k">def</span> <span class="nf">apply</span><span class="o">(</span><span class="n">m</span><span class="k">:</span> <span class="kt">ResultName</span><span class="o">[</span><span class="kt">User</span><span class="o">])(</span><span class="n">rs</span><span class="k">:</span> <span class="kt">WrappedResultSet</span><span class="o">)</span> <span class="k">=</span> <span class="o">{</span>
@@ -237,17 +236,17 @@
   <span class="o">}</span>
 <span class="o">}</span>
 </code></pre></div>
-<p>Use the above code like this:</p>
+<p>You can use the above code this way:</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">val</span> <span class="nv">m</span> <span class="k">=</span> <span class="nv">Member</span><span class="o">.</span><span class="py">syntax</span><span class="o">(</span><span class="s">"m"</span><span class="o">)</span>
 <span class="k">val</span> <span class="nv">members</span> <span class="k">=</span> <span class="n">sql</span><span class="s">"select ${m.result.*} from ${Member.as(m)}"</span><span class="o">.</span><span class="py">map</span><span class="o">(</span><span class="nc">Member</span><span class="o">(</span><span class="n">m</span><span class="o">)).</span><span class="py">list</span><span class="o">.</span><span class="py">apply</span><span class="o">()</span>
 <span class="c1">// select m.id as i_on_m, m.name as n_on_m from members m</span>
 </code></pre></div>
-<p>If you need just column names for insert/update/delete queries, use <code>#column.{name}</code> like this:</p>
+<p>If you only require column names for insert, update, or delete queries, use <code>#column.{name}</code> as shown below:</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">val</span> <span class="nv">c</span> <span class="k">=</span> <span class="nv">Member</span><span class="o">.</span><span class="py">column</span>
 <span class="n">sql</span><span class="s">"insert into ${Member.table} (${c.name}, ${c.birthday}) values (${name}, ${birthday})"</span>
   <span class="o">.</span><span class="py">update</span><span class="o">.</span><span class="py">apply</span><span class="o">()</span>
 </code></pre></div>
-<p>Since <code>#column</code> is a member of <code>SQLSyntaxSupport[A]</code>, you can use <code>#column</code> in <code>Member</code> object:</p>
+<p>Since <code>#column</code> is a member of <code>SQLSyntaxSupport[A]</code>, you can utilize <code>#column</code> within the <code>Member</code> object:</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">object</span> <span class="nc">Member</span> <span class="k">extends</span> <span class="nc">SQLSyntaxSupport</span><span class="o">[</span><span class="kt">Member</span><span class="o">]</span> <span class="o">{</span>
   <span class="k">def</span> <span class="nf">create</span><span class="o">(</span><span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">birthday</span><span class="k">:</span> <span class="kt">LocalDate</span><span class="o">)(</span><span class="k">implicit</span> <span class="n">s</span><span class="k">:</span> <span class="kt">DBSession</span> <span class="o">=</span> <span class="nc">AutoSession</span><span class="o">)</span><span class="k">:</span> <span class="kt">Member</span> <span class="o">=</span> <span class="o">{</span>
     <span class="k">val</span> <span class="nv">id</span> <span class="k">=</span> <span class="n">sql</span><span class="s">"insert into ${table} (${column.name}, ${column.birthday}) values (${name}, ${birthday})"</span>
@@ -261,7 +260,7 @@
 
 <hr/>
 
-<p>If you have multiple tables for same entity. For example, <code>orders_2011</code>, <code>orders_2012</code> and <code>orders_2013</code>.</p>
+<p>If you have multiple tables for the same entity, for example, <code>orders_2011</code>, <code>orders_2012</code>, and <code>orders_2013</code>:</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">case</span> <span class="k">class</span> <span class="nc">Order</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">productId</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">customerId</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Long</span><span class="o">],</span> <span class="n">createdAt</span><span class="k">:</span> <span class="kt">ZonedDateTime</span><span class="o">)</span>
 
 <span class="k">class</span> <span class="nc">OrderTable</span><span class="o">(</span><span class="k">val</span> <span class="nv">year</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span> <span class="k">extends</span> <span class="nc">SQLSyntaxSupport</span><span class="o">[</span><span class="kt">Order</span><span class="o">]</span> <span class="o">{</span>
@@ -303,7 +302,7 @@
 
 <p>NOTICE: Since Scala 2.11, you can use a case class for 22+ columns table.</p>
 
-<p>Just use normal class and implement <code>EntityEquality</code> trait (for one-to-many relations).</p>
+<p>Just use a normal class and implement the <code>EntityEquality</code> trait for one-to-many relations.</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">import</span> <span class="nn">scalikekdbc._</span>
 <span class="k">import</span> <span class="nn">java.time.ZonedDateTime</span>
 
@@ -348,7 +347,7 @@
           <p><a href="/documentation/playframework-support.html">Play Framework</a></p>
           <p><a href="/documentation/reactivestreams-support.html">Reactive Streams</a></p>
           <p><a href="/documentation/dbconsole.html">dbconsole</a></p>
-          <p><a href="https://www.javadoc.io/doc/org.scalikejdbc/scalikejdbc-core_2.13/4.2.1">Core API Doc</a></p>
+          <p><a href="https://www.javadoc.io/doc/org.scalikejdbc/scalikejdbc-core_2.13/4.3.0">Core API Doc</a></p>
           <p><a href="/documentation/faq.html">FAQ</a></p>
           <p><a href="/documentation/testimonials.html">Testimonials</a></p>
           <p><a href="/contribution.html">Contribution</a></p>

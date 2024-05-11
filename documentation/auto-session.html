@@ -37,49 +37,45 @@
 
 <hr/>
 
-<p>Basic usage of ScalikeJDBC is using <code>DB.autoCommit/readOnly/localTx/withinTx { ...}</code> blocks.</p>
-
-<p>However, if you&rsquo;d like to re-use methods, they might not be available.</p>
+<p>Typically, ScalikeJDBC operations are encapsulated within <code>DB.autoCommit</code>, <code>DB.readOnly</code>, and other transaction blocks. For reusing methods across different transaction contexts as below, </p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">def</span> <span class="nf">findById</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">)</span> <span class="k">=</span> <span class="nc">DB</span> <span class="n">readOnly</span> <span class="o">{</span>
   <span class="n">sql</span><span class="s">"select id, name from members where id = ${id}"</span>
     <span class="o">.</span><span class="py">map</span><span class="o">(</span><span class="n">rs</span> <span class="k">=&gt;</span> <span class="nc">Member</span><span class="o">(</span><span class="n">rs</span><span class="o">)).</span><span class="py">single</span><span class="o">.</span><span class="py">apply</span><span class="o">()</span>
 <span class="o">}</span>
 </code></pre></div>
-<p>When you use the above method in a transaction block, the code won&rsquo;t work as you expected.</p>
-
-<p>The reason is that since <code>#findById(Long)</code> uses another session(=connection), it couldn&rsquo;t access uncommitted data.</p>
+<p><code>AutoSession</code> becomes essential. In a transaction block, this method may not perform as expected because it uses a separate session and cannot access uncommitted data. The reason is that since <code>#findById(Long)</code> uses another session(=connection), it couldn&rsquo;t access uncommitted data.</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="nc">DB</span> <span class="n">localTx</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span>
   <span class="k">val</span> <span class="nv">id</span> <span class="k">=</span> <span class="nf">create</span><span class="o">(</span><span class="s">"Alice"</span><span class="o">)</span>
   <span class="nf">findById</span><span class="o">(</span><span class="n">id</span><span class="o">)</span> <span class="c1">// Not found!</span>
 <span class="o">}</span>
 </code></pre></div>
-<p>You need to change method&rsquo;s API to accept implicit parameters and now you don&rsquo;t need <code>DB</code> block inside the method.</p>
+<p>With this change, the method can access the current transaction context. Instead of having <code>DB</code> blocks inside, your method can accept an implict DBSession paramter from external code to join an existing transactional session.</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">def</span> <span class="nf">findById</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">)(</span><span class="k">implicit</span> <span class="n">session</span><span class="k">:</span> <span class="kt">DBSession</span><span class="o">)</span> <span class="k">=</span>
   <span class="n">sql</span><span class="s">"select id, name from members where id = ${id}"</span>
     <span class="o">.</span><span class="py">map</span><span class="o">(</span><span class="n">rs</span> <span class="k">=&gt;</span> <span class="nc">Member</span><span class="o">(</span><span class="n">rs</span><span class="o">)).</span><span class="py">single</span><span class="o">.</span><span class="py">apply</span><span class="o">()</span>
 </code></pre></div>
-<p>This one works as expected.</p>
+<p>With the change, the following code works as you expect.</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="nc">DB</span> <span class="n">localTx</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span>
   <span class="k">val</span> <span class="nv">id</span> <span class="k">=</span> <span class="nf">create</span><span class="o">(</span><span class="s">"Alice"</span><span class="o">)</span>
   <span class="nf">findById</span><span class="o">(</span><span class="n">id</span><span class="o">)</span> <span class="c1">// Found!</span>
 <span class="o">}</span>
 </code></pre></div>
-<p>But unfortunately, now we need to pass implicit parameter to <code>#findById</code> every time to use it.</p>
+<p>But unfortunately, now that we need to pass implicit parameter to <code>#findById</code> every time to use the method, it could be troublesome especially for simple code snippets.</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="c1">// now we cannot use this method directly</span>
 <span class="nf">findById</span><span class="o">(</span><span class="n">id</span><span class="o">)</span> <span class="c1">// implicit parameter not found!</span>
 
 <span class="nc">DB</span> <span class="n">readOnly</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span> <span class="nf">findById</span><span class="o">(</span><span class="n">id</span><span class="o">)</span> <span class="o">}</span>
 </code></pre></div>
-<p><code>AutoSession</code> is a solution for this issue. Use <code>AutoSession</code> as default value of the implicit parameter.</p>
+<p><code>AutoSession</code> is a solution for the issue. You can have <code>AutoSession</code> as default value of the implicit parameter.</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">def</span> <span class="nf">findById</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">)(</span><span class="k">implicit</span> <span class="n">session</span><span class="k">:</span> <span class="kt">DBSession</span> <span class="o">=</span> <span class="nc">AutoSession</span><span class="o">)</span> <span class="k">=</span>
   <span class="n">sql</span><span class="s">"select id, name from members where id = ${id}"</span>
     <span class="o">.</span><span class="py">map</span><span class="o">(</span><span class="n">rs</span> <span class="k">=&gt;</span> <span class="nc">Member</span><span class="o">(</span><span class="n">rs</span><span class="o">)).</span><span class="py">single</span><span class="o">.</span><span class="py">apply</span><span class="o">()</span>
 </code></pre></div>
-<p>This change made <code>#findById</code> flexible.</p>
+<p>Having the default implement value can make <code>#findById</code> even more flexible plus much simpler.</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="nf">findById</span><span class="o">(</span><span class="n">id</span><span class="o">)</span> <span class="c1">// borrows a read-only session and gives it back</span>
 <span class="nc">DB</span> <span class="n">localTx</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span> <span class="nf">findById</span><span class="o">(</span><span class="n">id</span><span class="o">)</span> <span class="o">}</span> <span class="c1">// using implicit session</span>
 </code></pre></div>
-<p>If you do the same with <code>NamedDB</code>, use <code>NamedAutoSession</code> as follows.</p>
+<p>When you do the same with <code>NamedDB</code>, you can use <code>NamedAutoSession</code> as below:</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">def</span> <span class="nf">findById</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">)(</span><span class="k">implicit</span> <span class="n">session</span><span class="k">:</span> <span class="kt">DBSession</span> <span class="o">=</span> <span class="nc">NamedAutoSession</span><span class="o">(</span><span class="s">"named"</span><span class="o">))</span> <span class="k">=</span>
   <span class="n">sql</span><span class="s">"select id, name from members where id = ${id}"</span>
 </code></pre></div>
@@ -89,9 +85,7 @@
 
 <hr/>
 
-<p>Since version 1.7.4, <code>ReadOnlyAutoSession</code> and <code>NamedReadOnlyAutoSession</code> is also available. </p>
-
-<p>These auto sessions disallow update/execute operations.</p>
+<p>Since version 1.7.4, <code>ReadOnlyAutoSession</code> and <code>NamedReadOnlyAutoSession</code> is also available, which are tailored for read-only operations, preventing any update or execute operations.</p>
 
           <hr/>
           <div class="alert alert-warning small">
@@ -120,7 +114,7 @@
           <p><a href="/documentation/playframework-support.html">Play Framework</a></p>
           <p><a href="/documentation/reactivestreams-support.html">Reactive Streams</a></p>
           <p><a href="/documentation/dbconsole.html">dbconsole</a></p>
-          <p><a href="https://www.javadoc.io/doc/org.scalikejdbc/scalikejdbc-core_2.13/4.2.1">Core API Doc</a></p>
+          <p><a href="https://www.javadoc.io/doc/org.scalikejdbc/scalikejdbc-core_2.13/4.3.0">Core API Doc</a></p>
           <p><a href="/documentation/faq.html">FAQ</a></p>
           <p><a href="/documentation/testimonials.html">Testimonials</a></p>
           <p><a href="/contribution.html">Contribution</a></p>

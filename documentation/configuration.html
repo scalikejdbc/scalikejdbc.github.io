@@ -33,7 +33,7 @@
 
 <hr/>
 
-<p>The following 3 things should be configured.</p>
+<p>To use ScalikeJDBC, the following three factors need to be proplery configured.</p>
 
 <hr/>
 
@@ -41,15 +41,13 @@
 
 <hr/>
 
-<p>In advance, some JDBC drivers must be loaded by using</p>
+<p>Before using JDBC drivers, they must be explicitly loaded using either:</p>
 <div class="highlight"><pre class="highlight plaintext"><code>Class.forName(String)
 </code></pre></div>
 <p>or</p>
 <div class="highlight"><pre class="highlight plaintext"><code>java.sql.DriverManager.registerDriver(java.sql.Driver)
 </code></pre></div>
-<p>However many modern JDBC implementations will be automatically loaded when they are present on the classpath.</p>
-
-<p>If you use <code>scalikejdbc-config</code> or <code>scalikejdbc-play-plugin</code>, they do the legacy work for you.</p>
+<p>Many modern JDBC drivers, however, automatically load themselves when included in the classpath. Nonetheless, when you&rsquo;re using <code>scalikejdbc-config</code> or <code>scalikejdbc-play-plugin</code>, these handle the above loading process for safety.</p>
 
 <hr/>
 
@@ -57,7 +55,7 @@
 
 <hr/>
 
-<p>ConnectionPool should be initialized when starting your applications.</p>
+<p>It&rsquo;s required to initialize a ConnectionPool at the start of your applications:</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">import</span> <span class="nn">scalikejdbc._</span>
 
 <span class="c1">// after loading JDBC drivers</span>
@@ -73,7 +71,7 @@
 <span class="c1">// all the connections are released, old connection pool will be abandoned</span>
 <span class="nv">ConnectionPool</span><span class="o">.</span><span class="py">add</span><span class="o">(</span><span class="s">"foo"</span><span class="o">,</span> <span class="n">url</span><span class="o">,</span> <span class="n">user</span><span class="o">,</span> <span class="n">password</span><span class="o">,</span> <span class="n">settings</span><span class="o">)</span>
 </code></pre></div>
-<p>When you use external DataSource (e.g. application server&rsquo;s connection pool), use javax.sql.DataSource via JNDI:</p>
+<p>For using an external DataSource, such as an application server&rsquo;s connection pool, connect via JNDI:</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">import</span> <span class="nn">javax.naming._</span>
 <span class="k">import</span> <span class="nn">javax.sql._</span>
 <span class="k">val</span> <span class="nv">ds</span> <span class="k">=</span> <span class="o">(</span><span class="k">new</span> <span class="nc">InitialContext</span><span class="o">)</span>
@@ -84,7 +82,7 @@
 <span class="nv">ConnectionPool</span><span class="o">.</span><span class="py">singleton</span><span class="o">(</span><span class="k">new</span> <span class="nc">DataSourceConnectionPool</span><span class="o">(</span><span class="n">ds</span><span class="o">))</span>
 <span class="nv">ConnectionPool</span><span class="o">.</span><span class="py">add</span><span class="o">(</span><span class="s">"foo"</span><span class="o">,</span> <span class="k">new</span> <span class="nc">DataSourceConnectionPool</span><span class="o">(</span><span class="n">ds</span><span class="o">))</span>
 </code></pre></div>
-<p><code>ConnectionPool</code> and <code>ConnectionPoolSettings</code>&lsquo;s parameters are like this:</p>
+<p>Here&rsquo;s how <code>ConnectionPool</code> and <code>ConnectionPoolSettings</code> parameters look:</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">abstract</span> <span class="k">class</span> <span class="nc">ConnectionPool</span><span class="o">(</span>
   <span class="k">val</span> <span class="nv">url</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
   <span class="k">val</span> <span class="nv">user</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
@@ -96,7 +94,7 @@
   <span class="n">connectionTimeoutMillis</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span>
   <span class="n">validationQuery</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span>
 </code></pre></div>
-<p>FYI: <a href="https://github.com/scalikejdbc/scalikejdbc/blob/master/scalikejdbc-core/src/main/scala/scalikejdbc/ConnectionPool.scala">Source Code</a></p>
+<p>Further details in the <a href="https://github.com/scalikejdbc/scalikejdbc/blob/master/scalikejdbc-core/src/main/scala/scalikejdbc/ConnectionPool.scala">source code</a></p>
 
 <hr/>
 
@@ -104,7 +102,7 @@
 
 <hr/>
 
-<p>Global settings for logging for query inspection and so on.</p>
+<p>Configure global settings for SQL error logging, query inspection, and more:</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">object</span> <span class="nc">GlobalSettings</span> <span class="o">{</span>
   <span class="k">var</span> <span class="n">loggingSQLErrors</span><span class="k">:</span> <span class="kt">Boolean</span>
   <span class="k">var</span> <span class="n">loggingSQLAndTime</span><span class="k">:</span> <span class="kt">LoggingSQLAndTimeSettings</span>
@@ -114,7 +112,7 @@
   <span class="k">var</span> <span class="n">queryFailureListener</span><span class="k">:</span> <span class="o">(</span><span class="kt">String</span><span class="o">,</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Any</span><span class="o">],</span> <span class="nc">Throwable</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="nc">Unit</span>
 <span class="o">}</span>
 </code></pre></div>
-<p>FYI: <a href="https://github.com/scalikejdbc/scalikejdbc/blob/master/scalikejdbc-core/src/main/scala/scalikejdbc/GlobalSettings.scala">Source Code</a></p>
+<p>Reference the <a href="https://github.com/scalikejdbc/scalikejdbc/blob/master/scalikejdbc-core/src/main/scala/scalikejdbc/GlobalSettings.scala">source code</a> for more details.</p>
 
 <hr/>
 
@@ -122,11 +120,11 @@
 
 <hr/>
 
-<p>If you use <code>scalikejdbc-config</code> which is an easy-to-use configuration loader for ScalikeJDBC which reads typesafe config, configuration is much simple.</p>
+<p>The <code>scalikejdbc-config</code> library simplifies the configuration process by utilizing Typesafe Config to read settings:</p>
 
 <p><a href="https://github.com/lightbend/config">Typesafe Config</a></p>
 
-<p>If you&rsquo;d like to setup <code>scalikejdbc-config</code>, see setup page.</p>
+<p>To learn how to configure <code>scalikejdbc-config</code>, see setup page.</p>
 
 <p><a href="/documentation/setup.html">/documentation/setup</a></p>
 
@@ -159,9 +157,9 @@ db.default.url="jdbc:mysql://localhost/scalikejdbc"
 db.default.driver="org.postgresql.Driver"
 db.default.url="jdbc:postgresql://localhost:5432/scalikejdbc"
 </code></pre></div>
-<p>After just calling <code>scalikejdbc.config.DBs.setupAll()</code>, Connection pools are prepared. <code>DBs.setup/DBs.setupAll</code> loads specified JDBC driver classes as well. </p>
+<p>When setting up with <code>scalikejdbc.config.DBs.setupAll()</code>, the module automatically loads the specified JDBC drivers and prepares connection pools.</p>
 
-<p>Note that due to the way JDBC works, these drivers are loaded globally for the entire JVM, and then a particular driver is selected from the global JVM list by locating the first which is able to handle the connection URL. This usually produces the expected behaviour anyway, unless you have multiple JDBC drivers in your classpath which handle the same URL (such as MySQL and MariaDB JDBC implementations, which both handle URLs of the form <code>jdbc:mysql:</code>). In these cases you may not get the implementation you are expecting, since the presence of JDBC packages in the classpath is, for many drivers, enough to have them registered globally.</p>
+<p>DBC drivers, once loaded, are globally available to the entire Java Virtual Machine (JVM). The selection process for a specific driver from the global list typically targets the first one capable of managing the given connection URL. This approach generally yields the correct behavior, except when multiple drivers capable of handling the same URL type (such as MySQL and MariaDB drivers, both supporting <code>jdbc:mysql:</code> URLs) are present in the classpath. In such cases, the expected driver might not be used, as the mere presence of JDBC drivers on the classpath often leads to their global registration, irrespective of their intended use.</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">import</span> <span class="nn">scalikejdbc._</span>
 <span class="k">import</span> <span class="nn">scalikejdbc.config._</span>
 
@@ -190,7 +188,7 @@ db.default.url="jdbc:postgresql://localhost:5432/scalikejdbc"
 
 <hr/>
 
-<p>It&rsquo;s also possible to add prefix(e.g. environment).</p>
+<p>You can manage different configurations for multiple environments:</p>
 <div class="highlight"><pre class="highlight plaintext"><code>development.db.default.driver="org.h2.Driver"
 development.db.default.url="jdbc:h2:file:./db/default"
 development.db.default.user="sa"
@@ -207,7 +205,7 @@ prod {
   }
 }
 </code></pre></div>
-<p>Use <code>DBsWithEnv</code> instead of <code>DBs</code>.</p>
+<p>To activate these settings, use <code>DBsWithEnv</code> instead of <code>DBs</code>.</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="nc">DBsWithEnv</span><span class="o">(</span><span class="s">"development"</span><span class="o">).</span><span class="py">setupAll</span><span class="o">()</span>
 <span class="nc">DBsWithEnv</span><span class="o">(</span><span class="s">"prod"</span><span class="o">).</span><span class="py">setup</span><span class="o">(</span><span class="s">"sandbox"</span><span class="o">)</span>
 </code></pre></div>
@@ -217,7 +215,7 @@ prod {
 
 <hr/>
 
-<p>The following settings are available.</p>
+<p>Global settings can be adjusted to log SQL errors, connection issues, and more:</p>
 <div class="highlight"><pre class="highlight plaintext"><code># Global settings
 scalikejdbc.global.loggingSQLErrors=true
 scalikejdbc.global.loggingConnections=true
@@ -257,7 +255,7 @@ scalikejdbc.global.loggingSQLAndTime.stackTraceDepth=10
           <p><a href="/documentation/playframework-support.html">Play Framework</a></p>
           <p><a href="/documentation/reactivestreams-support.html">Reactive Streams</a></p>
           <p><a href="/documentation/dbconsole.html">dbconsole</a></p>
-          <p><a href="https://www.javadoc.io/doc/org.scalikejdbc/scalikejdbc-core_2.13/4.2.1">Core API Doc</a></p>
+          <p><a href="https://www.javadoc.io/doc/org.scalikejdbc/scalikejdbc-core_2.13/4.3.0">Core API Doc</a></p>
           <p><a href="/documentation/faq.html">FAQ</a></p>
           <p><a href="/documentation/testimonials.html">Testimonials</a></p>
           <p><a href="/contribution.html">Contribution</a></p>

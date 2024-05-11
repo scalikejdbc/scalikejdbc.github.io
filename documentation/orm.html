@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <!-- Use title if it's in the page YAML frontmatter -->
+    <title>ORM - ScalikeJDBC</title>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+    <link href="/stylesheets/all.css" rel="stylesheet" />
+    <script src="/javascripts/all.js"></script>
+  </head>
+  <body>
+    <div class="container">
+    <div class="navbar" role="navigation" id="header">
+      <div class="container">
+        <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li><a class="navbar-brand" href="/">ScalikeJDBC</a></li>
+            <li><a href="https://groups.google.com/group/scalikejdbc-users-group">Users Group</a></li>
+            <li><a href="https://github.com/scalikejdbc/scalikejdbc">GitHub</a></li>
+            <li><a href="https://skinny-framework.github.io/documentation/orm.html">Skinny ORM</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+    <div class="col-xs-6 pull-right" style="height:50px;">
+      <gcse:searchbox-only></gcse:searchbox-only>
+    </div>
+      <div class="col-xs-9 left">
+        <div class="content">
+          ## ORM
+
+<hr/>
+### Rich O/R Mapper
+<hr/>
+
+For those who require more robust functionalities, consider using scalikejdbc-orm. This extension is an O/R mapper built on top of the ScalikeJDBC core library, drawing significant inspiration from Ruby on Rails' ActiveRecord library.
+
+#### Efficient Data Fetching with Join Queries / Eager Loading
+
+One of the standout features of scalikejdbc-orm is its ability to efficiently handle data associations, effectively eliminating the common N+1 query problem. This is achieved through the smart use of join queries in resolving associations like `#belongsTo`, `#hasOne`, and `#hasMany/#hasManyThrough`. These are processed behind the scenes, allowing you to focus on your application without worrying about performance degradation due to N+1 issues.
+
+While join queries are suitable for many scenarios, some complex data relationships might require a different approach. For such use cases, you can do eager loading (i.e. resolve the main entity and then perform in-clause query to resolve deep nested associations) with the `#includes` method.
+
+<hr/>
+### Setup
+<hr/>
+
+In addition to the core library, add the library along with a JDBC driver and logging tool:
+
+```scala
+libraryDependencies ++= Seq(
+  "org.scalikejdbc" %% "scalikejdbc-orm" % "4.3.0",
+  "com.h2database"  %  "h2"              % "2.2.224",
+  "ch.qos.logback"  %  "logback-classic" % "1.5.6"
+)
+```
+
+<hr/>
+### Quick Example
+<hr/>
+
+Save the following code as `example.scala`:
+
+```scala
+import java.time.ZonedDateTime
+
+import scalikejdbc.*
+import scalikejdbc.orm.*
+import scalikejdbc.orm.timstamps.TimestampsFeature
+
+case class Email(
+  id: Long,
+  memberId: Long,
+  address: String,
+)
+object Email extends CRUDMapper[Email] {
+  override lazy val tableName = "member_email"
+  lazy val defaultAlias = createAlias("me")
+  def extract(rs: WrappedResultSet, e: ResultName[Email]): Email = autoConstruct(rs, e)
+}
+
+case class Member(
+  id: Long,
+  name: Option[String],
+  createdAt: ZonedDateTime,
+  updatedAt: Option[ZonedDateTime],
+  email: Option[Email] = None,
+)
+object Member extends CRUDMapper[Member] with TimestampsFeature[Member] {
+  lazy val defaultAlias = createAlias("m")
+  def extract(rs: WrappedResultSet, n: ResultName[Member]): Member = autoConstruct(rs, n, "email")
+
+  val email = hasOne[Email](Email, (m, e) => m.copy(email = e))
+}
+
+class Example extends App {
+  // ### Database connection ###
+  Class.forName("org.h2.Driver")
+  ConnectionPool.singleton("jdbc:h2:mem:hello;MODE=PostgreSQL", "user", "pass")
+  implicit val session = AutoSession
+
+  // ### Create tables ###
+  sql"""create table member (
+    id serial not null primary key,
+    name varchar(64),
+    created_at timestamp not null,
+    updated_at timestamp
+  )""".execute.apply()
+  sql"""create table member_email (
+    id serial not null primary key,
+    member_id int not null,
+    address varchar(256) not null
+  )""".execute.apply()
+
+  val m = Member.column
+
+  // ### Insert rows ###
+  val ids = Seq("Alice", "Bob", "Chris") map { name =>
+    // insert into member (name, created_at, updated_at) values ('Alice', '2024-05-11 14:52:27.13', '2024-05-11 14:52:27.13');
+    Member.createWithNamedValues(m.name -> name)
+  }
+
+  // ### Find all rows ###
+  // select m.id as i_on_m, m.name as n_on_m, m.created_at as ca_on_m, m.updated_at as ua_on_m from member m order by m.id;
+  val allMembers1: Seq[Member] = Member.findAll()
+  // select m.id as i_on_m, m.name as n_on_m, m.created_at as ca_on_m, m.updated_at as ua_on_m from member m where m.id in (1, 2, 3);
+  val allMembers2: Seq[Member] = Member.findAllByIds(ids*)
+
+  // ### Run queries with where conditions ###
+  // Quick way but less type-safety
+  // select m.id as i_on_m, m.name as n_on_m, m.created_at as ca_on_m, m.updated_at as ua_on_m from member m where m.name = 'Alice' order by m.id;
+  val member1: Seq[Member] = Member.where("name" -> "Alice").apply()
+  // Types-safe query builder
+  // select m.id as i_on_m, m.name as n_on_m, m.created_at as ca_on_m, m.updated_at as ua_on_m from member m where name = 'Alice' order by m.id;
+  val member2: Seq[Member] = Member.where(sqls.eq(m.name, "Alice")).apply()
+
+  val memberId = member2.head.id
+
+  // ### Run join queries ###
+  val e = Email.column
+  // insert into member_email (member_id, address) values (1, 'a@example.com');
+  Email.createWithNamedValues(e.memberId -> memberId, e.address -> "a@example.com")
+
+  // Note that member3.email exists while it does not in member1,2
+  // select m.id as i_on_m, m.name as n_on_m, m.created_at as ca_on_m, m.updated_at as ua_on_m , me.id as i_on_me, me.member_id as mi_on_me, me.address as a_on_me from member m left join member_email me on m.id = me.member_id where name = 'Alice' order by m.id;
+  val member3 = Member.joins(Member.email).where(sqls.eq(m.name, "Alice")).apply()
+
+  // ### Update/delete rows ###
+  // update member set updated_at = '2024-05-11 14:52:27.188', name = 'Ace' where id = 1;
+  Member.updateById(memberId).withAttributes("name" -> "Ace")
+  // delete from member where id = 1;
+  Member.deleteById(memberId)
+}
+```
+
+Run the code by the `sbt run` command. How did it go?
+
+<hr/>
+### Associations
+<hr/>
+
+The key feature of ORM is definitely how it resolves associations for developers. ScalikeJDBC ORM does it in a quite similar way to ActiveRecord from Ruby on Rails. In this section, we will guide you on how to define assocations in code.
+
+In the realm of O/R mapper, the hallmark feature lies in its ability to effortlessly resolve associations for developers. ScalikeJDBC ORM achieves this with a striking resemblance to ActiveRecord from Ruby on Rails. In the following section, we'll walk you through defining associations in your code.
+
+[This test code](https://github.com/scalikejdbc/scalikejdbc/tree/master/scalikejdbc-orm/src/test/scala/basic_test/accounts) provides invaluable insights for learning. If you're unable to find specific examples here, referring to the code will be greatly helpful.
+
+#### hasOne
+
+The `hasOne` relationship signifies that table A is referenced from table B via table A's primary key. Your code aims to include table B's data within the entity of table A. In the following example, the `Member` entity (representing table A) includes a `name` property, which can be resolved using the `member_id` column within the `Name` entity (representing table B).
+
+```scala
+import scalikejdbc.*
+import scalikejdbc.orm.*
+
+case class Member(
+  id: Long,
+  name: Option[Name] = None,
+)
+object Member extends CRUDMapper[Member] {
+  override val tableName = "members"
+  override val defaultAlias = createAlias("m")
+  override def extract(rs: WrappedResultSet, n: ResultName[Member]): Member = autoConstruct(rs, rn, "name")
+
+  val name: Association[Member] = hasOne[Name](Name, (m, name) => m.copy(name = name))
+}
+
+case class Name(
+  memberId: Long,
+  first: String,
+  last: String,
+)
+
+object Name extends CRUDMapper[Name] {
+  override val useAutoIncrementPrimaryKey = false
+  override val tableName = "names"
+  override val primaryKeyFieldName = "memberId"
+  override val defaultAlias = createAlias("nm")
+
+  def extract(rs: WrappedResultSet, s: ResultName[Name]): Name = autoConstruct(rs, s)
+}
+```
+
+Your code can run queries this way:
+
+```scala
+// Finder method style
+val member: Option[Member] = Member.joins(Member.name).findById(123)
+
+// Querying API style
+val member: Option[Member] = Member.joins(Member.name).where(sqls.eq(m.id, 123)).apply()
+```
+
+If table B has a row with `member_id: 123`, `member.map(_.name)` is present. When you can assume the `name` already exists and would like to resolve the data at any time, add `#byDefault` method call to the `hasOne` call as below. In this case, you'll never need to have the reference to the result. Thus, you can remove `Member.name` property.
+
+```scala
+object Member extends CRUDMapper[Member] {
+  // ....
+
+  hasOne[Name](Name, (m, name) => m.copy(name = name)).byDefault
+}
+```
+
+This `#byDefault` method is available for all other association APIs.
+
+#### belongsTo
+
+The `belongsTo` relationship indicates that table B is referenced from table A via table B's primary key. Your code aims to incorporate table B's data into the entity of table A. In the following example, the `Member` entity (representing table A) includes a `company` property, which can be resolved using the `company_id` column within the entity. From another perspective, the `Company` entity (representing table B) does not contain any information about `Member` (table A).
+
+```scala
+import scalikejdbc.*
+import scalikejdbc.orm.*
+
+case class Member(
+  id: Long,
+  name: String,
+  companyId: Optional[Long],
+  company: Option[Company] = None,
+)
+object Member extends CRUDMapper[Member] {
+  override val defaultAlias = createAlias("m")
+  override def extract(rs: WrappedResultSet, n: ResultName[Member]): Member = autoConstruct(rs, rn, "company")
+
+  val company = belongsTo[Company](Company, (m, c) => m.copy(company = c))
+}
+
+case class Company(
+  id: Long,
+  name: String,
+)
+object Company extends CRUDMapper[Company] {
+ override val defaultAlias = createAlias("c")
+  def extract(rs: WrappedResultSet, s: ResultName[Name]): Name = autoConstruct(rs, s)
+}
+```
+
+Here is a code snippet demonstrating how to perform join queries:
+
+```scala
+val c = Company.column
+val abc = Company.createWithNamedValues(c.name, "ABC Company")
+val m = Member.column
+Member.createWithNamedValues(m.name -> "Kaz", m.companyId -> abc.map(_.id))
+
+val member: Option[Member] =
+  Member.joins(Member.company).where(sqls.eq(m.name, "Kaz")).apply()
+```
+
+As mentioned above, once you add `byDefault` call to the `belongsTo` code line, you can omit `.joins(Member.company)` in the code.
+
+#### hasMany
+
+The `hasMany` relationship denotes that table A is referenced from table B via table A's primary key. Your code seeks to include multiple rows from table B into the entity of table A. In the following example, the `Company` entity (representing table A) contains a `members` property, which can be resolved using the `company_id` column on the `Member` entity side (representing table B).
+
+```scala
+import scalikejdbc.*
+import scalikejdbc.orm.*
+
+case class Company(
+  id: Long,
+  name: String,
+  members: Seq[Member] = Nil,
+)
+object Company extends CRUDMapper[Company] {
+  override val defaultAlias = createAlias("c")
+  def extract(rs: WrappedResultSet, s: ResultName[Name]): Name = autoConstruct(rs, s, "members")
+
+  val members = hasMany[Member](
+    many = Member -> Member.defaultAlias,
+    on = (c, ms) => sqls.eq(c.id, ms.companyId),
+    merge = (c, ms) => c.copy(members = ms)
+  )
+}
+
+case class Member(
+  id: Long,
+  name: String,
+  companyId: Optional[Long],
+)
+object Member extends CRUDMapper[Member] {
+  override val defaultAlias = createAlias("m")
+  override def extract(rs: WrappedResultSet, n: ResultName[Member]): Member = autoConstruct(rs, rn)
+}
+```
+
+Here is a code snippet demonstrating how to perform join queries:
+
+```scala
+val c = Company.column
+val gf = Company.createWithNamedValues(c.name, "Good Flow")
+val companyId = gf.get.id
+val m = Member.column
+Seq("Kaz", "Yu", "Ken") foreach { name => 
+  Member.createWithNamedValues(m.name -> name, m.companyId -> companyId)
+}
+
+// company.map(_.members) is a list of three entities
+val company: Option[Company] =
+  Company.joins(Company.members).findById(companyId)
+```
+
+If everything goes well, `company.map(_.members)` should be a list of three entitiy objects.
+
+#### hasManyThrough
+
+The `hasManyThrough` relationship operates similarly to `hasMany`, but with a crucial distinction: it involves a join table that manages the relationship between table A and table B.
+
+
+```scala
+import scalikejdbc.*
+import scalikejdbc.orm.*
+
+case class Member(
+  id: Long,
+  name: String,
+  skills: Optional[Skill],
+)
+object Member extends CRUDMapper[Member] {
+  override val defaultAlias = createAlias("m")
+  override def extract(rs: WrappedResultSet, n: ResultName[Member]): Member = autoConstruct(rs, rn, "skills")
+
+  val skills = hasManyThrough[Skill](
+    MemberSkill,
+    Skill,
+    (member, ss) => member.copy(skills = ss)
+  )
+}
+
+case class MemberSkill(memberId: Long, skillId: Long)
+object MemberSkill extends JoinTable[MemberSkill] {
+  override val defaultAlias = createAlias("ms")
+}
+case class Skill(id: Long, name: String)
+object Skill extends CRUDMapper[Skill] {
+  override val defaultAlias = createAlias("s")
+  override def extract(rs: WrappedResultSet, s: ResultName[Skill]): Skill = autoConstruct(rs, s)
+}
+```
+
+Here is a code snippet demonstrating how to perform join queries:
+
+```scala
+val alice: Option[Member] =
+Member.joins(Member.skills).findById(123)
+```
+
+The `alice.map(_.skills)` should be a list of `Skill` entities if some skills are saved in the "member_skill" table.
+
+#### includes (Eager Loading)
+
+When enabling eager loading via the `includes` API, it's necessary to define both the `belongsTo` etc. and `includes` within the same association claim.
+
+```scala
+object Member extends SkinnyCRUDMapper[Member] {
+
+  // Unfortunately, in Scala 2.10.x, the combination of Scala macros and type-dynamic may not always behave as expected, particularly when defining "val company". 
+  // If you encounter this issue, consider using alternatives such as "val companyOpt", "companyRef", and so on.
+  lazy val companyOpt = {
+    // Do normal belongsTo def first
+    belongsTo[Company](Company, merge = (m, c) => m.copy(company = c))
+    // Then attach includes following the claim API call
+    .includes[Company](
+      merge = (members, companies) => members.map { m =>
+        companies.find(c => m.company.exists(_.id == c.id))
+          .map(c => m.copy(company = Some(c)))
+          .getOrElse(m)
+      })
+  }
+}
+
+// This line of code performs two queries
+// 1) simple select query to fetch all the member table rows
+// 2) select query with in clause of IDs toward the company table
+// And then the ORM binds the 2) results to relevant entity using the merge function
+Member.includes(Member.companyOpt).findAll()
+```
+
+Here is another example with `hasManyThrough`:
+
+```scala
+object Member extends SkinnyCRUDMapper[Member] {
+  lazy val skills =
+    hasManyThrough[Skill](
+      MemberSkill, Skill, (m, skills) => m.copy(skills = skills)
+    ).includes[Skill]((ms, skills) => ms.map { m =>
+      m.copy(skills = skills.filter(_.memberId.exists(_ == m.id)))
+    })
+}
+
+Member.includes(Member.skills).findById(123) // with skills
+```
+
+Please note that eager loading of more deeply nested entities is not currently supported. 
+
+While it could be feasible with a dynamic programming language like Ruby, achieving the same functionality with a strictly typed language like Scala is quite challenging. At present, we don't have any plans to enhance this feature unless the Scala language provides a revolutionary hack for us to leverage.
+
+For more examples and hands-on learning, please refer to [this example working code](https://github.com/scalikejdbc/scalikejdbc/tree/master/scalikejdbc-orm/src/test/scala/basic_test/accounts). If you have any questions or feature requests, don't hesitate to submit them on GitHub!
+
+          <hr/>
+          <div class="alert alert-warning small">
+            If this webpage has a typo or something wrong, Please report or fix it. <a href="/contribution.html">How?</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xs-3 right">
+        <div class="content small">
+          <h5>Latest version</h5>
+          <hr/>
+          <p><a href="/documentation/setup.html">Setup</a></p>
+          <p><a href="/documentation/configuration.html">Configuration</a></p>
+          <p><a href="/documentation/connection-pool.html">Connection Pool</a></p>
+          <p><a href="/documentation/operations.html">Operations</a></p>
+          <p><a href="/documentation/transaction.html">Transaction</a></p>
+          <p><a href="/documentation/auto-session.html">Auto Session</a></p>
+          <p><a href="/documentation/sql-interpolation.html">SQLInterpolation</a></p>
+          <p><a href="/documentation/query-dsl.html">QueryDSL</a></p>
+          <p><a href="/documentation/one-to-x.html">One-to-x API</a></p>
+          <p><a href="/documentation/auto-macros.html">Auto Macros</a></p>
+          <p><a href="/documentation/query-inspector.html">Logging / Query Inspector</a></p>
+          <p><a href="/documentation/reverse-engineering.html">Reverse Engineering</a></p>
+          <p><a href="/documentation/testing.html">Testing</a></p>
+          <p><a href="/documentation/playframework-support.html">Play Framework</a></p>
+          <p><a href="/documentation/reactivestreams-support.html">Reactive Streams</a></p>
+          <p><a href="/documentation/dbconsole.html">dbconsole</a></p>
+          <p><a href="https://www.javadoc.io/doc/org.scalikejdbc/scalikejdbc-core_2.13/4.3.0">Core API Doc</a></p>
+          <p><a href="/documentation/faq.html">FAQ</a></p>
+          <p><a href="/documentation/testimonials.html">Testimonials</a></p>
+          <p><a href="/contribution.html">Contribution</a></p>
+          <hr/>
+          <h5>Older Versions</h5>
+          <hr/>
+          <p><a href="/documentation/2.x/">version 2.x</a></p>
+          <p><a href="/documentation/1.x/">version 1.x</a></p>
+        </div>
+      </div>
+    </div>
+    </div>
+    <script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script>
+(function() {
+var cx = '000372347144050476309:fnw5lotlq6o';
+var gcse = document.createElement('script');
+gcse.type = 'text/javascript';
+gcse.async = true;
+gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//cse.google.com/cse.js?cx=' + cx;
+var s = document.getElementsByTagName('script')[0];
+s.parentNode.insertBefore(gcse, s);
+})();
+</script>
+  </body>
+</html>

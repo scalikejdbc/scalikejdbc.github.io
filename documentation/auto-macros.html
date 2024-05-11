@@ -37,7 +37,7 @@
 
 <hr/>
 
-<p>You can avoid writing boilerplate code when using <code>scalikejdbc-syntax-support-macro</code>.</p>
+<p>If you want to avoid writing lots of boilerplate code, <code>scalikejdbc-syntax-support-macro</code> can be greatly helpful for reducing such troublesome coding tasks.</p>
 
 <hr/>
 
@@ -45,8 +45,8 @@
 
 <hr/>
 
-<p>Add the following aditional dependency to your sbt project.</p>
-<div class="highlight"><pre class="highlight scala"><code><span class="n">libraryDependencies</span> <span class="o">+=</span> <span class="s">"org.scalikejdbc"</span> <span class="o">%%</span> <span class="s">"scalikejdbc-syntax-support-macro"</span> <span class="o">%</span> <span class="s">"4.2.1"</span>
+<p>In addition to the core library, you can add the following optional dependency in <code>buid.sbt</code>:</p>
+<div class="highlight"><pre class="highlight scala"><code><span class="n">libraryDependencies</span> <span class="o">+=</span> <span class="s">"org.scalikejdbc"</span> <span class="o">%%</span> <span class="s">"scalikejdbc-syntax-support-macro"</span> <span class="o">%</span> <span class="s">"4.3.0"</span>
 </code></pre></div>
 <hr/>
 
@@ -56,8 +56,13 @@
 
 <h4 id="autoconstruct-for-extracting-entities-from-resultset">autoConstruct for extracting entities from ResultSet</h4>
 
-<p>Usually, we should write ResultSet extractor method as follows.</p>
-<div class="highlight"><pre class="highlight scala"><code><span class="k">case</span> <span class="k">class</span> <span class="nc">Company</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">countryId</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Long</span><span class="o">],</span> <span class="n">country</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Country</span><span class="o">]</span> <span class="k">=</span> <span class="nc">None</span><span class="o">)</span>
+<p>When you don&rsquo;t use the macros, the usual code to extract data from <code>ResultSet</code> should look like below:</p>
+<div class="highlight"><pre class="highlight scala"><code><span class="k">case</span> <span class="k">class</span> <span class="nc">Company</span><span class="o">(</span>
+  <span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span>
+  <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> 
+  <span class="n">countryId</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Long</span><span class="o">],</span>
+  <span class="n">country</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Country</span><span class="o">]</span> <span class="k">=</span> <span class="nc">None</span>
+<span class="o">)</span>
 
 <span class="k">object</span> <span class="nc">Company</span> <span class="k">extends</span> <span class="nc">SQLSyntaxSupport</span><span class="o">[</span><span class="kt">Company</span><span class="o">]</span> <span class="o">{</span>
 
@@ -68,28 +73,34 @@
   <span class="o">)</span>
 <span class="o">}</span>
 </code></pre></div>
-<p>When using scalikejdbc-syntax-support-macro, you can use <code>#autoConstruct</code> macro. </p>
-<div class="highlight"><pre class="highlight scala"><code><span class="k">case</span> <span class="k">class</span> <span class="nc">Company</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">countryId</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Long</span><span class="o">],</span> <span class="n">country</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Country</span><span class="o">]</span> <span class="k">=</span> <span class="nc">None</span><span class="o">)</span>
+<p>When using scalikejdbc-syntax-support-macro, you can use <code>#autoConstruct</code> macro instead. As you can see, now the code is significantly simpler and much easier to maintain for the future.</p>
+<div class="highlight"><pre class="highlight scala"><code><span class="k">case</span> <span class="k">class</span> <span class="nc">Company</span><span class="o">(</span>
+  <span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span>
+  <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> 
+  <span class="n">countryId</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Long</span><span class="o">],</span>
+  <span class="c1">// This property never comes from ResultSet</span>
+  <span class="n">country</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Country</span><span class="o">]</span> <span class="k">=</span> <span class="nc">None</span>
+<span class="o">)</span>
 
 <span class="k">object</span> <span class="nc">Company</span> <span class="k">extends</span> <span class="nc">SQLSyntaxSupport</span><span class="o">[</span><span class="kt">Company</span><span class="o">]</span> <span class="o">{</span>
 
   <span class="k">def</span> <span class="nf">apply</span><span class="o">(</span><span class="n">rs</span><span class="k">:</span> <span class="kt">WrappedResultSet</span><span class="o">,</span> <span class="n">rn</span><span class="k">:</span> <span class="kt">ResultName</span><span class="o">[</span><span class="kt">Company</span><span class="o">])</span><span class="k">:</span> <span class="kt">Company</span> <span class="o">=</span> 
-    <span class="nf">autoConstruct</span><span class="o">(</span><span class="n">rs</span><span class="o">,</span> <span class="n">rn</span><span class="o">,</span> <span class="s">"country"</span><span class="o">)</span> <span class="c1">// "country" will be ignored when binding values from ResultSet</span>
+    <span class="c1">// "country" is execluded when binding values from ResultSet</span>
+    <span class="c1">// Note that the property neeeds to have the default `None` value</span>
+    <span class="nf">autoConstruct</span><span class="o">(</span><span class="n">rs</span><span class="o">,</span> <span class="n">rn</span><span class="o">,</span> <span class="s">"country"</span><span class="o">)</span>
 <span class="o">}</span>
 </code></pre></div>
 <p>The <code>#autoConstruct</code> method binds all the fields defined at the primary constructor automatically.</p>
 
-<p>The <code>country</code> field in the above example class should be ignored. In such cases, you should specify additional String parameter such as <code>&quot;country&quot;</code>.
-Of course, the <code>&quot;country&quot;</code> will be verified at Scala compilation time. We believe that&rsquo;s pretty cool and useful.</p>
+<p>The <code>country</code> field in the above example class should be ignored. In such cases, you should specify an additional String parameter such as &ldquo;country&rdquo;. Of course, the &ldquo;country&rdquo; will be verified at Scala compilation time!</p>
 
 <hr/>
 
 <h4 id="autocolumns-to-avoid-accessing-jdbc-metadata">autoColumns to avoid accessing JDBC metadata</h4>
 
-<p>When your code load ScalikeJDBC DAO objects, ScalikeJDBC automatically fetches all the column names for the table specified by SQLSyntaxSupport&rsquo;s <code>tableName</code> (via JDBC metadata API).</p>
+<p>When your code loads ScalikeJDBC DAO objects, ScalikeJDBC automatically fetches all the column names for the table specified by <code>SQLSyntaxSupport</code>&lsquo;s <code>tableName</code> via the JDBC metadata API.</p>
 
-<p>If you don&rsquo;t prefer the behavior, you can choose loading column names from the entity class&rsquo;s field names instead.
-The following code won&rsquo;t access JDBC metadata and will resolve column names from Company class&rsquo;s fields, primary constructor&rsquo;s parameters, by simply converting them to snake-cased ones or applying nameConverters to them.</p>
+<p>If you don&rsquo;t prefer the behavior, you can choose to load column names from the entity class&rsquo;s field names instead. The following code won&rsquo;t access JDBC metadata and will resolve column names from the <code>Company</code> class&rsquo;s fields and primary constructor&rsquo;s parameters by simply converting them to snake-cased ones or applying name converters to them.</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">case</span> <span class="k">class</span> <span class="nc">Company</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">countryId</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Long</span><span class="o">],</span> <span class="n">country</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Country</span><span class="o">]</span> <span class="k">=</span> <span class="nc">None</span><span class="o">)</span>
 
 <span class="k">object</span> <span class="nc">Company</span> <span class="k">extends</span> <span class="nc">SQLSyntaxSupport</span><span class="o">[</span><span class="kt">Company</span><span class="o">]</span> <span class="o">{</span>
@@ -125,7 +136,7 @@ The following code won&rsquo;t access JDBC metadata and will resolve column name
           <p><a href="/documentation/playframework-support.html">Play Framework</a></p>
           <p><a href="/documentation/reactivestreams-support.html">Reactive Streams</a></p>
           <p><a href="/documentation/dbconsole.html">dbconsole</a></p>
-          <p><a href="https://www.javadoc.io/doc/org.scalikejdbc/scalikejdbc-core_2.13/4.2.1">Core API Doc</a></p>
+          <p><a href="https://www.javadoc.io/doc/org.scalikejdbc/scalikejdbc-core_2.13/4.3.0">Core API Doc</a></p>
           <p><a href="/documentation/faq.html">FAQ</a></p>
           <p><a href="/documentation/testimonials.html">Testimonials</a></p>
           <p><a href="/contribution.html">Contribution</a></p>

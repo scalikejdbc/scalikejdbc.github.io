@@ -37,13 +37,15 @@
 
 <hr/>
 
-<p>Using LoggingSQLAndTime feature, you can check the actual SQL(not exactly) and time.</p>
+<p>With the LoggingSQLAndTime feature, you can monitor the actual SQL queries executed (although not necessarily the exact text) and their execution time.</p>
 
 <hr/>
 
 <h3 id="settings">Settings</h3>
 
 <hr/>
+
+<p>To configure SQL logging and timing, adjust the <code>GlobalSettings.loggingSQLAndTime</code> as follows:</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">import</span> <span class="nn">scalikejdbc._</span>
 
 <span class="nv">GlobalSettings</span><span class="o">.</span><span class="py">loggingSQLAndTime</span> <span class="k">=</span> <span class="nc">LoggingSQLAndTimeSettings</span><span class="o">(</span>
@@ -63,7 +65,7 @@
 
 <hr/>
 
-<p>For example, logging as follows:</p>
+<p>Here&rsquo;s an example of how logging appears with these settings:</p>
 <div class="highlight"><pre class="highlight shell"><code><span class="o">[</span>debug] s.StatementExecutor<span class="nv">$$</span>anon<span class="nv">$1</span> - SQL execution completed
 
   <span class="o">[</span>Executed SQL]
@@ -94,14 +96,14 @@
 
 <hr/>
 
-<p>If you don&rsquo;t need stack trace logging and just print SQL in single line, use <code>singleLineMode = true</code>.</p>
+<p>If you prefer a more concise output without stack traces and in a single line, enable singleLineMode:</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="nv">GlobalSettings</span><span class="o">.</span><span class="py">loggingSQLAndTime</span> <span class="k">=</span> <span class="nc">LoggingSQLAndTimeSettings</span><span class="o">(</span>
   <span class="n">enabled</span> <span class="k">=</span> <span class="kc">true</span><span class="o">,</span>
   <span class="n">singleLineMode</span> <span class="k">=</span> <span class="kc">true</span><span class="o">,</span>
   <span class="n">logLevel</span> <span class="k">=</span> <span class="s">"debug"</span>
 <span class="o">)</span>
 </code></pre></div>
-<p>In this case, logging as follows:</p>
+<p>The log output will then simplify to:</p>
 <div class="highlight"><pre class="highlight shell"><code>2013-05-26 16:23:08,072 DEBUG <span class="o">[</span>pool-4-thread-4] s.StatementExecutor<span class="nv">$$</span>anon<span class="nv">$1</span> <span class="o">[</span>Log.scala:81] <span class="o">[</span>SQL Execution] <span class="k">select</span> <span class="k">*</span> from user where email <span class="o">=</span> <span class="s1">'guillaume@sample.com'</span><span class="p">;</span> <span class="o">(</span>0 ms<span class="o">)</span>
 </code></pre></div>
 <hr/>
@@ -110,9 +112,9 @@
 
 <hr/>
 
-<p>You can use hooks such as <code>GlobalSettings.queryCompletionListener</code> and <code>GlobalSettings.queryFailureListener</code>.</p>
+<p>Beyond simple logging, ScalikeJDBC provides hooks like <code>GlobalSettings.queryCompletionListener</code> and <code>GlobalSettings.queryFailureListener</code> for additional monitoring and actions.</p>
 
-<p>For instance, the following example will send information about slow queries to Fluentd.</p>
+<p>For instance, the following example demonstrates how to send information about slow queries to Fluentd.</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">import</span> <span class="nn">org.fluentd.logger.scala._</span>
 <span class="k">val</span> <span class="nv">logger</span> <span class="k">=</span> <span class="nv">FluentLoggerFactory</span><span class="o">.</span><span class="py">getLogger</span><span class="o">(</span><span class="s">"scalikejdbc"</span><span class="o">)</span>
 
@@ -130,7 +132,7 @@
     <span class="o">.</span><span class="py">map</span><span class="o">(</span><span class="n">rs</span> <span class="k">=&gt;</span> <span class="nc">OrderCount</span><span class="o">(</span><span class="n">rs</span><span class="o">)).</span><span class="py">list</span><span class="o">.</span><span class="py">apply</span><span class="o">()</span>
 <span class="o">}</span>
 </code></pre></div>
-<p>Since version 2.2.1, you can attach tags to each query. This feature will help you when classifying queries.</p>
+<p>Additionally, from version 2.2.1, you can use tags to categorize queries for better classification and analysis:</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="nv">GlobalSettings</span><span class="o">.</span><span class="py">taggedQueryCompletionListener</span> <span class="k">=</span> <span class="o">(</span><span class="n">sql</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="n">params</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Any</span><span class="o">],</span> <span class="n">millis</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">tags</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">String</span><span class="o">])</span> <span class="k">=&gt;</span> <span class="o">{</span>
   <span class="c1">// do something here</span>
 <span class="o">}</span>
@@ -144,6 +146,8 @@
     <span class="o">.</span><span class="py">map</span><span class="o">(</span><span class="n">rs</span> <span class="k">=&gt;</span> <span class="nc">OrderCount</span><span class="o">(</span><span class="n">rs</span><span class="o">)).</span><span class="py">list</span><span class="o">.</span><span class="py">apply</span><span class="o">()</span>
 <span class="o">}</span>
 </code></pre></div>
+<p>These features enhance the ability to monitor, analyze, and respond to database query performance directly within your application.</p>
+
           <hr/>
           <div class="alert alert-warning small">
             If this webpage has a typo or something wrong, Please report or fix it. <a href="/contribution.html">How?</a>
@@ -171,7 +175,7 @@
           <p><a href="/documentation/playframework-support.html">Play Framework</a></p>
           <p><a href="/documentation/reactivestreams-support.html">Reactive Streams</a></p>
           <p><a href="/documentation/dbconsole.html">dbconsole</a></p>
-          <p><a href="https://www.javadoc.io/doc/org.scalikejdbc/scalikejdbc-core_2.13/4.2.1">Core API Doc</a></p>
+          <p><a href="https://www.javadoc.io/doc/org.scalikejdbc/scalikejdbc-core_2.13/4.3.0">Core API Doc</a></p>
           <p><a href="/documentation/faq.html">FAQ</a></p>
           <p><a href="/documentation/testimonials.html">Testimonials</a></p>
           <p><a href="/contribution.html">Contribution</a></p>

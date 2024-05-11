@@ -33,21 +33,20 @@
 
 <hr/>
 
-<p>Since ScalikejDBC 3.0, we support the <a href="https://www.reactive-streams.org/reactive-streams-1.0.4-javadoc/org/reactivestreams/Publisher.html">Publisher</a> of Reactive Streams to subscribe a stream from a database query.
-<code>scalikejdbc-streams</code> is a Reactive Streams 1.0 compliant implementation.
-It passes the existing unit tests to satisfy PublisherVerification in <a href="https://github.com/reactive-streams/reactive-streams-jvm/tree/v1.0.0/tck">Reactive Streams TCK</a>.</p>
+<p>Since version 3.0, ScalikeJDBC has introduced support for the <a href="https://www.reactive-streams.org/reactive-streams-1.0.4-javadoc/org/reactivestreams/Publisher.html">Publisher</a> interface of Reactive Streams. This allows you to subscribe to a stream of results from a database query, enhancing the library&rsquo;s capabilities for handling data flows reactively.</p>
 
-<p>This library is originally assumed to be suitable for batch applications.
-You need to keep borrowing a connection while someone is subscribing a stream provided by <code>scalikejdbc-streams</code>.
-Be aware of the max size of connection pool and carefully monitor the state of the pool.
-<hr/></p>
+<p>scalikejdbc-streams is a Reactive Streams 1.0 compliant implementation, which passes the <code>PublisherVerification</code> tests within the <a href="https://github.com/reactive-streams/reactive-streams-jvm/tree/v1.0.0/tck">Reactive Streams TCK</a>. </p>
+
+<p>Originally, scalikejdbc-streams is assumed to be particularly suitable for batch applications that require processing large datasets. Note that you need to keep borrowing a connection while someone is still subscribing a stream provided by <code>scalikejdbc-streams</code>. Also, be aware of the max size of connection pool and carefully monitor the state of the pool.</p>
+
+<hr/>
 
 <h3 id="setup">Setup</h3>
 
 <hr/>
 
 <p>Add the following aditional dependency to your sbt project.</p>
-<div class="highlight"><pre class="highlight scala"><code><span class="n">libraryDependencies</span> <span class="o">+=</span> <span class="s">"org.scalikejdbc"</span> <span class="o">%%</span> <span class="s">"scalikejdbc-streams"</span> <span class="o">%</span> <span class="s">"4.2.1"</span>
+<div class="highlight"><pre class="highlight scala"><code><span class="n">libraryDependencies</span> <span class="o">+=</span> <span class="s">"org.scalikejdbc"</span> <span class="o">%%</span> <span class="s">"scalikejdbc-streams"</span> <span class="o">%</span> <span class="s">"4.3.0"</span>
 </code></pre></div>
 <hr/>
 
@@ -89,8 +88,8 @@ Be aware of the max size of connection pool and carefully monitor the state of t
 <span class="c1">// 4. Give a Reactive Streams Subscriber to it.</span>
 <span class="nv">publisher</span><span class="o">.</span><span class="py">subscribe</span><span class="o">(</span><span class="n">subscriber</span><span class="o">)</span>
 </code></pre></div>
-<p>The DatabasePublisher capsulates an ExecutionContext to inside.
-We also recommend using ExecutionContext which is separate from the main thread pool.</p>
+<p>The <code>DatabasePublisher</code> capsulates an <code>ExecutionContext</code> to inside.
+We also recommend using <code>ExecutionContext</code> which is separate from the main thread pool.</p>
 
 <p>The Subscriber example is here:
 <a href="https://github.com/reactive-streams/reactive-streams-jvm/blob/master/examples/src/main/java/org/reactivestreams/example/unicast/AsyncSubscriber.java">Reactive Streams Example - AsyncSubscriber</a></p>
@@ -114,8 +113,7 @@ If you don&rsquo;t prefer the behavior, you can customize adjusting DBSession at
 
 <h4 id="integrate-with-akka-streams">Integrate with Akka Streams</h4>
 
-<p>It is easy to integrate <code>scalikejdbc-streams</code> with another library that supports Reactive Streams.
-For example, Akka Streams, you can give a ScalikeJDBC&rsquo;s publisher to Akka Streams Source as follows.</p>
+<p>It is easy to integrate <code>scalikejdbc-streams</code> with another library that supports Reactive Streams. For example, Akka Streams, you can give a ScalikeJDBC&rsquo;s publisher to Akka Streams Source as follows.</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">implicit</span> <span class="k">val</span> <span class="nv">system</span> <span class="k">=</span> <span class="nc">ActorSystem</span><span class="o">(</span><span class="s">"streams"</span><span class="o">)</span>
 <span class="k">import</span> <span class="nn">system.dispatcher</span>
 <span class="k">implicit</span> <span class="k">val</span> <span class="nv">materializer</span> <span class="k">=</span> <span class="nc">ActorMaterializer</span><span class="o">()</span>
@@ -149,7 +147,7 @@ For example, Akka Streams, you can give a ScalikeJDBC&rsquo;s publisher to Akka 
           <p><a href="/documentation/playframework-support.html">Play Framework</a></p>
           <p><a href="/documentation/reactivestreams-support.html">Reactive Streams</a></p>
           <p><a href="/documentation/dbconsole.html">dbconsole</a></p>
-          <p><a href="https://www.javadoc.io/doc/org.scalikejdbc/scalikejdbc-core_2.13/4.2.1">Core API Doc</a></p>
+          <p><a href="https://www.javadoc.io/doc/org.scalikejdbc/scalikejdbc-core_2.13/4.3.0">Core API Doc</a></p>
           <p><a href="/documentation/faq.html">FAQ</a></p>
           <p><a href="/documentation/testimonials.html">Testimonials</a></p>
           <p><a href="/contribution.html">Contribution</a></p>

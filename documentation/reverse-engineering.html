@@ -44,19 +44,21 @@
 <h3 id="sbt-command">Sbt Command</h3>
 
 <hr/>
+
+<p>To generate Scala case classes and companion objects for your database tables using ScalikeJDBC, you can use the <code>scalikejdbcGen</code> command in sbt. Here&rsquo;s how to use it:</p>
 <div class="highlight"><pre class="highlight shell"><code>sbt <span class="s2">"scalikejdbcGen [table-name (class-name)]"</span>
-</code></pre></div>
-<p>e.g.</p>
-<div class="highlight"><pre class="highlight shell"><code>sbt <span class="s2">"scalikejdbcGen company"</span>
+sbt <span class="s2">"scalikejdbcGen company"</span>
 sbt <span class="s2">"scalikejdbcGen companies Company"</span>
 </code></pre></div>
+<p>These commands generate Scala models that correspond to the structure of your database tables, simplifying the process of interacting with these tables through ScalikeJDBC.</p>
+
 <hr/>
 
 <h3 id="output-example">Output Example</h3>
 
 <hr/>
 
-<p>From the following table:</p>
+<p>Given a SQL table defined as follows:</p>
 <div class="highlight"><pre class="highlight sql"><code><span class="k">create</span> <span class="k">table</span> <span class="n">member</span> <span class="p">(</span>
   <span class="n">id</span> <span class="nb">int</span> <span class="k">generated</span> <span class="n">always</span> <span class="k">as</span> <span class="k">identity</span><span class="p">,</span>
   <span class="n">name</span> <span class="nb">varchar</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span> <span class="k">not</span> <span class="k">null</span><span class="p">,</span>
@@ -66,7 +68,7 @@ sbt <span class="s2">"scalikejdbcGen companies Company"</span>
   <span class="k">primary</span> <span class="k">key</span><span class="p">(</span><span class="n">id</span><span class="p">)</span>
 <span class="p">)</span>
 </code></pre></div>
-<p>This tool will generate the following Scala source code:</p>
+<p>The <code>scalikejdbcGen</code> tool will generate Scala source code that might look something like this:</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">package</span> <span class="nn">models</span>
 
 <span class="k">import</span> <span class="nn">scalikejdbc._</span>
@@ -84,7 +86,6 @@ sbt <span class="s2">"scalikejdbcGen companies Company"</span>
   <span class="k">def</span> <span class="nf">destroy</span><span class="o">()(</span><span class="k">implicit</span> <span class="n">session</span><span class="k">:</span> <span class="kt">DBSession</span> <span class="o">=</span> <span class="nv">Member</span><span class="o">.</span><span class="py">autoSession</span><span class="o">)</span><span class="k">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="nv">Member</span><span class="o">.</span><span class="py">destroy</span><span class="o">(</span><span class="k">this</span><span class="o">)(</span><span class="n">session</span><span class="o">)</span>
 
 <span class="o">}</span>
-
 
 <span class="k">object</span> <span class="nc">Member</span> <span class="k">extends</span> <span class="nc">SQLSyntaxSupport</span><span class="o">[</span><span class="kt">Member</span><span class="o">]</span> <span class="o">{</span>
 
@@ -198,7 +199,7 @@ sbt <span class="s2">"scalikejdbcGen companies Company"</span>
 
 <span class="o">}</span>
 </code></pre></div>
-<p>And specs2 or ScalaTest&rsquo;s FlatSpec.</p>
+<p>And specs2 or ScalaTest&rsquo;s FlatSpec as well:</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">package</span> <span class="nn">models</span>
 
 <span class="k">import</span> <span class="nn">scalikejdbc.specs2.mutable.AutoRollback</span>
@@ -292,7 +293,7 @@ sbt <span class="s2">"scalikejdbcGen companies Company"</span>
           <p><a href="/documentation/playframework-support.html">Play Framework</a></p>
           <p><a href="/documentation/reactivestreams-support.html">Reactive Streams</a></p>
           <p><a href="/documentation/dbconsole.html">dbconsole</a></p>
-          <p><a href="https://www.javadoc.io/doc/org.scalikejdbc/scalikejdbc-core_2.13/4.2.1">Core API Doc</a></p>
+          <p><a href="https://www.javadoc.io/doc/org.scalikejdbc/scalikejdbc-core_2.13/4.3.0">Core API Doc</a></p>
           <p><a href="/documentation/faq.html">FAQ</a></p>
           <p><a href="/documentation/testimonials.html">Testimonials</a></p>
           <p><a href="/contribution.html">Contribution</a></p>

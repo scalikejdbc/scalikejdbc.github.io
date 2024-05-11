@@ -37,7 +37,7 @@
 
 <hr/>
 
-<p>There are various query APIs. All of them (<code>single</code>, <code>first</code>, <code>list</code> and <code>foreach</code>) will execute <code>java.sql.PreparedStatement#executeQuery()</code>.</p>
+<p>ScalikeJDBC provides a variety of query APIs including <code>single</code>, <code>first</code>, <code>list</code>, and <code>foreach</code>. Each of these functions will execute the <code>java.sql.PreparedStatement#executeQuery()</code>.</p>
 
 <hr/>
 
@@ -45,7 +45,7 @@
 
 <hr/>
 
-<p><code>single</code> returns matched single row as an <code>Option</code> value. If unexpectedly multiple rows are returned, runtime exception will be thrown.</p>
+<p>The <code>single</code> API returns a single matched row as an <code>Option</code>. If multiple rows are returned unexpectedly, a runtime exception is thrown.</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">import</span> <span class="nn">scalikejdbc._</span>
 
 <span class="k">val</span> <span class="nv">id</span> <span class="k">=</span> <span class="mi">123</span>
@@ -87,7 +87,7 @@
 
 <hr/>
 
-<p><code>first</code> returns the first row of matched rows as an <code>Option</code> value.</p>
+<p>The <code>first</code> API retrieves the first row from the matched rows and returns it as an <code>Option</code>.</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">val</span> <span class="nv">name</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">String</span><span class="o">]</span> <span class="k">=</span> <span class="nc">DB</span> <span class="n">readOnly</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span>
   <span class="n">sql</span><span class="s">"select name from emp"</span><span class="o">.</span><span class="py">map</span><span class="o">(</span><span class="n">rs</span> <span class="k">=&gt;</span> <span class="nv">rs</span><span class="o">.</span><span class="py">string</span><span class="o">(</span><span class="s">"name"</span><span class="o">)).</span><span class="py">first</span><span class="o">.</span><span class="py">apply</span><span class="o">()</span>
 <span class="o">}</span>
@@ -103,7 +103,7 @@
 
 <hr/>
 
-<p><code>list</code> returns matched multiple rows as <code>scala.collection.immutable.List</code>.</p>
+<p>The <code>list</code> API returns matched multiple rows as a <code>scala.collection.immutable.List</code>.</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">val</span> <span class="nv">name</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">String</span><span class="o">]</span> <span class="k">=</span> <span class="nc">DB</span> <span class="n">readOnly</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span>
   <span class="n">sql</span><span class="s">"select name from emp"</span><span class="o">.</span><span class="py">map</span><span class="o">(</span><span class="n">rs</span> <span class="k">=&gt;</span> <span class="nv">rs</span><span class="o">.</span><span class="py">string</span><span class="o">(</span><span class="s">"name"</span><span class="o">)).</span><span class="py">list</span><span class="o">.</span><span class="py">apply</span><span class="o">()</span>
 <span class="o">}</span>
@@ -119,7 +119,7 @@
 
 <hr/>
 
-<p><code>foreach</code> allows you to make some side-effect in iterations. This API is useful for handling large <code>ResultSet</code>.</p>
+<p>The <code>foreach</code> API allows you to perform side effects during iterations. This method is particularly useful for handling large <code>ResultSet</code> streaming data efficiently.</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="nc">DB</span> <span class="n">readOnly</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span>
   <span class="n">sql</span><span class="s">"select name from emp"</span><span class="o">.</span><span class="py">foreach</span> <span class="o">{</span> <span class="n">rs</span> <span class="k">=&gt;</span>
     <span class="nv">out</span><span class="o">.</span><span class="py">write</span><span class="o">(</span><span class="nv">rs</span><span class="o">.</span><span class="py">string</span><span class="o">(</span><span class="s">"name"</span><span class="o">))</span>
@@ -139,11 +139,11 @@
 
 <hr/>
 
-<p>For instance, the PostgreSQL JDBC driver does infinite(!) caching for result sets if fetchSize is set to 0 (the default) and this causes memory problems.</p>
+<p>In cases like the PostgreSQL JDBC driver, setting the fetchSize to 0 (which is the default) can lead to infinite caching of result sets and subsequently cause memory issues. It&rsquo;s important to manage the fetchSize appropriately to prevent such problems.</p>
 
 <p><a href="https://docs.oracle.com/javase/8/docs/api/java/sql/Statement.html#setFetchSize-int-">https://docs.oracle.com/javase/8/docs/api/java/sql/Statement.html#setFetchSize-int-</a></p>
 
-<p>You can specify JDBC fetchSize as follows since version 2.0.5.</p>
+<p>From version 2.0.5 onwards, ScalikeJDBC allows you to specify the JDBC fetchSize to better control memory usage and enhance performance:</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">val</span> <span class="nv">e</span> <span class="k">=</span> <span class="nv">Emp</span><span class="o">.</span><span class="py">syntax</span><span class="o">(</span><span class="s">"e"</span><span class="o">)</span>
 <span class="nc">DB</span> <span class="n">readOnly</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span>
   <span class="n">sql</span><span class="s">"select name from emp"</span>
@@ -151,7 +151,7 @@
     <span class="o">.</span><span class="py">foreach</span> <span class="o">{</span> <span class="n">rs</span> <span class="k">=&gt;</span> <span class="nv">out</span><span class="o">.</span><span class="py">write</span><span class="o">(</span><span class="nv">rs</span><span class="o">.</span><span class="py">string</span><span class="o">(</span><span class="s">"name"</span><span class="o">))</span> <span class="o">}</span>
 <span class="o">}</span>
 </code></pre></div>
-<p>Or it&rsquo;s also fine to set fetchSize to <code>scalikejdbc.DBSession</code>.</p>
+<p>Alternatively, you can set the fetchSize directly on the <code>scalikejdbc.DBSession</code> to manage data retrieval more efficiently. This approach is also supported in ScalikeJDBC from version 2.0.5 onwards:</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="nf">val</span> <span class="o">(</span><span class="n">e</span><span class="o">,</span> <span class="n">c</span><span class="o">)</span> <span class="k">=</span> <span class="o">(</span><span class="nv">Emp</span><span class="o">.</span><span class="py">syntax</span><span class="o">(</span><span class="s">"e"</span><span class="o">),</span> <span class="nv">Cmp</span><span class="o">.</span><span class="py">syntax</span><span class="o">(</span><span class="s">"c"</span><span class="o">))</span>
 
 <span class="nc">DB</span> <span class="n">readOnly</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span>
@@ -171,9 +171,7 @@
 
 <hr/>
 
-<p>In some cases, you might need to implement your own custom extractor. This can be useful for testing out queries.</p>
-
-<p>This example shows how to preserve <code>null</code> values in a result set.</p>
+<p>Implementing a custom extractor can be essential when you need more control over how data is retrieved from a result set, such as preserving null values. Here&rsquo;s an example of how you can create a custom extractor in ScalikeJDBC, useful for testing queries and ensuring null values are handled appropriately:</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">def</span> <span class="nf">toMap</span><span class="o">(</span><span class="n">rs</span><span class="k">:</span> <span class="kt">WrappedResultSet</span><span class="o">)</span><span class="k">:</span> <span class="kt">Map</span><span class="o">[</span><span class="kt">String</span>, <span class="kt">Any</span><span class="o">]</span> <span class="k">=</span>  <span class="o">{</span>
   <span class="o">(</span><span class="mi">1</span> <span class="n">to</span> <span class="nv">rs</span><span class="o">.</span><span class="py">metaData</span><span class="o">.</span><span class="py">getColumnCount</span><span class="o">).</span><span class="py">foldLeft</span><span class="o">(</span><span class="nc">Map</span><span class="o">[</span><span class="kt">String</span>, <span class="kt">Any</span><span class="o">]())</span> <span class="o">{</span> <span class="o">(</span><span class="n">result</span><span class="o">,</span> <span class="n">i</span><span class="o">)</span> <span class="k">=&gt;</span>
     <span class="k">val</span> <span class="nv">label</span> <span class="k">=</span> <span class="nv">rs</span><span class="o">.</span><span class="py">metaData</span><span class="o">.</span><span class="py">getColumnLabel</span><span class="o">(</span><span class="n">i</span><span class="o">)</span>
@@ -183,15 +181,15 @@
 
 <span class="n">sql</span><span class="s">"select * from emp"</span><span class="o">.</span><span class="py">map</span><span class="o">(</span><span class="n">rs</span> <span class="k">=&gt;</span> <span class="nf">toMap</span><span class="o">(</span><span class="n">rs</span><span class="o">)).</span><span class="py">single</span><span class="o">.</span><span class="py">apply</span><span class="o">()</span>
 </code></pre></div>
+<p>This code snippet demonstrates how to use a custom extractor to fetch data from a database while preserving null values as <code>Option</code> types in Scala, enhancing the robustness of your data handling logic.</p>
+
 <hr/>
 
 <h4 id="using-parameterbinder">Using ParameterBinder</h4>
 
 <hr/>
 
-<p><code>ParameterBinder</code> allows you to customize how parameters should be bound to <code>PreparedStatement</code> object inside ScalikeJDBC.</p>
-
-<p>The following example shows how to use <code>PreparedStatement#setBinaryStream</code> when binding <code>InputStream</code> value to <code>PreparedStatement</code>.</p>
+<p>Using <code>ParameterBinder</code> in ScalikeJDBC lets you customize the binding of parameters to a <code>PreparedStatement</code>. This is particularly useful for handling complex data types such as binary streams. Here&rsquo;s how you can bind an <code>InputStream</code> to a <code>PreparedStatement</code> using <code>#setBinaryStream()</code>:</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="n">sql</span><span class="s">"create table blob_example (id bigint, data blob)"</span><span class="o">).</span><span class="py">execute</span><span class="o">.</span><span class="py">apply</span><span class="o">()</span>
 
 <span class="k">val</span> <span class="nv">bytes</span> <span class="k">=</span> <span class="nv">scala</span><span class="o">.</span><span class="py">Array</span><span class="o">[</span><span class="kt">Byte</span><span class="o">](</span><span class="mi">1</span><span class="o">,</span> <span class="mi">2</span><span class="o">,</span> <span class="mi">3</span><span class="o">,</span> <span class="mi">4</span><span class="o">,</span> <span class="mi">5</span><span class="o">,</span> <span class="mi">6</span><span class="o">,</span> <span class="mi">7</span><span class="o">)</span>
@@ -203,7 +201,7 @@
 
 <span class="n">sql</span><span class="s">"insert into blob_example (data) values (${bytesBinder})"</span><span class="o">).</span><span class="py">update</span><span class="o">.</span><span class="py">apply</span><span class="o">()</span>
 </code></pre></div>
-<p>If you need to enable some <code>ParameterBinder</code> implicitly, you need to define <code>ParameterBinderFactory</code> for it.</p>
+<p>To enable a <code>ParameterBinder</code> implicitly across your Scala code, you must define a <code>ParameterBinderFactory</code>. This factory will automatically generate <code>ParameterBinder</code> instances for specific types as needed. Here&rsquo;s an example of how to set up a <code>ParameterBinderFactory</code> for a <code>MemberId</code> type, which is useful for binding binary data:</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">case</span> <span class="k">class</span> <span class="nc">MemberId</span><span class="o">(</span><span class="n">value</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span>
 <span class="k">case</span> <span class="k">class</span> <span class="nc">Member</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">MemberId</span><span class="o">,</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span>
 <span class="k">object</span> <span class="nc">Member</span> <span class="k">extends</span> <span class="nc">SQLSyntaxSupport</span><span class="o">[</span><span class="kt">Member</span><span class="o">]</span> <span class="o">{}</span>
@@ -228,9 +226,7 @@
 
 <hr/>
 
-<p><code>TypeBinder[A]</code> is a type class to extract type <code>A</code> values from ResultSet. To extract a value as a specific type value, you need to define the type class for it.</p>
-
-<p>Let&rsquo;s say you need to bind a long value as <code>MemberId</code> type as below.</p>
+<p>To extract values of a specific type from a <code>ResultSet</code>, you&rsquo;ll need to implement a <code>TypeBinder</code> type class for that type. This allows you to define custom extraction logic for handling database values as custom types. For example, if you have a <code>MemberId</code> type that wraps a <code>Long</code> value, you can create a <code>TypeBinder</code> for it like this:</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">import</span> <span class="nn">scalikejdbc._</span>
 
 <span class="k">implicit</span> <span class="k">val</span> <span class="nv">session</span> <span class="k">=</span> <span class="nc">AutoSession</span>
@@ -264,7 +260,7 @@
 <span class="k">val</span> <span class="nv">ids</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">MemberId</span><span class="o">]</span> <span class="k">=</span> <span class="n">sql</span><span class="s">"select id from member"</span><span class="o">.</span><span class="py">map</span><span class="o">(</span><span class="nv">_</span><span class="o">.</span><span class="py">get</span><span class="o">[</span><span class="kt">MemberId</span><span class="o">](</span><span class="s">"id"</span><span class="o">)).</span><span class="py">list</span><span class="o">.</span><span class="py">apply</span><span class="o">()</span>
 <span class="c1">// ids: Seq[MemberId] = List(MemberId(1), MemberId(1), MemberId(2), MemberId(3))</span>
 </code></pre></div>
-<p>Of course, it&rsquo;s also possible to simply deal with this case without <code>TypeBinder</code>.</p>
+<p>Certainly, you can handle custom types like MemberId without explicitly defining a <code>TypeBinder</code> by manually extracting and converting the data within your database queries. Here&rsquo;s how you might approach this:</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">val</span> <span class="nv">ids</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">MemberId</span><span class="o">]</span> <span class="k">=</span> <span class="n">sql</span><span class="s">"select id from member"</span><span class="o">.</span><span class="py">map</span><span class="o">(</span><span class="n">rs</span> <span class="k">=&gt;</span> <span class="nc">MemberId</span><span class="o">(</span><span class="nv">rs</span><span class="o">.</span><span class="py">get</span><span class="o">(</span><span class="s">"id"</span><span class="o">))).</span><span class="py">list</span><span class="o">.</span><span class="py">apply</span><span class="o">()</span>
 </code></pre></div>
 <hr/>
@@ -273,7 +269,7 @@
 
 <hr/>
 
-<p>Using <code>Binders</code> is very convenient when you define both <code>ParameterBinderFactory</code> and <code>TypeBinder</code>.</p>
+<p>Using <code>Binders</code> is highly convenient when you need to define both a <code>ParameterBinderFactory</code> and a <code>TypeBinder</code> for a custom type. This approach allows for consistent and streamlined handling of how a type is both sent to and retrieved from the database, ensuring that your custom types are seamlessly integrated into your database operations.</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="c1">// object Binders {</span>
 <span class="c1">//   def of[A](f: Any =&gt; A)(g: A =&gt; (PreparedStatement, Int) =&gt; Unit): Binders[A]</span>
 <span class="c1">// }</span>
@@ -306,10 +302,10 @@
 
 <hr/>
 
-<p>You need to add the optional module which supports joda-time library.</p>
-<div class="highlight"><pre class="highlight scala"><code><span class="n">libraryDependencies</span> <span class="o">+=</span> <span class="s">"org.scalikejdbc"</span> <span class="o">%%</span> <span class="s">"scalikejdbc-joda-time"</span> <span class="o">%</span> <span class="s">"4.2.1"</span>
+<p>When working with the joda-time library, it&rsquo;s necessary to include the appropriate optional module to ensure full compatibility and functionality. Here&rsquo;s how you can set up and use the joda-time support module within your Scala project:</p>
+<div class="highlight"><pre class="highlight scala"><code><span class="n">libraryDependencies</span> <span class="o">+=</span> <span class="s">"org.scalikejdbc"</span> <span class="o">%%</span> <span class="s">"scalikejdbc-joda-time"</span> <span class="o">%</span> <span class="s">"4.3.0"</span>
 </code></pre></div>
-<p>Also, you explicitly need to import ParameterBinderFatory and TypeBinder.</p>
+<p>After importing, you can use the pre-defined <code>ParameterBinderFactory</code> and <code>TypeBinder</code> instances to handle joda-time specific types:</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">import</span> <span class="nn">scalikejdbc._</span>
 <span class="c1">// If you need ParameterBinderFactory for joda-time classes</span>
 <span class="k">import</span> <span class="nn">scalikejdbc.jodatime.JodaParameterBinderFactory._</span>
@@ -339,7 +335,7 @@
 
 <hr/>
 
-<p><code>update</code> executes <code>java.sql.PreparedStatement#executeUpdate()</code>.</p>
+<p>The <code>update</code> API executes <code>java.sql.PreparedStatement#executeUpdate()</code>.</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">import</span> <span class="nn">scalikejdbc._</span>
 
 <span class="nc">DB</span> <span class="n">localTx</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span>
@@ -375,7 +371,7 @@
 
 <hr/>
 
-<p><code>execute</code> executes <code>java.sql.PreparedStatement#execute()</code>.</p>
+<p>The <code>execute</code> API executes <code>java.sql.PreparedStatement#execute()</code>.</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="nc">DB</span> <span class="n">autoCommit</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span>
   <span class="n">sql</span><span class="s">"create table emp (id integer primary key, name varchar(30))"</span><span class="o">.</span><span class="py">execute</span><span class="o">.</span><span class="py">apply</span><span class="o">()</span>
 <span class="o">}</span>
@@ -388,7 +384,7 @@
 
 <hr/>
 
-<p><code>batch</code> and <code>batchByName</code> executes <code>java.sql.PreparedStatement#executeBatch()</code>.</p>
+<p>The <code>batch</code> and <code>batchByName</code> executes <code>java.sql.PreparedStatement#executeBatch()</code>.</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">import</span> <span class="nn">scalikejdbc._</span>
 
 <span class="nc">DB</span> <span class="n">localTx</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span>
@@ -437,7 +433,7 @@
           <p><a href="/documentation/playframework-support.html">Play Framework</a></p>
           <p><a href="/documentation/reactivestreams-support.html">Reactive Streams</a></p>
           <p><a href="/documentation/dbconsole.html">dbconsole</a></p>
-          <p><a href="https://www.javadoc.io/doc/org.scalikejdbc/scalikejdbc-core_2.13/4.2.1">Core API Doc</a></p>
+          <p><a href="https://www.javadoc.io/doc/org.scalikejdbc/scalikejdbc-core_2.13/4.3.0">Core API Doc</a></p>
           <p><a href="/documentation/faq.html">FAQ</a></p>
           <p><a href="/documentation/testimonials.html">Testimonials</a></p>
           <p><a href="/contribution.html">Contribution</a></p>

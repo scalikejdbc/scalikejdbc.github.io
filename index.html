@@ -33,19 +33,19 @@
 
 <hr/>
 
-<h2 id="just-write-sql-and-get-things-done">Just write SQL and get things done!</h2>
+<h2 id="streamline-your-workflow-with-scalikejdbc-just-write-sql-and-get-things-done-efficiently">Streamline your workflow with ScalikeJDBC: just write SQL and get things done efficiently!</h2>
 
 <hr/>
 
 <p><img alt="Logo" src="/images/logo.png" /></p>
 
-<p>ScalikeJDBC is a tidy SQL-based DB access library for Scala developers. This library naturally wraps JDBC APIs and provides you easy-to-use and very flexible APIs. What&rsquo;s more, QueryDSL makes your code type-safe and reusable.</p>
+<p>This library seamlessly wraps JDBC APIs, offering intuitive and highly flexible functionalities. With QueryDSL, your code becomes inherently type-safe and reusable.</p>
 
-<p>ScalikeJDBC is a practical and production-ready one. Use this library for your real projects.</p>
+<p>ScalikeJDBC is not just practical; it&rsquo;s production-ready. Utilize this library confidently in your real-world projects.</p>
 
 <h3 id="working-on-the-jdbc-layer">Working on the JDBC layer</h3>
 
-<p>Whether you like it or not, JDBC is a stable standard interface. Since most of RDBMS supports JDBC interface, we can access RDBMS in the same way. We never release without passing all the unit tests with the following RDBMS.</p>
+<p>Whether you prefer it or not, JDBC stands as a steadfast standard interface. Given its widespread support across most RDBMS, accessing databases remains consistent. We adhere to this standard rigorously, ensuring each release passes through comprehensive unit tests across various RDBMS platforms:</p>
 
 <ul>
 <li>PostgreSQL</li>
@@ -54,17 +54,15 @@
 <li>HSQLDB</li>
 </ul>
 
-<p>We believe that ScalikeJDBC basically works with any other RDBMS (Oracle, SQL Server and so on).</p>
+<p>We firmly believe that ScalikeJDBC seamlessly integrates with a variety of RDBMS, including Oracle, SQL Server, and others. Its robust design ensures compatibility and reliability across different database platforms.</p>
 
 <h3 id="amazon-redshift-facebook-presto-also-supports-jdbc">Amazon Redshift, Facebook Presto also supports JDBC</h3>
 
-<p>If you can access some datastore via JDBC interface, that means you can access them via ScalikeJDBC too.</p>
-
-<p>Recently, <a href="https://docs.aws.amazon.com/redshift/latest/dg/c_redshift-postgres-jdbc.html">Amazon Redshift</a> and <a href="https://prestodb.io/docs/current/installation/jdbc.html">Facebook Presto</a> support JDBC interface. You can access them via ScalikeJDBC!</p>
+<p>If you can access a datastore via the JDBC interface, you can also seamlessly access it through ScalikeJDBC. For instance, <a href="https://docs.aws.amazon.com/redshift/latest/dg/c_redshift-postgres-jdbc.html">Amazon Redshift</a> and <a href="https://prestodb.io/docs/current/installation/jdbc.html">Facebook Presto</a> have added support for the JDBC interface, enabling easy integration with ScalikeJDBC.</p>
 
 <h3 id="few-dependencies">Few dependencies</h3>
 
-<p>The core of ScalikeJDBC has so few dependencies that you won&rsquo;t be bothered by dependency hell.</p>
+<p>The core of ScalikeJDBC boasts minimal dependencies, sparing you from the woes of dependency hell. Enjoy a streamlined development experience without unnecessary complications.</p>
 
 <ul>
 <li>JDBC Drivers you need</li>
@@ -72,17 +70,17 @@
 <li>SLF4J API</li>
 </ul>
 
-<p>Of course, you can use c3p0 (or others) instead of commons-dbcp though ConnectionPool implementation for that isn&rsquo;t provided by default.</p>
+<p>Certainly, you have the flexibility to utilize c3p0 or other connection pool libraries instead of commons-dbcp with ScalikeJDBC. While ScalikeJDBC doesn&rsquo;t offer a default ConnectionPool implementation for these alternatives, you have the freedom to integrate them seamlessly according to your project requirements.</p>
 
 <h3 id="non-blocking">Non-blocking?</h3>
 
-<p>Unfortunately, no. Indeed, JDBC drivers block on socket IO. So using them to talk with RDBMS in async event driven architecture may not be appropriate. However, actually most of real world applications don&rsquo;t need event-driven architecture yet. JDBC is still important infrastructure for apps on the JVM.</p>
+<p>While JDBC drivers inherently block on socket IO, making them potentially unsuitable for async event-driven architectures, it&rsquo;s worth noting that most real-world applications currently don&rsquo;t require such architecture. JDBC remains a crucial infrastructure for JVM-based apps.</p>
 
-<p>If you really prefer non-blocking database access, take a look at ScalikeJDBC-Async. It provides non-blocking APIs to talk with PostgreSQL and MySQL in the JDBC way.</p>
+<p>However, if you&rsquo;re inclined towards non-blocking database access, consider exploring ScalikeJDBC-Async. This library offers non-blocking APIs for communicating with PostgreSQL and MySQL in a JDBC-like manner.</p>
+
+<p>Please be aware that ScalikeJDBC-Async is still in its alpha stage. If you lack the motivation or resources to investigate and address issues independently, we recommend awaiting the stable version release in the future. You can find more information and the library&rsquo;s source code on its GitHub page:</p>
 
 <p><a href="https://github.com/scalikejdbc/scalikejdbc-async">https://github.com/scalikejdbc/scalikejdbc-async</a></p>
-
-<p>ScalikeJDBC-Async is still in the alpha stage. If you don&rsquo;t have the motivation to investigate or fix issues yourself, we recommend waiting until the stable version is released someday.</p>
 
 <h3 id="faq">FAQ</h3>
 
@@ -94,31 +92,35 @@
 
 <hr/>
 
-<p>All you need to do is add ScalikeJDBC, JDBC driver and an slf4j implementation.</p>
+<p>If you&rsquo;re looking to execute SQL queries efficiently, the best approach is to use ScalikeJDBC along with the appropriate JDBC driver for your database. Here&rsquo;s how you can get started quickly!</p>
 
-<h3 id="scalikejdbc-4-x">ScalikeJDBC 4.x</h3>
+<h3 id="depedencies">Depedencies</h3>
 
-<p>ScalikeJDBC 4 requires Java SE 8 or higher. If you still need to run your applications on Java SE 7, keep using ScalikeJDBC 2.5.</p>
+<p>To get started with ScalikeJDBC, add the following dependency to your build.sbt:</p>
+
+<h4 id="scalikejdbc-4-x">ScalikeJDBC 4.x</h4>
+
+<p>ScalikeJDBC 4 requires Java SE 8 or higher. If you still need to run your applications on Java SE 7, keep using ScalikeJDBC 2.5:</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="c1">// Scala 2.12, 2.13 and 3</span>
 <span class="n">libraryDependencies</span> <span class="o">++=</span> <span class="nc">Seq</span><span class="o">(</span>
-  <span class="s">"org.scalikejdbc"</span> <span class="o">%%</span> <span class="s">"scalikejdbc"</span>       <span class="o">%</span> <span class="s">"4.2.1"</span><span class="o">,</span>
-  <span class="s">"com.h2database"</span>  <span class="o">%</span>  <span class="s">"h2"</span>                <span class="o">%</span> <span class="s">"1.4.200"</span><span class="o">,</span>
-  <span class="s">"ch.qos.logback"</span>  <span class="o">%</span>  <span class="s">"logback-classic"</span>   <span class="o">%</span> <span class="s">"1.2.12"</span>
+  <span class="s">"org.scalikejdbc"</span> <span class="o">%%</span> <span class="s">"scalikejdbc"</span>       <span class="o">%</span> <span class="s">"4.3.0"</span><span class="o">,</span>
+  <span class="s">"com.h2database"</span>  <span class="o">%</span>  <span class="s">"h2"</span>                <span class="o">%</span> <span class="s">"2.2.224"</span><span class="o">,</span>
+  <span class="s">"ch.qos.logback"</span>  <span class="o">%</span>  <span class="s">"logback-classic"</span>   <span class="o">%</span> <span class="s">"1.5.6"</span>
 <span class="o">)</span>
 </code></pre></div>
-<h3 id="scalikejdbc-2-x">ScalikeJDBC 2.x</h3>
+<h4 id="scalikejdbc-2-x">ScalikeJDBC 2.x</h4>
 
 <p>See <a href="/documentation/2.x/">ScalikeJDBC 2.x Documentation</a> for details.</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="c1">// Scala 2.10, 2.11, 2.12</span>
 <span class="n">libraryDependencies</span> <span class="o">++=</span> <span class="nc">Seq</span><span class="o">(</span>
   <span class="s">"org.scalikejdbc"</span> <span class="o">%%</span> <span class="s">"scalikejdbc"</span>               <span class="o">%</span> <span class="s">"2.5.2"</span><span class="o">,</span>
-  <span class="s">"com.h2database"</span>  <span class="o">%</span>  <span class="s">"h2"</span>                        <span class="o">%</span> <span class="s">"1.4.200"</span><span class="o">,</span>
-  <span class="s">"ch.qos.logback"</span>  <span class="o">%</span>  <span class="s">"logback-classic"</span>           <span class="o">%</span> <span class="s">"1.2.12"</span>
+  <span class="s">"com.h2database"</span>  <span class="o">%</span>  <span class="s">"h2"</span>                        <span class="o">%</span> <span class="s">"2.2.224"</span><span class="o">,</span>
+  <span class="s">"ch.qos.logback"</span>  <span class="o">%</span>  <span class="s">"logback-classic"</span>           <span class="o">%</span> <span class="s">"1.5.6"</span>
 <span class="o">)</span>
 </code></pre></div>
 <hr/>
 
-<h2 id="first-example">First example</h2>
+<h3 id="quick-code-example">Quick Code example</h3>
 
 <hr/>
 
@@ -130,7 +132,7 @@
 <span class="nv">ConnectionPool</span><span class="o">.</span><span class="py">singleton</span><span class="o">(</span><span class="s">"jdbc:h2:mem:hello"</span><span class="o">,</span> <span class="s">"user"</span><span class="o">,</span> <span class="s">"pass"</span><span class="o">)</span>
 
 <span class="c1">// ad-hoc session provider on the REPL</span>
-<span class="k">implicit</span> <span class="k">val</span> <span class="nv">session</span> <span class="k">=</span> <span class="nc">AutoSession</span>
+<span class="k">implicit</span> <span class="k">val</span> <span class="nv">session</span><span class="k">:</span> <span class="kt">DBSession</span> <span class="o">=</span> <span class="nc">AutoSession</span>
 
 <span class="c1">// table creation, you can run DDL by using #execute as same as JDBC</span>
 <span class="n">sql</span><span class="s">"""
@@ -192,126 +194,9 @@ create table members (
 </code></pre></div>
 <p>See in detail: <a href="/documentation/operations.html">/documentation/operations</a></p>
 
-<hr/>
+<h3 id="scalikejdbc-orm">ScalikeJDBC ORM</h3>
 
-<h3 id="type-safe-dsl">Type-safe DSL</h3>
-
-<p>Since version 1.6, QueryDSL is available. It&rsquo;s a SQL-like and type-safe DSL to build DRY SQLs.</p>
-
-<p>Here is an example:</p>
-<div class="highlight"><pre class="highlight java"><code><span class="n">val</span> <span class="o">(</span><span class="n">p</span><span class="o">,</span> <span class="n">c</span><span class="o">)</span> <span class="o">=</span> <span class="o">(</span><span class="nc">Programmer</span><span class="o">.</span><span class="na">syntax</span><span class="o">(</span><span class="s">"p"</span><span class="o">),</span> <span class="nc">Company</span><span class="o">.</span><span class="na">syntax</span><span class="o">(</span><span class="s">"c"</span><span class="o">))</span>
-
-<span class="n">val</span> <span class="nl">programmers:</span> <span class="nc">Seq</span><span class="o">[</span><span class="nc">Programmer</span><span class="o">]</span> <span class="o">=</span> <span class="no">DB</span><span class="o">.</span><span class="na">readOnly</span> <span class="o">{</span> <span class="n">implicit</span> <span class="n">session</span> <span class="o">=&gt;</span>
-  <span class="n">withSQL</span> <span class="o">{</span>
-    <span class="n">select</span>
-      <span class="o">.</span><span class="na">from</span><span class="o">(</span><span class="nc">Programmer</span> <span class="n">as</span> <span class="n">p</span><span class="o">)</span>
-      <span class="o">.</span><span class="na">leftJoin</span><span class="o">(</span><span class="nc">Company</span> <span class="n">as</span> <span class="n">c</span><span class="o">).</span><span class="na">on</span><span class="o">(</span><span class="n">p</span><span class="o">.</span><span class="na">companyId</span><span class="o">,</span> <span class="n">c</span><span class="o">.</span><span class="na">id</span><span class="o">)</span>
-      <span class="o">.</span><span class="na">where</span><span class="o">.</span><span class="na">eq</span><span class="o">(</span><span class="n">p</span><span class="o">.</span><span class="na">isDeleted</span><span class="o">,</span> <span class="kc">false</span><span class="o">)</span>
-      <span class="o">.</span><span class="na">orderBy</span><span class="o">(</span><span class="n">p</span><span class="o">.</span><span class="na">createdAt</span><span class="o">)</span>
-      <span class="o">.</span><span class="na">limit</span><span class="o">(</span><span class="mi">10</span><span class="o">)</span>
-      <span class="o">.</span><span class="na">offset</span><span class="o">(</span><span class="mi">0</span><span class="o">)</span>
-  <span class="o">}.</span><span class="na">map</span><span class="o">(</span><span class="nc">Programmer</span><span class="o">(</span><span class="n">p</span><span class="o">,</span> <span class="n">c</span><span class="o">)).</span><span class="na">list</span><span class="o">.</span><span class="na">apply</span><span class="o">()</span>
-<span class="o">}</span>
-</code></pre></div>
-<p>See in detail: <a href="/documentation/query-dsl.html">/documentation/query-dsl</a></p>
-
-<p>Test code: <a href="https://github.com/scalikejdbc/scalikejdbc/blob/master/scalikejdbc-joda-time/src/test/scala/scalikejdbc/QueryInterfaceSpec.scala">src/test/scala/scalikejdbc/QueryInterfaceSpec.scala</a></p>
-
-<hr/>
-
-<h3 id="flexible-transaction-control">Flexible transaction control</h3>
-
-<p>ScalikeJDBC provides several APIs for session/transaction control.</p>
-
-<ul>
-<li>DB autoCommit { implicit session =&gt; &hellip; }</li>
-<li>DB localTx { implicit session =&gt; &hellip; }</li>
-<li>DB withinTx { implicit session =&gt; &hellip; }</li>
-<li>DB readOnly { implicit session =&gt; &hellip; }</li>
-</ul>
-
-<p>Here is an example which re-uses methods in both simple invocation and transactional operations.</p>
-<div class="highlight"><pre class="highlight java"><code><span class="n">object</span> <span class="nc">Product</span> <span class="o">{</span>
-  <span class="n">def</span> <span class="nf">create</span><span class="o">(</span><span class="nl">name:</span> <span class="nc">String</span><span class="o">,</span> <span class="nl">price:</span> <span class="nc">Long</span><span class="o">)(</span><span class="n">implicit</span> <span class="nl">s:</span> <span class="nc">DBSession</span> <span class="o">=</span> <span class="nc">AutoSession</span><span class="o">):</span> <span class="nc">Long</span> <span class="o">=</span> <span class="o">{</span>
-    <span class="n">sql</span><span class="s">"insert into products values (${name}, ${price})"</span>
-      <span class="o">.</span><span class="na">updateAndReturnGeneratedKey</span><span class="o">.</span><span class="na">apply</span><span class="o">()</span> <span class="c1">// returns auto-incremeneted id</span>
-  <span class="o">}</span>
-
-  <span class="n">def</span> <span class="nf">findById</span><span class="o">(</span><span class="nl">id:</span> <span class="nc">Long</span><span class="o">)(</span><span class="n">implicit</span> <span class="nl">s:</span> <span class="nc">DBSession</span> <span class="o">=</span> <span class="nc">AutoSession</span><span class="o">):</span> <span class="nc">Option</span><span class="o">[</span><span class="nc">Product</span><span class="o">]</span> <span class="o">=</span> <span class="o">{</span>
-    <span class="n">sql</span><span class="s">"select id, name, price, created_at from products where id = ${id}"</span>
-      <span class="o">.</span><span class="na">map</span> <span class="o">{</span> <span class="n">rs</span> <span class="o">=&gt;</span> <span class="nc">Product</span><span class="o">(</span><span class="n">rs</span><span class="o">)</span> <span class="o">}.</span><span class="na">single</span><span class="o">.</span><span class="na">apply</span><span class="o">()</span>
-  <span class="o">}</span>
-<span class="o">}</span>
-
-<span class="nc">Product</span><span class="o">.</span><span class="na">findById</span><span class="o">(</span><span class="mi">123</span><span class="o">)</span> <span class="c1">// borrows connection from pool and gives it back after execution</span>
-
-<span class="no">DB</span> <span class="n">localTx</span> <span class="o">{</span> <span class="n">implicit</span> <span class="n">session</span> <span class="o">=&gt;</span> <span class="c1">// transactional session</span>
-  <span class="n">val</span> <span class="n">id</span> <span class="o">=</span> <span class="nc">Product</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="s">"ScalikeJDBC Cookbook"</span><span class="o">,</span> <span class="mi">200</span><span class="o">)</span> <span class="c1">// within transaction</span>
-  <span class="n">val</span> <span class="n">product</span> <span class="o">=</span> <span class="nc">Product</span><span class="o">.</span><span class="na">findById</span><span class="o">(</span><span class="n">id</span><span class="o">)</span> <span class="c1">// within transaction</span>
-<span class="o">}</span>
-</code></pre></div>
-<p>See in detail: <a href="/documentation/transaction.html">/documentation/transaction</a></p>
-
-<hr/>
-
-<h3 id="useful-query-inspections">Useful Query Inspections</h3>
-
-<p>By default, ScalikeJDBC shows you what SQL is executed and where it is. We believe that is quite useful for debugging your apps. Logging only slow queries in production, but it also helps you.</p>
-<div class="highlight"><pre class="highlight plaintext"><code>[debug] s.StatementExecutor$$anon$1 - SQL execution completed
-
-  [Executed SQL]
-   select id, name from users where email = 'alice@example.com'; (3 ms)
-
-  [Stack Trace]
-    ...
-    models.User$.findByEmail(User.scala:26)
-    controllers.Projects$$anonfun$index$1$$anonfun$apply$1$$anonfun$apply$2.apply(Projects.scala:20)
-    controllers.Projects$$anonfun$index$1$$anonfun$apply$1$$anonfun$apply$2.apply(Projects.scala:19)
-    controllers.Secured$$anonfun$IsAuthenticated$3$$anonfun$apply$3.apply(Application.scala:88)
-</code></pre></div>
-<p>See in detail: <a href="/documentation/query-inspector.html">/documentation/query-inspector</a></p>
-
-<hr/>
-
-<h3 id="testing-support">Testing Support</h3>
-
-<p>Testing support which provides the following functionalities for <a href="https://www.scalatest.org/">ScalaTest</a> and <a href="https://etorreborre.github.io/specs2/">specs2</a>.</p>
-
-<ul>
-<li>Rollback automatically after each test</li>
-<li>Testing with fixtures</li>
-</ul>
-
-<p>See in detail: <a href="/documentation/testing.html">/documentation/testing</a></p>
-
-<hr/>
-
-<h3 id="reverse-engineering">Reverse Engineering</h3>
-
-<p>You can easily get Scala code from existing database by using ScalikeJDBC&rsquo;s reverse engineering tool.</p>
-<div class="highlight"><pre class="highlight plaintext"><code>sbt "scalikejdbcGen [table-name (class-name)]"
-</code></pre></div>
-<p>e.g.</p>
-<div class="highlight"><pre class="highlight plaintext"><code>sbt "scalikejdbcGen company"
-sbt "scalikejdbcGen companies Company"
-</code></pre></div>
-<p>See in detail: <a href="/documentation/reverse-engineering.html">/documentation/reverse-engineering</a></p>
-
-<hr/>
-
-<h3 id="play-framework-support">Play Framework Support</h3>
-
-<p>You can use ScalikeJDBC with Play framework 2 seamlessly. We promise you that it becomes more productive when used with scalikejdbc-mapper-generator.</p>
-
-<p>See in detail: <a href="/documentation/playframework-support.html">/documentation/playframework-support</a></p>
-
-<hr/>
-
-<h3 id="reactive-streams-support">Reactive Streams Support</h3>
-
-<p>ScalikeJDBC provides the Publisher interface of Reactive Streams to subscribe a stream from a database query.</p>
-
-<p>See in detail: <a href="/documentation/reactivestreams-support.html">/documentation/reactivestreams-support</a></p>
+<p>If you&rsquo;re looking for a richer database solution, scalikejdbc-orm, which is available since version 4.3, could be a greater option for you! Refer to <a href="/documentation/orm.html">/documentation/orm</a> for more details.</p>
 
 <hr/>
 
@@ -319,7 +204,7 @@ sbt "scalikejdbcGen companies Company"
 
 <hr/>
 
-<p>Many companies are already use ScalikeJDBC in their business!</p>
+<p>ScalikeJDBC has become the trusted go-to for countless companies in their software endeavors! Join the thriving community of developers leveraging ScalikeJDBC&rsquo;s power and reliability to streamline database access and enhance project efficiency.</p>
 
 <p><span class="col-md-12">
   <span class="col-md-3 text-center">
@@ -388,57 +273,6 @@ sbt "scalikejdbcGen companies Company"
 
 <p><a href="/documentation/testimonials.html">Read more..</a></p>
 
-<hr/>
-
-<h2 id="license">License</h2>
-
-<p>Published binary files have the following copyright:</p>
-<div class="highlight"><pre class="highlight plaintext"><code>Copyright scalikejdbc.org
-Apache License, Version 2.0
-http://www.apache.org/licenses/LICENSE-2.0.html
-</code></pre></div>
-<hr/>
-
-<h2 id="related-products">Related Products</h2>
-
-<hr/>
-
-<h3 id="scalikejdbc-async">ScalikeJDBC-Async</h3>
-
-<p>ScalikeJDBC Extension: Non-blocking APIs in the JDBC way.</p>
-
-<p><a href="https://github.com/scalikejdbc/scalikejdbc-async">github.com/scalikejdbc/scalikejdbc-async</a></p>
-
-<p>ScalikeJDBC-Async provides non-blocking APIs to talk with PostgreSQL and MySQL in the JDBC way.</p>
-
-<p>This library is built with <a href="https://github.com/jasync-sql/jasync-sql">jasync-sql</a>.</p>
-
-<hr/>
-
-<h3 id="dbconsole">dbconsole</h3>
-
-<p>dbconsole is an extended sbt console to connect database.</p>
-
-<h4 id="mac-os-x-linux">Mac OS X, Linux</h4>
-<div class="highlight"><pre class="highlight shell"><code>curl <span class="nt">-L</span> https://git.io/dbcon | sh
-</code></pre></div>
-<h4 id="windows">Windows</h4>
-<div class="highlight"><pre class="highlight plaintext"><code>https://git.io/dbcon.bat
-</code></pre></div>
-<p>See in detail: <a href="/documentation/dbconsole.html">/documentation/dbconsole</a></p>
-
-<hr/>
-
-<h3 id="skinny-orm">Skinny ORM</h3>
-
-<p><img alt="Skinny framework" src="/images/skinny.png" /></p>
-
-<p>Skinny ORM is the default DB access library of <a href="https://skinny-framework.github.io/">Skinny Framework</a>. Skinny ORM is built upon ScalikeJDBC.</p>
-
-<p>In most cases, ORM makes things easier.</p>
-
-<p><a href="https://skinny-framework.github.io/documentation/orm.html">https://skinny-framework.github.io/documentation/orm.html</a></p>
-
           <hr/>
           <div class="alert alert-warning small">
             If this webpage has a typo or something wrong, Please report or fix it. <a href="/contribution.html">How?</a>
@@ -466,7 +300,7 @@ http://www.apache.org/licenses/LICENSE-2.0.html
           <p><a href="/documentation/playframework-support.html">Play Framework</a></p>
           <p><a href="/documentation/reactivestreams-support.html">Reactive Streams</a></p>
           <p><a href="/documentation/dbconsole.html">dbconsole</a></p>
-          <p><a href="https://www.javadoc.io/doc/org.scalikejdbc/scalikejdbc-core_2.13/4.2.1">Core API Doc</a></p>
+          <p><a href="https://www.javadoc.io/doc/org.scalikejdbc/scalikejdbc-core_2.13/4.3.0">Core API Doc</a></p>
           <p><a href="/documentation/faq.html">FAQ</a></p>
           <p><a href="/documentation/testimonials.html">Testimonials</a></p>
           <p><a href="/contribution.html">Contribution</a></p>

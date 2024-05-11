@@ -37,7 +37,7 @@
 
 <hr/>
 
-<p>See <a href="/documentation/configuration.html">/documentation/configuration</a></p>
+<p>For details on setting up your connection pool, please visit the <a href="/documentation/configuration.html">/documentation/configuration</a> page.</p>
 
 <hr/>
 
@@ -45,35 +45,31 @@
 
 <hr/>
 
-<p>Simply just call <code>#borrow</code> method.</p>
+<p>To borrow a connection, simply use the <code>#borrow()</code> method:</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">import</span> <span class="nn">scalikejdbc._</span>
-<span class="c1">// default</span>
+<span class="c1">// default connection</span>
 <span class="k">val</span> <span class="nv">conn</span><span class="k">:</span> <span class="kt">java.sql.Connection</span> <span class="o">=</span> <span class="nv">ConnectionPool</span><span class="o">.</span><span class="py">borrow</span><span class="o">()</span>
-<span class="c1">// named</span>
+<span class="c1">// named connection</span>
 <span class="k">val</span> <span class="nv">conn</span><span class="k">:</span> <span class="kt">java.sql.Connection</span> <span class="o">=</span> <span class="nc">ConnectionPool</span><span class="o">(</span><span class="s">"named"</span><span class="o">).</span><span class="py">borrow</span><span class="o">()</span>
 </code></pre></div>
-<p>Be careful. The connection object should be released by yourself.</p>
-
-<p>Basically using loan pattern is recommended to avoid human errors.</p>
+<p>It is important to manually release the connection. To prevent errors, employing the so-called loan pattern is recommended:</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="nf">using</span><span class="o">(</span><span class="nv">ConnectionPool</span><span class="o">.</span><span class="py">borrow</span><span class="o">())</span> <span class="o">{</span> <span class="n">conn</span> <span class="k">=&gt;</span>
   <span class="c1">// do something</span>
 <span class="o">}</span>
 </code></pre></div>
-<p>ScalikeJDBC wraps a <code>java.sql.Connection</code> object as a <code>scalikejdbc.DB</code> object.</p>
+<p>ScalikeJDBC encapsulates a <code>java.sql.Connection</code> in a <code>scalikejdbc.DB</code> object for safer, easier management:</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="nf">using</span><span class="o">(</span><span class="nc">DB</span><span class="o">(</span><span class="nv">ConnectionPool</span><span class="o">.</span><span class="py">borrow</span><span class="o">()))</span> <span class="o">{</span> <span class="n">db</span> <span class="k">=&gt;</span>
-  <span class="c1">// ...</span>
+  <span class="c1">// perform database operations</span>
 <span class="o">}</span>
 </code></pre></div>
-<p><code>DB</code> object can provide <code>DBSession</code> for each operation.</p>
+<p>The <code>DB</code> object simplifies managing <code>DBSession</code> for different operations:</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="nf">using</span><span class="o">(</span><span class="nc">DB</span><span class="o">(</span><span class="nv">ConnectionPool</span><span class="o">.</span><span class="py">borrow</span><span class="o">()))</span> <span class="o">{</span> <span class="n">db</span> <span class="k">=&gt;</span>
   <span class="nv">db</span><span class="o">.</span><span class="py">readOnly</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span>
-    <span class="c1">// ...</span>
+    <span class="c1">// read-only operations</span>
   <span class="o">}</span>
 <span class="o">}</span>
 </code></pre></div>
-<p>Right, above code is too verbose! Using DB object make it much simpler.</p>
-
-<p>You can simplify the same things by using <code>DB</code> or <code>NamedDB</code> objects and it&rsquo;s the common usage of ScalikeJDBC.</p>
+<p>However, this can be made simpler by directly using the <code>DB</code> or <code>NamedDB</code> objects, which is the most common way to use this library:</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="c1">// default</span>
 <span class="nc">DB</span> <span class="n">readOnly</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span>
   <span class="c1">// ...</span>
@@ -89,7 +85,7 @@
 
 <hr/>
 
-<p>By default, <code>scalikejdbc.DB</code> or <code>scalikejdbc.NamedDB</code> instance always closes its connection (= releases and returns it to connection pools).</p>
+<p>By default, <code>scalikejdbc.DB</code> or <code>scalikejdbc.NamedDB</code> instance closes its connection automatically (= releases and returns it to connection pools).</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="nf">using</span><span class="o">(</span><span class="nv">connectionPool</span><span class="o">.</span><span class="py">borrow</span><span class="o">())</span> <span class="o">{</span> <span class="o">(</span><span class="n">conn</span><span class="k">:</span> <span class="kt">java.sql.Connection</span><span class="o">)</span> <span class="k">=&gt;</span> 
   <span class="k">val</span> <span class="nv">db</span><span class="k">:</span> <span class="kt">DB</span> <span class="o">=</span> <span class="nc">DB</span><span class="o">(</span><span class="n">conn</span><span class="o">)</span>
 
@@ -97,14 +93,13 @@
     <span class="n">sql</span><span class="s">"update something set name = ${name} where id = ${id}"</span><span class="o">.</span><span class="py">update</span><span class="o">.</span><span class="py">apply</span><span class="o">()</span>
   <span class="o">}</span> <span class="c1">// localTx or other APIs always close the connection to avoid connection leaks</span>
 
-  <span class="c1">// the Connection already has been closed here!</span>
-  <span class="c1">// java.sql.SQLException will be thrown!</span>
+  <span class="c1">// Connection is already closed here, using it again will throw an SQLException!</span>
   <span class="nv">db</span><span class="o">.</span><span class="py">localTx</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span>
     <span class="c1">// ....</span>
   <span class="o">}</span>
 <span class="o">}</span>
 </code></pre></div>
-<p>When you prefer reusing the same Connection without releasing and returning to connection pools, use <code>DB#autoClose(Boolean)</code>.</p>
+<p>To reuse the same connection without returning it to the connection pool, disable auto-close through <code>DB#autoClose(Boolean)</code>:</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="nf">using</span><span class="o">(</span><span class="nv">connectionPool</span><span class="o">.</span><span class="py">borrow</span><span class="o">())</span> <span class="o">{</span> <span class="o">(</span><span class="n">conn</span><span class="k">:</span> <span class="kt">java.sql.Connection</span><span class="o">)</span> <span class="k">=&gt;</span> 
   <span class="k">val</span> <span class="nv">db</span><span class="k">:</span> <span class="kt">DB</span> <span class="o">=</span> <span class="nc">DB</span><span class="o">(</span><span class="n">conn</span><span class="o">)</span>
 
@@ -115,7 +110,7 @@
     <span class="n">sql</span><span class="s">"update something set name = ${name} where id = ${id}"</span><span class="o">.</span><span class="py">update</span><span class="o">.</span><span class="py">apply</span><span class="o">()</span>
   <span class="o">}</span> <span class="c1">// localTx won't close the current Connection</span>
 
-  <span class="c1">// this block also works fine!</span>
+  <span class="c1">// Reuse the connection for another transaction</span>
   <span class="nv">db</span><span class="o">.</span><span class="py">localTx</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span>
     <span class="c1">// ....</span>
   <span class="o">}</span>
@@ -127,7 +122,7 @@
 
 <hr/>
 
-<p>You can share DB connections as thread-local values. The connection should be released by yourself.</p>
+<p>Connections can be managed as thread-local variables, needing explicit closure (meaning you&rsquo;re responsible to manually close the session):</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">def</span> <span class="nf">init</span><span class="o">()</span> <span class="k">=</span> <span class="o">{</span>
   <span class="k">val</span> <span class="nv">newDB</span> <span class="k">=</span> <span class="nv">ThreadLocalDB</span><span class="o">.</span><span class="py">create</span><span class="o">(</span><span class="n">conn</span><span class="o">)</span>
   <span class="nv">newDB</span><span class="o">.</span><span class="py">begin</span><span class="o">()</span>
@@ -146,9 +141,7 @@
 
 <hr/>
 
-<p>You can replace ConnectionPool settings safely on runtime. </p>
-
-<p>The old pool won&rsquo;t be abandoned until all the borrowed connections are closed.</p>
+<p>ConnectionPool settings can be safely changed at runtime without disrupting existing connections:</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">def</span> <span class="nf">doSomething</span> <span class="k">=</span> <span class="o">{</span>
   <span class="nv">ConnectionPool</span><span class="o">.</span><span class="py">singleton</span><span class="o">(</span><span class="s">"jdbc:h2:mem:db1"</span><span class="o">,</span> <span class="s">"user"</span><span class="o">,</span> <span class="s">"pass"</span><span class="o">)</span>
   <span class="nc">DB</span> <span class="n">localTx</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">s</span> <span class="k">=&gt;</span>
@@ -168,7 +161,7 @@
 
 <hr/>
 
-<p>If you want to use another one which is not Commons DBCP as the connection provider, You can also specify your own <code>ConnectionPoolFactory</code> as follows:</p>
+<p>To utilize a different connection pool provider, such as c3p0, define your own <code>ConnectionPoolFactory</code>:</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="cm">/**
  * c3p0 Connection Pool Factory
  */</span>
@@ -216,7 +209,7 @@
 
 <hr/>
 
-<p>When <code>ConnectionPoolFactory</code> implementation already exists, it&rsquo;s possible to specify it by configuration. By default, commons-dbcp &frac12; and bonecp are already prepared. When you&rsquo;d like to add another <code>ConnectionPoolFactory</code>, call repository&rsquo;s add method like this:</p>
+<p>When a <code>ConnectionPoolFactory</code> implementation is already in place, it can be configured for use. By default, ScalikeJDBC comes pre-configured with commons-dbcp &frac12; and bonecp. If you need to integrate a different <code>ConnectionPoolFactory</code>, you can add it to the repository as follows:</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="nv">scalikejdbc</span><span class="o">.</span><span class="py">ConnectionPoolFactoryRepository</span><span class="o">.</span><span class="py">add</span><span class="o">(</span><span class="s">"name"</span><span class="o">,</span> <span class="nc">YourConnectionPoolFactory</span><span class="o">)</span>
 </code></pre></div>
 <hr/>
@@ -233,23 +226,12 @@
 
 <h4 id="commons-dbcp-1-x">commons-dbcp 1.x</h4>
 
-<p>Previously, commons-dbcp 1.4 was the default connection pool for ScalikeJDBC. We don&rsquo;t recomment using the older one now, but if you need to choose 1.4 instead for some reason, specifying <code>commons-dbcp</code> works.</p>
+<p>Previously, commons-dbcp 1.4 served as the default connection pool for ScalikeJDBC. While it is no longer recommended, if there is a specific reason to use version 1.4, it can still be specified as <code>commons-dbcp</code> in the configuration.</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="nv">ConnectionPool</span><span class="o">.</span><span class="py">singleton</span><span class="o">(</span><span class="n">url</span><span class="o">,</span> <span class="n">user</span><span class="o">,</span> <span class="n">password</span><span class="o">,</span> 
   <span class="nc">ConnectionPoolSettings</span><span class="o">(</span><span class="n">connectionPoolFactoryName</span> <span class="k">=</span> <span class="s">"commons-dbcp"</span><span class="o">))</span>
 </code></pre></div>
 <p><code>commons-dbcp</code> dependency should be added by yourself.</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="n">libraryDependencies</span> <span class="o">+=</span> <span class="s">"commons-dbcp"</span> <span class="o">%</span> <span class="s">"commons-dbcp"</span> <span class="o">%</span> <span class="s">"1.4"</span>
-</code></pre></div>
-<hr/>
-
-<h4 id="bonecp">BoneCP</h4>
-
-<p><a href="http://jolbox.com/">http://jolbox.com/</a></p>
-<div class="highlight"><pre class="highlight scala"><code><span class="nv">ConnectionPool</span><span class="o">.</span><span class="py">singleton</span><span class="o">(</span><span class="n">url</span><span class="o">,</span> <span class="n">user</span><span class="o">,</span> <span class="n">password</span><span class="o">,</span> 
-  <span class="nc">ConnectionPoolSettings</span><span class="o">(</span><span class="n">connectionPoolFactoryName</span> <span class="k">=</span> <span class="s">"bonecp"</span><span class="o">))</span>
-</code></pre></div>
-<p><code>bonecp</code> dependency should be added by yourself.</p>
-<div class="highlight"><pre class="highlight scala"><code><span class="n">libraryDependencies</span> <span class="o">+=</span> <span class="s">"com.jolbox"</span> <span class="o">%</span> <span class="s">"bonecp"</span> <span class="o">%</span> <span class="s">"0.8.0.RELEASE"</span>
 </code></pre></div>
 <hr/>
 
@@ -298,7 +280,7 @@
           <p><a href="/documentation/playframework-support.html">Play Framework</a></p>
           <p><a href="/documentation/reactivestreams-support.html">Reactive Streams</a></p>
           <p><a href="/documentation/dbconsole.html">dbconsole</a></p>
-          <p><a href="https://www.javadoc.io/doc/org.scalikejdbc/scalikejdbc-core_2.13/4.2.1">Core API Doc</a></p>
+          <p><a href="https://www.javadoc.io/doc/org.scalikejdbc/scalikejdbc-core_2.13/4.3.0">Core API Doc</a></p>
           <p><a href="/documentation/faq.html">FAQ</a></p>
           <p><a href="/documentation/testimonials.html">Testimonials</a></p>
           <p><a href="/contribution.html">Contribution</a></p>
