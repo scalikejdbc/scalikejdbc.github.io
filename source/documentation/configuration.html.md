@@ -5,13 +5,13 @@ title: Configuration - ScalikeJDBC
 ## Configuration
 
 <hr/>
-The following 3 things should be configured.
+To use ScalikeJDBC, the following three factors need to be proplery configured.
 
 <hr/>
 ### Loading JDBC Drivers
 <hr/>
 
-In advance, some JDBC drivers must be loaded by using
+Before using JDBC drivers, they must be explicitly loaded using either:
 
 ```
 Class.forName(String)
@@ -23,15 +23,13 @@ or
 java.sql.DriverManager.registerDriver(java.sql.Driver)
 ```
 
-However many modern JDBC implementations will be automatically loaded when they are present on the classpath.
-
-If you use `scalikejdbc-config` or `scalikejdbc-play-plugin`, they do the legacy work for you.
+Many modern JDBC drivers, however, automatically load themselves when included in the classpath. Nonetheless, when you're using `scalikejdbc-config` or `scalikejdbc-play-plugin`, these handle the above loading process for safety.
 
 <hr/>
 ### Connection Pool Settings
 <hr/>
 
-ConnectionPool should be initialized when starting your applications.
+It's required to initialize a ConnectionPool at the start of your applications:
 
 ```scala
 import scalikejdbc._
@@ -50,7 +48,7 @@ val settings = ConnectionPoolSettings(
 ConnectionPool.add("foo", url, user, password, settings)
 ```
 
-When you use external DataSource (e.g. application server's connection pool), use javax.sql.DataSource via JNDI:
+For using an external DataSource, such as an application server's connection pool, connect via JNDI:
 
 ```scala
 import javax.naming._
@@ -64,7 +62,7 @@ ConnectionPool.singleton(new DataSourceConnectionPool(ds))
 ConnectionPool.add("foo", new DataSourceConnectionPool(ds))
 ```
 
-`ConnectionPool` and `ConnectionPoolSettings`'s parameters are like this:
+Here's how `ConnectionPool` and `ConnectionPoolSettings` parameters look:
 
 ```scala
 abstract class ConnectionPool(
@@ -82,14 +80,14 @@ case class ConnectionPoolSettings(
   validationQuery: String)
 ```
 
-FYI: [Source Code](https://github.com/scalikejdbc/scalikejdbc/blob/master/scalikejdbc-core/src/main/scala/scalikejdbc/ConnectionPool.scala)
+Further details in the [source code](https://github.com/scalikejdbc/scalikejdbc/blob/master/scalikejdbc-core/src/main/scala/scalikejdbc/ConnectionPool.scala)
 
 
 <hr/>
 ### Global Settings
 <hr/>
 
-Global settings for logging for query inspection and so on.
+Configure global settings for SQL error logging, query inspection, and more:
 
 ```scala
 object GlobalSettings {
@@ -102,17 +100,17 @@ object GlobalSettings {
 }
 ```
 
-FYI: [Source Code](https://github.com/scalikejdbc/scalikejdbc/blob/master/scalikejdbc-core/src/main/scala/scalikejdbc/GlobalSettings.scala)
+Reference the [source code](https://github.com/scalikejdbc/scalikejdbc/blob/master/scalikejdbc-core/src/main/scala/scalikejdbc/GlobalSettings.scala) for more details.
 
 <hr/>
 ### scalikejdbc-config
 <hr/>
 
-If you use `scalikejdbc-config` which is an easy-to-use configuration loader for ScalikeJDBC which reads typesafe config, configuration is much simple.
+The `scalikejdbc-config` library simplifies the configuration process by utilizing Typesafe Config to read settings:
 
 [Typesafe Config](https://github.com/lightbend/config)
 
-If you'd like to setup `scalikejdbc-config`, see setup page.
+To learn how to configure `scalikejdbc-config`, see setup page.
 
 [/documentation/setup](/documentation/setup.html)
 
@@ -148,9 +146,9 @@ db.default.driver="org.postgresql.Driver"
 db.default.url="jdbc:postgresql://localhost:5432/scalikejdbc"
 ```
 
-After just calling `scalikejdbc.config.DBs.setupAll()`, Connection pools are prepared. `DBs.setup/DBs.setupAll` loads specified JDBC driver classes as well. 
+When setting up with `scalikejdbc.config.DBs.setupAll()`, the module automatically loads the specified JDBC drivers and prepares connection pools.
 
-Note that due to the way JDBC works, these drivers are loaded globally for the entire JVM, and then a particular driver is selected from the global JVM list by locating the first which is able to handle the connection URL. This usually produces the expected behaviour anyway, unless you have multiple JDBC drivers in your classpath which handle the same URL (such as MySQL and MariaDB JDBC implementations, which both handle URLs of the form `jdbc:mysql:`). In these cases you may not get the implementation you are expecting, since the presence of JDBC packages in the classpath is, for many drivers, enough to have them registered globally.
+DBC drivers, once loaded, are globally available to the entire Java Virtual Machine (JVM). The selection process for a specific driver from the global list typically targets the first one capable of managing the given connection URL. This approach generally yields the correct behavior, except when multiple drivers capable of handling the same URL type (such as MySQL and MariaDB drivers, both supporting `jdbc:mysql:` URLs) are present in the classpath. In such cases, the expected driver might not be used, as the mere presence of JDBC drivers on the classpath often leads to their global registration, irrespective of their intended use.
 
 ```scala
 import scalikejdbc._
@@ -180,7 +178,7 @@ DBs.closeAll()
 ### scalikejdbc-config with Environment
 <hr/>
 
-It's also possible to add prefix(e.g. environment).
+You can manage different configurations for multiple environments:
 
 ```
 development.db.default.driver="org.h2.Driver"
@@ -199,8 +197,7 @@ prod {
   }
 }
 ```
-
-Use `DBsWithEnv` instead of `DBs`.
+To activate these settings, use `DBsWithEnv` instead of `DBs`.
 
 ```scala
 DBsWithEnv("development").setupAll()
@@ -211,7 +208,7 @@ DBsWithEnv("prod").setup("sandbox")
 ### scalikejdbc-config for Global Settings
 <hr/>
 
-The following settings are available.
+Global settings can be adjusted to log SQL errors, connection issues, and more:
 
 ```
 # Global settings

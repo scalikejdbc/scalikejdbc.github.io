@@ -8,13 +8,13 @@ title: Auto Macros - ScalikeJDBC
 ### Avoid Boilerplate Code
 <hr/>
 
-You can avoid writing boilerplate code when using `scalikejdbc-syntax-support-macro`.
+If you want to avoid writing lots of boilerplate code, `scalikejdbc-syntax-support-macro` can be greatly helpful for reducing such troublesome coding tasks.
 
 <hr/>
 ### Setup
 <hr/>
 
-Add the following aditional dependency to your sbt project.
+In addition to the core library, you can add the following optional dependency in `buid.sbt`:
 
 ```scala
 libraryDependencies += "org.scalikejdbc" %% "scalikejdbc-syntax-support-macro" % "<%= version %>"
@@ -26,10 +26,15 @@ libraryDependencies += "org.scalikejdbc" %% "scalikejdbc-syntax-support-macro" %
 
 #### autoConstruct for extracting entities from ResultSet
 
-Usually, we should write ResultSet extractor method as follows.
+When you don't use the macros, the usual code to extract data from `ResultSet` should look like below:
 
 ```scala
-case class Company(id: Long, name: String, countryId: Option[Long], country: Option[Country] = None)
+case class Company(
+  id: Long,
+  name: String, 
+  countryId: Option[Long],
+  country: Option[Country] = None
+)
 
 object Company extends SQLSyntaxSupport[Company] {
 
@@ -41,31 +46,36 @@ object Company extends SQLSyntaxSupport[Company] {
 }
 ```
 
-When using scalikejdbc-syntax-support-macro, you can use `#autoConstruct` macro. 
+When using scalikejdbc-syntax-support-macro, you can use `#autoConstruct` macro instead. As you can see, now the code is significantly simpler and much easier to maintain for the future.
 
 ```scala
-case class Company(id: Long, name: String, countryId: Option[Long], country: Option[Country] = None)
+case class Company(
+  id: Long,
+  name: String, 
+  countryId: Option[Long],
+  // This property never comes from ResultSet
+  country: Option[Country] = None
+)
 
 object Company extends SQLSyntaxSupport[Company] {
 
   def apply(rs: WrappedResultSet, rn: ResultName[Company]): Company = 
-    autoConstruct(rs, rn, "country") // "country" will be ignored when binding values from ResultSet
+    // "country" is execluded when binding values from ResultSet
+    // Note that the property neeeds to have the default `None` value
+    autoConstruct(rs, rn, "country")
 }
 ```
 
 The `#autoConstruct` method binds all the fields defined at the primary constructor automatically.
 
-The `country` field in the above example class should be ignored. In such cases, you should specify additional String parameter such as `"country"`.
-Of course, the `"country"` will be verified at Scala compilation time. We believe that's pretty cool and useful.
-
+The `country` field in the above example class should be ignored. In such cases, you should specify an additional String parameter such as "country". Of course, the "country" will be verified at Scala compilation time!
 
 <hr/>
 #### autoColumns to avoid accessing JDBC metadata
 
-When your code load ScalikeJDBC DAO objects, ScalikeJDBC automatically fetches all the column names for the table specified by SQLSyntaxSupport's `tableName` (via JDBC metadata API).
+When your code loads ScalikeJDBC DAO objects, ScalikeJDBC automatically fetches all the column names for the table specified by `SQLSyntaxSupport`'s `tableName` via the JDBC metadata API.
 
-If you don't prefer the behavior, you can choose loading column names from the entity class's field names instead.
-The following code won't access JDBC metadata and will resolve column names from Company class's fields, primary constructor's parameters, by simply converting them to snake-cased ones or applying nameConverters to them.
+If you don't prefer the behavior, you can choose to load column names from the entity class's field names instead. The following code won't access JDBC metadata and will resolve column names from the `Company` class's fields and primary constructor's parameters by simply converting them to snake-cased ones or applying name converters to them.
 
 ```scala
 case class Company(id: Long, name: String, countryId: Option[Long], country: Option[Country] = None)

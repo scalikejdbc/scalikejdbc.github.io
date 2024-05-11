@@ -8,13 +8,13 @@ title: Operations - ScalikeJDBC
 ### Query API
 <hr/>
 
-There are various query APIs. All of them (`single`, `first`, `list` and `foreach`) will execute `java.sql.PreparedStatement#executeQuery()`.
+ScalikeJDBC provides a variety of query APIs including `single`, `first`, `list`, and `foreach`. Each of these functions will execute the `java.sql.PreparedStatement#executeQuery()`.
 
 <hr/>
 #### Single / Optional Result for Query
 <hr/>
 
-`single` returns matched single row as an `Option` value. If unexpectedly multiple rows are returned, runtime exception will be thrown.
+The `single` API returns a single matched row as an `Option`. If multiple rows are returned unexpectedly, a runtime exception is thrown.
 
 ```scala
 import scalikejdbc._
@@ -58,7 +58,7 @@ You can learn about QueryDSL in detail here:
 #### First Result from Multiple Results
 <hr/>
 
-`first` returns the first row of matched rows as an `Option` value.
+The `first` API retrieves the first row from the matched rows and returns it as an `Option`.
 
 ```scala
 val name: Option[String] = DB readOnly { implicit session =>
@@ -75,7 +75,7 @@ val name: Option[String] = DB readOnly { implicit session =>
 #### List Results
 <hr/>
 
-`list` returns matched multiple rows as `scala.collection.immutable.List`.
+The `list` API returns matched multiple rows as a `scala.collection.immutable.List`.
 
 ```scala
 val name: List[String] = DB readOnly { implicit session =>
@@ -92,7 +92,7 @@ val name: List[String] = DB readOnly { implicit session =>
 #### Foreach Operation
 <hr/>
 
-`foreach` allows you to make some side-effect in iterations. This API is useful for handling large `ResultSet`.
+The `foreach` API allows you to perform side effects during iterations. This method is particularly useful for handling large `ResultSet` streaming data efficiently.
 
 ```scala
 DB readOnly { implicit session =>
@@ -113,11 +113,11 @@ DB readOnly { implicit session =>
 #### Setting JDBC fetchSize
 <hr/>
 
-For instance, the PostgreSQL JDBC driver does infinite(!) caching for result sets if fetchSize is set to 0 (the default) and this causes memory problems.
+In cases like the PostgreSQL JDBC driver, setting the fetchSize to 0 (which is the default) can lead to infinite caching of result sets and subsequently cause memory issues. It's important to manage the fetchSize appropriately to prevent such problems.
 
 https://docs.oracle.com/javase/8/docs/api/java/sql/Statement.html#setFetchSize-int-
 
-You can specify JDBC fetchSize as follows since version 2.0.5.
+From version 2.0.5 onwards, ScalikeJDBC allows you to specify the JDBC fetchSize to better control memory usage and enhance performance:
 
 ```scala
 val e = Emp.syntax("e")
@@ -128,7 +128,7 @@ DB readOnly { implicit session =>
 }
 ```
 
-Or it's also fine to set fetchSize to `scalikejdbc.DBSession`.
+Alternatively, you can set the fetchSize directly on the `scalikejdbc.DBSession` to manage data retrieval more efficiently. This approach is also supported in ScalikeJDBC from version 2.0.5 onwards:
 
 ```scala
 val (e, c) = (Emp.syntax("e"), Cmp.syntax("c"))
@@ -149,9 +149,8 @@ DB readOnly { implicit session =>
 #### Implementing Custom Extractor
 <hr/>
 
-In some cases, you might need to implement your own custom extractor. This can be useful for testing out queries.
 
-This example shows how to preserve ``null`` values in a result set.
+Implementing a custom extractor can be essential when you need more control over how data is retrieved from a result set, such as preserving null values. Here's an example of how you can create a custom extractor in ScalikeJDBC, useful for testing queries and ensuring null values are handled appropriately:
 
 ```scala
 def toMap(rs: WrappedResultSet): Map[String, Any] =  {
@@ -163,14 +162,13 @@ def toMap(rs: WrappedResultSet): Map[String, Any] =  {
 
 sql"select * from emp".map(rs => toMap(rs)).single.apply()
 ```
+This code snippet demonstrates how to use a custom extractor to fetch data from a database while preserving null values as `Option` types in Scala, enhancing the robustness of your data handling logic.
 
 <hr/>
 #### Using ParameterBinder
 <hr/>
 
-`ParameterBinder` allows you to customize how parameters should be bound to `PreparedStatement` object inside ScalikeJDBC.
-
-The following example shows how to use `PreparedStatement#setBinaryStream` when binding `InputStream` value to `PreparedStatement`.
+Using `ParameterBinder` in ScalikeJDBC lets you customize the binding of parameters to a `PreparedStatement`. This is particularly useful for handling complex data types such as binary streams. Here's how you can bind an `InputStream` to a `PreparedStatement` using `#setBinaryStream()`:
 
 ```scala
 sql"create table blob_example (id bigint, data blob)").execute.apply()
@@ -185,7 +183,7 @@ val bytesBinder = ParameterBinder(
 sql"insert into blob_example (data) values (${bytesBinder})").update.apply()
 ```
 
-If you need to enable some `ParameterBinder` implicitly, you need to define `ParameterBinderFactory` for it.
+To enable a `ParameterBinder` implicitly across your Scala code, you must define a `ParameterBinderFactory`. This factory will automatically generate `ParameterBinder` instances for specific types as needed. Here's an example of how to set up a `ParameterBinderFactory` for a `MemberId` type, which is useful for binding binary data:
 
 ```scala
 case class MemberId(value: Int)
@@ -211,9 +209,7 @@ sql"select id from member where id = $memberId" // will bind `memberId` as an ob
 #### Using TypeBinder
 <hr/>
 
-`TypeBinder[A]` is a type class to extract type `A` values from ResultSet. To extract a value as a specific type value, you need to define the type class for it.
-
-Let's say you need to bind a long value as `MemberId` type as below.
+To extract values of a specific type from a `ResultSet`, you'll need to implement a `TypeBinder` type class for that type. This allows you to define custom extraction logic for handling database values as custom types. For example, if you have a `MemberId` type that wraps a `Long` value, you can create a `TypeBinder` for it like this:
 
 ```scala
 import scalikejdbc._
@@ -253,7 +249,7 @@ val ids: Seq[MemberId] = sql"select id from member".map(_.get[MemberId]("id")).l
 // ids: Seq[MemberId] = List(MemberId(1), MemberId(1), MemberId(2), MemberId(3))
 ```
 
-Of course, it's also possible to simply deal with this case without `TypeBinder`.
+Certainly, you can handle custom types like MemberId without explicitly defining a `TypeBinder` by manually extracting and converting the data within your database queries. Here's how you might approach this:
 
 ```scala
 val ids: Seq[MemberId] = sql"select id from member".map(rs => MemberId(rs.get("id"))).list.apply()
@@ -263,7 +259,7 @@ val ids: Seq[MemberId] = sql"select id from member".map(rs => MemberId(rs.get("i
 #### Binders to define both ParameterBinderFactory and TypeBinder
 <hr/>
 
-Using `Binders` is very convenient when you define both `ParameterBinderFactory` and `TypeBinder`.
+Using `Binders` is highly convenient when you need to define both a `ParameterBinderFactory` and a `TypeBinder` for a custom type. This approach allows for consistent and streamlined handling of how a type is both sent to and retrieved from the database, ensuring that your custom types are seamlessly integrated into your database operations.
 
 ```scala
 // object Binders {
@@ -297,13 +293,13 @@ case class MemberId(value: Int)
 #### Using joda-time library
 <hr/>
 
-You need to add the optional module which supports joda-time library.
+When working with the joda-time library, it's necessary to include the appropriate optional module to ensure full compatibility and functionality. Here's how you can set up and use the joda-time support module within your Scala project:
 
 ```scala
 libraryDependencies += "org.scalikejdbc" %% "scalikejdbc-joda-time" % "<%= version %>"
 ```
 
-Also, you explicitly need to import ParameterBinderFatory and TypeBinder.
+After importing, you can use the pre-defined `ParameterBinderFactory` and `TypeBinder` instances to handle joda-time specific types:
 
 ```scala
 import scalikejdbc._
@@ -334,7 +330,7 @@ object Group extends SQLSyntaxSupport[Group] {
 ### Update API
 <hr/>
 
-`update` executes `java.sql.PreparedStatement#executeUpdate()`.
+The `update` API executes `java.sql.PreparedStatement#executeUpdate()`.
 
 ```scala
 import scalikejdbc._
@@ -371,7 +367,7 @@ DB localTx { implicit s =>
 ### Execute API
 <hr/>
 
-`execute` executes `java.sql.PreparedStatement#execute()`.
+The `execute` API executes `java.sql.PreparedStatement#execute()`.
 
 ```scala
 DB autoCommit { implicit session =>
@@ -385,7 +381,7 @@ DB autoCommit { implicit session =>
 ### Batch API
 <hr/>
 
-`batch` and `batchByName` executes `java.sql.PreparedStatement#executeBatch()`.
+The `batch` and `batchByName` executes `java.sql.PreparedStatement#executeBatch()`.
 
 ```scala
 import scalikejdbc._

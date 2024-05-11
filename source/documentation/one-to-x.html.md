@@ -8,20 +8,17 @@ title: One-to-X API - ScalikeJDBC
 ### Why One-to-x APIs are needed?
 <hr/>
 
-Users can write all the mapping operations by using `#map` or `#foldLeft`... with a lot of boilerplate code.
-
-ScalikeJDBC provides you some useful APIs to map results to objects.
+While users can perform mapping operations using methods like `#map` or `#foldLeft`, these often require extensive boilerplate code. ScalikeJDBC offers specialized APIs that simplify the mapping of results to objects.
 
 <div class="alert alert-warning">
-Be aware that resolving multiple one-to-many relationships with a single join query may cause performance or data size problems when dealing with large number of rows.
+Be aware that resolving multiple one-to-many relationships with a single join query may lead to performance or data size issues when handling a large number of rows.
 </div>
 
 <hr/>
 ### One-To-Many / One-To-Manies
 <hr/>
 
-Simple example:
-
+Here is a simple example:
 ```scala
 case class Member(id: Long, name: String)
 case class Group(id: Long, name: String, members: Seq[Member] = Nil)
@@ -53,7 +50,7 @@ val groups: Seq[Group] =
    .apply()
 ```
 
-`one.toManies` supports 9 tables to join.
+`one.toManies` supports up to 9 tables for joining.
 
 ```scala
 case class Member(id: Long, name: String)
@@ -85,7 +82,7 @@ val groups: Seq[Group] =
 ### One-To-One
 <hr/>
 
-`one.toOne` for inner join queries.
+`one.toOne` for inner join queries:
 
 ```scala
 case class Owner(id: Long, name: String)
@@ -109,7 +106,7 @@ val groups: Seq[Group] =
   .apply()
 ```
 
-If you don't want to define `owner` as an optional value, use `#map` instead.
+For optional relationships, use `#map`:
 
 ```scala
 case class Owner(id: Long, name: String)
@@ -140,7 +137,7 @@ val groups: Seq[Group] =
   .apply()
 ```
 
-`one.toOptionalOne` for outer join queries.
+or `one.toOptionalOne` for outer join queries:
 
 ```scala
 case class Owner(id: Long, name: String)
@@ -166,7 +163,8 @@ val groups: Seq[Group] =
 ### About Entity Equality
 <hr/>
 
-In most cases, you will use case classes for entities. And basically it works fine. However, as you know, Scala (under 2.11) has 22 limitation and you cannot create a case class with more thatn 22 parameters. If your table has more than 22 columns, you need to create a normal class like this:
+Typically, entities are represented using case classes. However, Scala versions below 2.11 limit case classes to 22 parameters. If your table has more than 22 columns, you'll need to use a normal class:
+
 
 ```scala
 class HugeTable(
@@ -182,9 +180,9 @@ object HugeTable extends SQLSyntaxSupport[HugeTable] {
 }
 ```
 
-The above code also works fine except for the use of one-to-x APIs. Case classes nicely overrides `#equals` method. But `HugeTable`'s `#equals` method won't work as you expect because it just predicates instance equality. So when you use normal classes and one-to-x APIs, you must override `#equals` method by yourself.
+The code works correctly except when using one-to-x APIs. Case classes automatically override the `#equals` method, facilitating proper equality checks. However, the `#equals` method in a regular class like `HugeTable` only assesses instance equality, which may not yield the expected behavior. Therefore, when using non-case classes with one-to-x APIs, it's crucial to manually override the `#equals` method.
 
-Since version 1.7.3, ScalikeJDBC provides `EntityEquality` trait like this:
+Starting from version 1.7.3, ScalikeJDBC includes the `EntityEquality` trait to simplify this process:
 
 ```scala
 class HugeTable(
@@ -195,7 +193,7 @@ class HugeTable(
 }
 ```
 
-`#equals` method predicates equality with `entityIdentity` and the class is same. The above code use only `id` value for equality. If it isn't appropriate, define `entityIdentity` differently.
+The `#equals` method determines equality based on `entityIdentity` and whether the objects belong to the same class. In the provided code, equality is solely based on the id value. If this approach doesn't suit your needs, you can redefine `entityIdentity` to incorporate additional or different attributes to better reflect your equality criteria.
 
 ```scala
 class HugeTable(
@@ -207,7 +205,7 @@ class HugeTable(
 }
 ```
 
-If you're still using older version and you cannot upgrade version right now, see the `EntityEquality` implementation and do the same thing.
+If you are using an older version and cannot upgrade at this time, you can refer to the `EntityEquality` implementation and replicate its functionality in your environment.
 
 https://github.com/scalikejdbc/scalikejdbc/blob/master/scalikejdbc-core/src/main/scala/scalikejdbc/EntityEquality.scala
 

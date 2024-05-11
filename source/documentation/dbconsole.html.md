@@ -8,13 +8,13 @@ title: dbconsole - ScalikeJDBC
 ### Setup
 <hr/>
 
-See [/documentation/setup](/documentation/setup.html).
+For initial setup instructions, please refer to the [/documentation/setup](/documentation/setup.html).
 
 <hr/>
 ### Usage
 <hr/>
 
-After installation, you can use `dbconsole` command, usage is pretty simple:
+Once installed, the `dbconsole` command allows easy database connection. Here's how to use it:
 
 ```
 $ dbconsole -h
@@ -33,7 +33,7 @@ General options:
 <hr/>
 #### Try sandbox db
 
-Please try it now with sandbox database.
+Experience the `dbconsole` now with a sandbox database setup:
 
 ```scala
 $ dbconsole sandbox

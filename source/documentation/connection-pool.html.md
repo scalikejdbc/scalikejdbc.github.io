@@ -8,26 +8,23 @@ title: Connection Pool - ScalikeJDBC
 ### Configuration
 <hr/>
 
-See [/documentation/configuration](/documentation/configuration.html)
-
+For details on setting up your connection pool, please visit the [/documentation/configuration](/documentation/configuration.html) page.
 
 <hr/>
 ### Borrowing Connections
 <hr/>
 
-Simply just call `#borrow` method.
+To borrow a connection, simply use the `#borrow()` method:
 
 ```scala
 import scalikejdbc._
-// default
+// default connection
 val conn: java.sql.Connection = ConnectionPool.borrow()
-// named
+// named connection
 val conn: java.sql.Connection = ConnectionPool("named").borrow()
 ```
 
-Be careful. The connection object should be released by yourself.
-
-Basically using loan pattern is recommended to avoid human errors.
+It is important to manually release the connection. To prevent errors, employing the so-called loan pattern is recommended:
 
 ```scala
 using(ConnectionPool.borrow()) { conn =>
@@ -35,27 +32,25 @@ using(ConnectionPool.borrow()) { conn =>
 }
 ```
 
-ScalikeJDBC wraps a `java.sql.Connection` object as a `scalikejdbc.DB` object.
+ScalikeJDBC encapsulates a `java.sql.Connection` in a `scalikejdbc.DB` object for safer, easier management:
 
 ```scala
 using(DB(ConnectionPool.borrow())) { db =>
-  // ...
+  // perform database operations
 }
 ```
 
-`DB` object can provide `DBSession` for each operation.
+The `DB` object simplifies managing `DBSession` for different operations:
 
 ```scala
 using(DB(ConnectionPool.borrow())) { db =>
   db.readOnly { implicit session =>
-    // ...
+    // read-only operations
   }
 }
 ```
 
-Right, above code is too verbose! Using DB object make it much simpler.
-
-You can simplify the same things by using `DB` or `NamedDB` objects and it's the common usage of ScalikeJDBC.
+However, this can be made simpler by directly using the `DB` or `NamedDB` objects, which is the most common way to use this library:
 
 ```scala
 // default
@@ -72,7 +67,7 @@ NamedDB("named") readOnly { implicit session =>
 ### Reusing same DB instance several times
 <hr/>
 
-By default, `scalikejdbc.DB` or `scalikejdbc.NamedDB` instance always closes its connection (= releases and returns it to connection pools).
+By default, `scalikejdbc.DB` or `scalikejdbc.NamedDB` instance closes its connection automatically (= releases and returns it to connection pools).
 
 ```scala
 using(connectionPool.borrow()) { (conn: java.sql.Connection) => 
@@ -82,15 +77,14 @@ using(connectionPool.borrow()) { (conn: java.sql.Connection) =>
     sql"update something set name = ${name} where id = ${id}".update.apply()
   } // localTx or other APIs always close the connection to avoid connection leaks
 
-  // the Connection already has been closed here!
-  // java.sql.SQLException will be thrown!
+  // Connection is already closed here, using it again will throw an SQLException!
   db.localTx { implicit session =>
     // ....
   }
 }
 ```
 
-When you prefer reusing the same Connection without releasing and returning to connection pools, use `DB#autoClose(Boolean)`.
+To reuse the same connection without returning it to the connection pool, disable auto-close through `DB#autoClose(Boolean)`:
 
 ```scala
 using(connectionPool.borrow()) { (conn: java.sql.Connection) => 
@@ -103,7 +97,7 @@ using(connectionPool.borrow()) { (conn: java.sql.Connection) =>
     sql"update something set name = ${name} where id = ${id}".update.apply()
   } // localTx won't close the current Connection
 
-  // this block also works fine!
+  // Reuse the connection for another transaction
   db.localTx { implicit session =>
     // ....
   }
@@ -114,7 +108,7 @@ using(connectionPool.borrow()) { (conn: java.sql.Connection) =>
 ### Thread-local Connection Pattern
 <hr/>
 
-You can share DB connections as thread-local values. The connection should be released by yourself.
+Connections can be managed as thread-local variables, needing explicit closure (meaning you're responsible to manually close the session):
 
 ```scala
 def init() = {
@@ -134,9 +128,7 @@ def finalize() = {
 ### Replacing ConnectionPool on Runtime
 <hr/>
 
-You can replace ConnectionPool settings safely on runtime. 
-
-The old pool won't be abandoned until all the borrowed connections are closed.
+ConnectionPool settings can be safely changed at runtime without disrupting existing connections:
 
 ```scala
 def doSomething = {
@@ -157,7 +149,7 @@ def doSomething = {
 ### Using Another ConnectionPool Implementation
 <hr/>
 
-If you want to use another one which is not Commons DBCP as the connection provider, You can also specify your own `ConnectionPoolFactory` as follows:
+To utilize a different connection pool provider, such as c3p0, define your own `ConnectionPoolFactory`:
 
 ```scala
 /**
@@ -206,7 +198,7 @@ ConnectionPool.add("xxxx", url, user, password)
 ### Switching ConnectionPool Implementation by configuration
 <hr/>
 
-When `ConnectionPoolFactory` implementation already exists, it's possible to specify it by configuration. By default, commons-dbcp 1/2 and bonecp are already prepared. When you'd like to add another `ConnectionPoolFactory`, call repository's add method like this:
+When a `ConnectionPoolFactory` implementation is already in place, it can be configured for use. By default, ScalikeJDBC comes pre-configured with commons-dbcp 1/2 and bonecp. If you need to integrate a different `ConnectionPoolFactory`, you can add it to the repository as follows:
 
 ```scala
 scalikejdbc.ConnectionPoolFactoryRepository.add("name", YourConnectionPoolFactory)
@@ -227,7 +219,7 @@ ConnectionPool.singleton(url, user, password,
 <hr/>
 #### commons-dbcp 1.x
 
-Previously, commons-dbcp 1.4 was the default connection pool for ScalikeJDBC. We don't recomment using the older one now, but if you need to choose 1.4 instead for some reason, specifying `commons-dbcp` works.
+Previously, commons-dbcp 1.4 served as the default connection pool for ScalikeJDBC. While it is no longer recommended, if there is a specific reason to use version 1.4, it can still be specified as `commons-dbcp` in the configuration.
 
 ```scala
 ConnectionPool.singleton(url, user, password, 
@@ -238,22 +230,6 @@ ConnectionPool.singleton(url, user, password,
 
 ```scala
 libraryDependencies += "commons-dbcp" % "commons-dbcp" % "1.4"
-```
-
-<hr/>
-#### BoneCP
-
-http://jolbox.com/
-
-```scala
-ConnectionPool.singleton(url, user, password, 
-  ConnectionPoolSettings(connectionPoolFactoryName = "bonecp"))
-```
-
-`bonecp` dependency should be added by yourself.
-
-```scala
-libraryDependencies += "com.jolbox" % "bonecp" % "0.8.0.RELEASE"
 ```
 
 <hr/>

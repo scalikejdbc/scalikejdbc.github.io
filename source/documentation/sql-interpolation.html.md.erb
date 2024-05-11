@@ -8,9 +8,7 @@ title: SQLInterpolation - ScalikeJDBC
 ### What's SQLInterpolation
 <hr/>
 
-SQLInterpolation is an SQL builder which uses String interpolation since Scala 2.10.
-
-The usage is pretty simple - just embedding values into sql"" template without `#bind` or `#bindByName`. It looks really cool.
+SQLInterpolation is an SQL builder that utilizes string interpolation, available since Scala 2.10. Its usage is straightforward: simply embed values into the `sql""` template without using `#bind` or `#bindByName`. This approach is quite efficient.
 
 ```scala
 import scalikejdbc._
@@ -24,7 +22,7 @@ val member = sql"select id, name from members where id = ${id}"
 //   .map(rs => Member(rs)).single.apply()
 ```
 
-Don't worry, this code is safely protected from SQL injection attacks. `${id}` will be a place holder.
+Don't worry, this code is secure against SQL injection attacks. `${id}` serves as a placeholder.
 
 ```sql
 select id, name from members where id = ?
@@ -32,21 +30,21 @@ select id, name from members where id = ?
 
 #### Natively-handled types
 
-The following types are natively handled using SQL parameter binding (not only for SQL interpolation, but also for explicit parameter binding):
+The following types are natively supported through SQL parameter binding, applicable to both SQL interpolation and explicit parameter binding:
 
 * Numeric types: `Int`, `Short`, `Long`, `Float`, `Double`, `java.math.{BigInt, BigDecimal}`
 * Time and date types: `java.sql.{Date, Time, Timestamp}`, `java.util.Date`, `org.joda.time.{DateTime, LocalDateTime, LocalDate, LocalTime}`, `java.time.{ZonedDateTime, Instant, LocalDateTime, LocalDate, LocalTime}`
 * Other types with a straightforward SQL correspondence: `java.sql.{Array, SQLXML}`, `java.io.InputStream` (as a binary stream)
 * `Option` – converted to the corresponding value for `Some` instances, and `null` for `None`.
 
-In addition, SQL interpolation unwraps instances of `scala.collection.Traversable` and `java.lang.Iterable` and converts each element of the list into a bound parameter separated by ``, '', so the following behaves as you would expect:
+Additionally, SQL interpolation unwraps instances of `scala.collection.Traversable` and `java.lang.Iterable`, converting each element into a bound parameter separated by either backticks or commas, ensuring behavior as expected:
 
 ```scala
 val ids = Seq(123, 124, 125)
 sql"SELECT * FROM members WHERE id IN (${ids})"
 ```
 
-Other values are mapped directly as `Object`s.
+Other values are directly mapped as Objects.
 
 <hr/>
 ### SQLSyntax
@@ -66,17 +64,17 @@ val members = sql"select id, name from members order by id ${ordering} limit 10"
 select id , name from members order by id desc limit 10
 ```
 
-Don't worry again, this code is safely protected. `sqls""` always treats external input values as binding parameters.
+Don't worry again, this code is secure. `sqls""` always treats external input values as binding parameters.
 
 <hr/>
 ### SQLSyntaxSupport
 <hr/>
 
-SQLSyntaxSupport is one step short of ORM. In other words, it's a powerful DRY way to write SQL.
+SQLSyntaxSupport is just shy of being an ORM. It provides a DRY method to write SQL effectively.
 
-First of all, mix the `SQLSyntaxSupport[A]` trait to `A` companion object, and define `tableName` and `#apply` method to map values from `ResultSet` object in it. The unfamiliar `ResultName[A]` are described later.
+Firstly, integrate the `SQLSyntaxSupport[A]` trait into the companion object of `A`, and specify `tableName` along with the `#apply` method to map values from the `ResultSet`. The `ResultName[A]`, which may be unfamiliar, will be explained later.
 
-NOTICE: When you use case classes for entities as follows (Group, GroupMember) everything goes fine. But if you use normal classes for entities, be aware of entity equality. See the following page in detail: [documentation/one-to-x.html](one-to-x.html)
+NOTE: Utilizing case classes for entities (like `Group` and `GroupMember`) generally works well. However, if you use regular classes for entities, be mindful of entity equality. For more details, refer to: [documentation/one-to-x.html](one-to-x.html)
 
 ```scala
 import scalikejdbc._
@@ -130,7 +128,7 @@ val groupMember: Option[GroupMember] = sql"""
   .map(GroupMember(m.resultName, g.resultName)).single.apply()
 ```
 
-Though the above code contains some `${...}` parts, I believe that you can understand what it means. Actually, this code runs the following SQL statement.
+While the code includes several `${...}` placeholders, I trust you can grasp their meaning. Essentially, this code executes the following SQL statement.
 
 ```sql
 select
@@ -141,15 +139,15 @@ where
   m.id = ?
 ```
 
-It seems to be natural that `${m.result.*}` is converted to listing all the columns, `${m.camelCase}` is converted to the `snake_case` column name. However, since you may have questions, I'll explain about some points.
+It's logical that `${m.result.*}` translates to listing all the columns, and `${m.camelCase}` converts to the corresponding snake_case column name. However, should you have any questions, I'm here to clarify specific points in the next section.
 
 <hr/>
 #### Why is ${m.result.*} transformed to listing all the columns?
 <hr/>
 
-In spite of column names are not defined anywhere, `${m.result.*}` is converted to listing all the column names. The secret is that loading from metadata (and they will be cached) when first access to the table. It's possible to obtain all column names as a `Seq[String]` value via `columns`.
+Although column names are not explicitly defined, `${m.result.*}` is converted to list all the column names. This is achieved by loading from metadata, which is cached upon the first access to the table. It's possible to retrieve all column names as a `Seq[String]` value via columns.
 
-If you need to define column names by yourself or need to access multi databases, please define column names as follows:
+If you need to manually define column names or require access to multiple databases, please define column names as follows:
 
 ```scala
 object GroupMember extends SQLSyntaxSupport[GroupMember] {
@@ -162,17 +160,17 @@ object GroupMember extends SQLSyntaxSupport[GroupMember] {
 #### Why can we use undefined methods such as m.groupId?
 <hr/>
 
-By Type Dynamic (SIP-17) since Scala 2.10.0, you can call undefined methods such as `m.groupId`. Type Dynamic is similar to Ruby's method_missing.
+With Type Dynamic (SIP-17) available since Scala 2.10.0, you can call undefined methods like `m.groupId`. Type Dynamic functions similarly to Ruby's method_missing.
 
 [https://docs.google.com/document/d/1XaNgZ06AR7bXJA9-jHrAiBVUwqReqG4-av6beoLaf3U](https://docs.google.com/document/d/1XaNgZ06AR7bXJA9-jHrAiBVUwqReqG4-av6beoLaf3U)
 
-When you call camel case fields, it will actually be transformed to column name as an underscore separated string. If column name doesn't exist in columns, `InvalidColumnNameException` will be thrown.
+When camel case fields are invoked, they are automatically transformed into underscore-separated column names. If a column name doesn't exist, an `InvalidColumnNameException` will be thrown.
 
-Before that, the case field name should be the same as any of the primary constructor arg names of type `A` of `SQLSyntaxSupport[A]`. The validation for this rule works in compilation phase with the power of Scala macros.
+Furthermore, the case field name must match one of the primary constructor argument names of type A in `SQLSyntaxSupport[A]`. This rule is validated during the compilation phase with the help of Scala macros.
 
 [https://docs.scala-lang.org/overviews/macros/overview.html](https://docs.scala-lang.org/overviews/macros/overview.html)
 
-If you don't want to use Type Dynamic, it's also possible to call `#field(String)` or `#column(String)` with String value. For instance, the following four examples mean the same thing.
+If Type Dynamic does not suit your needs, you can alternatively use `#field(String)` or `#column(String)` to specify column names explicitly. Here are four examples demonstrating this approach, all of which achieve the same result:
 
 ```scala
 m.groupId
@@ -181,7 +179,7 @@ m.column("group_id")
 m.c("group_id")
 ```
 
-If you don't need to convert field names to snake cased column names, set `useSnakeCaseColumnName` as false like this:
+If you prefer not to convert field names to snake-cased column names, you can set `useSnakeCaseColumnName` to false as shown below:
 
 ```scala
 object UserType extends SQLSyntaxSupport[UserType] {
@@ -190,7 +188,7 @@ object UserType extends SQLSyntaxSupport[UserType] {
 }
 ```
 
-In some cases, you might want to avoid expose column names to application layer. If this is the case, override `nameConverters`. If you want to treat `service_cd` column as `serviceCode`, define regular expression and replaced name in columns as follows. Since the `nameConverters` works as partial match retrieval, it's also possible to specify just `Map("Code" -> "cd")`.
+In situations where you prefer not to expose column names to the application layer, you can override `nameConverters`. For example, if you wish to refer to the `service_cd` column as `serviceCode`, you can define a regular expression and the replacement name in `nameConverters` as follows. Since `nameConverters` operates on partial match retrieval, you can also simply specify mappings such as `Map("Code" -> "cd")`.
 
 ```scala
 case class Event(id: Long, name: String, serviceCode: Long)
@@ -208,25 +206,24 @@ object Event extends SQLSyntaxSupport[Event] {
 #### What is the difference between m.id, m.result.id and m.resultName.id?
 <hr/>
 
-For instance, `m`'s APIs of `val m = Member.syntax("mm")` means as follows:
+Here's an explanation of the differences between `m.id`, `m.result.id`, and `m.resultName.id` based on the `Member.syntax("mm")` API:
 
-- `m.groupId` will be converted to `sqls"mm.group_id"`
-- `m.result.groupId` will be converted to `sqls"mm.group_id as gi_on_mm"`
-- `m.resultName` returns a `ResultName[Member]` object
-- `m.resultName.groupId` will be converted to `sqls"gi_on_mm"`
+- `m.groupId` is generally used to reference the column directly in SQL, converting it to  `sqls"mm.group_id"`
+- `m.result.groupId` refers to the same column but with an alias for use in result processing, which is converted to `sqls"mm.group_id as gi_on_mm"`
+- `m.resultName` provides a `ResultName[Member]` object
+- `m.resultName.groupId` specifically accesses the aliased column name for result processing, resulting in `sqls"gi_on_mm"`
 
-- `Member.as(m)` will be converted to `members m` in SQL
+Additionally, using `Member.as(m)` translates to `members m` in SQL, contextualizing the Member table alias.
 
-If you use `Member.syntax()`, tableName will be set. For example,  `m.result.groupId` will be `"members.group_id as gi_on_members"`. If you specified as `Member.syntax("m")`, `m.result.groupId` will be `"members.group_id as gi_on_m"`.
+If you use `Member.syntax()`, the table name is included in aliases. For example,  `m.result.groupId` becomes `"members.group_id as gi_on_members"`. If you set it as `Member.syntax("m")`, `m.result.groupId` translates to `"members.group_id as gi_on_m"`.
 
-That's all the rules of `SQLSyntaxSupport`. I believed that now the following code will be easy to understand for you.
+That covers all the rules of `SQLSyntaxSupport`. I believe this explanation will make the following code easier for you to understand.
 
 ```scala
 val ids: List[Long] = sql"select ${m.result.id} from ${Member.as(m)} where ${m.groupId} = 1"
   .map(rs => rs.long(m.resultName.id)).list.apply()
 ```
-
-Define `#apply(ResultName[Member])` method and the method will make your `#map` operation pretty simple.
+By defining the `#apply(ResultName[Member])` method, your `#map` operations become straightforward and efficient.
 
 ```scala
 object Member extends SQLSyntaxSupport[Member] {
@@ -237,7 +234,7 @@ object Member extends SQLSyntaxSupport[Member] {
 }
 ```
 
-Use the above code like this:
+You can use the above code this way:
 
 ```scala
 val m = Member.syntax("m")
@@ -245,7 +242,7 @@ val members = sql"select ${m.result.*} from ${Member.as(m)}".map(Member(m)).list
 // select m.id as i_on_m, m.name as n_on_m from members m
 ```
 
-If you need just column names for insert/update/delete queries, use `#column.{name}` like this:
+If you only require column names for insert, update, or delete queries, use `#column.{name}` as shown below:
 
 ```scala
 val c = Member.column
@@ -253,7 +250,7 @@ sql"insert into ${Member.table} (${c.name}, ${c.birthday}) values (${name}, ${bi
   .update.apply()
 ```
 
-Since `#column` is a member of `SQLSyntaxSupport[A]`, you can use `#column` in `Member` object:
+Since `#column` is a member of `SQLSyntaxSupport[A]`, you can utilize `#column` within the `Member` object:
 
 ```scala
 object Member extends SQLSyntaxSupport[Member] {
@@ -268,7 +265,7 @@ object Member extends SQLSyntaxSupport[Member] {
 #### Use Case: SQLSyntaxSupport with table sharding
 <hr/>
 
-If you have multiple tables for same entity. For example, `orders_2011`, `orders_2012` and `orders_2013`.
+If you have multiple tables for the same entity, for example, `orders_2011`, `orders_2012`, and `orders_2013`:
 
 ```scala
 case class Order(id: Long, productId: Long, customerId: Option[Long], createdAt: ZonedDateTime)
@@ -311,7 +308,7 @@ DB readOnly { implicit s =>
 
 NOTICE: Since Scala 2.11, you can use a case class for 22+ columns table.
 
-Just use normal class and implement `EntityEquality` trait (for one-to-many relations).
+Just use a normal class and implement the `EntityEquality` trait for one-to-many relations.
 
 ```scala
 import scalikekdbc._

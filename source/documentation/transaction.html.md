@@ -8,13 +8,14 @@ title: Transaction - ScalikeJDBC
 ### #readOnly block / session
 <hr/>
 
-Executes query in read-only mode.
+This code block executes queries in read-only mode. This means that no update/execute operations are allowed.
 
 ```scala
 val names = DB readOnly { implicit session =>
   sql"select name from emp".map { rs => rs.string("name") }.list.apply()
 }
 
+// Alternatively, you can use a session variable this way:
 implicit val session = DB.readOnlySession
 try {
   val names = sql"select name from emp".map { rs => rs.string("name") }.list.apply()
@@ -24,7 +25,7 @@ try {
 }
 ```
 
-Of course, `update` operations in read-only mode will cause `java.sql.SQLException`.
+If you run an `update` operation within read-only mode, the code throws `java.sql.SQLException`:
 
 ```scala
 DB readOnly { implicit session =>
@@ -36,7 +37,7 @@ DB readOnly { implicit session =>
 ### #autoCommit block / session
 <hr/>
 
-Executes query / update in auto-commit mode.
+This code block executes queries / update operations in auto-commit mode.
 
 ```scala
 val count = DB autoCommit { implicit session =>
@@ -44,7 +45,7 @@ val count = DB autoCommit { implicit session =>
 }
 ```
 
-When using autoCommitSession, every operation will be executed in auto-commit mode.
+When using `autoCommitSession`, an operation will be executed in auto-commit mode too.
 
 ```scala
 implicit val session = DB.autoCommitSession
@@ -58,9 +59,7 @@ try {
 ### #localTx block
 <hr/>
 
-Executes query / update in block-scoped transactions.
-
-If an Exception was thrown in the block, the transaction will perform rollback automatically.
+This code block executes queries / update operations in block-scoped transactions. When an Exception was thrown within the block, the ongoing transaction will be cancelled and then the transaction will be rolled back automatically.
 
 ```scala
 val count = DB localTx { implicit session =>
@@ -71,7 +70,7 @@ val count = DB localTx { implicit session =>
 }
 ```
 
-`TxBoundary` provides other transaction boundary instead of Exception as follows (2.2.0 or higher):
+The `TxBoundary` class provides a differnt transaction boundary beyond throwing an Exception (This feature is available since version 2.2.0):
 
 ```scala
 import scalikejdbc._
@@ -85,13 +84,13 @@ val result: Try[Result] = DB localTx { implicit session =>
 // https://www.scala-lang.org/api/current/scala/util/Try.html
 ```
 
-Built-in type class instances are `Try`, `Either` and `Future`. You can use them by `import scalikejdbc.TxBoundary,***._`.
+The Built-in type class instances are `Try`, `Either` and `Future`. You can use them by having `import scalikejdbc.TxBoundary,***._` in your code.
 
 <hr/>
 ### #futureLocalTx block 
 <hr/>
 
-`futureLocalTx` use `Future`'s state as transaction boundary. If one of the Future operations was failed, the transaction will perform rollback automatically. 
+The `futureLocalTx` block uses `Future`'s state as the transaction boundary. When any of the `Future` operations fails, the transaction will be rolled back automatically. 
 
 ```scala
 object FutureDB {
@@ -123,7 +122,7 @@ Example.fResult.foreach(println(_))
 // #=> 1
 ````
 
-or `TxBoundary[Future[A]]` is also available.
+Alternatively, you can use `TxBoundary[Future[A]]` too:
 
 ```scala
 import scalikejdbc.TxBoundary.Future._
@@ -136,11 +135,13 @@ val fResult = DB localTx { implicit s =>
 ### Working with IO monads
 <hr/>
 
+This section guides you on how to implement a transaction boundary for IO monads.
+
 <hr/>
 #### IO monad minimal example
 <hr/>
 
-*MyIO*
+Let's say you have a custom IO monad called `MyIO`:
 
 ```scala
 sealed abstract class MyIO[+A] {
@@ -175,9 +176,7 @@ object MyIO {
   final case class Delay[+A](thunk: () => A) extends MyIO[A]
 }
 ```
-
-
-*TxBoundary typeclass instance for MyIO[A]*
+Here is an example of `TxBoundary` typeclass instance for `MyIO[A]` type:
 
 ```scala
 import scalikejdbc._
@@ -201,33 +200,23 @@ implicit def myIOTxBoundary[A]: TxBoundary[MyIO[A]] = new TxBoundary[MyIO[A]] {
 }
 ```
 
-
-*localTx*
-
-To use `scalikejdbc` with IO monads, you cannot use `localTx` out of the box.
-You must use it with a `TxBoundary` instance for MyIO[A]
+Woth the above custom `TxBoundary`, you can use `localTx` code blocks in a simple way sa below:
 
 ```scala
 import scalikejdbc._
-
 type A = ???
-
 def asyncExecution: DBSession => MyIO[A] = ???
-
 // default
 DB.localTx(asyncExecution)(boundary = myIOTxBoundary)
-
 // named
 NamedDB("named").localTx(asyncExecution)(boundary = myIOTxBoundary)
-
 ```
-
 
 <hr/>
 #### Cats Effect IO example
 <hr/>
 
-*TxBoundary typeclass instance for cats.effect.IO[A]*
+This section guides on how to define your own custom `TxBoundary` typeclass instance for `cats.effect.IO[A]`.
 
 `cats.effect.IO` offers two ways to handle completion/cancellation as below. You can use `guaranteeCase` for commit/rollback operations while going with `guarantee` for connection closure.
 
@@ -247,10 +236,7 @@ implicit def catsEffectIOTxBoundary[A]: TxBoundary[IO[A]] = new TxBoundary[IO[A]
 }
 ```
 
-
-*localTx*
-
-To take control of all the side-effects that happen in `localTx` method, you can use `suspend` method to wrap the code blocks using `localTx`.
+To take control of all the side-effects that happen within a `localTx` code block, you can use `suspend` method to wrap the code blocks using `localTx`:
 
 ```scala
 import scalikejdbc._
@@ -272,14 +258,13 @@ IO.suspend {
 
 ```
 
-
 <hr/>
 ### #withinTx block / session
 <hr/>
 
-Executes query / update in already existing transactions.
+This code block joins an exsting transcation and executes queries / update operations with it.
 
-In this case, all the transactional operations (such as `Tx#begin()`, `Tx#rollback()` or `Tx#commit()`) should be managed by users of ScalikeJDBC.
+In this case, your code is responsible to manage all transactional operations (such as `Tx#begin()`, `Tx#rollback()` or `Tx#commit()`). ScalikeJDBC never does anything under the hood.
 
 ```scala
 val db = DB(conn)

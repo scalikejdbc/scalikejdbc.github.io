@@ -8,7 +8,7 @@ title: QueryDSL - ScalikeJDBC
 ### Introduction
 <hr/>
 
-Since version 1.6.0, Query DSL is newly added. It's much readable and type-safe DSL.
+Since version 1.6.0, ScalikeJDBC has introduced a new Query DSL, which offers a more readable and type-safe way to construct SQL queries. This enhancement is designed to improve the development experience by providing clearer syntax and reducing the likelihood of SQL-related errors.
 
 ```scala
 val id = 123
@@ -24,9 +24,7 @@ val groupMember = sql"""
     .map(GroupMember(m, g)).single.apply()
 ```
 
-You can re-write this SQLInterpolation code by using QueryDSL as follow.
-
-We believe this code is much simpler and quite understandable.
+To illustrate how the new Query DSL can simplify SQL queries, consider this example where SQL interpolation is rewritten using Query DSL. The transition to Query DSL aims to enhance readability and understandability:
 
 ```scala
 val id = 123
@@ -37,7 +35,7 @@ val groupMember = withSQL {
 }.map(GroupMember(m.resultName, g.resultName)).single.apply()
 ```
 
-More examples are
+Here are more examples. Here is an interpolation code:
 
 ```scala
 val m = Member.syntax("m")
@@ -45,7 +43,7 @@ val ids: List[Long] = sql"select ${m.result.id} from ${Member.as(m)} where ${m.g
 val members = sql"select ${m.result.*} from ${Member.as(m)}".map(Member(m)).list.apply()
 ```
 
-will be like this:
+The code will be like below with QueryDSL:
 
 ```scala
 val m = Member.syntax("m")
@@ -59,13 +57,11 @@ val members = withSQL { select.from(Member as m) }.map(Member(m.resultName)).lis
 ### QueryDSL Reference
 <hr/>
 
-FYI: You can find some example in QueryDSL's test code:
+For a deeper understanding and practical examples of using QueryDSL, you can refer to the test codes provided in the ScalikeJDBC repository. These examples demonstrate how to effectively utilize the QueryDSL for constructing and executing SQL queries in a type-safe manner. 
 
-[scalikejdbc-interpolation/src/test/scala/scalikejdbc/QueryInterfaceSpec.scala](https://github.com/scalikejdbc/scalikejdbc/blob/master/scalikejdbc-interpolation/src/test/scala/scalikejdbc/QueryInterfaceSpec.scala)
+For instance, [this test code](https://github.com/scalikejdbc/scalikejdbc/blob/master/scalikejdbc-interpolation/src/test/scala/scalikejdbc/QueryInterfaceSpec.scala) is a great collection of code snippets.
 
-`sqls` is alias for `SQLSyntax` object. Methods that are defined on `object SQLSyntax` is available everywhere.
-
-[scalikejdbc-core/src/main/scala/scalikejdbc/interpolation/SQLSyntax.scala](https://github.com/scalikejdbc/scalikejdbc/blob/master/scalikejdbc-core/src/main/scala/scalikejdbc/interpolation/SQLSyntax.scala)
+Also, the `SQLSyntax` object is a core component in ScalikeJDBC's SQL interpolation and DSLs. `sqls` is a commonly used alias for `SQLSyntax`, which simplifies the creation and manipulation of SQL fragments. Methods defined on the SQLSyntax object are accessible throughout the DSL, enhancing the ease of constructing complex queries. Check the [source code](https://github.com/scalikejdbc/scalikejdbc/blob/master/scalikejdbc-core/src/main/scala/scalikejdbc/interpolation/SQLSyntax.scala) for more details.
 
 <hr/>
 #### And/Or conditions 
@@ -98,7 +94,7 @@ val orders = withSQL {
 // select o.id as i_on_o from orders o where o.product_id = ? or o.customer_id is null
 ```
 
-Adding round bracket is like this:
+Adding round bracket can be something like this:
 
 ```scala
 val ids = withSQL {

@@ -8,11 +8,13 @@ title: Query Inspector - ScalikeJDBC
 ### Checking the actual SQL and timing
 <hr/>
 
-Using LoggingSQLAndTime feature, you can check the actual SQL(not exactly) and time.
+With the LoggingSQLAndTime feature, you can monitor the actual SQL queries executed (although not necessarily the exact text) and their execution time.
 
 <hr/>
 ### Settings
 <hr/>
+
+To configure SQL logging and timing, adjust the `GlobalSettings.loggingSQLAndTime` as follows:
 
 ```scala
 import scalikejdbc._
@@ -33,7 +35,7 @@ GlobalSettings.loggingSQLAndTime = LoggingSQLAndTimeSettings(
 ### Output Example
 <hr/>
 
-For example, logging as follows:
+Here's an example of how logging appears with these settings:
 
 ```sh
 [debug] s.StatementExecutor$$anon$1 - SQL execution completed
@@ -65,7 +67,7 @@ For example, logging as follows:
 ### Single Line Mode
 <hr/>
 
-If you don't need stack trace logging and just print SQL in single line, use `singleLineMode = true`.
+If you prefer a more concise output without stack traces and in a single line, enable singleLineMode:
 
 ```scala
 GlobalSettings.loggingSQLAndTime = LoggingSQLAndTimeSettings(
@@ -75,7 +77,7 @@ GlobalSettings.loggingSQLAndTime = LoggingSQLAndTimeSettings(
 )
 ```
 
-In this case, logging as follows:
+The log output will then simplify to:
 
 ```sh
 2013-05-26 16:23:08,072 DEBUG [pool-4-thread-4] s.StatementExecutor$$anon$1 [Log.scala:81] [SQL Execution] select * from user where email = 'guillaume@sample.com'; (0 ms)
@@ -85,9 +87,9 @@ In this case, logging as follows:
 ### Not Only Logging
 <hr/>
 
-You can use hooks such as `GlobalSettings.queryCompletionListener` and `GlobalSettings.queryFailureListener`.
+Beyond simple logging, ScalikeJDBC provides hooks like `GlobalSettings.queryCompletionListener` and `GlobalSettings.queryFailureListener` for additional monitoring and actions.
 
-For instance, the following example will send information about slow queries to Fluentd.
+For instance, the following example demonstrates how to send information about slow queries to Fluentd.
 
 ```scala
 import org.fluentd.logger.scala._
@@ -108,7 +110,7 @@ val counts = DB readOnly { implicit s =>
 }
 ```
 
-Since version 2.2.1, you can attach tags to each query. This feature will help you when classifying queries.
+Additionally, from version 2.2.1, you can use tags to categorize queries for better classification and analysis:
 
 ```scala
 GlobalSettings.taggedQueryCompletionListener = (sql: String, params: Seq[Any], millis: Long, tags: Seq[String]) => {
@@ -125,4 +127,4 @@ val counts = DB readOnly { implicit s =>
 }
 ```
 
-
+These features enhance the ability to monitor, analyze, and respond to database query performance directly within your application.
