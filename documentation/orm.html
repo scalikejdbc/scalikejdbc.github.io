@@ -95,11 +95,11 @@
   <span class="k">val</span> <span class="nv">email</span> <span class="k">=</span> <span class="n">hasOne</span><span class="o">[</span><span class="kt">Email</span><span class="o">](</span><span class="nc">Email</span><span class="o">,</span> <span class="o">(</span><span class="n">m</span><span class="o">,</span> <span class="n">e</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="nv">m</span><span class="o">.</span><span class="py">copy</span><span class="o">(</span><span class="n">email</span> <span class="k">=</span> <span class="n">e</span><span class="o">))</span>
 <span class="o">}</span>
 
-<span class="k">class</span> <span class="nc">Example</span> <span class="k">extends</span> <span class="nc">App</span> <span class="o">{</span>
+<span class="k">object</span> <span class="nc">Example</span> <span class="k">extends</span> <span class="nc">App</span> <span class="o">{</span>
   <span class="c1">// ### Database connection ###</span>
   <span class="nv">Class</span><span class="o">.</span><span class="py">forName</span><span class="o">(</span><span class="s">"org.h2.Driver"</span><span class="o">)</span>
   <span class="nv">ConnectionPool</span><span class="o">.</span><span class="py">singleton</span><span class="o">(</span><span class="s">"jdbc:h2:mem:hello;MODE=PostgreSQL"</span><span class="o">,</span> <span class="s">"user"</span><span class="o">,</span> <span class="s">"pass"</span><span class="o">)</span>
-  <span class="k">implicit</span> <span class="k">val</span> <span class="nv">session</span> <span class="k">=</span> <span class="nc">AutoSession</span>
+  <span class="k">implicit</span> <span class="k">val</span> <span class="nv">session</span><span class="k">:</span> <span class="kt">DBSession</span> <span class="o">=</span> <span class="nc">AutoSession</span>
 
   <span class="c1">// ### Create tables ###</span>
   <span class="n">sql</span><span class="s">"""create table member (
