@@ -14,22 +14,21 @@ See [/documentation/setup](/documentation/setup.html).
 ### Sbt Command
 <hr/>
 
+To generate Scala case classes and companion objects for your database tables using ScalikeJDBC, you can use the `scalikejdbcGen` command in sbt. Here's how to use it:
+
 ```sh
 sbt "scalikejdbcGen [table-name (class-name)]"
-```
-
-e.g.
-
-```sh
 sbt "scalikejdbcGen company"
 sbt "scalikejdbcGen companies Company"
 ```
+
+These commands generate Scala models that correspond to the structure of your database tables, simplifying the process of interacting with these tables through ScalikeJDBC.
 
 <hr/>
 ### Output Example
 <hr/>
 
-From the following table:
+Given a SQL table defined as follows:
 
 ```sql
 create table member (
@@ -42,7 +41,7 @@ create table member (
 )
 ```
 
-This tool will generate the following Scala source code:
+The `scalikejdbcGen` tool will generate Scala source code that might look something like this:
 
 ```scala
 package models
@@ -62,7 +61,6 @@ case class Member(
   def destroy()(implicit session: DBSession = Member.autoSession): Int = Member.destroy(this)(session)
 
 }
-
 
 object Member extends SQLSyntaxSupport[Member] {
 
@@ -177,8 +175,7 @@ object Member extends SQLSyntaxSupport[Member] {
 }
 ```
 
-And specs2 or ScalaTest's FlatSpec.
-
+And specs2 or ScalaTest's FlatSpec as well:
 
 ```scala
 package models

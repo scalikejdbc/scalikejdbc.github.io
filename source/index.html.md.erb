@@ -1,52 +1,49 @@
 # ScalikeJDBC
 
 <hr/>
-## Just write SQL and get things done!
+## Streamline your workflow with ScalikeJDBC: just write SQL and get things done efficiently!
 <hr/>
 
 ![Logo](images/logo.png)
 
-ScalikeJDBC is a tidy SQL-based DB access library for Scala developers. This library naturally wraps JDBC APIs and provides you easy-to-use and very flexible APIs. What's more, QueryDSL makes your code type-safe and reusable.
+This library seamlessly wraps JDBC APIs, offering intuitive and highly flexible functionalities. With QueryDSL, your code becomes inherently type-safe and reusable.
 
-ScalikeJDBC is a practical and production-ready one. Use this library for your real projects.
+ScalikeJDBC is not just practical; it's production-ready. Utilize this library confidently in your real-world projects.
 
 ### Working on the JDBC layer
 
-Whether you like it or not, JDBC is a stable standard interface. Since most of RDBMS supports JDBC interface, we can access RDBMS in the same way. We never release without passing all the unit tests with the following RDBMS.
+Whether you prefer it or not, JDBC stands as a steadfast standard interface. Given its widespread support across most RDBMS, accessing databases remains consistent. We adhere to this standard rigorously, ensuring each release passes through comprehensive unit tests across various RDBMS platforms:
 
 - PostgreSQL
 - MySQL
 - H2 Database Engine
 - HSQLDB
 
-We believe that ScalikeJDBC basically works with any other RDBMS (Oracle, SQL Server and so on).
+We firmly believe that ScalikeJDBC seamlessly integrates with a variety of RDBMS, including Oracle, SQL Server, and others. Its robust design ensures compatibility and reliability across different database platforms.
 
 ### Amazon Redshift, Facebook Presto also supports JDBC
 
-If you can access some datastore via JDBC interface, that means you can access them via ScalikeJDBC too.
-
-Recently, [Amazon Redshift](https://docs.aws.amazon.com/redshift/latest/dg/c_redshift-postgres-jdbc.html) and [Facebook Presto](https://prestodb.io/docs/current/installation/jdbc.html) support JDBC interface. You can access them via ScalikeJDBC!
+If you can access a datastore via the JDBC interface, you can also seamlessly access it through ScalikeJDBC. For instance, [Amazon Redshift](https://docs.aws.amazon.com/redshift/latest/dg/c_redshift-postgres-jdbc.html) and [Facebook Presto](https://prestodb.io/docs/current/installation/jdbc.html) have added support for the JDBC interface, enabling easy integration with ScalikeJDBC.
 
 ### Few dependencies
 
-The core of ScalikeJDBC has so few dependencies that you won't be bothered by dependency hell.
+The core of ScalikeJDBC boasts minimal dependencies, sparing you from the woes of dependency hell. Enjoy a streamlined development experience without unnecessary complications.
 
 - JDBC Drivers you need
 - Commons DBCP
 - SLF4J API
 
-Of course, you can use c3p0 (or others) instead of commons-dbcp though ConnectionPool implementation for that isn't provided by default.
+Certainly, you have the flexibility to utilize c3p0 or other connection pool libraries instead of commons-dbcp with ScalikeJDBC. While ScalikeJDBC doesn't offer a default ConnectionPool implementation for these alternatives, you have the freedom to integrate them seamlessly according to your project requirements.
 
 ### Non-blocking?
 
-Unfortunately, no. Indeed, JDBC drivers block on socket IO. So using them to talk with RDBMS in async event driven architecture may not be appropriate. However, actually most of real world applications don't need event-driven architecture yet. JDBC is still important infrastructure for apps on the JVM.
+While JDBC drivers inherently block on socket IO, making them potentially unsuitable for async event-driven architectures, it's worth noting that most real-world applications currently don't require such architecture. JDBC remains a crucial infrastructure for JVM-based apps.
 
-If you really prefer non-blocking database access, take a look at ScalikeJDBC-Async. It provides non-blocking APIs to talk with PostgreSQL and MySQL in the JDBC way.
+However, if you're inclined towards non-blocking database access, consider exploring ScalikeJDBC-Async. This library offers non-blocking APIs for communicating with PostgreSQL and MySQL in a JDBC-like manner.
+
+Please be aware that ScalikeJDBC-Async is still in its alpha stage. If you lack the motivation or resources to investigate and address issues independently, we recommend awaiting the stable version release in the future. You can find more information and the library's source code on its GitHub page:
 
 https://github.com/scalikejdbc/scalikejdbc-async
-
-ScalikeJDBC-Async is still in the alpha stage. If you don't have the motivation to investigate or fix issues yourself, we recommend waiting until the stable version is released someday.
-
 
 ### FAQ
 
@@ -56,11 +53,15 @@ See also FAQs here: [/documentation/faq.html](/documentation/faq.html)
 ## Getting Started
 <hr/>
 
-All you need to do is add ScalikeJDBC, JDBC driver and an slf4j implementation.
+If you're looking to execute SQL queries efficiently, the best approach is to use ScalikeJDBC along with the appropriate JDBC driver for your database. Here's how you can get started quickly!
 
-### ScalikeJDBC 4.x
+### Depedencies
 
-ScalikeJDBC 4 requires Java SE 8 or higher. If you still need to run your applications on Java SE 7, keep using ScalikeJDBC 2.5.
+To get started with ScalikeJDBC, add the following dependency to your build.sbt:
+
+#### ScalikeJDBC 4.x
+
+ScalikeJDBC 4 requires Java SE 8 or higher. If you still need to run your applications on Java SE 7, keep using ScalikeJDBC 2.5:
 
 ```scala
 // Scala 2.12, 2.13 and 3
@@ -71,7 +72,7 @@ libraryDependencies ++= Seq(
 )
 ```
 
-### ScalikeJDBC 2.x
+#### ScalikeJDBC 2.x
 
 See [ScalikeJDBC 2.x Documentation](/documentation/2.x/) for details.
 
@@ -85,7 +86,7 @@ libraryDependencies ++= Seq(
 ```
 
 <hr/>
-## First example
+### Quick Code example
 <hr/>
 
 Put the above dependencies into your `build.sbt` and run `sbt console` now.
@@ -98,7 +99,7 @@ Class.forName("org.h2.Driver")
 ConnectionPool.singleton("jdbc:h2:mem:hello", "user", "pass")
 
 // ad-hoc session provider on the REPL
-implicit val session = AutoSession
+implicit val session: DBSession = AutoSession
 
 // table creation, you can run DDL by using #execute as same as JDBC
 sql"""
@@ -162,136 +163,15 @@ val memberId: Option[Long] = DB readOnly { implicit session =>
 
 See in detail: [/documentation/operations](documentation/operations.html)
 
-<hr/>
-### Type-safe DSL
+### ScalikeJDBC ORM
 
-Since version 1.6, QueryDSL is available. It's a SQL-like and type-safe DSL to build DRY SQLs.
-
-Here is an example:
-
-```java
-val (p, c) = (Programmer.syntax("p"), Company.syntax("c"))
-
-val programmers: Seq[Programmer] = DB.readOnly { implicit session =>
-  withSQL {
-    select
-      .from(Programmer as p)
-      .leftJoin(Company as c).on(p.companyId, c.id)
-      .where.eq(p.isDeleted, false)
-      .orderBy(p.createdAt)
-      .limit(10)
-      .offset(0)
-  }.map(Programmer(p, c)).list.apply()
-}
-```
-
-See in detail: [/documentation/query-dsl](documentation/query-dsl.html)
-
-Test code: [src/test/scala/scalikejdbc/QueryInterfaceSpec.scala](https://github.com/scalikejdbc/scalikejdbc/blob/master/scalikejdbc-joda-time/src/test/scala/scalikejdbc/QueryInterfaceSpec.scala)
-
-<hr/>
-### Flexible transaction control
-
-ScalikeJDBC provides several APIs for session/transaction control.
-
- - DB autoCommit { implicit session => ... }
- - DB localTx { implicit session => ... }
- - DB withinTx { implicit session => ... }
- - DB readOnly { implicit session => ... }
-
-Here is an example which re-uses methods in both simple invocation and transactional operations.
-
-```java
-object Product {
-  def create(name: String, price: Long)(implicit s: DBSession = AutoSession): Long = {
-    sql"insert into products values (${name}, ${price})"
-      .updateAndReturnGeneratedKey.apply() // returns auto-incremeneted id
-  }
-
-  def findById(id: Long)(implicit s: DBSession = AutoSession): Option[Product] = {
-    sql"select id, name, price, created_at from products where id = ${id}"
-      .map { rs => Product(rs) }.single.apply()
-  }
-}
-
-Product.findById(123) // borrows connection from pool and gives it back after execution
-
-DB localTx { implicit session => // transactional session
-  val id = Product.create("ScalikeJDBC Cookbook", 200) // within transaction
-  val product = Product.findById(id) // within transaction
-}
-```
-
-See in detail: [/documentation/transaction](documentation/transaction.html)
-
-<hr/>
-### Useful Query Inspections
-
-By default, ScalikeJDBC shows you what SQL is executed and where it is. We believe that is quite useful for debugging your apps. Logging only slow queries in production, but it also helps you.
-
-```
-[debug] s.StatementExecutor$$anon$1 - SQL execution completed
-
-  [Executed SQL]
-   select id, name from users where email = 'alice@example.com'; (3 ms)
-
-  [Stack Trace]
-    ...
-    models.User$.findByEmail(User.scala:26)
-    controllers.Projects$$anonfun$index$1$$anonfun$apply$1$$anonfun$apply$2.apply(Projects.scala:20)
-    controllers.Projects$$anonfun$index$1$$anonfun$apply$1$$anonfun$apply$2.apply(Projects.scala:19)
-    controllers.Secured$$anonfun$IsAuthenticated$3$$anonfun$apply$3.apply(Application.scala:88)
-```
-
-See in detail: [/documentation/query-inspector](documentation/query-inspector.html)
-
-<hr/>
-### Testing Support
-
-Testing support which provides the following functionalities for [ScalaTest](https://www.scalatest.org/) and [specs2](https://etorreborre.github.io/specs2/).
-
- - Rollback automatically after each test
- - Testing with fixtures
-
-See in detail: [/documentation/testing](documentation/testing.html)
-
-<hr/>
-### Reverse Engineering
-
-You can easily get Scala code from existing database by using ScalikeJDBC's reverse engineering tool.
-
-```
-sbt "scalikejdbcGen [table-name (class-name)]"
-```
-
-e.g.
-
-```
-sbt "scalikejdbcGen company"
-sbt "scalikejdbcGen companies Company"
-```
-
-See in detail: [/documentation/reverse-engineering](documentation/reverse-engineering.html)
-
-<hr/>
-### Play Framework Support
-
-You can use ScalikeJDBC with Play framework 2 seamlessly. We promise you that it becomes more productive when used with scalikejdbc-mapper-generator.
-
-See in detail: [/documentation/playframework-support](documentation/playframework-support.html)
-
-<hr/>
-### Reactive Streams Support
-
-ScalikeJDBC provides the Publisher interface of Reactive Streams to subscribe a stream from a database query.
-
-See in detail: [/documentation/reactivestreams-support](documentation/reactivestreams-support.html)
+If you're looking for a richer database solution, scalikejdbc-orm, which is available since version 4.3, could be a greater option for you! Refer to [/documentation/orm](documentation/orm.html) for more details.
 
 <hr/>
 ## We're using ScalikeJDBC!
 <hr/>
 
-Many companies are already use ScalikeJDBC in their business!
+ScalikeJDBC has become the trusted go-to for countless companies in their software endeavors! Join the thriving community of developers leveraging ScalikeJDBC's power and reliability to streamline database access and enhance project efficiency.
 
 <span class="col-md-12">
   <span class="col-md-3 text-center">
@@ -359,59 +239,3 @@ Many companies are already use ScalikeJDBC in their business!
 </span>
 
 [Read more..](documentation/testimonials.html)
-
-<hr/>
-## License
-
-Published binary files have the following copyright:
-
-```
-Copyright scalikejdbc.org
-Apache License, Version 2.0
-http://www.apache.org/licenses/LICENSE-2.0.html
-```
-
-<hr/>
-## Related Products
-
-<hr/>
-### ScalikeJDBC-Async
-
-ScalikeJDBC Extension: Non-blocking APIs in the JDBC way.
-
-[github.com/scalikejdbc/scalikejdbc-async](https://github.com/scalikejdbc/scalikejdbc-async)
-
-ScalikeJDBC-Async provides non-blocking APIs to talk with PostgreSQL and MySQL in the JDBC way.
-
-This library is built with [jasync-sql](https://github.com/jasync-sql/jasync-sql).
-
-<hr/>
-### dbconsole
-
-dbconsole is an extended sbt console to connect database.
-
-#### Mac OS X, Linux
-
-```sh
-curl -L https://git.io/dbcon | sh
-```
-
-#### Windows
-
-```
-https://git.io/dbcon.bat
-```
-
-See in detail: [/documentation/dbconsole](documentation/dbconsole.html)
-
-
-<hr/>
-### Skinny ORM
-
-![Skinny framework](images/skinny.png)
-
-Skinny ORM is the default DB access library of [Skinny Framework](https://skinny-framework.github.io/). Skinny ORM is built upon ScalikeJDBC.
-
-In most cases, ORM makes things easier.
-
-[https://skinny-framework.github.io/documentation/orm.html](https://skinny-framework.github.io/documentation/orm.html)

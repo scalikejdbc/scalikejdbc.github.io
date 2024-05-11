@@ -13,9 +13,7 @@ ScalikeJDBC libraries are available on the Maven central repository.
 ### Core Library & Interpolation
 <hr/>
 
-Add latest version into your `build.sbt` or `project/Build.scala`. Don't forget JDBC driver and slf4j implementation.
-
-If you're still using Scala 2.9, you can't use `scalikejdbc-interpolation`.
+To get started with ScalikeJDBC, add the latest version of the core library along with the necessary JDBC driver and an SLF4J implementation to your project's build configuration. Here's how you can do this in your `build.sbt` file:
 
 ```scala
 libraryDependencies ++= Seq(
@@ -25,7 +23,7 @@ libraryDependencies ++= Seq(
 )
 ```
 
-In your application, just add the following import.
+In your app code, add the following line of code to import the module:
 
 ```scala
 import scalikejdbc._

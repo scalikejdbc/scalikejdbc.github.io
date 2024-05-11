@@ -8,9 +8,7 @@ title: Auto Session - ScalikeJDBC
 ### Why AutoSession?
 <hr/>
 
-Basic usage of ScalikeJDBC is using `DB.autoCommit/readOnly/localTx/withinTx { ...}` blocks.
-
-However, if you'd like to re-use methods, they might not be available.
+Typically, ScalikeJDBC operations are encapsulated within `DB.autoCommit`, `DB.readOnly`, and other transaction blocks. For reusing methods across different transaction contexts as below, 
 
 ```scala
 def findById(id: Long) = DB readOnly {
@@ -19,9 +17,7 @@ def findById(id: Long) = DB readOnly {
 }
 ```
 
-When you use the above method in a transaction block, the code won't work as you expected.
-
-The reason is that since `#findById(Long)` uses another session(=connection), it couldn't access uncommitted data.
+`AutoSession` becomes essential. In a transaction block, this method may not perform as expected because it uses a separate session and cannot access uncommitted data. The reason is that since `#findById(Long)` uses another session(=connection), it couldn't access uncommitted data.
 
 ```scala
 DB localTx { implicit session =>
@@ -30,7 +26,7 @@ DB localTx { implicit session =>
 }
 ```
 
-You need to change method's API to accept implicit parameters and now you don't need `DB` block inside the method.
+With this change, the method can access the current transaction context. Instead of having `DB` blocks inside, your method can accept an implict DBSession paramter from external code to join an existing transactional session.
 
 ```scala
 def findById(id: Long)(implicit session: DBSession) =
@@ -38,7 +34,7 @@ def findById(id: Long)(implicit session: DBSession) =
     .map(rs => Member(rs)).single.apply()
 ```
 
-This one works as expected.
+With the change, the following code works as you expect.
 
 ```scala
 DB localTx { implicit session =>
@@ -47,7 +43,7 @@ DB localTx { implicit session =>
 }
 ```
 
-But unfortunately, now we need to pass implicit parameter to `#findById` every time to use it.
+But unfortunately, now that we need to pass implicit parameter to `#findById` every time to use the method, it could be troublesome especially for simple code snippets.
 
 ```scala
 // now we cannot use this method directly
@@ -56,7 +52,7 @@ findById(id) // implicit parameter not found!
 DB readOnly { implicit session => findById(id) }
 ```
 
-`AutoSession` is a solution for this issue. Use `AutoSession` as default value of the implicit parameter.
+`AutoSession` is a solution for the issue. You can have `AutoSession` as default value of the implicit parameter.
 
 ```scala
 def findById(id: Long)(implicit session: DBSession = AutoSession) =
@@ -64,14 +60,14 @@ def findById(id: Long)(implicit session: DBSession = AutoSession) =
     .map(rs => Member(rs)).single.apply()
 ```
 
-This change made `#findById` flexible.
+Having the default implement value can make `#findById` even more flexible plus much simpler.
 
 ```scala
 findById(id) // borrows a read-only session and gives it back
 DB localTx { implicit session => findById(id) } // using implicit session
 ```
 
-If you do the same with `NamedDB`, use `NamedAutoSession` as follows.
+When you do the same with `NamedDB`, you can use `NamedAutoSession` as below:
 
 ```scala
 def findById(id: Long)(implicit session: DBSession = NamedAutoSession("named")) =
@@ -82,8 +78,5 @@ def findById(id: Long)(implicit session: DBSession = NamedAutoSession("named")) 
 ### ReadOnlyAutoSession
 <hr/>
 
-Since version 1.7.4, `ReadOnlyAutoSession` and `NamedReadOnlyAutoSession` is also available. 
-
-These auto sessions disallow update/execute operations.
-
+Since version 1.7.4, `ReadOnlyAutoSession` and `NamedReadOnlyAutoSession` is also available, which are tailored for read-only operations, preventing any update or execute operations.
 
