@@ -19,7 +19,6 @@
             <li><a class="navbar-brand" href="/">ScalikeJDBC</a></li>
             <li><a href="https://groups.google.com/group/scalikejdbc-users-group">Users Group</a></li>
             <li><a href="https://github.com/scalikejdbc/scalikejdbc">GitHub</a></li>
-            <li><a href="https://skinny-framework.github.io/documentation/orm.html">Skinny ORM</a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
@@ -29,394 +28,362 @@
     </div>
       <div class="col-xs-9 left">
         <div class="content">
-          ## ORM
+          <h2 id="orm">ORM</h2>
 
 <hr/>
-### Rich O/R Mapper
-<hr/>
 
-For those who require more robust functionalities, consider using scalikejdbc-orm. This extension is an O/R mapper built on top of the ScalikeJDBC core library, drawing significant inspiration from Ruby on Rails' ActiveRecord library.
-
-#### Efficient Data Fetching with Join Queries / Eager Loading
-
-One of the standout features of scalikejdbc-orm is its ability to efficiently handle data associations, effectively eliminating the common N+1 query problem. This is achieved through the smart use of join queries in resolving associations like `#belongsTo`, `#hasOne`, and `#hasMany/#hasManyThrough`. These are processed behind the scenes, allowing you to focus on your application without worrying about performance degradation due to N+1 issues.
-
-While join queries are suitable for many scenarios, some complex data relationships might require a different approach. For such use cases, you can do eager loading (i.e. resolve the main entity and then perform in-clause query to resolve deep nested associations) with the `#includes` method.
+<h3 id="rich-o-r-mapper">Rich O/R Mapper</h3>
 
 <hr/>
-### Setup
-<hr/>
 
-In addition to the core library, add the library along with a JDBC driver and logging tool:
+<p>For those who require more robust functionalities, consider using scalikejdbc-orm. This extension is an O/R mapper built on top of the ScalikeJDBC core library, drawing significant inspiration from Ruby on Rails&rsquo; ActiveRecord library.</p>
 
-```scala
-libraryDependencies ++= Seq(
-  "org.scalikejdbc" %% "scalikejdbc-orm" % "4.3.0",
-  "com.h2database"  %  "h2"              % "2.2.224",
-  "ch.qos.logback"  %  "logback-classic" % "1.5.6"
-)
-```
+<h4 id="efficient-data-fetching-with-join-queries-eager-loading">Efficient Data Fetching with Join Queries / Eager Loading</h4>
+
+<p>One of the standout features of scalikejdbc-orm is its ability to efficiently handle data associations, effectively eliminating the common N+1 query problem. This is achieved through the smart use of join queries in resolving associations like <code>#belongsTo</code>, <code>#hasOne</code>, and <code>#hasMany/#hasManyThrough</code>. These are processed behind the scenes, allowing you to focus on your application without worrying about performance degradation due to N+1 issues.</p>
+
+<p>While join queries are suitable for many scenarios, some complex data relationships might require a different approach. For such use cases, you can do eager loading (i.e. resolve the main entity and then perform in-clause query to resolve deep nested associations) with the <code>#includes</code> method.</p>
 
 <hr/>
-### Quick Example
+
+<h3 id="setup">Setup</h3>
+
 <hr/>
 
-Save the following code as `example.scala`:
+<p>In addition to the core library, add the library along with a JDBC driver and logging tool:</p>
+<div class="highlight"><pre class="highlight scala"><code><span class="n">libraryDependencies</span> <span class="o">++=</span> <span class="nc">Seq</span><span class="o">(</span>
+  <span class="s">"org.scalikejdbc"</span> <span class="o">%%</span> <span class="s">"scalikejdbc-orm"</span> <span class="o">%</span> <span class="s">"4.3.0"</span><span class="o">,</span>
+  <span class="s">"com.h2database"</span>  <span class="o">%</span>  <span class="s">"h2"</span>              <span class="o">%</span> <span class="s">"2.2.224"</span><span class="o">,</span>
+  <span class="s">"ch.qos.logback"</span>  <span class="o">%</span>  <span class="s">"logback-classic"</span> <span class="o">%</span> <span class="s">"1.5.6"</span>
+<span class="o">)</span>
+</code></pre></div>
+<hr/>
 
-```scala
-import java.time.ZonedDateTime
+<h3 id="quick-example">Quick Example</h3>
 
-import scalikejdbc.*
-import scalikejdbc.orm.*
-import scalikejdbc.orm.timstamps.TimestampsFeature
+<hr/>
 
-case class Email(
-  id: Long,
-  memberId: Long,
-  address: String,
-)
-object Email extends CRUDMapper[Email] {
-  override lazy val tableName = "member_email"
-  lazy val defaultAlias = createAlias("me")
-  def extract(rs: WrappedResultSet, e: ResultName[Email]): Email = autoConstruct(rs, e)
-}
+<p>Save the following code as <code>example.scala</code>:</p>
+<div class="highlight"><pre class="highlight scala"><code><span class="k">import</span> <span class="nn">java.time.ZonedDateTime</span>
 
-case class Member(
-  id: Long,
-  name: Option[String],
-  createdAt: ZonedDateTime,
-  updatedAt: Option[ZonedDateTime],
-  email: Option[Email] = None,
-)
-object Member extends CRUDMapper[Member] with TimestampsFeature[Member] {
-  lazy val defaultAlias = createAlias("m")
-  def extract(rs: WrappedResultSet, n: ResultName[Member]): Member = autoConstruct(rs, n, "email")
+<span class="k">import</span> <span class="nn">scalikejdbc.</span><span class="o">*</span>
+<span class="k">import</span> <span class="nn">scalikejdbc.orm.</span><span class="o">*</span>
+<span class="k">import</span> <span class="nn">scalikejdbc.orm.timstamps.TimestampsFeature</span>
 
-  val email = hasOne[Email](Email, (m, e) => m.copy(email = e))
-}
+<span class="k">case</span> <span class="k">class</span> <span class="nc">Email</span><span class="o">(</span>
+  <span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span>
+  <span class="n">memberId</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span>
+  <span class="n">address</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
+<span class="o">)</span>
+<span class="k">object</span> <span class="nc">Email</span> <span class="k">extends</span> <span class="nc">CRUDMapper</span><span class="o">[</span><span class="kt">Email</span><span class="o">]</span> <span class="o">{</span>
+  <span class="k">override</span> <span class="k">lazy</span> <span class="k">val</span> <span class="nv">tableName</span> <span class="k">=</span> <span class="s">"member_email"</span>
+  <span class="k">lazy</span> <span class="k">val</span> <span class="nv">defaultAlias</span> <span class="k">=</span> <span class="nf">createAlias</span><span class="o">(</span><span class="s">"me"</span><span class="o">)</span>
+  <span class="k">def</span> <span class="nf">extract</span><span class="o">(</span><span class="n">rs</span><span class="k">:</span> <span class="kt">WrappedResultSet</span><span class="o">,</span> <span class="n">e</span><span class="k">:</span> <span class="kt">ResultName</span><span class="o">[</span><span class="kt">Email</span><span class="o">])</span><span class="k">:</span> <span class="kt">Email</span> <span class="o">=</span> <span class="nf">autoConstruct</span><span class="o">(</span><span class="n">rs</span><span class="o">,</span> <span class="n">e</span><span class="o">)</span>
+<span class="o">}</span>
 
-class Example extends App {
-  // ### Database connection ###
-  Class.forName("org.h2.Driver")
-  ConnectionPool.singleton("jdbc:h2:mem:hello;MODE=PostgreSQL", "user", "pass")
-  implicit val session = AutoSession
+<span class="k">case</span> <span class="k">class</span> <span class="nc">Member</span><span class="o">(</span>
+  <span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span>
+  <span class="n">name</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">String</span><span class="o">],</span>
+  <span class="n">createdAt</span><span class="k">:</span> <span class="kt">ZonedDateTime</span><span class="o">,</span>
+  <span class="n">updatedAt</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">ZonedDateTime</span><span class="o">],</span>
+  <span class="n">email</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Email</span><span class="o">]</span> <span class="k">=</span> <span class="nc">None</span><span class="o">,</span>
+<span class="o">)</span>
+<span class="k">object</span> <span class="nc">Member</span> <span class="k">extends</span> <span class="nc">CRUDMapper</span><span class="o">[</span><span class="kt">Member</span><span class="o">]</span> <span class="k">with</span> <span class="nc">TimestampsFeature</span><span class="o">[</span><span class="kt">Member</span><span class="o">]</span> <span class="o">{</span>
+  <span class="k">lazy</span> <span class="k">val</span> <span class="nv">defaultAlias</span> <span class="k">=</span> <span class="nf">createAlias</span><span class="o">(</span><span class="s">"m"</span><span class="o">)</span>
+  <span class="k">def</span> <span class="nf">extract</span><span class="o">(</span><span class="n">rs</span><span class="k">:</span> <span class="kt">WrappedResultSet</span><span class="o">,</span> <span class="n">n</span><span class="k">:</span> <span class="kt">ResultName</span><span class="o">[</span><span class="kt">Member</span><span class="o">])</span><span class="k">:</span> <span class="kt">Member</span> <span class="o">=</span> <span class="nf">autoConstruct</span><span class="o">(</span><span class="n">rs</span><span class="o">,</span> <span class="n">n</span><span class="o">,</span> <span class="s">"email"</span><span class="o">)</span>
 
-  // ### Create tables ###
-  sql"""create table member (
+  <span class="k">val</span> <span class="nv">email</span> <span class="k">=</span> <span class="n">hasOne</span><span class="o">[</span><span class="kt">Email</span><span class="o">](</span><span class="nc">Email</span><span class="o">,</span> <span class="o">(</span><span class="n">m</span><span class="o">,</span> <span class="n">e</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="nv">m</span><span class="o">.</span><span class="py">copy</span><span class="o">(</span><span class="n">email</span> <span class="k">=</span> <span class="n">e</span><span class="o">))</span>
+<span class="o">}</span>
+
+<span class="k">class</span> <span class="nc">Example</span> <span class="k">extends</span> <span class="nc">App</span> <span class="o">{</span>
+  <span class="c1">// ### Database connection ###</span>
+  <span class="nv">Class</span><span class="o">.</span><span class="py">forName</span><span class="o">(</span><span class="s">"org.h2.Driver"</span><span class="o">)</span>
+  <span class="nv">ConnectionPool</span><span class="o">.</span><span class="py">singleton</span><span class="o">(</span><span class="s">"jdbc:h2:mem:hello;MODE=PostgreSQL"</span><span class="o">,</span> <span class="s">"user"</span><span class="o">,</span> <span class="s">"pass"</span><span class="o">)</span>
+  <span class="k">implicit</span> <span class="k">val</span> <span class="nv">session</span> <span class="k">=</span> <span class="nc">AutoSession</span>
+
+  <span class="c1">// ### Create tables ###</span>
+  <span class="n">sql</span><span class="s">"""create table member (
     id serial not null primary key,
     name varchar(64),
     created_at timestamp not null,
     updated_at timestamp
-  )""".execute.apply()
-  sql"""create table member_email (
+  )"""</span><span class="o">.</span><span class="py">execute</span><span class="o">.</span><span class="py">apply</span><span class="o">()</span>
+  <span class="n">sql</span><span class="s">"""create table member_email (
     id serial not null primary key,
     member_id int not null,
     address varchar(256) not null
-  )""".execute.apply()
+  )"""</span><span class="o">.</span><span class="py">execute</span><span class="o">.</span><span class="py">apply</span><span class="o">()</span>
 
-  val m = Member.column
+  <span class="k">val</span> <span class="nv">m</span> <span class="k">=</span> <span class="nv">Member</span><span class="o">.</span><span class="py">column</span>
 
-  // ### Insert rows ###
-  val ids = Seq("Alice", "Bob", "Chris") map { name =>
-    // insert into member (name, created_at, updated_at) values ('Alice', '2024-05-11 14:52:27.13', '2024-05-11 14:52:27.13');
-    Member.createWithNamedValues(m.name -> name)
-  }
+  <span class="c1">// ### Insert rows ###</span>
+  <span class="k">val</span> <span class="nv">ids</span> <span class="k">=</span> <span class="nc">Seq</span><span class="o">(</span><span class="s">"Alice"</span><span class="o">,</span> <span class="s">"Bob"</span><span class="o">,</span> <span class="s">"Chris"</span><span class="o">)</span> <span class="n">map</span> <span class="o">{</span> <span class="n">name</span> <span class="k">=&gt;</span>
+    <span class="c1">// insert into member (name, created_at, updated_at) values ('Alice', '2024-05-11 14:52:27.13', '2024-05-11 14:52:27.13');</span>
+    <span class="nv">Member</span><span class="o">.</span><span class="py">createWithNamedValues</span><span class="o">(</span><span class="nv">m</span><span class="o">.</span><span class="py">name</span> <span class="o">-&gt;</span> <span class="n">name</span><span class="o">)</span>
+  <span class="o">}</span>
 
-  // ### Find all rows ###
-  // select m.id as i_on_m, m.name as n_on_m, m.created_at as ca_on_m, m.updated_at as ua_on_m from member m order by m.id;
-  val allMembers1: Seq[Member] = Member.findAll()
-  // select m.id as i_on_m, m.name as n_on_m, m.created_at as ca_on_m, m.updated_at as ua_on_m from member m where m.id in (1, 2, 3);
-  val allMembers2: Seq[Member] = Member.findAllByIds(ids*)
+  <span class="c1">// ### Find all rows ###</span>
+  <span class="c1">// select m.id as i_on_m, m.name as n_on_m, m.created_at as ca_on_m, m.updated_at as ua_on_m from member m order by m.id;</span>
+  <span class="k">val</span> <span class="nv">allMembers1</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Member</span><span class="o">]</span> <span class="k">=</span> <span class="nv">Member</span><span class="o">.</span><span class="py">findAll</span><span class="o">()</span>
+  <span class="c1">// select m.id as i_on_m, m.name as n_on_m, m.created_at as ca_on_m, m.updated_at as ua_on_m from member m where m.id in (1, 2, 3);</span>
+  <span class="k">val</span> <span class="nv">allMembers2</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Member</span><span class="o">]</span> <span class="k">=</span> <span class="nv">Member</span><span class="o">.</span><span class="py">findAllByIds</span><span class="o">(</span><span class="n">ids</span><span class="o">*)</span>
 
-  // ### Run queries with where conditions ###
-  // Quick way but less type-safety
-  // select m.id as i_on_m, m.name as n_on_m, m.created_at as ca_on_m, m.updated_at as ua_on_m from member m where m.name = 'Alice' order by m.id;
-  val member1: Seq[Member] = Member.where("name" -> "Alice").apply()
-  // Types-safe query builder
-  // select m.id as i_on_m, m.name as n_on_m, m.created_at as ca_on_m, m.updated_at as ua_on_m from member m where name = 'Alice' order by m.id;
-  val member2: Seq[Member] = Member.where(sqls.eq(m.name, "Alice")).apply()
+  <span class="c1">// ### Run queries with where conditions ###</span>
+  <span class="c1">// Quick way but less type-safety</span>
+  <span class="c1">// select m.id as i_on_m, m.name as n_on_m, m.created_at as ca_on_m, m.updated_at as ua_on_m from member m where m.name = 'Alice' order by m.id;</span>
+  <span class="k">val</span> <span class="nv">member1</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Member</span><span class="o">]</span> <span class="k">=</span> <span class="nv">Member</span><span class="o">.</span><span class="py">where</span><span class="o">(</span><span class="s">"name"</span> <span class="o">-&gt;</span> <span class="s">"Alice"</span><span class="o">).</span><span class="py">apply</span><span class="o">()</span>
+  <span class="c1">// Types-safe query builder</span>
+  <span class="c1">// select m.id as i_on_m, m.name as n_on_m, m.created_at as ca_on_m, m.updated_at as ua_on_m from member m where name = 'Alice' order by m.id;</span>
+  <span class="k">val</span> <span class="nv">member2</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Member</span><span class="o">]</span> <span class="k">=</span> <span class="nv">Member</span><span class="o">.</span><span class="py">where</span><span class="o">(</span><span class="nv">sqls</span><span class="o">.</span><span class="py">eq</span><span class="o">(</span><span class="nv">m</span><span class="o">.</span><span class="py">name</span><span class="o">,</span> <span class="s">"Alice"</span><span class="o">)).</span><span class="py">apply</span><span class="o">()</span>
 
-  val memberId = member2.head.id
+  <span class="k">val</span> <span class="nv">memberId</span> <span class="k">=</span> <span class="nv">member2</span><span class="o">.</span><span class="py">head</span><span class="o">.</span><span class="py">id</span>
 
-  // ### Run join queries ###
-  val e = Email.column
-  // insert into member_email (member_id, address) values (1, 'a@example.com');
-  Email.createWithNamedValues(e.memberId -> memberId, e.address -> "a@example.com")
+  <span class="c1">// ### Run join queries ###</span>
+  <span class="k">val</span> <span class="nv">e</span> <span class="k">=</span> <span class="nv">Email</span><span class="o">.</span><span class="py">column</span>
+  <span class="c1">// insert into member_email (member_id, address) values (1, 'a@example.com');</span>
+  <span class="nv">Email</span><span class="o">.</span><span class="py">createWithNamedValues</span><span class="o">(</span><span class="nv">e</span><span class="o">.</span><span class="py">memberId</span> <span class="o">-&gt;</span> <span class="n">memberId</span><span class="o">,</span> <span class="nv">e</span><span class="o">.</span><span class="py">address</span> <span class="o">-&gt;</span> <span class="s">"a@example.com"</span><span class="o">)</span>
 
-  // Note that member3.email exists while it does not in member1,2
-  // select m.id as i_on_m, m.name as n_on_m, m.created_at as ca_on_m, m.updated_at as ua_on_m , me.id as i_on_me, me.member_id as mi_on_me, me.address as a_on_me from member m left join member_email me on m.id = me.member_id where name = 'Alice' order by m.id;
-  val member3 = Member.joins(Member.email).where(sqls.eq(m.name, "Alice")).apply()
+  <span class="c1">// Note that member3.email exists while it does not in member1,2</span>
+  <span class="c1">// select m.id as i_on_m, m.name as n_on_m, m.created_at as ca_on_m, m.updated_at as ua_on_m , me.id as i_on_me, me.member_id as mi_on_me, me.address as a_on_me from member m left join member_email me on m.id = me.member_id where name = 'Alice' order by m.id;</span>
+  <span class="k">val</span> <span class="nv">member3</span> <span class="k">=</span> <span class="nv">Member</span><span class="o">.</span><span class="py">joins</span><span class="o">(</span><span class="nv">Member</span><span class="o">.</span><span class="py">email</span><span class="o">).</span><span class="py">where</span><span class="o">(</span><span class="nv">sqls</span><span class="o">.</span><span class="py">eq</span><span class="o">(</span><span class="nv">m</span><span class="o">.</span><span class="py">name</span><span class="o">,</span> <span class="s">"Alice"</span><span class="o">)).</span><span class="py">apply</span><span class="o">()</span>
 
-  // ### Update/delete rows ###
-  // update member set updated_at = '2024-05-11 14:52:27.188', name = 'Ace' where id = 1;
-  Member.updateById(memberId).withAttributes("name" -> "Ace")
-  // delete from member where id = 1;
-  Member.deleteById(memberId)
-}
-```
-
-Run the code by the `sbt run` command. How did it go?
+  <span class="c1">// ### Update/delete rows ###</span>
+  <span class="c1">// update member set updated_at = '2024-05-11 14:52:27.188', name = 'Ace' where id = 1;</span>
+  <span class="nv">Member</span><span class="o">.</span><span class="py">updateById</span><span class="o">(</span><span class="n">memberId</span><span class="o">).</span><span class="py">withAttributes</span><span class="o">(</span><span class="s">"name"</span> <span class="o">-&gt;</span> <span class="s">"Ace"</span><span class="o">)</span>
+  <span class="c1">// delete from member where id = 1;</span>
+  <span class="nv">Member</span><span class="o">.</span><span class="py">deleteById</span><span class="o">(</span><span class="n">memberId</span><span class="o">)</span>
+<span class="o">}</span>
+</code></pre></div>
+<p>Run the code by the <code>sbt run</code> command. How did it go?</p>
 
 <hr/>
-### Associations
+
+<h3 id="associations">Associations</h3>
+
 <hr/>
 
-The key feature of ORM is definitely how it resolves associations for developers. ScalikeJDBC ORM does it in a quite similar way to ActiveRecord from Ruby on Rails. In this section, we will guide you on how to define assocations in code.
+<p>The key feature of ORM is definitely how it resolves associations for developers. ScalikeJDBC ORM does it in a quite similar way to ActiveRecord from Ruby on Rails. In this section, we will guide you on how to define assocations in code.</p>
 
-In the realm of O/R mapper, the hallmark feature lies in its ability to effortlessly resolve associations for developers. ScalikeJDBC ORM achieves this with a striking resemblance to ActiveRecord from Ruby on Rails. In the following section, we'll walk you through defining associations in your code.
+<p>In the realm of O/R mapper, the hallmark feature lies in its ability to effortlessly resolve associations for developers. ScalikeJDBC ORM achieves this with a striking resemblance to ActiveRecord from Ruby on Rails. In the following section, we&rsquo;ll walk you through defining associations in your code.</p>
 
-[This test code](https://github.com/scalikejdbc/scalikejdbc/tree/master/scalikejdbc-orm/src/test/scala/basic_test/accounts) provides invaluable insights for learning. If you're unable to find specific examples here, referring to the code will be greatly helpful.
+<p><a href="https://github.com/scalikejdbc/scalikejdbc/tree/master/scalikejdbc-orm/src/test/scala/basic_test/accounts">This test code</a> provides invaluable insights for learning. If you&rsquo;re unable to find specific examples here, referring to the code will be greatly helpful.</p>
 
-#### hasOne
+<h4 id="hasone">hasOne</h4>
 
-The `hasOne` relationship signifies that table A is referenced from table B via table A's primary key. Your code aims to include table B's data within the entity of table A. In the following example, the `Member` entity (representing table A) includes a `name` property, which can be resolved using the `member_id` column within the `Name` entity (representing table B).
+<p>The <code>hasOne</code> relationship signifies that table A is referenced from table B via table A&rsquo;s primary key. Your code aims to include table B&rsquo;s data within the entity of table A. In the following example, the <code>Member</code> entity (representing table A) includes a <code>name</code> property, which can be resolved using the <code>member_id</code> column within the <code>Name</code> entity (representing table B).</p>
+<div class="highlight"><pre class="highlight scala"><code><span class="k">import</span> <span class="nn">scalikejdbc.</span><span class="o">*</span>
+<span class="k">import</span> <span class="nn">scalikejdbc.orm.</span><span class="o">*</span>
 
-```scala
-import scalikejdbc.*
-import scalikejdbc.orm.*
+<span class="k">case</span> <span class="k">class</span> <span class="nc">Member</span><span class="o">(</span>
+  <span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span>
+  <span class="n">name</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Name</span><span class="o">]</span> <span class="k">=</span> <span class="nc">None</span><span class="o">,</span>
+<span class="o">)</span>
+<span class="k">object</span> <span class="nc">Member</span> <span class="k">extends</span> <span class="nc">CRUDMapper</span><span class="o">[</span><span class="kt">Member</span><span class="o">]</span> <span class="o">{</span>
+  <span class="k">override</span> <span class="k">val</span> <span class="nv">tableName</span> <span class="k">=</span> <span class="s">"members"</span>
+  <span class="k">override</span> <span class="k">val</span> <span class="nv">defaultAlias</span> <span class="k">=</span> <span class="nf">createAlias</span><span class="o">(</span><span class="s">"m"</span><span class="o">)</span>
+  <span class="k">override</span> <span class="k">def</span> <span class="nf">extract</span><span class="o">(</span><span class="n">rs</span><span class="k">:</span> <span class="kt">WrappedResultSet</span><span class="o">,</span> <span class="n">n</span><span class="k">:</span> <span class="kt">ResultName</span><span class="o">[</span><span class="kt">Member</span><span class="o">])</span><span class="k">:</span> <span class="kt">Member</span> <span class="o">=</span> <span class="nf">autoConstruct</span><span class="o">(</span><span class="n">rs</span><span class="o">,</span> <span class="n">rn</span><span class="o">,</span> <span class="s">"name"</span><span class="o">)</span>
 
-case class Member(
-  id: Long,
-  name: Option[Name] = None,
-)
-object Member extends CRUDMapper[Member] {
-  override val tableName = "members"
-  override val defaultAlias = createAlias("m")
-  override def extract(rs: WrappedResultSet, n: ResultName[Member]): Member = autoConstruct(rs, rn, "name")
+  <span class="k">val</span> <span class="nv">name</span><span class="k">:</span> <span class="kt">Association</span><span class="o">[</span><span class="kt">Member</span><span class="o">]</span> <span class="k">=</span> <span class="n">hasOne</span><span class="o">[</span><span class="kt">Name</span><span class="o">](</span><span class="nc">Name</span><span class="o">,</span> <span class="o">(</span><span class="n">m</span><span class="o">,</span> <span class="n">name</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="nv">m</span><span class="o">.</span><span class="py">copy</span><span class="o">(</span><span class="n">name</span> <span class="k">=</span> <span class="n">name</span><span class="o">))</span>
+<span class="o">}</span>
 
-  val name: Association[Member] = hasOne[Name](Name, (m, name) => m.copy(name = name))
-}
+<span class="k">case</span> <span class="k">class</span> <span class="nc">Name</span><span class="o">(</span>
+  <span class="n">memberId</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span>
+  <span class="n">first</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
+  <span class="n">last</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
+<span class="o">)</span>
 
-case class Name(
-  memberId: Long,
-  first: String,
-  last: String,
-)
+<span class="k">object</span> <span class="nc">Name</span> <span class="k">extends</span> <span class="nc">CRUDMapper</span><span class="o">[</span><span class="kt">Name</span><span class="o">]</span> <span class="o">{</span>
+  <span class="k">override</span> <span class="k">val</span> <span class="nv">useAutoIncrementPrimaryKey</span> <span class="k">=</span> <span class="kc">false</span>
+  <span class="k">override</span> <span class="k">val</span> <span class="nv">tableName</span> <span class="k">=</span> <span class="s">"names"</span>
+  <span class="k">override</span> <span class="k">val</span> <span class="nv">primaryKeyFieldName</span> <span class="k">=</span> <span class="s">"memberId"</span>
+  <span class="k">override</span> <span class="k">val</span> <span class="nv">defaultAlias</span> <span class="k">=</span> <span class="nf">createAlias</span><span class="o">(</span><span class="s">"nm"</span><span class="o">)</span>
 
-object Name extends CRUDMapper[Name] {
-  override val useAutoIncrementPrimaryKey = false
-  override val tableName = "names"
-  override val primaryKeyFieldName = "memberId"
-  override val defaultAlias = createAlias("nm")
+  <span class="k">def</span> <span class="nf">extract</span><span class="o">(</span><span class="n">rs</span><span class="k">:</span> <span class="kt">WrappedResultSet</span><span class="o">,</span> <span class="n">s</span><span class="k">:</span> <span class="kt">ResultName</span><span class="o">[</span><span class="kt">Name</span><span class="o">])</span><span class="k">:</span> <span class="kt">Name</span> <span class="o">=</span> <span class="nf">autoConstruct</span><span class="o">(</span><span class="n">rs</span><span class="o">,</span> <span class="n">s</span><span class="o">)</span>
+<span class="o">}</span>
+</code></pre></div>
+<p>Your code can run queries this way:</p>
+<div class="highlight"><pre class="highlight scala"><code><span class="c1">// Finder method style</span>
+<span class="k">val</span> <span class="nv">member</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Member</span><span class="o">]</span> <span class="k">=</span> <span class="nv">Member</span><span class="o">.</span><span class="py">joins</span><span class="o">(</span><span class="nv">Member</span><span class="o">.</span><span class="py">name</span><span class="o">).</span><span class="py">findById</span><span class="o">(</span><span class="mi">123</span><span class="o">)</span>
 
-  def extract(rs: WrappedResultSet, s: ResultName[Name]): Name = autoConstruct(rs, s)
-}
-```
+<span class="c1">// Querying API style</span>
+<span class="k">val</span> <span class="nv">member</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Member</span><span class="o">]</span> <span class="k">=</span> <span class="nv">Member</span><span class="o">.</span><span class="py">joins</span><span class="o">(</span><span class="nv">Member</span><span class="o">.</span><span class="py">name</span><span class="o">).</span><span class="py">where</span><span class="o">(</span><span class="nv">sqls</span><span class="o">.</span><span class="py">eq</span><span class="o">(</span><span class="nv">m</span><span class="o">.</span><span class="py">id</span><span class="o">,</span> <span class="mi">123</span><span class="o">)).</span><span class="py">apply</span><span class="o">()</span>
+</code></pre></div>
+<p>If table B has a row with <code>member_id: 123</code>, <code>member.map(_.name)</code> is present. When you can assume the <code>name</code> already exists and would like to resolve the data at any time, add <code>#byDefault</code> method call to the <code>hasOne</code> call as below. In this case, you&rsquo;ll never need to have the reference to the result. Thus, you can remove <code>Member.name</code> property.</p>
+<div class="highlight"><pre class="highlight scala"><code><span class="k">object</span> <span class="nc">Member</span> <span class="k">extends</span> <span class="nc">CRUDMapper</span><span class="o">[</span><span class="kt">Member</span><span class="o">]</span> <span class="o">{</span>
+  <span class="c1">// ....</span>
 
-Your code can run queries this way:
+  <span class="n">hasOne</span><span class="o">[</span><span class="kt">Name</span><span class="o">](</span><span class="nc">Name</span><span class="o">,</span> <span class="o">(</span><span class="n">m</span><span class="o">,</span> <span class="n">name</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="nv">m</span><span class="o">.</span><span class="py">copy</span><span class="o">(</span><span class="n">name</span> <span class="k">=</span> <span class="n">name</span><span class="o">)).</span><span class="py">byDefault</span>
+<span class="o">}</span>
+</code></pre></div>
+<p>This <code>#byDefault</code> method is available for all other association APIs.</p>
 
-```scala
-// Finder method style
-val member: Option[Member] = Member.joins(Member.name).findById(123)
+<h4 id="belongsto">belongsTo</h4>
 
-// Querying API style
-val member: Option[Member] = Member.joins(Member.name).where(sqls.eq(m.id, 123)).apply()
-```
+<p>The <code>belongsTo</code> relationship indicates that table B is referenced from table A via table B&rsquo;s primary key. Your code aims to incorporate table B&rsquo;s data into the entity of table A. In the following example, the <code>Member</code> entity (representing table A) includes a <code>company</code> property, which can be resolved using the <code>company_id</code> column within the entity. From another perspective, the <code>Company</code> entity (representing table B) does not contain any information about <code>Member</code> (table A).</p>
+<div class="highlight"><pre class="highlight scala"><code><span class="k">import</span> <span class="nn">scalikejdbc.</span><span class="o">*</span>
+<span class="k">import</span> <span class="nn">scalikejdbc.orm.</span><span class="o">*</span>
 
-If table B has a row with `member_id: 123`, `member.map(_.name)` is present. When you can assume the `name` already exists and would like to resolve the data at any time, add `#byDefault` method call to the `hasOne` call as below. In this case, you'll never need to have the reference to the result. Thus, you can remove `Member.name` property.
+<span class="k">case</span> <span class="k">class</span> <span class="nc">Member</span><span class="o">(</span>
+  <span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span>
+  <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
+  <span class="n">companyId</span><span class="k">:</span> <span class="kt">Optional</span><span class="o">[</span><span class="kt">Long</span><span class="o">],</span>
+  <span class="n">company</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Company</span><span class="o">]</span> <span class="k">=</span> <span class="nc">None</span><span class="o">,</span>
+<span class="o">)</span>
+<span class="k">object</span> <span class="nc">Member</span> <span class="k">extends</span> <span class="nc">CRUDMapper</span><span class="o">[</span><span class="kt">Member</span><span class="o">]</span> <span class="o">{</span>
+  <span class="k">override</span> <span class="k">val</span> <span class="nv">defaultAlias</span> <span class="k">=</span> <span class="nf">createAlias</span><span class="o">(</span><span class="s">"m"</span><span class="o">)</span>
+  <span class="k">override</span> <span class="k">def</span> <span class="nf">extract</span><span class="o">(</span><span class="n">rs</span><span class="k">:</span> <span class="kt">WrappedResultSet</span><span class="o">,</span> <span class="n">n</span><span class="k">:</span> <span class="kt">ResultName</span><span class="o">[</span><span class="kt">Member</span><span class="o">])</span><span class="k">:</span> <span class="kt">Member</span> <span class="o">=</span> <span class="nf">autoConstruct</span><span class="o">(</span><span class="n">rs</span><span class="o">,</span> <span class="n">rn</span><span class="o">,</span> <span class="s">"company"</span><span class="o">)</span>
 
-```scala
-object Member extends CRUDMapper[Member] {
-  // ....
+  <span class="k">val</span> <span class="nv">company</span> <span class="k">=</span> <span class="n">belongsTo</span><span class="o">[</span><span class="kt">Company</span><span class="o">](</span><span class="nc">Company</span><span class="o">,</span> <span class="o">(</span><span class="n">m</span><span class="o">,</span> <span class="n">c</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="nv">m</span><span class="o">.</span><span class="py">copy</span><span class="o">(</span><span class="n">company</span> <span class="k">=</span> <span class="n">c</span><span class="o">))</span>
+<span class="o">}</span>
 
-  hasOne[Name](Name, (m, name) => m.copy(name = name)).byDefault
-}
-```
+<span class="k">case</span> <span class="k">class</span> <span class="nc">Company</span><span class="o">(</span>
+  <span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span>
+  <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
+<span class="o">)</span>
+<span class="k">object</span> <span class="nc">Company</span> <span class="k">extends</span> <span class="nc">CRUDMapper</span><span class="o">[</span><span class="kt">Company</span><span class="o">]</span> <span class="o">{</span>
+ <span class="k">override</span> <span class="k">val</span> <span class="nv">defaultAlias</span> <span class="k">=</span> <span class="nf">createAlias</span><span class="o">(</span><span class="s">"c"</span><span class="o">)</span>
+  <span class="k">def</span> <span class="nf">extract</span><span class="o">(</span><span class="n">rs</span><span class="k">:</span> <span class="kt">WrappedResultSet</span><span class="o">,</span> <span class="n">s</span><span class="k">:</span> <span class="kt">ResultName</span><span class="o">[</span><span class="kt">Name</span><span class="o">])</span><span class="k">:</span> <span class="kt">Name</span> <span class="o">=</span> <span class="nf">autoConstruct</span><span class="o">(</span><span class="n">rs</span><span class="o">,</span> <span class="n">s</span><span class="o">)</span>
+<span class="o">}</span>
+</code></pre></div>
+<p>Here is a code snippet demonstrating how to perform join queries:</p>
+<div class="highlight"><pre class="highlight scala"><code><span class="k">val</span> <span class="nv">c</span> <span class="k">=</span> <span class="nv">Company</span><span class="o">.</span><span class="py">column</span>
+<span class="k">val</span> <span class="nv">abc</span> <span class="k">=</span> <span class="nv">Company</span><span class="o">.</span><span class="py">createWithNamedValues</span><span class="o">(</span><span class="nv">c</span><span class="o">.</span><span class="py">name</span><span class="o">,</span> <span class="s">"ABC Company"</span><span class="o">)</span>
+<span class="k">val</span> <span class="nv">m</span> <span class="k">=</span> <span class="nv">Member</span><span class="o">.</span><span class="py">column</span>
+<span class="nv">Member</span><span class="o">.</span><span class="py">createWithNamedValues</span><span class="o">(</span><span class="nv">m</span><span class="o">.</span><span class="py">name</span> <span class="o">-&gt;</span> <span class="s">"Kaz"</span><span class="o">,</span> <span class="nv">m</span><span class="o">.</span><span class="py">companyId</span> <span class="o">-&gt;</span> <span class="nv">abc</span><span class="o">.</span><span class="py">map</span><span class="o">(</span><span class="nv">_</span><span class="o">.</span><span class="py">id</span><span class="o">))</span>
 
-This `#byDefault` method is available for all other association APIs.
+<span class="k">val</span> <span class="nv">member</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Member</span><span class="o">]</span> <span class="k">=</span>
+  <span class="nv">Member</span><span class="o">.</span><span class="py">joins</span><span class="o">(</span><span class="nv">Member</span><span class="o">.</span><span class="py">company</span><span class="o">).</span><span class="py">where</span><span class="o">(</span><span class="nv">sqls</span><span class="o">.</span><span class="py">eq</span><span class="o">(</span><span class="nv">m</span><span class="o">.</span><span class="py">name</span><span class="o">,</span> <span class="s">"Kaz"</span><span class="o">)).</span><span class="py">apply</span><span class="o">()</span>
+</code></pre></div>
+<p>As mentioned above, once you add <code>byDefault</code> call to the <code>belongsTo</code> code line, you can omit <code>.joins(Member.company)</code> in the code.</p>
 
-#### belongsTo
+<h4 id="hasmany">hasMany</h4>
 
-The `belongsTo` relationship indicates that table B is referenced from table A via table B's primary key. Your code aims to incorporate table B's data into the entity of table A. In the following example, the `Member` entity (representing table A) includes a `company` property, which can be resolved using the `company_id` column within the entity. From another perspective, the `Company` entity (representing table B) does not contain any information about `Member` (table A).
+<p>The <code>hasMany</code> relationship denotes that table A is referenced from table B via table A&rsquo;s primary key. Your code seeks to include multiple rows from table B into the entity of table A. In the following example, the <code>Company</code> entity (representing table A) contains a <code>members</code> property, which can be resolved using the <code>company_id</code> column on the <code>Member</code> entity side (representing table B).</p>
+<div class="highlight"><pre class="highlight scala"><code><span class="k">import</span> <span class="nn">scalikejdbc.</span><span class="o">*</span>
+<span class="k">import</span> <span class="nn">scalikejdbc.orm.</span><span class="o">*</span>
 
-```scala
-import scalikejdbc.*
-import scalikejdbc.orm.*
+<span class="k">case</span> <span class="k">class</span> <span class="nc">Company</span><span class="o">(</span>
+  <span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span>
+  <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
+  <span class="n">members</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Member</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Nil</span><span class="o">,</span>
+<span class="o">)</span>
+<span class="k">object</span> <span class="nc">Company</span> <span class="k">extends</span> <span class="nc">CRUDMapper</span><span class="o">[</span><span class="kt">Company</span><span class="o">]</span> <span class="o">{</span>
+  <span class="k">override</span> <span class="k">val</span> <span class="nv">defaultAlias</span> <span class="k">=</span> <span class="nf">createAlias</span><span class="o">(</span><span class="s">"c"</span><span class="o">)</span>
+  <span class="k">def</span> <span class="nf">extract</span><span class="o">(</span><span class="n">rs</span><span class="k">:</span> <span class="kt">WrappedResultSet</span><span class="o">,</span> <span class="n">s</span><span class="k">:</span> <span class="kt">ResultName</span><span class="o">[</span><span class="kt">Name</span><span class="o">])</span><span class="k">:</span> <span class="kt">Name</span> <span class="o">=</span> <span class="nf">autoConstruct</span><span class="o">(</span><span class="n">rs</span><span class="o">,</span> <span class="n">s</span><span class="o">,</span> <span class="s">"members"</span><span class="o">)</span>
 
-case class Member(
-  id: Long,
-  name: String,
-  companyId: Optional[Long],
-  company: Option[Company] = None,
-)
-object Member extends CRUDMapper[Member] {
-  override val defaultAlias = createAlias("m")
-  override def extract(rs: WrappedResultSet, n: ResultName[Member]): Member = autoConstruct(rs, rn, "company")
+  <span class="k">val</span> <span class="nv">members</span> <span class="k">=</span> <span class="n">hasMany</span><span class="o">[</span><span class="kt">Member</span><span class="o">](</span>
+    <span class="n">many</span> <span class="k">=</span> <span class="nc">Member</span> <span class="o">-&gt;</span> <span class="nv">Member</span><span class="o">.</span><span class="py">defaultAlias</span><span class="o">,</span>
+    <span class="n">on</span> <span class="k">=</span> <span class="o">(</span><span class="n">c</span><span class="o">,</span> <span class="n">ms</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="nv">sqls</span><span class="o">.</span><span class="py">eq</span><span class="o">(</span><span class="nv">c</span><span class="o">.</span><span class="py">id</span><span class="o">,</span> <span class="nv">ms</span><span class="o">.</span><span class="py">companyId</span><span class="o">),</span>
+    <span class="n">merge</span> <span class="k">=</span> <span class="o">(</span><span class="n">c</span><span class="o">,</span> <span class="n">ms</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="nv">c</span><span class="o">.</span><span class="py">copy</span><span class="o">(</span><span class="n">members</span> <span class="k">=</span> <span class="n">ms</span><span class="o">)</span>
+  <span class="o">)</span>
+<span class="o">}</span>
 
-  val company = belongsTo[Company](Company, (m, c) => m.copy(company = c))
-}
+<span class="k">case</span> <span class="k">class</span> <span class="nc">Member</span><span class="o">(</span>
+  <span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span>
+  <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
+  <span class="n">companyId</span><span class="k">:</span> <span class="kt">Optional</span><span class="o">[</span><span class="kt">Long</span><span class="o">],</span>
+<span class="o">)</span>
+<span class="k">object</span> <span class="nc">Member</span> <span class="k">extends</span> <span class="nc">CRUDMapper</span><span class="o">[</span><span class="kt">Member</span><span class="o">]</span> <span class="o">{</span>
+  <span class="k">override</span> <span class="k">val</span> <span class="nv">defaultAlias</span> <span class="k">=</span> <span class="nf">createAlias</span><span class="o">(</span><span class="s">"m"</span><span class="o">)</span>
+  <span class="k">override</span> <span class="k">def</span> <span class="nf">extract</span><span class="o">(</span><span class="n">rs</span><span class="k">:</span> <span class="kt">WrappedResultSet</span><span class="o">,</span> <span class="n">n</span><span class="k">:</span> <span class="kt">ResultName</span><span class="o">[</span><span class="kt">Member</span><span class="o">])</span><span class="k">:</span> <span class="kt">Member</span> <span class="o">=</span> <span class="nf">autoConstruct</span><span class="o">(</span><span class="n">rs</span><span class="o">,</span> <span class="n">rn</span><span class="o">)</span>
+<span class="o">}</span>
+</code></pre></div>
+<p>Here is a code snippet demonstrating how to perform join queries:</p>
+<div class="highlight"><pre class="highlight scala"><code><span class="k">val</span> <span class="nv">c</span> <span class="k">=</span> <span class="nv">Company</span><span class="o">.</span><span class="py">column</span>
+<span class="k">val</span> <span class="nv">gf</span> <span class="k">=</span> <span class="nv">Company</span><span class="o">.</span><span class="py">createWithNamedValues</span><span class="o">(</span><span class="nv">c</span><span class="o">.</span><span class="py">name</span><span class="o">,</span> <span class="s">"Good Flow"</span><span class="o">)</span>
+<span class="k">val</span> <span class="nv">companyId</span> <span class="k">=</span> <span class="nv">gf</span><span class="o">.</span><span class="py">get</span><span class="o">.</span><span class="py">id</span>
+<span class="k">val</span> <span class="nv">m</span> <span class="k">=</span> <span class="nv">Member</span><span class="o">.</span><span class="py">column</span>
+<span class="nc">Seq</span><span class="o">(</span><span class="s">"Kaz"</span><span class="o">,</span> <span class="s">"Yu"</span><span class="o">,</span> <span class="s">"Ken"</span><span class="o">)</span> <span class="n">foreach</span> <span class="o">{</span> <span class="n">name</span> <span class="k">=&gt;</span> 
+  <span class="nv">Member</span><span class="o">.</span><span class="py">createWithNamedValues</span><span class="o">(</span><span class="nv">m</span><span class="o">.</span><span class="py">name</span> <span class="o">-&gt;</span> <span class="n">name</span><span class="o">,</span> <span class="nv">m</span><span class="o">.</span><span class="py">companyId</span> <span class="o">-&gt;</span> <span class="n">companyId</span><span class="o">)</span>
+<span class="o">}</span>
 
-case class Company(
-  id: Long,
-  name: String,
-)
-object Company extends CRUDMapper[Company] {
- override val defaultAlias = createAlias("c")
-  def extract(rs: WrappedResultSet, s: ResultName[Name]): Name = autoConstruct(rs, s)
-}
-```
+<span class="c1">// company.map(_.members) is a list of three entities</span>
+<span class="k">val</span> <span class="nv">company</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Company</span><span class="o">]</span> <span class="k">=</span>
+  <span class="nv">Company</span><span class="o">.</span><span class="py">joins</span><span class="o">(</span><span class="nv">Company</span><span class="o">.</span><span class="py">members</span><span class="o">).</span><span class="py">findById</span><span class="o">(</span><span class="n">companyId</span><span class="o">)</span>
+</code></pre></div>
+<p>If everything goes well, <code>company.map(_.members)</code> should be a list of three entitiy objects.</p>
 
-Here is a code snippet demonstrating how to perform join queries:
+<h4 id="hasmanythrough">hasManyThrough</h4>
 
-```scala
-val c = Company.column
-val abc = Company.createWithNamedValues(c.name, "ABC Company")
-val m = Member.column
-Member.createWithNamedValues(m.name -> "Kaz", m.companyId -> abc.map(_.id))
+<p>The <code>hasManyThrough</code> relationship operates similarly to <code>hasMany</code>, but with a crucial distinction: it involves a join table that manages the relationship between table A and table B.</p>
+<div class="highlight"><pre class="highlight scala"><code><span class="k">import</span> <span class="nn">scalikejdbc.</span><span class="o">*</span>
+<span class="k">import</span> <span class="nn">scalikejdbc.orm.</span><span class="o">*</span>
 
-val member: Option[Member] =
-  Member.joins(Member.company).where(sqls.eq(m.name, "Kaz")).apply()
-```
+<span class="k">case</span> <span class="k">class</span> <span class="nc">Member</span><span class="o">(</span>
+  <span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span>
+  <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span>
+  <span class="n">skills</span><span class="k">:</span> <span class="kt">Optional</span><span class="o">[</span><span class="kt">Skill</span><span class="o">],</span>
+<span class="o">)</span>
+<span class="k">object</span> <span class="nc">Member</span> <span class="k">extends</span> <span class="nc">CRUDMapper</span><span class="o">[</span><span class="kt">Member</span><span class="o">]</span> <span class="o">{</span>
+  <span class="k">override</span> <span class="k">val</span> <span class="nv">defaultAlias</span> <span class="k">=</span> <span class="nf">createAlias</span><span class="o">(</span><span class="s">"m"</span><span class="o">)</span>
+  <span class="k">override</span> <span class="k">def</span> <span class="nf">extract</span><span class="o">(</span><span class="n">rs</span><span class="k">:</span> <span class="kt">WrappedResultSet</span><span class="o">,</span> <span class="n">n</span><span class="k">:</span> <span class="kt">ResultName</span><span class="o">[</span><span class="kt">Member</span><span class="o">])</span><span class="k">:</span> <span class="kt">Member</span> <span class="o">=</span> <span class="nf">autoConstruct</span><span class="o">(</span><span class="n">rs</span><span class="o">,</span> <span class="n">rn</span><span class="o">,</span> <span class="s">"skills"</span><span class="o">)</span>
 
-As mentioned above, once you add `byDefault` call to the `belongsTo` code line, you can omit `.joins(Member.company)` in the code.
+  <span class="k">val</span> <span class="nv">skills</span> <span class="k">=</span> <span class="n">hasManyThrough</span><span class="o">[</span><span class="kt">Skill</span><span class="o">](</span>
+    <span class="nc">MemberSkill</span><span class="o">,</span>
+    <span class="nc">Skill</span><span class="o">,</span>
+    <span class="o">(</span><span class="n">member</span><span class="o">,</span> <span class="n">ss</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="nv">member</span><span class="o">.</span><span class="py">copy</span><span class="o">(</span><span class="n">skills</span> <span class="k">=</span> <span class="n">ss</span><span class="o">)</span>
+  <span class="o">)</span>
+<span class="o">}</span>
 
-#### hasMany
+<span class="k">case</span> <span class="k">class</span> <span class="nc">MemberSkill</span><span class="o">(</span><span class="n">memberId</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">skillId</span><span class="k">:</span> <span class="kt">Long</span><span class="o">)</span>
+<span class="k">object</span> <span class="nc">MemberSkill</span> <span class="k">extends</span> <span class="nc">JoinTable</span><span class="o">[</span><span class="kt">MemberSkill</span><span class="o">]</span> <span class="o">{</span>
+  <span class="k">override</span> <span class="k">val</span> <span class="nv">defaultAlias</span> <span class="k">=</span> <span class="nf">createAlias</span><span class="o">(</span><span class="s">"ms"</span><span class="o">)</span>
+<span class="o">}</span>
+<span class="k">case</span> <span class="k">class</span> <span class="nc">Skill</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="n">name</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span>
+<span class="k">object</span> <span class="nc">Skill</span> <span class="k">extends</span> <span class="nc">CRUDMapper</span><span class="o">[</span><span class="kt">Skill</span><span class="o">]</span> <span class="o">{</span>
+  <span class="k">override</span> <span class="k">val</span> <span class="nv">defaultAlias</span> <span class="k">=</span> <span class="nf">createAlias</span><span class="o">(</span><span class="s">"s"</span><span class="o">)</span>
+  <span class="k">override</span> <span class="k">def</span> <span class="nf">extract</span><span class="o">(</span><span class="n">rs</span><span class="k">:</span> <span class="kt">WrappedResultSet</span><span class="o">,</span> <span class="n">s</span><span class="k">:</span> <span class="kt">ResultName</span><span class="o">[</span><span class="kt">Skill</span><span class="o">])</span><span class="k">:</span> <span class="kt">Skill</span> <span class="o">=</span> <span class="nf">autoConstruct</span><span class="o">(</span><span class="n">rs</span><span class="o">,</span> <span class="n">s</span><span class="o">)</span>
+<span class="o">}</span>
+</code></pre></div>
+<p>Here is a code snippet demonstrating how to perform join queries:</p>
+<div class="highlight"><pre class="highlight scala"><code><span class="k">val</span> <span class="nv">alice</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Member</span><span class="o">]</span> <span class="k">=</span>
+<span class="nv">Member</span><span class="o">.</span><span class="py">joins</span><span class="o">(</span><span class="nv">Member</span><span class="o">.</span><span class="py">skills</span><span class="o">).</span><span class="py">findById</span><span class="o">(</span><span class="mi">123</span><span class="o">)</span>
+</code></pre></div>
+<p>The <code>alice.map(_.skills)</code> should be a list of <code>Skill</code> entities if some skills are saved in the &ldquo;member_skill&rdquo; table.</p>
 
-The `hasMany` relationship denotes that table A is referenced from table B via table A's primary key. Your code seeks to include multiple rows from table B into the entity of table A. In the following example, the `Company` entity (representing table A) contains a `members` property, which can be resolved using the `company_id` column on the `Member` entity side (representing table B).
+<h4 id="includes-eager-loading">includes (Eager Loading)</h4>
 
-```scala
-import scalikejdbc.*
-import scalikejdbc.orm.*
+<p>When enabling eager loading via the <code>includes</code> API, it&rsquo;s necessary to define both the <code>belongsTo</code> etc. and <code>includes</code> within the same association claim.</p>
+<div class="highlight"><pre class="highlight scala"><code><span class="k">object</span> <span class="nc">Member</span> <span class="k">extends</span> <span class="nc">SkinnyCRUDMapper</span><span class="o">[</span><span class="kt">Member</span><span class="o">]</span> <span class="o">{</span>
 
-case class Company(
-  id: Long,
-  name: String,
-  members: Seq[Member] = Nil,
-)
-object Company extends CRUDMapper[Company] {
-  override val defaultAlias = createAlias("c")
-  def extract(rs: WrappedResultSet, s: ResultName[Name]): Name = autoConstruct(rs, s, "members")
+  <span class="c1">// Unfortunately, in Scala 2.10.x, the combination of Scala macros and type-dynamic may not always behave as expected, particularly when defining "val company". </span>
+  <span class="c1">// If you encounter this issue, consider using alternatives such as "val companyOpt", "companyRef", and so on.</span>
+  <span class="k">lazy</span> <span class="k">val</span> <span class="nv">companyOpt</span> <span class="k">=</span> <span class="o">{</span>
+    <span class="c1">// Do normal belongsTo def first</span>
+    <span class="n">belongsTo</span><span class="o">[</span><span class="kt">Company</span><span class="o">](</span><span class="nc">Company</span><span class="o">,</span> <span class="n">merge</span> <span class="k">=</span> <span class="o">(</span><span class="n">m</span><span class="o">,</span> <span class="n">c</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="nv">m</span><span class="o">.</span><span class="py">copy</span><span class="o">(</span><span class="n">company</span> <span class="k">=</span> <span class="n">c</span><span class="o">))</span>
+    <span class="c1">// Then attach includes following the claim API call</span>
+    <span class="o">.</span><span class="py">includes</span><span class="o">[</span><span class="kt">Company</span><span class="o">](</span>
+      <span class="n">merge</span> <span class="k">=</span> <span class="o">(</span><span class="n">members</span><span class="o">,</span> <span class="n">companies</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="nv">members</span><span class="o">.</span><span class="py">map</span> <span class="o">{</span> <span class="n">m</span> <span class="k">=&gt;</span>
+        <span class="nv">companies</span><span class="o">.</span><span class="py">find</span><span class="o">(</span><span class="n">c</span> <span class="k">=&gt;</span> <span class="nv">m</span><span class="o">.</span><span class="py">company</span><span class="o">.</span><span class="py">exists</span><span class="o">(</span><span class="nv">_</span><span class="o">.</span><span class="py">id</span> <span class="o">==</span> <span class="nv">c</span><span class="o">.</span><span class="py">id</span><span class="o">))</span>
+          <span class="o">.</span><span class="py">map</span><span class="o">(</span><span class="n">c</span> <span class="k">=&gt;</span> <span class="nv">m</span><span class="o">.</span><span class="py">copy</span><span class="o">(</span><span class="n">company</span> <span class="k">=</span> <span class="nc">Some</span><span class="o">(</span><span class="n">c</span><span class="o">)))</span>
+          <span class="o">.</span><span class="py">getOrElse</span><span class="o">(</span><span class="n">m</span><span class="o">)</span>
+      <span class="o">})</span>
+  <span class="o">}</span>
+<span class="o">}</span>
 
-  val members = hasMany[Member](
-    many = Member -> Member.defaultAlias,
-    on = (c, ms) => sqls.eq(c.id, ms.companyId),
-    merge = (c, ms) => c.copy(members = ms)
-  )
-}
+<span class="c1">// This line of code performs two queries</span>
+<span class="c1">// 1) simple select query to fetch all the member table rows</span>
+<span class="c1">// 2) select query with in clause of IDs toward the company table</span>
+<span class="c1">// And then the ORM binds the 2) results to relevant entity using the merge function</span>
+<span class="nv">Member</span><span class="o">.</span><span class="py">includes</span><span class="o">(</span><span class="nv">Member</span><span class="o">.</span><span class="py">companyOpt</span><span class="o">).</span><span class="py">findAll</span><span class="o">()</span>
+</code></pre></div>
+<p>Here is another example with <code>hasManyThrough</code>:</p>
+<div class="highlight"><pre class="highlight scala"><code><span class="k">object</span> <span class="nc">Member</span> <span class="k">extends</span> <span class="nc">SkinnyCRUDMapper</span><span class="o">[</span><span class="kt">Member</span><span class="o">]</span> <span class="o">{</span>
+  <span class="k">lazy</span> <span class="k">val</span> <span class="nv">skills</span> <span class="k">=</span>
+    <span class="n">hasManyThrough</span><span class="o">[</span><span class="kt">Skill</span><span class="o">](</span>
+      <span class="nc">MemberSkill</span><span class="o">,</span> <span class="nc">Skill</span><span class="o">,</span> <span class="o">(</span><span class="n">m</span><span class="o">,</span> <span class="n">skills</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="nv">m</span><span class="o">.</span><span class="py">copy</span><span class="o">(</span><span class="n">skills</span> <span class="k">=</span> <span class="n">skills</span><span class="o">)</span>
+    <span class="o">).</span><span class="py">includes</span><span class="o">[</span><span class="kt">Skill</span><span class="o">]((</span><span class="n">ms</span><span class="o">,</span> <span class="n">skills</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="nv">ms</span><span class="o">.</span><span class="py">map</span> <span class="o">{</span> <span class="n">m</span> <span class="k">=&gt;</span>
+      <span class="nv">m</span><span class="o">.</span><span class="py">copy</span><span class="o">(</span><span class="n">skills</span> <span class="k">=</span> <span class="nv">skills</span><span class="o">.</span><span class="py">filter</span><span class="o">(</span><span class="nv">_</span><span class="o">.</span><span class="py">memberId</span><span class="o">.</span><span class="py">exists</span><span class="o">(</span><span class="k">_</span> <span class="o">==</span> <span class="nv">m</span><span class="o">.</span><span class="py">id</span><span class="o">)))</span>
+    <span class="o">})</span>
+<span class="o">}</span>
 
-case class Member(
-  id: Long,
-  name: String,
-  companyId: Optional[Long],
-)
-object Member extends CRUDMapper[Member] {
-  override val defaultAlias = createAlias("m")
-  override def extract(rs: WrappedResultSet, n: ResultName[Member]): Member = autoConstruct(rs, rn)
-}
-```
+<span class="nv">Member</span><span class="o">.</span><span class="py">includes</span><span class="o">(</span><span class="nv">Member</span><span class="o">.</span><span class="py">skills</span><span class="o">).</span><span class="py">findById</span><span class="o">(</span><span class="mi">123</span><span class="o">)</span> <span class="c1">// with skills</span>
+</code></pre></div>
+<p>Please note that eager loading of more deeply nested entities is not currently supported. </p>
 
-Here is a code snippet demonstrating how to perform join queries:
+<p>While it could be feasible with a dynamic programming language like Ruby, achieving the same functionality with a strictly typed language like Scala is quite challenging. At present, we don&rsquo;t have any plans to enhance this feature unless the Scala language provides a revolutionary hack for us to leverage.</p>
 
-```scala
-val c = Company.column
-val gf = Company.createWithNamedValues(c.name, "Good Flow")
-val companyId = gf.get.id
-val m = Member.column
-Seq("Kaz", "Yu", "Ken") foreach { name => 
-  Member.createWithNamedValues(m.name -> name, m.companyId -> companyId)
-}
-
-// company.map(_.members) is a list of three entities
-val company: Option[Company] =
-  Company.joins(Company.members).findById(companyId)
-```
-
-If everything goes well, `company.map(_.members)` should be a list of three entitiy objects.
-
-#### hasManyThrough
-
-The `hasManyThrough` relationship operates similarly to `hasMany`, but with a crucial distinction: it involves a join table that manages the relationship between table A and table B.
-
-
-```scala
-import scalikejdbc.*
-import scalikejdbc.orm.*
-
-case class Member(
-  id: Long,
-  name: String,
-  skills: Optional[Skill],
-)
-object Member extends CRUDMapper[Member] {
-  override val defaultAlias = createAlias("m")
-  override def extract(rs: WrappedResultSet, n: ResultName[Member]): Member = autoConstruct(rs, rn, "skills")
-
-  val skills = hasManyThrough[Skill](
-    MemberSkill,
-    Skill,
-    (member, ss) => member.copy(skills = ss)
-  )
-}
-
-case class MemberSkill(memberId: Long, skillId: Long)
-object MemberSkill extends JoinTable[MemberSkill] {
-  override val defaultAlias = createAlias("ms")
-}
-case class Skill(id: Long, name: String)
-object Skill extends CRUDMapper[Skill] {
-  override val defaultAlias = createAlias("s")
-  override def extract(rs: WrappedResultSet, s: ResultName[Skill]): Skill = autoConstruct(rs, s)
-}
-```
-
-Here is a code snippet demonstrating how to perform join queries:
-
-```scala
-val alice: Option[Member] =
-Member.joins(Member.skills).findById(123)
-```
-
-The `alice.map(_.skills)` should be a list of `Skill` entities if some skills are saved in the "member_skill" table.
-
-#### includes (Eager Loading)
-
-When enabling eager loading via the `includes` API, it's necessary to define both the `belongsTo` etc. and `includes` within the same association claim.
-
-```scala
-object Member extends SkinnyCRUDMapper[Member] {
-
-  // Unfortunately, in Scala 2.10.x, the combination of Scala macros and type-dynamic may not always behave as expected, particularly when defining "val company". 
-  // If you encounter this issue, consider using alternatives such as "val companyOpt", "companyRef", and so on.
-  lazy val companyOpt = {
-    // Do normal belongsTo def first
-    belongsTo[Company](Company, merge = (m, c) => m.copy(company = c))
-    // Then attach includes following the claim API call
-    .includes[Company](
-      merge = (members, companies) => members.map { m =>
-        companies.find(c => m.company.exists(_.id == c.id))
-          .map(c => m.copy(company = Some(c)))
-          .getOrElse(m)
-      })
-  }
-}
-
-// This line of code performs two queries
-// 1) simple select query to fetch all the member table rows
-// 2) select query with in clause of IDs toward the company table
-// And then the ORM binds the 2) results to relevant entity using the merge function
-Member.includes(Member.companyOpt).findAll()
-```
-
-Here is another example with `hasManyThrough`:
-
-```scala
-object Member extends SkinnyCRUDMapper[Member] {
-  lazy val skills =
-    hasManyThrough[Skill](
-      MemberSkill, Skill, (m, skills) => m.copy(skills = skills)
-    ).includes[Skill]((ms, skills) => ms.map { m =>
-      m.copy(skills = skills.filter(_.memberId.exists(_ == m.id)))
-    })
-}
-
-Member.includes(Member.skills).findById(123) // with skills
-```
-
-Please note that eager loading of more deeply nested entities is not currently supported. 
-
-While it could be feasible with a dynamic programming language like Ruby, achieving the same functionality with a strictly typed language like Scala is quite challenging. At present, we don't have any plans to enhance this feature unless the Scala language provides a revolutionary hack for us to leverage.
-
-For more examples and hands-on learning, please refer to [this example working code](https://github.com/scalikejdbc/scalikejdbc/tree/master/scalikejdbc-orm/src/test/scala/basic_test/accounts). If you have any questions or feature requests, don't hesitate to submit them on GitHub!
+<p>For more examples and hands-on learning, please refer to <a href="https://github.com/scalikejdbc/scalikejdbc/tree/master/scalikejdbc-orm/src/test/scala/basic_test/accounts">this example working code</a>. If you have any questions or feature requests, don&rsquo;t hesitate to submit them on GitHub!</p>
 
           <hr/>
           <div class="alert alert-warning small">
