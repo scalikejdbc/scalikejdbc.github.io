@@ -1,16 +1,17 @@
 # ScalikeJDBC
 
 <hr/>
-## Just write SQL and get things done
+## Just Write SQL And Get Things Done 💪
 <hr/>
-
-![Logo](images/logo.png)
 
 This library seamlessly wraps JDBC APIs, offering intuitive and highly flexible functionalities. With QueryDSL, your code becomes inherently type-safe and reusable.
 
 ScalikeJDBC is not just practical; it's production-ready. Utilize this library confidently in your real-world projects.
 
-### Working on the JDBC layer
+![Logo](images/logo.png)
+
+<hr/>
+### Working on JDBC Layer
 
 Whether you prefer it or not, JDBC stands as a steadfast standard interface. Given its widespread support across most RDBMS, accessing databases remains consistent. We adhere to this standard rigorously, ensuring each release passes through comprehensive unit tests across various RDBMS platforms:
 
@@ -21,11 +22,12 @@ Whether you prefer it or not, JDBC stands as a steadfast standard interface. Giv
 
 We firmly believe that ScalikeJDBC seamlessly integrates with a variety of RDBMS, including Oracle, SQL Server, and others. Its robust design ensures compatibility and reliability across different database platforms.
 
-### Amazon Redshift, Facebook Presto also supports JDBC
+#### Amazon Redshift, Facebook Presto also supports JDBC
 
 If you can access a datastore via the JDBC interface, you can also seamlessly access it through ScalikeJDBC. For instance, [Amazon Redshift](https://docs.aws.amazon.com/redshift/latest/dg/c_redshift-postgres-jdbc.html) and [Facebook Presto](https://prestodb.io/docs/current/installation/jdbc.html) have added support for the JDBC interface, enabling easy integration with ScalikeJDBC.
 
-### Few dependencies
+<hr/>
+### Less Dependencies
 
 The core of ScalikeJDBC boasts minimal dependencies, sparing you from the woes of dependency hell. Enjoy a streamlined development experience without unnecessary complications.
 
@@ -35,7 +37,7 @@ The core of ScalikeJDBC boasts minimal dependencies, sparing you from the woes o
 
 Certainly, you have the flexibility to utilize c3p0 or other connection pool libraries instead of commons-dbcp with ScalikeJDBC. While ScalikeJDBC doesn't offer a default ConnectionPool implementation for these alternatives, you have the freedom to integrate them seamlessly according to your project requirements.
 
-### Non-blocking?
+### No Non-Blocking?
 
 While JDBC drivers inherently block on socket IO, making them potentially unsuitable for async event-driven architectures, it's worth noting that most real-world applications currently don't require such architecture. JDBC remains a crucial infrastructure for JVM-based apps.
 

@@ -140,6 +140,7 @@ In the realm of O/R mapper, the hallmark feature lies in its ability to effortle
 
 [This test code](https://github.com/scalikejdbc/scalikejdbc/tree/master/scalikejdbc-orm/src/test/scala/basic_test/accounts) provides invaluable insights for learning. If you're unable to find specific examples here, referring to the code will be greatly helpful.
 
+<hr/>
 #### hasOne
 
 The `hasOne` relationship signifies that table A is referenced from table B via table A's primary key. Your code aims to include table B's data within the entity of table A. In the following example, the `Member` entity (representing table A) includes a `name` property, which can be resolved using the `member_id` column within the `Name` entity (representing table B).
@@ -198,6 +199,7 @@ object Member extends CRUDMapper[Member] {
 
 This `#byDefault` method is available for all other association APIs.
 
+<hr/>
 #### belongsTo
 
 The `belongsTo` relationship indicates that table B is referenced from table A via table B's primary key. Your code aims to incorporate table B's data into the entity of table A. In the following example, the `Member` entity (representing table A) includes a `company` property, which can be resolved using the `company_id` column within the entity. From another perspective, the `Company` entity (representing table B) does not contain any information about `Member` (table A).
@@ -243,6 +245,7 @@ val member: Option[Member] =
 
 As mentioned above, once you add `byDefault` call to the `belongsTo` code line, you can omit `.joins(Member.company)` in the code.
 
+<hr/>
 #### hasMany
 
 The `hasMany` relationship denotes that table A is referenced from table B via table A's primary key. Your code seeks to include multiple rows from table B into the entity of table A. In the following example, the `Company` entity (representing table A) contains a `members` property, which can be resolved using the `company_id` column on the `Member` entity side (representing table B).
@@ -336,11 +339,12 @@ Here is a code snippet demonstrating how to perform join queries:
 
 ```scala
 val alice: Option[Member] =
-Member.joins(Member.skills).findById(123)
+  Member.joins(Member.skills).findById(123)
 ```
 
 The `alice.map(_.skills)` should be a list of `Skill` entities if some skills are saved in the "member_skill" table.
 
+<hr/>
 #### includes (Eager Loading)
 
 When enabling eager loading via the `includes` API, it's necessary to define both the `belongsTo` etc. and `includes` within the same association claim.
@@ -388,5 +392,7 @@ Member.includes(Member.skills).findById(123) // with skills
 Please note that eager loading of more deeply nested entities is not currently supported. 
 
 While it could be feasible with a dynamic programming language like Ruby, achieving the same functionality with a strictly typed language like Scala is quite challenging. At present, we don't have any plans to enhance this feature unless the Scala language provides a revolutionary hack for us to leverage.
+
+<hr/>
 
 For more examples and hands-on learning, please refer to [this example working code](https://github.com/scalikejdbc/scalikejdbc/tree/master/scalikejdbc-orm/src/test/scala/basic_test/accounts). If you have any questions or feature requests, don't hesitate to submit them on GitHub!
