@@ -53,12 +53,6 @@ https://github.com/scalikejdbc/scalikejdbc-async
 ScalikeJDBC-Async is currently in the alpha stage. If you are not prepared to actively investigate and resolve issues, it may be advisable to wait for the release of a stable version in the future.
 
 <hr/>
-### ORM feature?
-<hr/>
-
-ScalikeJDBC is a lower-level library than typical ORMs, focusing on being a clean wrapper around JDBC drivers. For full ORM features like associations, consider using ScalikeJDBC ORM, which is built on top of ScalikeJDBC and we've recently migrated from Skinny Framework project.
-
-<hr/>
 ### Is it possible to integrate with Play Framework?
 <hr/>
 
