@@ -215,7 +215,7 @@ Here's an explanation of the differences between `m.id`, `m.result.id`, and `m.r
 
 Additionally, using `Member.as(m)` translates to `members m` in SQL, contextualizing the Member table alias.
 
-If you use `Member.syntax()`, the table name is included in aliases. For example,  `m.result.groupId` becomes `"members.group_id as gi_on_members"`. If you set it as `Member.syntax("m")`, `m.result.groupId` translates to `"members.group_id as gi_on_m"`.
+If you use `Member.syntax()`, the table name is included in aliases. For example,  `m.result.groupId` becomes `"members.group_id as gi_on_members"`. If you set it as `Member.syntax("m")`, `m.result.groupId` translates to `"m.group_id as gi_on_m"`.
 
 That covers all the rules of `SQLSyntaxSupport`. I believe this explanation will make the following code easier for you to understand.
 
@@ -238,7 +238,7 @@ You can use the above code this way:
 
 ```scala
 val m = Member.syntax("m")
-val members = sql"select ${m.result.*} from ${Member.as(m)}".map(Member(m)).list.apply()
+val members = sql"select ${m.result.*} from ${Member.as(m)}".map(Member(m.resultName)).list.apply()
 // select m.id as i_on_m, m.name as n_on_m from members m
 ```
 
