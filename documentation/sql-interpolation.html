@@ -221,7 +221,7 @@
 
 <p>Additionally, using <code>Member.as(m)</code> translates to <code>members m</code> in SQL, contextualizing the Member table alias.</p>
 
-<p>If you use <code>Member.syntax()</code>, the table name is included in aliases. For example,  <code>m.result.groupId</code> becomes <code>&quot;members.group_id as gi_on_members&quot;</code>. If you set it as <code>Member.syntax(&quot;m&quot;)</code>, <code>m.result.groupId</code> translates to <code>&quot;members.group_id as gi_on_m&quot;</code>.</p>
+<p>If you use <code>Member.syntax()</code>, the table name is included in aliases. For example,  <code>m.result.groupId</code> becomes <code>&quot;members.group_id as gi_on_members&quot;</code>. If you set it as <code>Member.syntax(&quot;m&quot;)</code>, <code>m.result.groupId</code> translates to <code>&quot;m.group_id as gi_on_m&quot;</code>.</p>
 
 <p>That covers all the rules of <code>SQLSyntaxSupport</code>. I believe this explanation will make the following code easier for you to understand.</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">val</span> <span class="nv">ids</span><span class="k">:</span> <span class="kt">List</span><span class="o">[</span><span class="kt">Long</span><span class="o">]</span> <span class="k">=</span> <span class="n">sql</span><span class="s">"select ${m.result.id} from ${Member.as(m)} where ${m.groupId} = 1"</span>
@@ -237,7 +237,7 @@
 </code></pre></div>
 <p>You can use the above code this way:</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">val</span> <span class="nv">m</span> <span class="k">=</span> <span class="nv">Member</span><span class="o">.</span><span class="py">syntax</span><span class="o">(</span><span class="s">"m"</span><span class="o">)</span>
-<span class="k">val</span> <span class="nv">members</span> <span class="k">=</span> <span class="n">sql</span><span class="s">"select ${m.result.*} from ${Member.as(m)}"</span><span class="o">.</span><span class="py">map</span><span class="o">(</span><span class="nc">Member</span><span class="o">(</span><span class="n">m</span><span class="o">)).</span><span class="py">list</span><span class="o">.</span><span class="py">apply</span><span class="o">()</span>
+<span class="k">val</span> <span class="nv">members</span> <span class="k">=</span> <span class="n">sql</span><span class="s">"select ${m.result.*} from ${Member.as(m)}"</span><span class="o">.</span><span class="py">map</span><span class="o">(</span><span class="nc">Member</span><span class="o">(</span><span class="nv">m</span><span class="o">.</span><span class="py">resultName</span><span class="o">)).</span><span class="py">list</span><span class="o">.</span><span class="py">apply</span><span class="o">()</span>
 <span class="c1">// select m.id as i_on_m, m.name as n_on_m from members m</span>
 </code></pre></div>
 <p>If you only require column names for insert, update, or delete queries, use <code>#column.{name}</code> as shown below:</p>
