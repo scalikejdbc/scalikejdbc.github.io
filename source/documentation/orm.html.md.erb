@@ -311,7 +311,7 @@ import scalikejdbc.orm.*
 case class Member(
   id: Long,
   name: String,
-  skills: Optional[Skill],
+  skills: Seq[Skill] = Nil,
 )
 object Member extends CRUDMapper[Member] {
   override val defaultAlias = createAlias("m")
@@ -324,14 +324,15 @@ object Member extends CRUDMapper[Member] {
   )
 }
 
-case class MemberSkill(memberId: Long, skillId: Long)
-object MemberSkill extends JoinTable[MemberSkill] {
-  override val defaultAlias = createAlias("ms")
-}
 case class Skill(id: Long, name: String)
 object Skill extends CRUDMapper[Skill] {
   override val defaultAlias = createAlias("s")
   override def extract(rs: WrappedResultSet, s: ResultName[Skill]): Skill = autoConstruct(rs, s)
+}
+
+case class MemberSkill(memberId: Long, skillId: Long)
+object MemberSkill extends JoinTable[MemberSkill] {
+  override val defaultAlias = createAlias("ms")
 }
 ```
 
@@ -351,7 +352,6 @@ When enabling eager loading via the `includes` API, it's necessary to define bot
 
 ```scala
 object Member extends SkinnyCRUDMapper[Member] {
-
   // Unfortunately, in Scala 2.10.x, the combination of Scala macros and type-dynamic may not always behave as expected, particularly when defining "val company". 
   // If you encounter this issue, consider using alternatives such as "val companyOpt", "companyRef", and so on.
   lazy val companyOpt = {
@@ -360,9 +360,7 @@ object Member extends SkinnyCRUDMapper[Member] {
     // Then attach includes following the claim API call
     .includes[Company](
       merge = (members, companies) => members.map { m =>
-        companies.find(c => m.company.exists(_.id == c.id))
-          .map(c => m.copy(company = Some(c)))
-          .getOrElse(m)
+        companies.find(c => m.company.exists(_.id == c.id)).map(c => m.copy(company = Some(c))).getOrElse(m)
       })
   }
 }
@@ -380,10 +378,13 @@ Here is another example with `hasManyThrough`:
 object Member extends SkinnyCRUDMapper[Member] {
   lazy val skills =
     hasManyThrough[Skill](
-      MemberSkill, Skill, (m, skills) => m.copy(skills = skills)
-    ).includes[Skill]((ms, skills) => ms.map { m =>
-      m.copy(skills = skills.filter(_.memberId.exists(_ == m.id)))
-    })
+      MemberSkill,
+      Skill,
+      (m, skills) => m.copy(skills = skills)
+    )
+    .includes[Skill](
+      (ms, skills) => ms.map { m => m.copy(skills = skills.filter(_.memberId.exists(_ == m.id))) }
+    )
 }
 
 Member.includes(Member.skills).findById(123) // with skills
