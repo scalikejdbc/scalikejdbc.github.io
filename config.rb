@@ -79,6 +79,13 @@ set :v1_latest_version, @v1_version
 set :h2_version,        "2.2.224"
 set :logback_version,   "1.5.6"
 
+helpers do
+  %i[version latest_version latest_play_support_version v2_play_support_version
+     v2_version v1_version v18_version v1_latest_version h2_version logback_version].each do |name|
+    define_method(name) { config[name] }
+  end
+end
+
 # Build-specific configuration
 configure :build do
   # For example, change the Compass output style for deployment
@@ -95,11 +102,5 @@ configure :build do
 
   # Or use a different image path
   # set :http_prefix, "/Content/images/"
-end
-
-activate :deploy do |deploy|
-  deploy.build_before = true
-  deploy.method = :git
-  deploy.branch = 'master'
 end
 
