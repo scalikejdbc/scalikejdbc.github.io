@@ -16,7 +16,7 @@ How to debug:
 git clone [your forked repository].
 cd scalikejdbc.github.io
 gem install bundler
-bundle install --path vendor/bundle
+bundle install
 # bundle exec middleman build
 bundle exec middleman server
 ```
@@ -27,4 +27,5 @@ Access `http://localhost:4567/` from your browser.
 
 Create a branch to request, and send your pull request to `develop` branch (not `master` branch).
 
+Changes pushed to `develop` are built and deployed to `master` by GitHub Actions.
 
