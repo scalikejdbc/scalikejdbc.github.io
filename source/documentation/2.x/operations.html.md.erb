@@ -298,7 +298,7 @@ DB localTx { implicit s =>
    }.update.apply()
 
   val id: Long = withSQL {
-    insert.into(Empy).namedValues(column.name -> name, column.createdAt -> sqls.currentTimestamp)
+    insert.into(Emp).namedValues(column.name -> name, column.createdAt -> sqls.currentTimestamp)
   }.updateAndReturnGeneratedKey.apply()
 
   withSQL { update(Emp).set(column.name -> newName).where.eq(column.id, id) }.update.apply()

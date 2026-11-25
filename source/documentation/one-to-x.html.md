@@ -130,7 +130,7 @@ val (g, o) = (Group.syntax, Owner.syntax)
 
 val groups: Seq[Group] =
   withSQL {
-    select.from(Group as g).innerJoin(Onwer as o).on(g.ownerId, o.id)
+    select.from(Group as g).innerJoin(Owner as o).on(g.ownerId, o.id)
   }
   .map(Group(g, o))
   .list

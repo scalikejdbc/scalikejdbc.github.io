@@ -23,7 +23,7 @@ For instructions on using alternative connection pool implementations, please vi
 ### How to share same DB with Rails ActiveRecord?
 <hr/>
 
-As you may know, Rails ActiveRecord stores timestamp values in UTC time zone without timezone information. In other words, those DB column types are usually `timetamp without timezone`. To align Scala applications with this format, set the Java TimeZone globally at startup:
+As you may know, Rails ActiveRecord stores timestamp values in UTC time zone without timezone information. In other words, those DB column types are usually `timestamp without timezone`. To align Scala applications with this format, set the Java TimeZone globally at startup:
 
 ```scala
 java.util.TimeZone.setDefault(java.util.TimeZone.getTimeZone("UTC"))

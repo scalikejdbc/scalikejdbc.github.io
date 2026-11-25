@@ -63,14 +63,14 @@ This code block executes queries / update operations in block-scoped transaction
 
 ```scala
 val count = DB localTx { implicit session =>
-  // --- transcation scope start ---
+  // --- transaction scope start ---
   sql"update emp set name = ${name1} where id = ${id1}".update.apply()
   sql"update emp set name = ${name2} where id = ${id2}".update.apply()
   // --- transaction scope end ---
 }
 ```
 
-The `TxBoundary` class provides a differnt transaction boundary beyond throwing an Exception (This feature is available since version 2.2.0):
+The `TxBoundary` class provides a different transaction boundary beyond throwing an Exception (This feature is available since version 2.2.0):
 
 ```scala
 import scalikejdbc._
@@ -200,7 +200,7 @@ implicit def myIOTxBoundary[A]: TxBoundary[MyIO[A]] = new TxBoundary[MyIO[A]] {
 }
 ```
 
-Woth the above custom `TxBoundary`, you can use `localTx` code blocks in a simple way sa below:
+With the above custom `TxBoundary`, you can use `localTx` code blocks in a simple way as below:
 
 ```scala
 import scalikejdbc._
@@ -262,7 +262,7 @@ IO.suspend {
 ### #withinTx block / session
 <hr/>
 
-This code block joins an exsting transcation and executes queries / update operations with it.
+This code block joins an existing transaction and executes queries / update operations with it.
 
 In this case, your code is responsible to manage all transactional operations (such as `Tx#begin()`, `Tx#rollback()` or `Tx#commit()`). ScalikeJDBC never does anything under the hood.
 

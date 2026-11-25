@@ -64,7 +64,7 @@ If an Exception was thrown in the block, the transaction will perform rollback a
 
 ```scala
 val count = DB localTx { implicit session =>
-  // --- transcation scope start ---
+  // --- transaction scope start ---
   sql"update emp set name = ${name1} where id = ${id1}".update.apply()
   sql"update emp set name = ${name2} where id = ${id2}".update.apply()
   // --- transaction scope end ---

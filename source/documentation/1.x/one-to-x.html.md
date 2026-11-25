@@ -133,7 +133,7 @@ val (g, o) = (Group.syntax, Owner.syntax)
 
 val groups: Seq[Group] =
   withSQL {
-    select.from(Group as g).innerJoin(Onwer as o).on(g.ownerId, o.id)
+    select.from(Group as g).innerJoin(Owner as o).on(g.ownerId, o.id)
   }
   .map(Group(g, o))
   .list
@@ -166,7 +166,7 @@ val groups: Seq[Group] =
 ### About Entity Equality
 <hr/>
 
-In most cases, you will use case classes for entities. And basically it works fine. However, as you know, Scala (under 2.11) has 22 limitation and you cannot create a case class with more thatn 22 parameters. If your table has more than 22 columns, you need to create a normal class like this:
+In most cases, you will use case classes for entities. And basically it works fine. However, as you know, Scala (under 2.11) has 22 limitation and you cannot create a case class with more than 22 parameters. If your table has more than 22 columns, you need to create a normal class like this:
 
 ```scala
 class HugeTable(
