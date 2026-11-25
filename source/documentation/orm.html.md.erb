@@ -134,7 +134,7 @@ Run the code by the `sbt run` command. How did it go?
 ### Associations
 <hr/>
 
-The key feature of ORM is definitely how it resolves associations for developers. ScalikeJDBC ORM does it in a quite similar way to ActiveRecord from Ruby on Rails. In this section, we will guide you on how to define assocations in code.
+The key feature of ORM is definitely how it resolves associations for developers. ScalikeJDBC ORM does it in a quite similar way to ActiveRecord from Ruby on Rails. In this section, we will guide you on how to define associations in code.
 
 In the realm of O/R mapper, the hallmark feature lies in its ability to effortlessly resolve associations for developers. ScalikeJDBC ORM achieves this with a striking resemblance to ActiveRecord from Ruby on Rails. In the following section, we'll walk you through defining associations in your code.
 
@@ -297,7 +297,7 @@ val company: Option[Company] =
   Company.joins(Company.members).findById(companyId)
 ```
 
-If everything goes well, `company.map(_.members)` should be a list of three entitiy objects.
+If everything goes well, `company.map(_.members)` should be a list of three entity objects.
 
 #### hasManyThrough
 

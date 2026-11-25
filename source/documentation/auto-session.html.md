@@ -26,7 +26,7 @@ DB localTx { implicit session =>
 }
 ```
 
-With this change, the method can access the current transaction context. Instead of having `DB` blocks inside, your method can accept an implict DBSession paramter from external code to join an existing transactional session.
+With this change, the method can access the current transaction context. Instead of having `DB` blocks inside, your method can accept an implicit DBSession parameter from external code to join an existing transactional session.
 
 ```scala
 def findById(id: Long)(implicit session: DBSession) =

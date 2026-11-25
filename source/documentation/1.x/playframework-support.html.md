@@ -86,7 +86,7 @@ ALTER SEQUENCE project_seq RESTART WITH 1;
 DELETE FROM project;
 ```
 
-##### conf/db/fixtures/defaut/project_member.sql
+##### conf/db/fixtures/default/project_member.sql
 
 ```sql
 # --- !Ups

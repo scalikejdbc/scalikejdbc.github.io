@@ -14,7 +14,7 @@ If you want to avoid writing lots of boilerplate code, `scalikejdbc-syntax-suppo
 ### Setup
 <hr/>
 
-In addition to the core library, you can add the following optional dependency in `buid.sbt`:
+In addition to the core library, you can add the following optional dependency in `build.sbt`:
 
 ```scala
 libraryDependencies += "org.scalikejdbc" %% "scalikejdbc-syntax-support-macro" % "<%= version %>"
@@ -61,7 +61,7 @@ object Company extends SQLSyntaxSupport[Company] {
 
   def apply(rs: WrappedResultSet, rn: ResultName[Company]): Company = 
     // "country" is execluded when binding values from ResultSet
-    // Note that the property neeeds to have the default `None` value
+    // Note that the property needs to have the default `None` value
     autoConstruct(rs, rn, "country")
 }
 ```
