@@ -40,7 +40,7 @@
 
 <hr/>
 
-<p><img alt="Logo" src="/images/logo.png" /></p>
+<p><img src="/images/logo.png" alt="Logo" /></p>
 
 <p>ScalikeJDBC is a tidy SQL-based DB access library for Scala developers. This library naturally wraps JDBC APIs and provides you easy-to-use and very flexible APIs. What&rsquo;s more, QueryDSL makes your code type-safe and reusable.</p>
 
@@ -112,7 +112,7 @@ NOTICE: Scala 2.9 incompatible changes will be backported only to ScalikeJDBC 1.
 
 <hr/>
 
-<p><img alt="Typesafe" src="/images/typesafe.png" /></p>
+<p><img src="/images/typesafe.png" alt="Typesafe" /></p>
 
 <p>You can try a <a href="http://www.playframework.com/">Play framework</a> example app which uses ScalikeJDBC on <a href="http://typesafe.com/activator">Typesafe Activator</a>.</p>
 
@@ -139,7 +139,7 @@ NOTICE: Scala 2.9 incompatible changes will be backported only to ScalikeJDBC 1.
 <span class="n">implicit</span> <span class="n">val</span> <span class="n">session</span> <span class="o">=</span> <span class="nc">AutoSession</span>
 
 <span class="c1">// table creation, you can run DDL by using #execute as same as JDBC</span>
-<span class="n">sql</span><span class="s">"""
+<span class="n">sql</span><span class="sh">"""
 create table members (
   id serial not null primary key,
   name varchar(64),
@@ -314,7 +314,7 @@ sbt "scalikejdbc-gen companies Company"
 
 <p>See in detail: <a href="documentation/playframework-support.html">/documentation/playframework-support</a></p>
 
-<p><img alt="Play framework" src="/images/play.png" /></p>
+<p><img src="/images/play.png" alt="Play framework" /></p>
 
 <hr/>
 
@@ -359,7 +359,7 @@ http://www.apache.org/licenses/LICENSE-2.0.html
 
 <h3 id="skinny-orm">Skinny ORM</h3>
 
-<p><img alt="Skinny framework" src="/images/skinny.png" /></p>
+<p><img src="/images/skinny.png" alt="Skinny framework" /></p>
 
 <p>Skinny ORM is the default DB access library of <a href="https://github.com/skinny-framework/skinny-framework">Skinny Framework</a>. Skinny ORM is built upon ScalikeJDBC.</p>
 

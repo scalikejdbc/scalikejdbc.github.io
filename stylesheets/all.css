@@ -64,6 +64,10 @@ body {
 .highlight .ge {
   font-style: italic;
 }
+.highlight .ges {
+  font-weight: bold;
+  font-style: italic;
+}
 .highlight .gs {
   font-weight: bold;
 }
@@ -188,7 +192,8 @@ body {
 .highlight .nv, .highlight .vc, .highlight .vg, .highlight .vi, .highlight .vm {
   color: #a8e1fe;
   font-weight: bold;
-}.highlight {
+}
+.highlight {
   background-color: #424242;
 }
 code {
