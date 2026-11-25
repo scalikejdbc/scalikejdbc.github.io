@@ -133,7 +133,7 @@ play.modules.enabled +<span class="o">=</span> <span class="s2">"scalikejdbc.Pla
 <span class="k">ALTER</span> <span class="n">SEQUENCE</span> <span class="n">project_seq</span> <span class="k">RESTART</span> <span class="k">WITH</span> <span class="mi">1</span><span class="p">;</span>
 <span class="k">DELETE</span> <span class="k">FROM</span> <span class="n">project</span><span class="p">;</span>
 </code></pre></div>
-<h4 id="conf-db-fixtures-defaut-project_member-sql">conf/db/fixtures/defaut/project_member.sql</h4>
+<h4 id="conf-db-fixtures-default-project_member-sql">conf/db/fixtures/default/project_member.sql</h4>
 <div class="highlight"><pre class="highlight sql"><code><span class="o">#</span> <span class="c1">--- !Ups</span>
 
 <span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">project_member</span> <span class="p">(</span><span class="n">project_id</span><span class="p">,</span> <span class="n">user_email</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">'guillaume@sample.com'</span><span class="p">);</span>

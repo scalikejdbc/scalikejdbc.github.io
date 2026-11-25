@@ -147,7 +147,7 @@
 
 <hr/>
 
-<p>In spite of column names are not defined anywhere, <code>${m.result.*}</code> is converted to listing all the column names. The secret is that laoding from metadata (and they will be cached) when first access to the table. It&rsquo;s possible to obtain all column names as a <code>Seq[String]</code> value via <code>columns</code>.</p>
+<p>In spite of column names are not defined anywhere, <code>${m.result.*}</code> is converted to listing all the column names. The secret is that loading from metadata (and they will be cached) when first access to the table. It&rsquo;s possible to obtain all column names as a <code>Seq[String]</code> value via <code>columns</code>.</p>
 
 <p>If you need to define column names by yourself or need to access multi databases, please define column names as follows:</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">object</span> <span class="nc">GroupMember</span> <span class="k">extends</span> <span class="nc">SQLSyntaxSupport</span><span class="o">[</span><span class="kt">GroupMember</span><span class="o">]</span> <span class="o">{</span>

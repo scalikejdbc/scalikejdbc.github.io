@@ -81,13 +81,13 @@
 
 <p>This code block executes queries / update operations in block-scoped transactions. When an Exception was thrown within the block, the ongoing transaction will be cancelled and then the transaction will be rolled back automatically.</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">val</span> <span class="nv">count</span> <span class="k">=</span> <span class="nc">DB</span> <span class="n">localTx</span> <span class="o">{</span> <span class="k">implicit</span> <span class="n">session</span> <span class="k">=&gt;</span>
-  <span class="c1">// --- transcation scope start ---</span>
+  <span class="c1">// --- transaction scope start ---</span>
   <span class="n">sql</span><span class="s">"update emp set name = ${name1} where id = ${id1}"</span><span class="o">.</span><span class="py">update</span><span class="o">.</span><span class="py">apply</span><span class="o">()</span>
   <span class="n">sql</span><span class="s">"update emp set name = ${name2} where id = ${id2}"</span><span class="o">.</span><span class="py">update</span><span class="o">.</span><span class="py">apply</span><span class="o">()</span>
   <span class="c1">// --- transaction scope end ---</span>
 <span class="o">}</span>
 </code></pre></div>
-<p>The <code>TxBoundary</code> class provides a differnt transaction boundary beyond throwing an Exception (This feature is available since version 2.2.0):</p>
+<p>The <code>TxBoundary</code> class provides a different transaction boundary beyond throwing an Exception (This feature is available since version 2.2.0):</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">import</span> <span class="nn">scalikejdbc._</span>
 <span class="k">import</span> <span class="nn">scala.util.Try</span>
 <span class="k">import</span> <span class="nn">scalikejdbc.TxBoundary.Try._</span>
@@ -209,7 +209,7 @@
   <span class="o">}</span>
 <span class="o">}</span>
 </code></pre></div>
-<p>Woth the above custom <code>TxBoundary</code>, you can use <code>localTx</code> code blocks in a simple way sa below:</p>
+<p>With the above custom <code>TxBoundary</code>, you can use <code>localTx</code> code blocks in a simple way as below:</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">import</span> <span class="nn">scalikejdbc._</span>
 <span class="k">type</span> <span class="kt">A</span> <span class="o">=</span> <span class="o">???</span>
 <span class="k">def</span> <span class="nf">asyncExecution</span><span class="k">:</span> <span class="kt">DBSession</span> <span class="o">=&gt;</span> <span class="nc">MyIO</span><span class="o">[</span><span class="kt">A</span><span class="o">]</span> <span class="k">=</span> <span class="o">???</span>
@@ -266,7 +266,7 @@
 
 <hr/>
 
-<p>This code block joins an exsting transcation and executes queries / update operations with it.</p>
+<p>This code block joins an existing transaction and executes queries / update operations with it.</p>
 
 <p>In this case, your code is responsible to manage all transactional operations (such as <code>Tx#begin()</code>, <code>Tx#rollback()</code> or <code>Tx#commit()</code>). ScalikeJDBC never does anything under the hood.</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">val</span> <span class="nv">db</span> <span class="k">=</span> <span class="nc">DB</span><span class="o">(</span><span class="n">conn</span><span class="o">)</span>

@@ -158,7 +158,7 @@ Be aware that resolving multiple one-to-many relationships with a single join qu
 
 <span class="k">val</span> <span class="nv">groups</span><span class="k">:</span> <span class="kt">Seq</span><span class="o">[</span><span class="kt">Group</span><span class="o">]</span> <span class="k">=</span>
   <span class="n">withSQL</span> <span class="o">{</span>
-    <span class="nv">select</span><span class="o">.</span><span class="py">from</span><span class="o">(</span><span class="nc">Group</span> <span class="n">as</span> <span class="n">g</span><span class="o">).</span><span class="py">innerJoin</span><span class="o">(</span><span class="nc">Onwer</span> <span class="n">as</span> <span class="n">o</span><span class="o">).</span><span class="py">on</span><span class="o">(</span><span class="nv">g</span><span class="o">.</span><span class="py">ownerId</span><span class="o">,</span> <span class="nv">o</span><span class="o">.</span><span class="py">id</span><span class="o">)</span>
+    <span class="nv">select</span><span class="o">.</span><span class="py">from</span><span class="o">(</span><span class="nc">Group</span> <span class="n">as</span> <span class="n">g</span><span class="o">).</span><span class="py">innerJoin</span><span class="o">(</span><span class="nc">Owner</span> <span class="n">as</span> <span class="n">o</span><span class="o">).</span><span class="py">on</span><span class="o">(</span><span class="nv">g</span><span class="o">.</span><span class="py">ownerId</span><span class="o">,</span> <span class="nv">o</span><span class="o">.</span><span class="py">id</span><span class="o">)</span>
   <span class="o">}</span>
   <span class="o">.</span><span class="py">map</span><span class="o">(</span><span class="nc">Group</span><span class="o">(</span><span class="n">g</span><span class="o">,</span> <span class="n">o</span><span class="o">))</span>
   <span class="o">.</span><span class="py">list</span>
@@ -189,7 +189,7 @@ Be aware that resolving multiple one-to-many relationships with a single join qu
 
 <hr/>
 
-<p>In most cases, you will use case classes for entities. And basically it works fine. However, as you know, Scala (under 2.11) has 22 limitation and you cannot create a case class with more thatn 22 parameters. If your table has more than 22 columns, you need to create a normal class like this:</p>
+<p>In most cases, you will use case classes for entities. And basically it works fine. However, as you know, Scala (under 2.11) has 22 limitation and you cannot create a case class with more than 22 parameters. If your table has more than 22 columns, you need to create a normal class like this:</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">class</span> <span class="nc">HugeTable</span><span class="o">(</span>
   <span class="k">val</span> <span class="nv">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">,</span> <span class="k">val</span> <span class="nv">c2</span><span class="k">:</span> <span class="kt">String</span><span class="o">,</span> <span class="k">val</span> <span class="nv">c3</span><span class="k">:</span> <span class="kt">String</span> <span class="kt">....</span> <span class="kt">val</span> <span class="kt">c23:</span> <span class="kt">String</span><span class="o">)</span>
 

@@ -48,7 +48,7 @@
   <span class="nf">findById</span><span class="o">(</span><span class="n">id</span><span class="o">)</span> <span class="c1">// Not found!</span>
 <span class="o">}</span>
 </code></pre></div>
-<p>With this change, the method can access the current transaction context. Instead of having <code>DB</code> blocks inside, your method can accept an implict DBSession paramter from external code to join an existing transactional session.</p>
+<p>With this change, the method can access the current transaction context. Instead of having <code>DB</code> blocks inside, your method can accept an implicit DBSession parameter from external code to join an existing transactional session.</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="k">def</span> <span class="nf">findById</span><span class="o">(</span><span class="n">id</span><span class="k">:</span> <span class="kt">Long</span><span class="o">)(</span><span class="k">implicit</span> <span class="n">session</span><span class="k">:</span> <span class="kt">DBSession</span><span class="o">)</span> <span class="k">=</span>
   <span class="n">sql</span><span class="s">"select id, name from members where id = ${id}"</span>
     <span class="o">.</span><span class="py">map</span><span class="o">(</span><span class="n">rs</span> <span class="k">=&gt;</span> <span class="nc">Member</span><span class="o">(</span><span class="n">rs</span><span class="o">)).</span><span class="py">single</span><span class="o">.</span><span class="py">apply</span><span class="o">()</span>

@@ -44,7 +44,7 @@
 
 <hr/>
 
-<p>In addition to the core library, you can add the following optional dependency in <code>buid.sbt</code>:</p>
+<p>In addition to the core library, you can add the following optional dependency in <code>build.sbt</code>:</p>
 <div class="highlight"><pre class="highlight scala"><code><span class="n">libraryDependencies</span> <span class="o">+=</span> <span class="s">"org.scalikejdbc"</span> <span class="o">%%</span> <span class="s">"scalikejdbc-syntax-support-macro"</span> <span class="o">%</span> <span class="s">"4.3.5"</span>
 </code></pre></div>
 <hr/>
@@ -85,7 +85,7 @@
 
   <span class="k">def</span> <span class="nf">apply</span><span class="o">(</span><span class="n">rs</span><span class="k">:</span> <span class="kt">WrappedResultSet</span><span class="o">,</span> <span class="n">rn</span><span class="k">:</span> <span class="kt">ResultName</span><span class="o">[</span><span class="kt">Company</span><span class="o">])</span><span class="k">:</span> <span class="kt">Company</span> <span class="o">=</span> 
     <span class="c1">// "country" is execluded when binding values from ResultSet</span>
-    <span class="c1">// Note that the property neeeds to have the default `None` value</span>
+    <span class="c1">// Note that the property needs to have the default `None` value</span>
     <span class="nf">autoConstruct</span><span class="o">(</span><span class="n">rs</span><span class="o">,</span> <span class="n">rn</span><span class="o">,</span> <span class="s">"country"</span><span class="o">)</span>
 <span class="o">}</span>
 </code></pre></div>

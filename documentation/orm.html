@@ -162,7 +162,7 @@
 
 <hr/>
 
-<p>The key feature of ORM is definitely how it resolves associations for developers. ScalikeJDBC ORM does it in a quite similar way to ActiveRecord from Ruby on Rails. In this section, we will guide you on how to define assocations in code.</p>
+<p>The key feature of ORM is definitely how it resolves associations for developers. ScalikeJDBC ORM does it in a quite similar way to ActiveRecord from Ruby on Rails. In this section, we will guide you on how to define associations in code.</p>
 
 <p>In the realm of O/R mapper, the hallmark feature lies in its ability to effortlessly resolve associations for developers. ScalikeJDBC ORM achieves this with a striking resemblance to ActiveRecord from Ruby on Rails. In the following section, we&rsquo;ll walk you through defining associations in your code.</p>
 
@@ -307,7 +307,7 @@
 <span class="k">val</span> <span class="nv">company</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">Company</span><span class="o">]</span> <span class="k">=</span>
   <span class="nv">Company</span><span class="o">.</span><span class="py">joins</span><span class="o">(</span><span class="nv">Company</span><span class="o">.</span><span class="py">members</span><span class="o">).</span><span class="py">findById</span><span class="o">(</span><span class="n">companyId</span><span class="o">)</span>
 </code></pre></div>
-<p>If everything goes well, <code>company.map(_.members)</code> should be a list of three entitiy objects.</p>
+<p>If everything goes well, <code>company.map(_.members)</code> should be a list of three entity objects.</p>
 
 <h4 id="hasmanythrough">hasManyThrough</h4>
 
